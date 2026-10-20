@@ -56,8 +56,14 @@ namespace swift::misc::aviation
 
     QVariant CInformationMessage::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

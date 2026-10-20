@@ -50,13 +50,25 @@ namespace swift::core
         const QString fileName = CSwiftDirectories::bootstrapResourceFilePath();
         // TODO Check if file exists or is broken
 
-        if (fileName.isEmpty()) { return CStatusMessage(this).error(u"No file name for local bootstrap file"); }
-        if (!sApp || sApp->isShuttingDown()) { return CStatusMessage(this).error(u"No sApp, shutting down?"); }
+        if (fileName.isEmpty())
+        {
+            return CStatusMessage(this).error(u"No file name for local bootstrap file");
+        }
+        if (!sApp || sApp->isShuttingDown())
+        {
+            return CStatusMessage(this).error(u"No sApp, shutting down?");
+        }
         const QFile file(fileName);
-        if (!file.exists()) { return CStatusMessage(this).error(u"File '%1' not existing") << fileName; }
+        if (!file.exists())
+        {
+            return CStatusMessage(this).error(u"File '%1' not existing") << fileName;
+        }
 
         const QString content(CFileUtils::readFileToString(fileName));
-        if (content.isEmpty()) { return CStatusMessage(this).error(u"File '%1' empty") << fileName; }
+        if (content.isEmpty())
+        {
+            return CStatusMessage(this).error(u"File '%1' empty") << fileName;
+        }
 
         try
         {

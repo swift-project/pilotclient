@@ -60,16 +60,25 @@ namespace swift::gui::menus
         }
         m_dialog->setFont(m_widget->font());
         const int r = m_dialog->exec();
-        if (r == QDialog::Rejected) { return; }
+        if (r == QDialog::Rejected)
+        {
+            return;
+        }
         const QString qss(m_dialog->getQss());
         m_widget->setStyleSheet(qss);
     }
 
     void CFontMenu::onFontSizePlus()
     {
-        if (!m_widget) { return; }
+        if (!m_widget)
+        {
+            return;
+        }
         const int pt = m_widget->font().pointSize() + 1;
-        if (pt > 24) { return; }
+        if (pt > 24)
+        {
+            return;
+        }
 
         m_widget->setStyleSheet(""); // avoid Qt crash
         m_widget->setStyleSheet(CStyleSheetUtility::asStylesheet(m_widget, pt));
@@ -79,9 +88,15 @@ namespace swift::gui::menus
 
     void CFontMenu::onFontSizeMinus()
     {
-        if (!m_widget) { return; }
+        if (!m_widget)
+        {
+            return;
+        }
         const int pt = m_widget->font().pointSize() - 1;
-        if (pt < 5) { return; }
+        if (pt < 5)
+        {
+            return;
+        }
 
         m_widget->setStyleSheet(""); // avoid Qt crash
         m_widget->setStyleSheet(CStyleSheetUtility::asStylesheet(m_widget, pt));

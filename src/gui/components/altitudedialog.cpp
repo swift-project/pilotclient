@@ -121,7 +121,10 @@ namespace swift::gui::components
                 m_altitudeStr = m_altitude.valueRoundedWithUnit(0);
             }
 
-            if (ui->cb_SimplifiedVATSIMFormat->isChecked()) { m_altitudeStr = m_altitude.asFpVatsimAltitudeString(); }
+            if (ui->cb_SimplifiedVATSIMFormat->isChecked())
+            {
+                m_altitudeStr = m_altitude.asFpVatsimAltitudeString();
+            }
 
             ui->le_String->setText(m_altitudeStr);
         }
@@ -131,14 +134,20 @@ namespace swift::gui::components
 
     void CAltitudeDialog::onVFRSelected(bool selected)
     {
-        if (!selected) { return; }
+        if (!selected)
+        {
+            return;
+        }
         this->onEditFinished();
     }
 
     void CAltitudeDialog::onStringOnlySelected(bool selected)
     {
         ui->le_String->setReadOnly(!selected);
-        if (!selected) { return; }
+        if (!selected)
+        {
+            return;
+        }
 
         this->onEditFinished();
         this->updateStyleSheet();

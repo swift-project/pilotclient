@@ -18,7 +18,10 @@ namespace swift::misc::simulation::fsx
     QString CSimConnectUtilities::resolveEnumToString(const DWORD id, const char *enumName)
     {
         const int i = CSimConnectUtilities::staticMetaObject.indexOfEnumerator(enumName);
-        if (i < 0) { return QStringLiteral("No enumerator for %1").arg(enumName); }
+        if (i < 0)
+        {
+            return QStringLiteral("No enumerator for %1").arg(enumName);
+        }
         const QMetaEnum m = CSimConnectUtilities::staticMetaObject.enumerator(i);
         const char *k = m.valueToKey(static_cast<int>(id));
         return (k) ? QLatin1String(k) : QStringLiteral("Id '%1' not found for %2").arg(id).arg(enumName);
@@ -44,12 +47,30 @@ namespace swift::misc::simulation::fsx
     int CSimConnectUtilities::lightsToLightStates(const CAircraftLights &lights)
     {
         int lightMask = 0;
-        if (lights.isBeaconOn()) { lightMask |= Beacon; }
-        if (lights.isLandingOn()) { lightMask |= Landing; }
-        if (lights.isLogoOn()) { lightMask |= Logo; }
-        if (lights.isNavOn()) { lightMask |= Nav; }
-        if (lights.isStrobeOn()) { lightMask |= Strobe; }
-        if (lights.isTaxiOn()) { lightMask |= Taxi; }
+        if (lights.isBeaconOn())
+        {
+            lightMask |= Beacon;
+        }
+        if (lights.isLandingOn())
+        {
+            lightMask |= Landing;
+        }
+        if (lights.isLogoOn())
+        {
+            lightMask |= Logo;
+        }
+        if (lights.isNavOn())
+        {
+            lightMask |= Nav;
+        }
+        if (lights.isStrobeOn())
+        {
+            lightMask |= Strobe;
+        }
+        if (lights.isTaxiOn())
+        {
+            lightMask |= Taxi;
+        }
         return lightMask;
     }
 

@@ -30,7 +30,10 @@ namespace swift::gui::models
     void CNameVariantPairModel::setIconMode(bool withIcon)
     {
         this->m_columns.clear();
-        if (withIcon) { this->m_columns.addColumn(CColumn(CNameVariantPair::IndexPixmap)); }
+        if (withIcon)
+        {
+            this->m_columns.addColumn(CColumn(CNameVariantPair::IndexPixmap));
+        }
         this->m_columns.addColumn(CColumn::standardString("name", CNameVariantPair::IndexName));
         this->m_columns.addColumn(CColumn("value", CNameVariantPair::IndexVariant, new CDefaultFormatter()));
 
@@ -54,7 +57,10 @@ namespace swift::gui::models
         else
         {
             // already in list, update
-            if (skipEqualValues && this->containsNameValue(name, value)) { return false; }
+            if (skipEqualValues && this->containsNameValue(name, value))
+            {
+                return false;
+            }
             this->update(index, pair);
             return true;
         }
@@ -79,7 +85,10 @@ namespace swift::gui::models
     bool CNameVariantPairModel::containsNameValue(const QString &name, const swift::misc::CVariant &value) const
     {
         int rowIndex = this->getRowIndexForName(name);
-        if (rowIndex < 0) { return false; }
+        if (rowIndex < 0)
+        {
+            return false;
+        }
         QModelIndex i = this->index(rowIndex, 0);
         const CNameVariantPair cv = this->at(i);
         return value == CVariant::fromValue(cv);

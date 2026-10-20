@@ -214,7 +214,10 @@ namespace swift::misc::Iterators
         //! Constructor.
         ConditionalIterator(I iterator, I end, F predicate) : m_iterator(iterator), m_end(end), m_predicate(predicate)
         {
-            while (m_iterator != m_end && !(*m_predicate)(*m_iterator)) { ++m_iterator; }
+            while (m_iterator != m_end && !(*m_predicate)(*m_iterator))
+            {
+                ++m_iterator;
+            }
         }
 
         //! Implicit conversion from an end iterator.
@@ -226,7 +229,8 @@ namespace swift::misc::Iterators
         ConditionalIterator &operator++()
         {
             Q_ASSERT(m_predicate);
-            do {
+            do
+            {
                 ++m_iterator;
             }
             while (m_iterator != m_end && !(*m_predicate)(*m_iterator));
@@ -291,7 +295,10 @@ namespace swift::misc::Iterators
         ConcatIterator(QVector<I> iterators) : m_iterators(std::move(iterators))
         {
             Q_ASSERT(m_iterators.size() % 2 == 0);
-            while (!m_iterators.empty() && m_iterators[0] == m_iterators[1]) { m_iterators.remove(0, 2); }
+            while (!m_iterators.empty() && m_iterators[0] == m_iterators[1])
+            {
+                m_iterators.remove(0, 2);
+            }
         }
 
         //! Implicit conversion from an end iterator.
@@ -303,7 +310,10 @@ namespace swift::misc::Iterators
         ConcatIterator &operator++()
         {
             ++(m_iterators[0]);
-            while (!m_iterators.empty() && m_iterators[0] == m_iterators[1]) { m_iterators.remove(0, 2); }
+            while (!m_iterators.empty() && m_iterators[0] == m_iterators[1])
+            {
+                m_iterators.remove(0, 2);
+            }
             return *this;
         }
         ConcatIterator operator++(int)

@@ -81,7 +81,10 @@ namespace swift::misc
 
     void CLogHandler::install(bool skipIfAlreadyInstalled)
     {
-        if (skipIfAlreadyInstalled && m_oldHandler) { return; }
+        if (skipIfAlreadyInstalled && m_oldHandler)
+        {
+            return;
+        }
         Q_ASSERT_X(!m_oldHandler, Q_FUNC_INFO, "Re-installing the log handler should be avoided");
         m_oldHandler = qInstallMessageHandler(messageHandler);
     }
@@ -108,7 +111,10 @@ namespace swift::misc
             topologicallySortedInsert(m_patternHandlers, PatternPair(pattern, handler), comparator);
             return handler;
         }
-        else { return (*it).second; }
+        else
+        {
+            return (*it).second;
+        }
     }
 
     CLogPatternHandler *CLogHandler::handlerForCategory(const CLogCategory &category)
@@ -121,7 +127,10 @@ namespace swift::misc
         QList<CLogPatternHandler *> m_handlers;
         for (const auto &pair : m_patternHandlers)
         {
-            if (pair.first.match(message)) { m_handlers.push_back(pair.second); }
+            if (pair.first.match(message))
+            {
+                m_handlers.push_back(pair.second);
+            }
         }
         return m_handlers;
     }
@@ -130,7 +139,10 @@ namespace swift::misc
     {
         for (const auto *handler : handlers)
         {
-            if (!handler->m_inheritFallThrough) { return handler->m_enableFallThrough; }
+            if (!handler->m_inheritFallThrough)
+            {
+                return handler->m_enableFallThrough;
+            }
         }
         return m_enableFallThrough;
     }
@@ -165,7 +177,10 @@ namespace swift::misc
         }
 
         auto bucket = m_tokenBuckets.find(statusMessage);
-        if (bucket == m_tokenBuckets.end()) { bucket = m_tokenBuckets.insert(statusMessage, { { 5, 1000, 1 }, 0 }); }
+        if (bucket == m_tokenBuckets.end())
+        {
+            bucket = m_tokenBuckets.insert(statusMessage, { { 5, 1000, 1 }, 0 });
+        }
         if (!bucket->first.tryConsume())
         {
             bucket->second++;
@@ -213,7 +228,10 @@ namespace swift::misc
             m_oldHandler(type, QMessageLogContext(nullptr, 0, nullptr, qPrintable(category)), message);
         }
 
-        for (auto *handler : handlers) { emit handler->messageLogged(statusMessage); }
+        for (auto *handler : handlers)
+        {
+            emit handler->messageLogged(statusMessage);
+        }
     }
 
     void CLogHandler::removePatternHandler(CLogPatternHandler *handler)
@@ -257,11 +275,20 @@ namespace swift::misc
             if (isSubscribed != m_isSubscribed)
             {
                 m_isSubscribed = isSubscribed;
-                if (m_isSubscribed) { emit m_parent->subscriptionAdded(m_pattern); }
-                else { emit m_parent->subscriptionRemoved(m_pattern); }
+                if (m_isSubscribed)
+                {
+                    emit m_parent->subscriptionAdded(m_pattern);
+                }
+                else
+                {
+                    emit m_parent->subscriptionRemoved(m_pattern);
+                }
             }
 
-            if (m_inheritFallThrough && !m_isSubscribed) { m_parent->removePatternHandler(this); }
+            if (m_inheritFallThrough && !m_isSubscribed)
+            {
+                m_parent->removePatternHandler(this);
+            }
         }
     }
 
@@ -271,7 +298,10 @@ namespace swift::misc
         {
             Q_ASSERT(thread() == QThread::currentThread());
             singleShot(0, CLogHandler::instance(), [pattern, self = QPointer<CLogSubscriber>(this)]() {
-                if (self) { self->changeSubscription(pattern); }
+                if (self)
+                {
+                    self->changeSubscription(pattern);
+                }
             });
             return;
         }
@@ -279,7 +309,10 @@ namespace swift::misc
         unsubscribe();
         m_handler = CLogHandler::instance()->handlerForPattern(pattern);
 
-        if (!m_inheritFallThrough) { m_handler->enableConsoleOutput(m_enableFallThrough); }
+        if (!m_inheritFallThrough)
+        {
+            m_handler->enableConsoleOutput(m_enableFallThrough);
+        }
         connect(m_handler.data(), &CLogPatternHandler::messageLogged, this, &CLogSubscriber::ps_logMessage,
                 Qt::DirectConnection);
     }
@@ -290,14 +323,20 @@ namespace swift::misc
         {
             Q_ASSERT(thread() == QThread::currentThread());
             singleShot(0, CLogHandler::instance(), [self = QPointer<CLogSubscriber>(this)]() {
-                if (self) { self->unsubscribe(); }
+                if (self)
+                {
+                    self->unsubscribe();
+                }
             });
             return;
         }
 
         if (m_handler)
         {
-            if (!m_inheritFallThrough) { m_handler->inheritConsoleOutput(); }
+            if (!m_inheritFallThrough)
+            {
+                m_handler->inheritConsoleOutput();
+            }
             m_handler->disconnect(this);
         }
     }
@@ -308,13 +347,19 @@ namespace swift::misc
         {
             Q_ASSERT(thread() == QThread::currentThread());
             singleShot(0, CLogHandler::instance(), [self = QPointer<CLogSubscriber>(this)]() {
-                if (self) { self->inheritConsoleOutput(); }
+                if (self)
+                {
+                    self->inheritConsoleOutput();
+                }
             });
             return;
         }
 
         m_inheritFallThrough = true;
-        if (m_handler) { m_handler->inheritConsoleOutput(); }
+        if (m_handler)
+        {
+            m_handler->inheritConsoleOutput();
+        }
     }
 
     void CLogSubscriber::enableConsoleOutput(bool enable)
@@ -323,14 +368,20 @@ namespace swift::misc
         {
             Q_ASSERT(thread() == QThread::currentThread());
             singleShot(0, CLogHandler::instance(), [enable, self = QPointer<CLogSubscriber>(this)]() {
-                if (self) { self->enableConsoleOutput(enable); }
+                if (self)
+                {
+                    self->enableConsoleOutput(enable);
+                }
             });
             return;
         }
 
         m_inheritFallThrough = false;
         m_enableFallThrough = enable;
-        if (m_handler) { m_handler->enableConsoleOutput(enable); }
+        if (m_handler)
+        {
+            m_handler->enableConsoleOutput(enable);
+        }
     }
 } // namespace swift::misc
 

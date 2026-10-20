@@ -20,14 +20,20 @@ namespace swift::misc::input
 
     void CHotkeyCombination::addKeyboardKey(const CKeyboardKey &key)
     {
-        if (m_keyboardKeys.contains(key)) { return; }
+        if (m_keyboardKeys.contains(key))
+        {
+            return;
+        }
         m_keyboardKeys.push_back(key);
         m_keyboardKeys.sortBy(&CKeyboardKey::getKey);
     }
 
     void CHotkeyCombination::addJoystickButton(const CJoystickButton &button)
     {
-        if (m_joystickButtons.contains(button)) { return; }
+        if (m_joystickButtons.contains(button))
+        {
+            return;
+        }
         m_joystickButtons.push_back(button);
         m_joystickButtons.sortBy(&CJoystickButton::getButtonIndex);
     }
@@ -46,14 +52,20 @@ namespace swift::misc::input
             Q_ASSERT(!oldKey.isUnknown());
             m_keyboardKeys.remove(oldKey);
         }
-        if (!newKey.isUnknown()) { m_keyboardKeys.push_back(newKey); }
+        if (!newKey.isUnknown())
+        {
+            m_keyboardKeys.push_back(newKey);
+        }
         m_keyboardKeys.sortBy(&CKeyboardKey::getKey);
     }
 
     void CHotkeyCombination::replaceButton(CJoystickButton oldButton, CJoystickButton newButton)
     {
         m_joystickButtons.remove(oldButton);
-        if (newButton.isValid()) { m_joystickButtons.push_back(newButton); }
+        if (newButton.isValid())
+        {
+            m_joystickButtons.push_back(newButton);
+        }
         m_joystickButtons.sortBy(&CJoystickButton::getButtonIndex);
     }
 
@@ -75,13 +87,19 @@ namespace swift::misc::input
         const CKeyboardKeyList otherKeys = other.getKeyboardKeys();
         for (const CKeyboardKey &key : otherKeys)
         {
-            if (containsKeyboardKey(key)) { combination.removeKeyboardKey(key); }
+            if (containsKeyboardKey(key))
+            {
+                combination.removeKeyboardKey(key);
+            }
         }
 
         const CJoystickButtonList otherButtons = other.getJoystickButtons();
         for (const CJoystickButton &button : otherButtons)
         {
-            if (containsJoystickButton(button)) { combination.removeJoystickButton(button); }
+            if (containsJoystickButton(button))
+            {
+                combination.removeJoystickButton(button);
+            }
         }
         return combination;
     }
@@ -91,8 +109,14 @@ namespace swift::misc::input
         Q_UNUSED(i18n)
         QStringList sl;
         sl.reserve(m_keyboardKeys.size() + m_joystickButtons.size());
-        for (const auto &key : m_keyboardKeys) { sl << key.toQString(); }
-        for (const auto &button : m_joystickButtons) { sl << button.toQString(); }
+        for (const auto &key : m_keyboardKeys)
+        {
+            sl << key.toQString();
+        }
+        for (const auto &button : m_joystickButtons)
+        {
+            sl << button.toQString();
+        }
         return sl.join('+');
     }
 
@@ -100,8 +124,14 @@ namespace swift::misc::input
     {
         QStringList sl;
         sl.reserve(m_keyboardKeys.size() + m_joystickButtons.size());
-        for (const auto &key : m_keyboardKeys) { sl << key.toQString(); }
-        for (const auto &button : m_joystickButtons) { sl << button.getButtonAsStringWithDeviceName(); }
+        for (const auto &key : m_keyboardKeys)
+        {
+            sl << key.toQString();
+        }
+        for (const auto &button : m_joystickButtons)
+        {
+            sl << button.getButtonAsStringWithDeviceName();
+        }
         return sl.join('+');
     }
 } // namespace swift::misc::input

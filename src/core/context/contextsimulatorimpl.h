@@ -254,7 +254,10 @@ namespace swift::core
             //! Register dot commands
             static void registerHelp()
             {
-                if (swift::misc::CSimpleCommandParser::registered("swift::core::CContextSimulator")) { return; }
+                if (swift::misc::CSimpleCommandParser::registered("swift::core::CContextSimulator"))
+                {
+                    return;
+                }
                 swift::misc::CSimpleCommandParser::registerCommand(
                     { ".ris", "rendering/interpolation setup (global setup)" });
                 swift::misc::CSimpleCommandParser::registerCommand(

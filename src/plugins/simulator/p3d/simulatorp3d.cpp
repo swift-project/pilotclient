@@ -44,10 +44,16 @@ namespace swift::simplugin::p3d
     bool CSimulatorP3D::connectTo()
     {
 #ifdef Q_OS_WIN64
-        if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get())) { return false; }
+        if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get()))
+        {
+            return false;
+        }
         return CSimulatorFsxCommon::connectTo();
 #else
-        if (!loadAndResolveFsxSimConnect(true)) { return false; }
+        if (!loadAndResolveFsxSimConnect(true))
+        {
+            return false;
+        }
         return CSimulatorFsxCommon::connectTo();
 #endif
     }
@@ -71,12 +77,21 @@ namespace swift::simplugin::p3d
             // https://www.prepar3d.com/SDKv4/sdk/simconnect_api/references/structures_and_enumerations.html#SIMCONNECT_RECV_GROUND_INFO
             const SIMCONNECT_RECV_GROUND_INFO *pObjData = static_cast<SIMCONNECT_RECV_GROUND_INFO *>(pData);
             const DWORD requestId = pObjData->dwRequestID;
-            if (!CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId)) { break; }
+            if (!CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId))
+            {
+                break;
+            }
             // valid elevation request
             // https://www.prepar3d.com/SDKv4/sdk/simconnect_api/references/structures_and_enumerations.html#SIMCONNECT_DATA_GROUND_INFO
-            if (pObjData->dwArraySize != 1) { break; }
+            if (pObjData->dwArraySize != 1)
+            {
+                break;
+            }
             const SIMCONNECT_DATA_GROUND_INFO gi = pObjData->rgData[0];
-            if (!gi.bIsValid) { break; }
+            if (!gi.bIsValid)
+            {
+                break;
+            }
             const CLatitude lat(gi.fLat, CAngleUnit::deg());
             const CLongitude lng(gi.fLon, CAngleUnit::deg());
             const CAltitude alt(gi.fAlt, CAltitude::MeanSeaLevel, CAltitude::TrueAltitude, CLengthUnit::ft());
@@ -94,9 +109,18 @@ namespace swift::simplugin::p3d
     // P3D version with new P3D simconnect functions
     bool CSimulatorP3D::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
     {
-        if (reference.isNull()) { return false; }
-        if (this->isShuttingDown()) { return false; }
-        if (!this->isConnected()) { return false; }
+        if (reference.isNull())
+        {
+            return false;
+        }
+        if (this->isShuttingDown())
+        {
+            return false;
+        }
+        if (!this->isConnected())
+        {
+            return false;
+        }
 
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
         const bool hasHeight = reference.hasMSLGeodeticHeight();
@@ -136,11 +160,20 @@ namespace swift::simplugin::p3d
 
     bool CSimulatorP3D::followAircraft(const CCallsign &callsign)
     {
-        if (this->isShuttingDownOrDisconnected()) { return false; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        }
 
         CSimConnectObject &simObject = m_simConnectObjects[callsign];
-        if (!simObject.hasValidRequestAndObjectId()) { return false; }
-        if (simObject.getCallsignByteArray().isEmpty()) { return false; }
+        if (!simObject.hasValidRequestAndObjectId())
+        {
+            return false;
+        }
+        if (simObject.getCallsignByteArray().isEmpty())
+        {
+            return false;
+        }
         HRESULT hr = s_false();
 
         //
@@ -185,7 +218,10 @@ namespace swift::simplugin::p3d
 
         // Observer is P3D only, not FSX
         const CAircraftSituation situation = m_lastSentSituations[callsign];
-        if (situation.isNull()) { return false; }
+        if (situation.isNull())
+        {
+            return false;
+        }
         SIMCONNECT_DATA_OBSERVER obs;
         SIMCONNECT_DATA_PBH pbh;
         pbh.Pitch = pbh.Bank = pbh.Heading = 0;
@@ -234,7 +270,10 @@ namespace swift::simplugin::p3d
 
     void CSimulatorP3D::removeCamera(fsxcommon::CSimConnectObject &simObject)
     {
-        if (!simObject.hasCamera()) { return; }
+        if (!simObject.hasCamera())
+        {
+            return;
+        }
         simObject.removeCamera();
         // const char *cameraName = simObject.getCallsignByteArray().constData();
         // SimConnect_DeleteCameraInstance(m_hSimConnect, simObject.getCameraGUID(), 0);
@@ -243,7 +282,10 @@ namespace swift::simplugin::p3d
 
     void CSimulatorP3D::removeObserver(CSimConnectObject &simObject)
     {
-        if (simObject.getObserverName().isEmpty()) { return; }
+        if (simObject.getObserverName().isEmpty())
+        {
+            return;
+        }
 
         QByteArray viewName = simObject.getObserverName().toLatin1();
         SimConnect_CloseView(m_hSimConnect, viewName.constData());
@@ -286,10 +328,16 @@ namespace swift::simplugin::p3d
     void CSimulatorP3DListener::startImpl()
     {
 #ifdef Q_OS_WIN64
-        if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get())) { return; }
+        if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get()))
+        {
+            return;
+        }
         CSimulatorFsxCommonListener::startImpl();
 #else
-        if (!loadAndResolveFsxSimConnect(true)) { return; }
+        if (!loadAndResolveFsxSimConnect(true))
+        {
+            return;
+        }
         CSimulatorFsxCommonListener::startImpl();
 #endif
     }

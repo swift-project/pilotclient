@@ -11,7 +11,10 @@ namespace XSwiftBus
 
     CDBusObject::~CDBusObject()
     {
-        if (m_dbusConnection) { m_dbusConnection->unregisterDisconnectedCallback(this); }
+        if (m_dbusConnection)
+        {
+            m_dbusConnection->unregisterDisconnectedCallback(this);
+        }
     };
 
     void CDBusObject::setDBusConnection(const std::shared_ptr<CDBusConnection> &dbusConnection)
@@ -33,14 +36,20 @@ namespace XSwiftBus
 
     void CDBusObject::sendDBusSignal(const std::string &name)
     {
-        if (!m_dbusConnection) { return; }
+        if (!m_dbusConnection)
+        {
+            return;
+        }
         CDBusMessage signal = CDBusMessage::createSignal(m_objectPath, m_interfaceName, name);
         m_dbusConnection->sendMessage(signal);
     }
 
     void CDBusObject::sendDBusMessage(const CDBusMessage &message)
     {
-        if (!m_dbusConnection) { return; }
+        if (!m_dbusConnection)
+        {
+            return;
+        }
         m_dbusConnection->sendMessage(message);
     }
 

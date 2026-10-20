@@ -28,11 +28,20 @@ namespace swift::misc
         std::for_each(begin2, end2, [&](const auto &rm) {
             const auto found = std::find(begin1, end1, rm);
             Q_ASSERT(found != end1);
-            if (newEnd == end1) { newEnd = found; }
-            else { newEnd = std::move(begin1, found, newEnd); }
+            if (newEnd == end1)
+            {
+                newEnd = found;
+            }
+            else
+            {
+                newEnd = std::move(begin1, found, newEnd);
+            }
             begin1 = std::next(found);
         });
-        if (newEnd != end1) { newEnd = std::move(begin1, end1, newEnd); }
+        if (newEnd != end1)
+        {
+            newEnd = std::move(begin1, end1, newEnd);
+        }
         return newEnd;
     }
 

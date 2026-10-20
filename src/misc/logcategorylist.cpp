@@ -19,7 +19,10 @@ namespace swift::misc
 {
     void CLogCategoryList::appendCategoriesFromMetaObject(const QMetaObject &metaObject, const QMetaObject &super)
     {
-        for (auto *meta = &metaObject; meta != &super; meta = meta->superClass()) { push_back(meta->className()); }
+        for (auto *meta = &metaObject; meta != &super; meta = meta->superClass())
+        {
+            push_back(meta->className());
+        }
     }
 
     QStringList CLogCategoryList::toQStringList() const

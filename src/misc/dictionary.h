@@ -82,8 +82,14 @@ namespace swift::misc
         //! \copydoc swift::misc::CValueObject::compare
         friend int compare(const CDictionary &a, const CDictionary &b)
         {
-            if (a.m_impl.size() < b.m_impl.size()) { return -1; }
-            if (a.m_impl.size() > b.m_impl.size()) { return 1; }
+            if (a.m_impl.size() < b.m_impl.size())
+            {
+                return -1;
+            }
+            if (a.m_impl.size() > b.m_impl.size())
+            {
+                return 1;
+            }
             return 0;
         }
 
@@ -120,8 +126,14 @@ namespace swift::misc
             CDictionary result = *this;
             for (auto it = result.begin(); it != result.end();)
             {
-                if (!p(it.key())) { it = result.erase(it); }
-                else { ++it; }
+                if (!p(it.key()))
+                {
+                    it = result.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
             }
             return result;
         }
@@ -141,8 +153,14 @@ namespace swift::misc
             CDictionary result = *this;
             for (auto it = result.begin(); it != result.end();)
             {
-                if (!p(it.value())) { it = result.erase(it); }
-                else { ++it; }
+                if (!p(it.value()))
+                {
+                    it = result.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
             }
             return result;
         }
@@ -190,8 +208,14 @@ namespace swift::misc
         {
             for (auto it = m_impl.begin(); it != m_impl.end();)
             {
-                if (p(it.key())) { it = m_impl.erase(it); }
-                else { ++it; }
+                if (p(it.key()))
+                {
+                    it = m_impl.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
             }
         }
 
@@ -201,8 +225,14 @@ namespace swift::misc
         {
             for (auto it = m_impl.begin(); it != m_impl.end();)
             {
-                if (p(it.value())) { it = m_impl.erase(it); }
-                else { ++it; }
+                if (p(it.value()))
+                {
+                    it = m_impl.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
             }
         }
 
@@ -226,8 +256,14 @@ namespace swift::misc
             for (auto it = begin(); it != end();)
             {
                 auto it2 = other.find(it.key());
-                if (it2 != other.end() && it.value() == it2.value()) { it = erase(it); }
-                else { ++it; }
+                if (it2 != other.end() && it.value() == it2.value())
+                {
+                    it = erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
             }
         }
 
@@ -237,7 +273,10 @@ namespace swift::misc
             QJsonArray array;
             QJsonObject json;
 
-            for (auto it = m_impl.cbegin(); it != m_impl.cend(); ++it) { array << it.key() << it.value(); }
+            for (auto it = m_impl.cbegin(); it != m_impl.cend(); ++it)
+            {
+                array << it.key() << it.value();
+            }
             json.insert("associativecontainerbase", array);
             return json;
         }
@@ -246,7 +285,10 @@ namespace swift::misc
         void convertFromJson(const QJsonObject &json)
         {
             QJsonValue value = json.value("associativecontainerbase");
-            if (value.isUndefined()) { throw CJsonException("Missing 'associativecontainerbase'"); }
+            if (value.isUndefined())
+            {
+                throw CJsonException("Missing 'associativecontainerbase'");
+            }
             QJsonArray array = value.toArray();
             int index = 0;
             for (auto it = array.begin(); it != array.end(); ++it)
@@ -374,7 +416,10 @@ namespace swift::misc
         //! Insert all items of other dictionary into this dictionary
         void insert(const CDictionary &other)
         {
-            for (auto i = other.cbegin(); i != other.cend(); ++i) { insert(i.key(), i.value()); }
+            for (auto i = other.cbegin(); i != other.cend(); ++i)
+            {
+                insert(i.key(), i.value());
+            }
         }
 
         //! Returns true if dictionary is empty
@@ -497,15 +542,24 @@ namespace swift::misc
     {
         static_assert(std::is_same_v<typename Map1::key_type, typename Map2::key_type>,
                       "Maps must have the same key type");
-        if (map1.empty() || map2.empty()) { return; }
+        if (map1.empty() || map2.empty())
+        {
+            return;
+        }
         auto it1 = implementationOf(map1).lowerBound(map2.cbegin().key());
         auto end1 = implementationOf(map1).upperBound(std::prev(map2.cend()).key());
         auto it2 = implementationOf(map2).lowerBound(map1.cbegin().key());
         auto end2 = implementationOf(map2).upperBound(std::prev(map1.cend()).key());
         while (it1 != end1 && it2 != end2)
         {
-            if (it1.key() < it2.key()) { ++it1; }
-            else if (it2.key() < it1.key()) { ++it2; }
+            if (it1.key() < it2.key())
+            {
+                ++it1;
+            }
+            else if (it2.key() < it1.key())
+            {
+                ++it2;
+            }
             else
             {
                 functor(it1.key(), it1.value(), it2);

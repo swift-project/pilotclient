@@ -157,7 +157,10 @@ namespace swift::misc
                 if (skipEqualValues)
                 {
                     const bool equal = derived()->equalsPropertyByIndex(value, index);
-                    if (equal) { continue; }
+                    if (equal)
+                    {
+                        continue;
+                    }
                 }
                 derived()->setPropertyByIndex(index, value);
                 changed.push_back(index);

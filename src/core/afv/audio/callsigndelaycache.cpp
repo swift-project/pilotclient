@@ -9,8 +9,14 @@ namespace swift::core::afv::audio
 {
     void CallsignDelayCache::initialise(const QString &callsign)
     {
-        if (!m_delayCache.contains(callsign)) { m_delayCache[callsign] = delayDefault; }
-        if (!m_successfulTransmissionsCache.contains(callsign)) { m_successfulTransmissionsCache[callsign] = 0; }
+        if (!m_delayCache.contains(callsign))
+        {
+            m_delayCache[callsign] = delayDefault;
+        }
+        if (!m_successfulTransmissionsCache.contains(callsign))
+        {
+            m_successfulTransmissionsCache[callsign] = 0;
+        }
     }
 
     int CallsignDelayCache::get(const QString &callsign) { return m_delayCache[callsign]; }

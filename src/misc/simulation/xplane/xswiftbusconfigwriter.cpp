@@ -18,10 +18,19 @@ namespace swift::misc::simulation::xplane
 
     void CXSwiftBusConfigWriter::setDBusAddress(const QString &dBusAddress)
     {
-        if (CDBusServer::isSessionOrSystemAddress(dBusAddress)) { m_dbusMode = "session"; }
-        else { m_dbusMode = "p2p"; }
+        if (CDBusServer::isSessionOrSystemAddress(dBusAddress))
+        {
+            m_dbusMode = "session";
+        }
+        else
+        {
+            m_dbusMode = "p2p";
+        }
 
-        if (m_dbusMode == "p2p") { CDBusServer::dBusAddressToHostAndPort(dBusAddress, m_dbusAddress, m_dbusPort); }
+        if (m_dbusMode == "p2p")
+        {
+            CDBusServer::dBusAddressToHostAndPort(dBusAddress, m_dbusAddress, m_dbusPort);
+        }
     }
 
     void CXSwiftBusConfigWriter::setDebugMode(bool on) { m_debug = on; }
@@ -38,19 +47,28 @@ namespace swift::misc::simulation::xplane
     void CXSwiftBusConfigWriter::updateInXPlane9()
     {
         const QString path = CXPlaneUtil::xswiftbusPluginDir(CXPlaneUtil::xplane9Dir());
-        if (!path.isEmpty()) { writeTo(path); }
+        if (!path.isEmpty())
+        {
+            writeTo(path);
+        }
     }
 
     void CXSwiftBusConfigWriter::updateInXPlane10()
     {
         const QString path = CXPlaneUtil::xswiftbusPluginDir(CXPlaneUtil::xplane10Dir());
-        if (!path.isEmpty()) { writeTo(path); }
+        if (!path.isEmpty())
+        {
+            writeTo(path);
+        }
     }
 
     void CXSwiftBusConfigWriter::updateInXPlane11()
     {
         const QString path = CXPlaneUtil::xswiftbusPluginDir(CXPlaneUtil::xplane11Dir());
-        if (!path.isEmpty()) { writeTo(path); }
+        if (!path.isEmpty())
+        {
+            writeTo(path);
+        }
     }
 
     void CXSwiftBusConfigWriter::writeTo(const QString &filePath)

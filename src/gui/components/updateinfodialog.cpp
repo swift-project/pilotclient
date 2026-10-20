@@ -36,10 +36,19 @@ namespace swift::gui::components
     int CUpdateInfoDialog::exec()
     {
         const int r = QDialog::exec();
-        if (r != QDialog::Accepted) { return r; }
-        if (!ui->comp_UpdateInfo->isNewPilotClientVersionAvailable()) { return QDialog::Rejected; }
+        if (r != QDialog::Accepted)
+        {
+            return r;
+        }
+        if (!ui->comp_UpdateInfo->isNewPilotClientVersionAvailable())
+        {
+            return QDialog::Rejected;
+        }
         const CDistribution distribution = ui->comp_UpdateInfo->getCurrentDistribution();
-        if (!distribution.hasDownloadUrl()) { return QDialog::Rejected; }
+        if (!distribution.hasDownloadUrl())
+        {
+            return QDialog::Rejected;
+        }
 
         ui->comp_UpdateInfo->triggerDownload();
         return r;

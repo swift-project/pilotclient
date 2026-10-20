@@ -29,8 +29,14 @@ namespace swift::gui::views
 
     void CFlightPlanDialog::showFlightPlan(const CCallsign &callsign)
     {
-        if (callsign.isEmpty()) { return; }
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork())
+        {
+            return;
+        }
         const CFlightPlan fp = sGui->getIContextNetwork()->loadFlightPlanFromNetwork(callsign);
         ui->te_FlightPlan->setText(fp.asHTML(true));
         ui->comp_CallsignCompleter->setCallsign(callsign);

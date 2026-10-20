@@ -17,7 +17,13 @@ namespace swift::misc::shared_state::dbus
     IHub *IHub::create(bool proxy, CDBusServer *server, const QDBusConnection &connection, const QString &service,
                        QObject *parent)
     {
-        if (proxy) { return new CHubProxy(connection, service, parent); }
-        else { return new CHub(server, parent); }
+        if (proxy)
+        {
+            return new CHubProxy(connection, service, parent);
+        }
+        else
+        {
+            return new CHub(server, parent);
+        }
     }
 } // namespace swift::misc::shared_state::dbus

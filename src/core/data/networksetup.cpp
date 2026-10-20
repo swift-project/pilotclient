@@ -32,7 +32,10 @@ namespace swift::core::data
             {
                 otherServers.addIfAddressNotExists(sApp->getGlobalSetup().getPredefinedServersPlusHardcodedServers());
             }
-            else { otherServers.addIfAddressNotExists(sApp->getGlobalSetup().getPredefinedServers()); }
+            else
+            {
+                otherServers.addIfAddressNotExists(sApp->getGlobalSetup().getPredefinedServers());
+            }
         }
         return otherServers;
     }
@@ -44,7 +47,10 @@ namespace swift::core::data
     bool CNetworkSetup::wasLastUsedWithOtherServer() const
     {
         const CServer server(this->getLastServer());
-        if (server.isNull()) { return false; }
+        if (server.isNull())
+        {
+            return false;
+        }
         return server.getEcosystem() == CEcosystem::privateFsd();
     }
 

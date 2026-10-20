@@ -79,14 +79,20 @@ namespace swift::gui
             this->setContentsMargins(this->isFrameless() ? this->getMarginsWhenFramelessFloating() :
                                                            this->getMarginsWhenFloating());
         }
-        else { this->setContentsMargins(this->getMarginsWhenDocked()); }
+        else
+        {
+            this->setContentsMargins(this->getMarginsWhenDocked());
+        }
     }
 
     CDockWidget::CDockWidget(QWidget *parent) : CDockWidget(true, parent) {}
 
     void CDockWidget::setOriginalTitleBar()
     {
-        if (!m_titleBarWidgetOriginal) { this->initTitleBarWidgets(); }
+        if (!m_titleBarWidgetOriginal)
+        {
+            this->initTitleBarWidgets();
+        }
         if (this->titleBarWidget() == m_titleBarWidgetOriginal)
         {
             return;
@@ -96,7 +102,10 @@ namespace swift::gui
 
     void CDockWidget::setEmptyTitleBar()
     {
-        if (!m_titleBarWidgetOriginal) { this->initTitleBarWidgets(); }
+        if (!m_titleBarWidgetOriginal)
+        {
+            this->initTitleBarWidgets();
+        }
         if (this->titleBarWidget() == m_titleBarWidgetEmpty)
         {
             return;
@@ -161,21 +170,33 @@ namespace swift::gui
 
     void CDockWidget::displayStatusMessage(const CStatusMessage &statusMessage)
     {
-        if (!m_allowStatusBar || !this->isFloating()) { return; }
+        if (!m_allowStatusBar || !this->isFloating())
+        {
+            return;
+        }
         m_statusBar.displayStatusMessage(statusMessage);
     }
 
     void CDockWidget::displayStatusMessages(const CStatusMessageList &statusMessages)
     {
-        if (!m_allowStatusBar || !this->isFloating()) { return; }
+        if (!m_allowStatusBar || !this->isFloating())
+        {
+            return;
+        }
         m_statusBar.displayStatusMessages(statusMessages);
     }
 
     void CDockWidget::showTitleWhenDocked(bool show)
     {
         m_windowTitleWhenDocked = show;
-        if (show) { QDockWidget::setWindowTitle(m_windowTitleBackup); }
-        else { QDockWidget::setWindowTitle(""); }
+        if (show)
+        {
+            QDockWidget::setWindowTitle(m_windowTitleBackup);
+        }
+        else
+        {
+            QDockWidget::setWindowTitle("");
+        }
     }
 
     void CDockWidget::resetWasAlreadyFloating() { m_wasAlreadyFloating = false; }
@@ -196,11 +217,17 @@ namespace swift::gui
         bool hasStatusBar = m_statusBar.getStatusBar();
         if (frameless)
         {
-            if (hasStatusBar) { this->addFramelessSizeGripToStatusBar(m_statusBar.getStatusBar()); }
+            if (hasStatusBar)
+            {
+                this->addFramelessSizeGripToStatusBar(m_statusBar.getStatusBar());
+            }
         }
         else
         {
-            if (hasStatusBar) { this->hideFramelessSizeGripInStatusBar(); }
+            if (hasStatusBar)
+            {
+                this->hideFramelessSizeGripInStatusBar();
+            }
         }
 
         // resize
@@ -230,7 +257,10 @@ namespace swift::gui
     void CDockWidget::toggleFloating()
     {
         const bool changeToFloating = !this->isFloating();
-        if (!changeToFloating) { this->setFrameless(false); } // remove frameless if not floating
+        if (!changeToFloating)
+        {
+            this->setFrameless(false);
+        } // remove frameless if not floating
 
         // disable the interactive docking
         if (changeToFloating)
@@ -238,7 +268,10 @@ namespace swift::gui
             m_originalAreas = this->allowedAreas();
             this->setAllowedAreas(Qt::NoDockWidgetArea);
         }
-        else { this->setAllowedAreas(m_originalAreas); }
+        else
+        {
+            this->setAllowedAreas(m_originalAreas);
+        }
 
         this->setAlwaysOnTop(m_alwaysOnTop && changeToFloating);
         this->setFloating(changeToFloating);
@@ -247,12 +280,18 @@ namespace swift::gui
         const bool shift = km.testFlag(Qt::ShiftModifier);
 
         // with shift ALWAYS reset
-        if (shift && changeToFloating) { this->resetPosition(); }
+        if (shift && changeToFloating)
+        {
+            this->resetPosition();
+        }
         if (changeToFloating)
         {
             // check where we are, otherwise reset if NOT appropriate
             const QPoint p = this->rect().topLeft();
-            if (p.x() < 1 || p.y() < 1) { this->resetPosition(); }
+            if (p.x() < 1 || p.y() < 1)
+            {
+                this->resetPosition();
+            }
         }
     }
 
@@ -295,8 +334,14 @@ namespace swift::gui
 
     void CDockWidget::setAlwaysOnTopFlag(bool onTop)
     {
-        if (onTop) { this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint); }
-        else { this->setWindowFlags(this->windowFlags() & ~Qt::WindowStaysOnTopHint); }
+        if (onTop)
+        {
+            this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
+        }
+        else
+        {
+            this->setWindowFlags(this->windowFlags() & ~Qt::WindowStaysOnTopHint);
+        }
     }
 
     bool CDockWidget::restoreFromSettings()
@@ -307,7 +352,10 @@ namespace swift::gui
             this->toggleFloating();
             QPointer<CDockWidget> myself(this);
             QTimer::singleShot(500, this, [=] {
-                if (myself) { myself->restoreFromSettings(); }
+                if (myself)
+                {
+                    myself->restoreFromSettings();
+                }
             });
             return true;
         }
@@ -317,7 +365,10 @@ namespace swift::gui
             this->toggleFrameless();
             QPointer<CDockWidget> myself(this);
             QTimer::singleShot(500, this, [=] {
-                if (myself) { myself->restoreFromSettings(); }
+                if (myself)
+                {
+                    myself->restoreFromSettings();
+                }
             });
             return true;
         }
@@ -327,7 +378,10 @@ namespace swift::gui
         if (!geo.isEmpty())
         {
             const bool ok = this->restoreGeometry(geo);
-            if (ok) { this->rememberFloatingSizeAndPosition(); }
+            if (ok)
+            {
+                this->rememberFloatingSizeAndPosition();
+            }
         }
 
         this->setMargins();
@@ -354,7 +408,10 @@ namespace swift::gui
 
             event->setAccepted(false); // refuse -> do not close (otherwise crash)
         }
-        else { QDockWidget::closeEvent(event); }
+        else
+        {
+            QDockWidget::closeEvent(event);
+        }
     }
 
     void CDockWidget::paintEvent(QPaintEvent *event)
@@ -366,18 +423,27 @@ namespace swift::gui
 
     void CDockWidget::mouseMoveEvent(QMouseEvent *event)
     {
-        if (!handleMouseMoveEvent(event)) { QDockWidget::mouseMoveEvent(event); }
+        if (!handleMouseMoveEvent(event))
+        {
+            QDockWidget::mouseMoveEvent(event);
+        }
     }
 
     void CDockWidget::keyPressEvent(QKeyEvent *event)
     {
-        if (event->key() == Qt::Key_Escape && this->isFloating()) { this->toggleFloating(); }
+        if (event->key() == Qt::Key_Escape && this->isFloating())
+        {
+            this->toggleFloating();
+        }
         QDockWidget::keyPressEvent(event);
     }
 
     void CDockWidget::mousePressEvent(QMouseEvent *event)
     {
-        if (!handleMousePressEvent(event)) { QDockWidget::mousePressEvent(event); }
+        if (!handleMousePressEvent(event))
+        {
+            QDockWidget::mousePressEvent(event);
+        }
     }
 
     void CDockWidget::addToContextMenu(QMenu *contextMenu) const
@@ -393,11 +459,17 @@ namespace swift::gui
             contextMenu->addAction(CIcons::dockTop16(), "Not on top", this, &CDockWidget::windowNotAlwaysOnTop);
             contextMenu->addAction(CIcons::refresh16(), "Redraw", this, qOverload<>(&CDockWidget::update));
         }
-        else { contextMenu->addAction(CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating); }
+        else
+        {
+            contextMenu->addAction(CIcons::floatOne16(), "Float", this, &CDockWidget::toggleFloating);
+        }
 
         // Font actions
         Q_ASSERT_X(m_fontMenu, Q_FUNC_INFO, "Missing menu object");
-        if (m_fontMenu) { contextMenu->addActions(m_fontMenu->getActions()); }
+        if (m_fontMenu)
+        {
+            contextMenu->addActions(m_fontMenu->getActions());
+        }
 
         // State actions (windows state)
         contextMenu->addAction(CIcons::load16(), "Restore from settings", this, &CDockWidget::restoreFromSettings);
@@ -433,7 +505,10 @@ namespace swift::gui
     QString CDockWidget::windowTitleOrBackup() const
     {
         const QString t(windowTitle());
-        if (t.isEmpty()) { return this->windowTitleBackup(); }
+        if (t.isEmpty())
+        {
+            return this->windowTitleBackup();
+        }
         return t;
     }
 
@@ -448,9 +523,15 @@ namespace swift::gui
         this->setMargins(); // from settings or default
         if (topLevel)
         {
-            if (m_windowTitleBackup != QDockWidget::windowTitle()) { QDockWidget::setWindowTitle(m_windowTitleBackup); }
+            if (m_windowTitleBackup != QDockWidget::windowTitle())
+            {
+                QDockWidget::setWindowTitle(m_windowTitleBackup);
+            }
             this->setNullTitleBarWidget();
-            if (m_wasFrameless) { this->setFrameless(true); }
+            if (m_wasFrameless)
+            {
+                this->setFrameless(true);
+            }
 
             /**
             if (!m_wasAlreadyFloating)
@@ -472,7 +553,10 @@ namespace swift::gui
             // frameless
             this->setFrameless(false);
 
-            if (!m_windowTitleWhenDocked) { QDockWidget::setWindowTitle(""); }
+            if (!m_windowTitleWhenDocked)
+            {
+                QDockWidget::setWindowTitle("");
+            }
             m_statusBar.hide();
             this->setEmptyTitleBar();
 
@@ -496,7 +580,10 @@ namespace swift::gui
 
     void CDockWidget::initStatusBarAndProperties()
     {
-        if (m_statusBar.getStatusBar()) { return; }
+        if (m_statusBar.getStatusBar())
+        {
+            return;
+        }
 
         // Typical reasons for asserts here
         // 1) Check the structure, we expect the following hierarchy:
@@ -506,11 +593,17 @@ namespace swift::gui
         // 3) Is the dock widget promoted swift::gui::CDockWidgetInfoArea?
         QWidget *outerWidget = this->widget(); // the outer widget containing the layout
         Q_ASSERT_X(outerWidget, "CDockWidget::initStatusBar", "No outer widget");
-        if (!outerWidget) { return; }
+        if (!outerWidget)
+        {
+            return;
+        }
         outerWidget->setProperty("dockwidget", propertyOuterWidget());
 
         Q_ASSERT_X(outerWidget->layout(), "CDockWidget::initStatusBar", "No outer widget layout");
-        if (!outerWidget->layout()) { return; }
+        if (!outerWidget->layout())
+        {
+            return;
+        }
         Q_ASSERT_X(outerWidget->layout()->itemAt(0) && outerWidget->layout()->itemAt(0)->widget(),
                    "CDockWidget::initStatusBar", "No outer widget layout item");
         if (!outerWidget->layout()->itemAt(0) || !outerWidget->layout()->itemAt(0)->widget())
@@ -531,7 +624,10 @@ namespace swift::gui
         innerWidget->setProperty("dockwidget", propertyInnerWidget());
 
         // status bar
-        if (!m_allowStatusBar) { return; }
+        if (!m_allowStatusBar)
+        {
+            return;
+        }
         m_statusBar.initStatusBar();
 
         // layout
@@ -548,13 +644,19 @@ namespace swift::gui
         // and should occupy maximum space
         auto *compWidget = innerWidget->findChild<QWidget *>(QString(), Qt::FindDirectChildrenOnly);
         Q_ASSERT(compWidget);
-        if (!compWidget) { return; }
+        if (!compWidget)
+        {
+            return;
+        }
         QSizePolicy sizePolicy = compWidget->sizePolicy();
         sizePolicy.setVerticalStretch(1); // make the original widget occupying maximum space
         compWidget->setSizePolicy(sizePolicy);
 
         // hide status bar if not floating T592 no longer init floating
-        if (!this->isFloating()) { m_statusBar.hide(); }
+        if (!this->isFloating())
+        {
+            m_statusBar.hide();
+        }
     }
 
     void CDockWidget::showContextMenu(const QPoint &pos)
@@ -574,10 +676,19 @@ namespace swift::gui
         const bool floating = this->isFloating();
         if (floating)
         {
-            if (frameless) { this->setMarginsWhenFramelessFloating(margins); }
-            else { this->setMarginsWhenFloating(margins); }
+            if (frameless)
+            {
+                this->setMarginsWhenFramelessFloating(margins);
+            }
+            else
+            {
+                this->setMarginsWhenFloating(margins);
+            }
         }
-        else { this->setMarginsWhenDocked(margins); }
+        else
+        {
+            this->setMarginsWhenDocked(margins);
+        }
         this->setContentsMargins(margins);
         this->repaint();
     }
@@ -606,14 +717,20 @@ namespace swift::gui
 
     void CDockWidget::rememberFloatingSizeAndPosition()
     {
-        if (!this->isFloating()) { return; }
+        if (!this->isFloating())
+        {
+            return;
+        }
         m_lastFloatingSize = this->size();
         m_lastFloatingPosition = this->pos();
     }
 
     void CDockWidget::restoreFloatingSizeAndPosition()
     {
-        if (!m_lastFloatingSize.isValid() || m_lastFloatingPosition.isNull()) { return; }
+        if (!m_lastFloatingSize.isValid() || m_lastFloatingPosition.isNull())
+        {
+            return;
+        }
         this->resize(m_lastFloatingSize);
         this->move(m_lastFloatingPosition);
     }
@@ -623,19 +740,31 @@ namespace swift::gui
         // if (!m_lastFloatingSize.isValid() || m_lastFloatingPosition.isNull()) { return; }
         QPointer<CDockWidget> myself(this);
         QTimer::singleShot(2500, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
             const bool shift = km.testFlag(Qt::ShiftModifier);
-            if (shift) { return; }
+            if (shift)
+            {
+                return;
+            }
 
-            if (!sGui || sGui->isCmdWindowSizeResetSet()) { return; }
+            if (!sGui || sGui->isCmdWindowSizeResetSet())
+            {
+                return;
+            }
             myself->restoreFromSettings();
         });
     }
 
     CDockWidgetSettings CDockWidget::getSettings() const
     {
-        if (this->objectName().isEmpty()) { return {}; }
+        if (this->objectName().isEmpty())
+        {
+            return {};
+        }
 
         // we need object name for settings %OwnerName%"
         const CDockWidgetSettings s = m_settings.get();
@@ -652,7 +781,10 @@ namespace swift::gui
         }
 
         const CStatusMessage m = m_settings.setAndSave(settings);
-        if (m.isFailure()) { CLogMessage::preformatted(m); }
+        if (m.isFailure())
+        {
+            CLogMessage::preformatted(m);
+        }
     }
 
     void CDockWidget::saveCurrentStateToSettings()
@@ -678,13 +810,22 @@ namespace swift::gui
     void CDockWidget::resetPosition()
     {
         // center on screen when floating
-        if (!this->isFloating()) { return; }
-        if (!sGui) { return; }
+        if (!this->isFloating())
+        {
+            return;
+        }
+        if (!sGui)
+        {
+            return;
+        }
 
         // pos can be null during init
         const QWidget *mw = CGuiUtility::mainApplicationWidget();
         QPoint pos = mw && mw->isVisible() ? CGuiUtility::mainWidgetGlobalPosition() : QPoint();
-        if (pos.isNull()) { pos = CGuiApplication::currentScreen()->geometry().center() - this->rect().center(); }
+        if (pos.isNull())
+        {
+            pos = CGuiApplication::currentScreen()->geometry().center() - this->rect().center();
+        }
 
         const int osFloatingX = m_offsetWhenFloating.x();
         const int osFloatingY = m_offsetWhenFloating.y();

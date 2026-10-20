@@ -20,12 +20,18 @@ namespace swift::misc
     const char *CStatusException::what() const noexcept
     {
         QWriteLocker lock(&this->m_lock);
-        if (m_temp.isNull()) { m_temp = m_payload.getMessage().toLocal8Bit(); }
+        if (m_temp.isNull())
+        {
+            m_temp = m_payload.getMessage().toLocal8Bit();
+        }
         return m_temp;
     }
 
     void CStatusException::maybeThrow(const CStatusMessage &message)
     {
-        if (!message.isEmpty()) { throw CStatusException(message); }
+        if (!message.isEmpty())
+        {
+            throw CStatusException(message);
+        }
     }
 } // namespace swift::misc

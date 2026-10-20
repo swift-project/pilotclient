@@ -38,7 +38,10 @@ namespace swift::misc::test
     bool CTestService::canRegisterTestService(QDBusConnection &connection)
     {
         const bool r = connection.registerService(CTestService::InterfaceName());
-        if (r) { connection.unregisterService(CTestService::InterfaceName()); }
+        if (r)
+        {
+            connection.unregisterService(CTestService::InterfaceName());
+        }
         return r;
     }
 
@@ -76,7 +79,10 @@ namespace swift::misc::test
         }
 
         out() << "Registration running as pid: " << CTestService::getPid() << Qt::endl;
-        if (pTestService) { out() << "Service registered" << Qt::endl; }
+        if (pTestService)
+        {
+            out() << "Service registered" << Qt::endl;
+        }
 
         QString service; // service not needed
         if (connection.connect(service, CTestService::ObjectPath(), CTestService::InterfaceName(), "sendStringMessage",
@@ -84,7 +90,10 @@ namespace swift::misc::test
         {
             out() << "Connected object with DBus 'sendStringMessage'" << Qt::endl;
         }
-        else { qFatal("Cannot connect service with DBus"); }
+        else
+        {
+            qFatal("Cannot connect service with DBus");
+        }
         return pTestService;
     }
 
@@ -351,7 +360,10 @@ namespace swift::misc::test
         if (m_verbose) out() << "Pid: " << CTestService::getPid() << " getObjectPaths" << Qt::endl;
         QList<QDBusObjectPath> paths;
         paths.reserve(n);
-        for (int i = 0; i < n; i++) { paths.append(QDBusObjectPath(ObjectPath())); }
+        for (int i = 0; i < n; i++)
+        {
+            paths.append(QDBusObjectPath(ObjectPath()));
+        }
         return paths;
     }
 } // namespace swift::misc::test

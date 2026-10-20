@@ -20,7 +20,10 @@ namespace swift::misc::simulation
     void CInterpolationStatus::checkIfValidSituation(const CAircraftSituation &situation)
     {
         m_isValidSituation = !situation.isPositionOrAltitudeNull();
-        if (!m_isValidSituation) { m_isValidSituation = false; }
+        if (!m_isValidSituation)
+        {
+            m_isValidSituation = false;
+        }
     }
 
     bool CInterpolationStatus::hasValidInterpolatedSituation() const { return m_isInterpolated && m_isValidSituation; }

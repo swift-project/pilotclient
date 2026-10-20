@@ -27,20 +27,29 @@ namespace swift::misc::physical_quantities
 
     double CMeasurementUnit::roundValue(double value, int digits) const
     {
-        if (digits < 0) { digits = m_data->m_displayDigits; }
+        if (digits < 0)
+        {
+            digits = m_data->m_displayDigits;
+        }
         return CMathUtils::round(value, digits);
     }
 
     double CMeasurementUnit::roundToEpsilon(double value) const
     {
-        if (qFuzzyIsNull(getEpsilon()) || this->isNull()) { return value; }
+        if (qFuzzyIsNull(getEpsilon()) || this->isNull())
+        {
+            return value;
+        }
         return CMathUtils::roundEpsilon(value, this->getEpsilon());
     }
 
     QString CMeasurementUnit::makeRoundedQString(double value, int digits, bool withGroupSeparator, bool i18n) const
     {
         Q_UNUSED(i18n);
-        if (digits < 0) { digits = m_data->m_displayDigits; }
+        if (digits < 0)
+        {
+            digits = m_data->m_displayDigits;
+        }
         const double v = CMathUtils::round(value, digits);
 
         // create locale without separator

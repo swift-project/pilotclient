@@ -57,7 +57,10 @@ namespace swift::misc::simulation
             const CStatusMessageList msg = CInterpolationLogger::writeLogFiles(situations, parts);
             CLogMessage::preformatted(msg);
 
-            if (clearLog && myself) { myself->clearLog(); }
+            if (clearLog && myself)
+            {
+                myself->clearLog();
+            }
         });
         return worker;
     }
@@ -67,13 +70,22 @@ namespace swift::misc::simulation
         QStringList files({ "", "" });
         const QString logDir = CSwiftDirectories::logDirectory();
         QDir logs(logDir);
-        if (!logs.exists()) { return files; }
+        if (!logs.exists())
+        {
+            return files;
+        }
         logs.setNameFilters(filePatterns());
         const QStringList interpolations =
             logs.entryList(QStringList({ filePatternInterpolationLog() }), QDir::NoFilter, QDir::Time);
-        if (!interpolations.isEmpty()) { files[0] = CFileUtils::appendFilePaths(logDir, interpolations.first()); }
+        if (!interpolations.isEmpty())
+        {
+            files[0] = CFileUtils::appendFilePaths(logDir, interpolations.first());
+        }
         const QStringList parts = logs.entryList(QStringList({ filePatternPartsLog() }), QDir::NoFilter, QDir::Time);
-        if (!parts.isEmpty()) { files[1] = CFileUtils::appendFilePaths(logDir, parts.first()); }
+        if (!parts.isEmpty())
+        {
+            files[1] = CFileUtils::appendFilePaths(logDir, parts.first());
+        }
         return files;
     }
 
@@ -158,7 +170,10 @@ namespace swift::misc::simulation
     {
         QWriteLocker l(&m_lockSituations);
         m_situationLogs.push_back(log);
-        if (m_situationLogs.size() > m_maxSituations) { m_situationLogs.removeFirst(); }
+        if (m_situationLogs.size() > m_maxSituations)
+        {
+            m_situationLogs.removeFirst();
+        }
     }
 
     void CInterpolationLogger::logParts(const PartsLog &log)
@@ -191,7 +206,10 @@ namespace swift::misc::simulation
         QList<SituationLog> logs;
         for (const SituationLog &log : copy)
         {
-            if (log.callsign != cs) { continue; }
+            if (log.callsign != cs)
+            {
+                continue;
+            }
             logs.push_back(log);
         }
         return logs;
@@ -203,7 +221,10 @@ namespace swift::misc::simulation
         QList<PartsLog> logs;
         for (const PartsLog &log : copy)
         {
-            if (log.callsign != cs) { continue; }
+            if (log.callsign != cs)
+            {
+                continue;
+            }
             logs.push_back(log);
         }
         return logs;
@@ -212,56 +233,80 @@ namespace swift::misc::simulation
     SituationLog CInterpolationLogger::getLastSituationLog() const
     {
         QReadLocker l(&m_lockSituations);
-        if (m_situationLogs.isEmpty()) { return {}; }
+        if (m_situationLogs.isEmpty())
+        {
+            return {};
+        }
         return m_situationLogs.last();
     }
 
     SituationLog CInterpolationLogger::getLastSituationLog(const CCallsign &cs) const
     {
         const QList<SituationLog> copy(this->getSituationsLog(cs));
-        if (copy.isEmpty()) { return {}; }
+        if (copy.isEmpty())
+        {
+            return {};
+        }
         return copy.last();
     }
 
     CAircraftSituation CInterpolationLogger::getLastSituation() const
     {
         QReadLocker l(&m_lockSituations);
-        if (m_situationLogs.isEmpty()) { return {}; }
+        if (m_situationLogs.isEmpty())
+        {
+            return {};
+        }
         return m_situationLogs.last().situationCurrent;
     }
 
     CAircraftSituation CInterpolationLogger::getLastSituation(const CCallsign &cs) const
     {
         const QList<SituationLog> copy(this->getSituationsLog(cs));
-        if (copy.isEmpty()) { return {}; }
+        if (copy.isEmpty())
+        {
+            return {};
+        }
         return copy.last().situationCurrent;
     }
 
     CAircraftParts CInterpolationLogger::getLastParts() const
     {
         QReadLocker l(&m_lockParts);
-        if (m_partsLogs.isEmpty()) { return {}; }
+        if (m_partsLogs.isEmpty())
+        {
+            return {};
+        }
         return m_partsLogs.last().parts;
     }
 
     CAircraftParts CInterpolationLogger::getLastParts(const CCallsign &cs) const
     {
         const QList<PartsLog> copy(this->getPartsLog(cs));
-        if (copy.isEmpty()) { return {}; }
+        if (copy.isEmpty())
+        {
+            return {};
+        }
         return copy.last().parts;
     }
 
     PartsLog CInterpolationLogger::getLastPartsLog() const
     {
         QReadLocker l(&m_lockParts);
-        if (m_partsLogs.isEmpty()) { return {}; }
+        if (m_partsLogs.isEmpty())
+        {
+            return {};
+        }
         return m_partsLogs.last();
     }
 
     PartsLog CInterpolationLogger::getLastPartsLog(const CCallsign &cs) const
     {
         const QList<PartsLog> copy(this->getPartsLog(cs));
-        if (copy.isEmpty()) { return {}; }
+        if (copy.isEmpty())
+        {
+            return {};
+        }
         return copy.last();
     }
 
@@ -285,7 +330,10 @@ namespace swift::misc::simulation
 
     QString CInterpolationLogger::getHtmlInterpolationLog(const QList<SituationLog> &logs)
     {
-        if (logs.isEmpty()) { return {}; }
+        if (logs.isEmpty())
+        {
+            return {};
+        }
         static const QString tableHeader =
             QStringLiteral(u"<thead><tr>"
                            u"<th title=\"changed situation\">cs.</th><th>Int</th>"
@@ -381,7 +429,10 @@ namespace swift::misc::simulation
 
     QString CInterpolationLogger::getKmlChangedSituations(const QList<SituationLog> &logs)
     {
-        if (logs.isEmpty()) { return {}; }
+        if (logs.isEmpty())
+        {
+            return {};
+        }
 
         QString kml;
         qint64 newPosTs = -1;
@@ -393,7 +444,10 @@ namespace swift::misc::simulation
             const CAircraftSituation situationNew = log.newestInterpolationSituation();
             const bool changedNewPosition = (newPosTs != situationNew.getMSecsSinceEpoch());
             const bool recalc = log.interpolantRecalc;
-            if (!changedNewPosition && !recalc) { continue; }
+            if (!changedNewPosition && !recalc)
+            {
+                continue;
+            }
             newPosTs = situationNew.getMSecsSinceEpoch();
             kml += CKmlUtils::asPlacemark(QStringLiteral("%1: %2 new pos: %3 recalc: %4")
                                               .arg(n++)
@@ -408,7 +462,10 @@ namespace swift::misc::simulation
 
     QString CInterpolationLogger::getKmlElevations(const QList<SituationLog> &logs)
     {
-        if (logs.isEmpty()) { return {}; }
+        if (logs.isEmpty())
+        {
+            return {};
+        }
 
         QString kml;
         qint64 newPosTs = -1;
@@ -420,8 +477,14 @@ namespace swift::misc::simulation
             const CAircraftSituation situationNew = log.newestInterpolationSituation();
             const bool changedNewPosition = (newPosTs != situationNew.getMSecsSinceEpoch());
             const bool recalc = log.interpolantRecalc;
-            if (!changedNewPosition && !recalc) { continue; }
-            if (!situationNew.hasGroundElevation()) { continue; }
+            if (!changedNewPosition && !recalc)
+            {
+                continue;
+            }
+            if (!situationNew.hasGroundElevation())
+            {
+                continue;
+            }
             newPosTs = situationNew.getMSecsSinceEpoch();
             kml += CKmlUtils::asPlacemark(QStringLiteral("%1: %2 %3 info: %4 alt.cor: %5")
                                               .arg(n++)
@@ -438,7 +501,10 @@ namespace swift::misc::simulation
 
     QString CInterpolationLogger::getKmlInterpolatedSituations(const QList<SituationLog> &logs)
     {
-        if (logs.isEmpty()) { return {}; }
+        if (logs.isEmpty())
+        {
+            return {};
+        }
 
         const CKmlUtils::KMLSettings s(true, false);
         QString coordinates;
@@ -456,7 +522,10 @@ namespace swift::misc::simulation
 
     QString CInterpolationLogger::getHtmlPartsLog(const QList<PartsLog> &logs)
     {
-        if (logs.isEmpty()) { return {}; }
+        if (logs.isEmpty())
+        {
+            return {};
+        }
         static const QString tableHeader = QStringLiteral(u"<thead><tr>"
                                                           u"<th>CS</th><th>timestamp</th>"
                                                           u"<th>c.</th>"
@@ -503,7 +572,10 @@ namespace swift::misc::simulation
 
     QString CInterpolationLogger::msSinceEpochToTime(qint64 t1, qint64 t2, qint64 t3)
     {
-        if (t3 < 0) { return QStringLiteral("%1 %2").arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2)); }
+        if (t3 < 0)
+        {
+            return QStringLiteral("%1 %2").arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2));
+        }
 
         return QStringLiteral("%1 %2 %3").arg(msSinceEpochToTime(t1), msSinceEpochToTime(t2), msSinceEpochToTime(t3));
     }
@@ -554,8 +626,14 @@ namespace swift::misc::simulation
         static const QString s("spline");
         static const QString l("linear");
         static const QString u("unknown");
-        if (interpolator == 's') { return s; }
-        if (interpolator == 'l') { return l; }
+        if (interpolator == 's')
+        {
+            return s;
+        }
+        if (interpolator == 'l')
+        {
+            return l;
+        }
         return u;
     }
 
@@ -565,7 +643,10 @@ namespace swift::misc::simulation
 #endif
     const CAircraftSituation &SituationLog::secondInterpolationSituation() const
     {
-        if (interpolationSituations.size() < 2) { return aviation::CAircraftSituation::null(); }
+        if (interpolationSituations.size() < 2)
+        {
+            return aviation::CAircraftSituation::null();
+        }
         const aviation::CAircraftSituationList::size_type i =
             interpolationSituations.size() - 2; // 2nd latest, latest at end
         return interpolationSituations[i];

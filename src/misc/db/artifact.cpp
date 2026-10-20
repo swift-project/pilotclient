@@ -22,20 +22,29 @@ namespace swift::misc::db
           m_platform(platform)
     {
         this->setVersion(trimVersionString(version));
-        if (!name.isEmpty() && version.isEmpty()) { m_version = versionNumberFromFilename(name); }
+        if (!name.isEmpty() && version.isEmpty())
+        {
+            m_version = versionNumberFromFilename(name);
+        }
     }
 
     bool CArtifact::matchesName(const QString &name, Qt::CaseSensitivity cs) const
     {
         const bool m =
             (cs == Qt::CaseInsensitive) ? caseInsensitiveStringCompare(this->getName(), name) : name == this->getName();
-        if (m) { return true; }
+        if (m)
+        {
+            return true;
+        }
         return name.startsWith(this->getName(), cs);
     }
 
     QString CArtifact::getFileSizeHumanReadable() const
     {
-        if (m_size < 0) { return {}; }
+        if (m_size < 0)
+        {
+            return {};
+        }
         return CFileUtils::humanReadableFileSize(m_size);
     }
 
@@ -45,7 +54,10 @@ namespace swift::misc::db
 
     bool CArtifact::isWithDistribution(const CDistribution &distribution, bool acceptMoreStableDistributions) const
     {
-        if (distribution.isEmpty() || !this->hasDistributions()) { return false; }
+        if (distribution.isEmpty() || !this->hasDistributions())
+        {
+            return false;
+        }
         return std::any_of(
             this->getDistributions().cbegin(), this->getDistributions().cend(), [&](const CDistribution &dist) {
                 return dist == distribution || (acceptMoreStableDistributions && dist.isStabilityBetter(distribution));
@@ -54,11 +66,17 @@ namespace swift::misc::db
 
     CRemoteFile CArtifact::asRemoteFile() const
     {
-        if (!this->hasDistributions()) { return {}; }
+        if (!this->hasDistributions())
+        {
+            return {};
+        }
         CRemoteFile rf(this->getName(), this->getFileSize());
         const CDistribution d = this->getMostStableDistribution();
         const CUrl url = d.getDownloadUrl();
-        if (url.isEmpty()) { return {}; }
+        if (url.isEmpty())
+        {
+            return {};
+        }
         rf.setUtcTimestamp(this->getUtcTimestamp());
         rf.setUrl(url);
         rf.setDescription(this->getPlatform().toQString() + " " + d.getChannel());
@@ -67,8 +85,14 @@ namespace swift::misc::db
 
     bool CArtifact::isNewerThanCurrentBuild() const
     {
-        if (this->isUnknown()) { return false; }
-        if (!this->hasVersion()) { return false; }
+        if (this->isUnknown())
+        {
+            return false;
+        }
+        if (!this->hasVersion())
+        {
+            return false;
+        }
         return this->getQVersion() > CBuildConfig::getVersion();
     }
 
@@ -84,7 +108,10 @@ namespace swift::misc::db
 
     QVariant CArtifact::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
@@ -180,25 +207,46 @@ namespace swift::misc::db
 
     CPlatform CArtifact::artifactNameToPlatform(const QString &name)
     {
-        if (name.isEmpty()) { return CPlatform::unknownOs(); }
+        if (name.isEmpty())
+        {
+            return CPlatform::unknownOs();
+        }
         const QString n(name.toLower().trimmed());
         if (n.contains("-windows-") || n.endsWith(".exe"))
         {
-            if (n.contains("-64-")) { return CPlatform::win64Platform(); }
-            if (n.contains("-32-")) { return CPlatform::win32Platform(); }
+            if (n.contains("-64-"))
+            {
+                return CPlatform::win64Platform();
+            }
+            if (n.contains("-32-"))
+            {
+                return CPlatform::win32Platform();
+            }
             return CPlatform::unknownOs();
         }
 
-        if (n.contains("-macos-") || n.endsWith(".dmg")) { return CPlatform::macOSPlatform(); }
-        if (n.contains("-linux-") || n.endsWith(".run")) { return CPlatform::linuxPlatform(); }
-        if (n.contains("-allos-")) { return CPlatform::allOs(); }
+        if (n.contains("-macos-") || n.endsWith(".dmg"))
+        {
+            return CPlatform::macOSPlatform();
+        }
+        if (n.contains("-linux-") || n.endsWith(".run"))
+        {
+            return CPlatform::linuxPlatform();
+        }
+        if (n.contains("-allos-"))
+        {
+            return CPlatform::allOs();
+        }
 
         return CPlatform::unknownOs();
     }
 
     QString CArtifact::versionNumberFromFilename(const QString &filename)
     {
-        if (filename.isEmpty()) { return {}; }
+        if (filename.isEmpty())
+        {
+            return {};
+        }
 
         // swiftinstaller-linux-64-0.9.2.123.run
         thread_local const QRegularExpression regex { R"(\d+\.\d+\.\d+\.\d+)" };
@@ -221,7 +269,10 @@ namespace swift::misc::db
         if (version.count('.') != 3) return version; // no 4th segment
         QStringList parts = version.split('.');
         const QString p4 = trim4thSegment(parts[3]);
-        if (p4 == parts[3]) { return version; } // nothing changed
+        if (p4 == parts[3])
+        {
+            return version;
+        } // nothing changed
         parts[3] = p4;
         const QString v = parts.join('.');
         return v;
@@ -230,7 +281,10 @@ namespace swift::misc::db
     QString CArtifact::trim4thSegment(const QString &seg)
     {
         // old schema: yMMddHHmm (9)
-        if (seg.length() >= 9) { return QStringLiteral("0"); }
+        if (seg.length() >= 9)
+        {
+            return QStringLiteral("0");
+        }
         return seg;
     }
 } // namespace swift::misc::db

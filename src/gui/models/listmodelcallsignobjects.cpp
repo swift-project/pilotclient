@@ -25,8 +25,14 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     QVariant CListModelCallsignObjects<T, UseCompare>::data(const QModelIndex &index, int role) const
     {
-        if (role != Qt::BackgroundRole) { return CListModelBase<ContainerType, UseCompare>::data(index, role); }
-        if (isHighlightedIndex(index)) { return QBrush(m_highlightColor); }
+        if (role != Qt::BackgroundRole)
+        {
+            return CListModelBase<ContainerType, UseCompare>::data(index, role);
+        }
+        if (isHighlightedIndex(index))
+        {
+            return QBrush(m_highlightColor);
+        }
         return CListModelBase<ContainerType, UseCompare>::data(index, role);
     }
 
@@ -34,15 +40,24 @@ namespace swift::gui::models
     swift::misc::aviation::CCallsign
     CListModelCallsignObjects<T, UseCompare>::callsignForIndex(const QModelIndex &index) const
     {
-        if (!index.isValid()) { return {}; }
+        if (!index.isValid())
+        {
+            return {};
+        }
         return this->at(index).getCallsign();
     }
 
     template <typename T, bool UseCompare>
     bool CListModelCallsignObjects<T, UseCompare>::isHighlightedIndex(const QModelIndex &index) const
     {
-        if (!index.isValid()) { return false; }
-        if (m_highlightCallsigns.isEmpty()) { return false; }
+        if (!index.isValid())
+        {
+            return false;
+        }
+        if (m_highlightCallsigns.isEmpty())
+        {
+            return false;
+        }
         return m_highlightCallsigns.contains(callsignForIndex(index));
     }
 

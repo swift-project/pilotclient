@@ -49,21 +49,30 @@ namespace swift::core::db
 
     CLivery CModelDataReader::getLiveryForCombinedCode(const QString &combinedCode) const
     {
-        if (!CLivery::isValidCombinedCode(combinedCode)) { return {}; }
+        if (!CLivery::isValidCombinedCode(combinedCode))
+        {
+            return {};
+        }
         const CLiveryList liveries(getLiveries());
         return liveries.findByCombinedCode(combinedCode);
     }
 
     CLivery CModelDataReader::getStdLiveryForAirlineVDesignator(const CAirlineIcaoCode &icao) const
     {
-        if (!icao.hasValidDesignator()) { return {}; }
+        if (!icao.hasValidDesignator())
+        {
+            return {};
+        }
         const CLiveryList liveries(getLiveries());
         return liveries.findStdLiveryByAirlineIcaoVDesignator(icao);
     }
 
     CLivery CModelDataReader::getLiveryForDbKey(int id) const
     {
-        if (id < 0) { return {}; }
+        if (id < 0)
+        {
+            return {};
+        }
         const CLiveryList liveries(getLiveries());
         return liveries.findByKey(id);
     }
@@ -78,7 +87,10 @@ namespace swift::core::db
 
     CDistributor CModelDataReader::getDistributorForDbKey(const QString &dbKey) const
     {
-        if (dbKey.isEmpty()) { return {}; }
+        if (dbKey.isEmpty())
+        {
+            return {};
+        }
         const CDistributorList distributors(getDistributors());
         return distributors.findByKeyOrAlias(dbKey);
     }
@@ -87,34 +99,49 @@ namespace swift::core::db
 
     CAircraftModel CModelDataReader::getModelForModelString(const QString &modelString) const
     {
-        if (modelString.isEmpty()) { return {}; }
+        if (modelString.isEmpty())
+        {
+            return {};
+        }
         const CAircraftModelList models(this->getModels());
         return models.findFirstByModelStringOrDefault(modelString);
     }
 
     bool CModelDataReader::containsModelString(const QString &modelString) const
     {
-        if (modelString.isEmpty()) { return false; }
+        if (modelString.isEmpty())
+        {
+            return false;
+        }
         return this->getModels().containsModelString(modelString);
     }
 
     CAircraftModel CModelDataReader::getModelForDbKey(int dbKey) const
     {
-        if (dbKey < 0) { return {}; }
+        if (dbKey < 0)
+        {
+            return {};
+        }
         const CAircraftModelList models(this->getModels());
         return models.findByKey(dbKey);
     }
 
     QSet<QString> CModelDataReader::getAircraftDesignatorsForAirline(const CAirlineIcaoCode &code) const
     {
-        if (!code.hasValidDesignator()) { return {}; }
+        if (!code.hasValidDesignator())
+        {
+            return {};
+        }
         const CAircraftModelList models(this->getModels());
         return models.getAircraftDesignatorsForAirline(code);
     }
 
     CAircraftIcaoCodeList CModelDataReader::getAicraftIcaoCodesForAirline(const CAirlineIcaoCode &code) const
     {
-        if (!code.hasValidDesignator()) { return {}; }
+        if (!code.hasValidDesignator())
+        {
+            return {};
+        }
         const CAircraftModelList models(this->getModels());
         return models.getAicraftIcaoCodesForAirline(code);
     }
@@ -123,7 +150,10 @@ namespace swift::core::db
     CModelDataReader::getModelsForAircraftDesignatorAndLiveryCombinedCode(const QString &aircraftDesignator,
                                                                           const QString &combinedCode)
     {
-        if (aircraftDesignator.isEmpty()) { return {}; }
+        if (aircraftDesignator.isEmpty())
+        {
+            return {};
+        }
         const CAircraftModelList models(this->getModels());
         return models.findByAircraftDesignatorAndLiveryCombinedCode(aircraftDesignator, combinedCode);
     }
@@ -163,7 +193,10 @@ namespace swift::core::db
                                 const QDateTime &newerThan)
     {
         this->threadAssertCheck();
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         entities &= CEntityFlags::DistributorLiveryModel;
 
         CEntityFlags::Entity triggeredRead = CEntityFlags::NoEntity;
@@ -176,7 +209,10 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseLiveryData });
                 triggeredRead |= CEntityFlags::LiveryEntity;
             }
-            else { this->logNoWorkingUrl(CEntityFlags::LiveryEntity); }
+            else
+            {
+                this->logNoWorkingUrl(CEntityFlags::LiveryEntity);
+            }
         }
 
         if (entities.testFlag(CEntityFlags::DistributorEntity))
@@ -188,7 +224,10 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseDistributorData });
                 triggeredRead |= CEntityFlags::DistributorEntity;
             }
-            else { this->logNoWorkingUrl(CEntityFlags::DistributorEntity); }
+            else
+            {
+                this->logNoWorkingUrl(CEntityFlags::DistributorEntity);
+            }
         }
 
         if (entities.testFlag(CEntityFlags::ModelEntity))
@@ -200,7 +239,10 @@ namespace swift::core::db
                 this->getFromNetworkAndLog(url, { this, &CModelDataReader::parseModelData });
                 triggeredRead |= CEntityFlags::ModelEntity;
             }
-            else { this->logNoWorkingUrl(CEntityFlags::ModelEntity); }
+            else
+            {
+                this->logNoWorkingUrl(CEntityFlags::ModelEntity);
+            }
         }
 
         if (triggeredRead != CEntityFlags::NoEntity)
@@ -223,20 +265,32 @@ namespace swift::core::db
     void CModelDataReader::updateReaderUrl(const CUrl &url)
     {
         const CUrl current = m_readerUrlCache.get();
-        if (current == url) { return; }
+        if (current == url)
+        {
+            return;
+        }
         const CStatusMessage m = m_readerUrlCache.set(url);
-        if (m.isFailure()) { CLogMessage::preformatted(m); }
+        if (m.isFailure())
+        {
+            CLogMessage::preformatted(m);
+        }
     }
 
     CAircraftIcaoCodeList CModelDataReader::getAircraftAircraftIcaos() const
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices())
+        {
+            return {};
+        }
         return sApp->getWebDataServices()->getAircraftIcaoCodes();
     }
 
     CAircraftCategoryList CModelDataReader::getAircraftCategories() const
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices())
+        {
+            return {};
+        }
         return sApp->getWebDataServices()->getAircraftCategories();
     }
 
@@ -245,7 +299,10 @@ namespace swift::core::db
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         CDatabaseReader::JsonDatastoreResponse res =
             this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
@@ -262,7 +319,10 @@ namespace swift::core::db
         {
             // create full list if it was just incremental
             const CLiveryList incrementalLiveries(CLiveryList::fromDatabaseJson(res));
-            if (incrementalLiveries.isEmpty()) { return; } // currenty ignored
+            if (incrementalLiveries.isEmpty())
+            {
+                return;
+            } // currenty ignored
             liveries = this->getLiveries();
             liveries.replaceOrAddObjectsByKey(incrementalLiveries);
         }
@@ -274,7 +334,10 @@ namespace swift::core::db
             this->logParseMessage("liveries", liveries.size(), static_cast<int>(time.elapsed()), res);
         }
 
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         const int n = liveries.size();
         qint64 latestTimestamp = liveries.latestTimestampMsecsSinceEpoch();
         if (n > 0 && latestTimestamp < 0)
@@ -294,7 +357,10 @@ namespace swift::core::db
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         CDatabaseReader::JsonDatastoreResponse res =
             this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
@@ -311,7 +377,10 @@ namespace swift::core::db
         {
             // create full list if it was just incremental
             const CDistributorList incrementalDistributors(CDistributorList::fromDatabaseJson(res));
-            if (incrementalDistributors.isEmpty()) { return; } // currently ignored
+            if (incrementalDistributors.isEmpty())
+            {
+                return;
+            } // currently ignored
             distributors = this->getDistributors();
             distributors.replaceOrAddObjectsByKey(incrementalDistributors);
         }
@@ -323,7 +392,10 @@ namespace swift::core::db
             this->logParseMessage("distributors", distributors.size(), static_cast<int>(time.elapsed()), res);
         }
 
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         const int n = distributors.size();
         qint64 latestTimestamp = distributors.latestTimestampMsecsSinceEpoch();
         if (n > 0 && latestTimestamp < 0)
@@ -344,7 +416,10 @@ namespace swift::core::db
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         const CDatabaseReader::JsonDatastoreResponse res =
             this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
         if (res.hasErrorMessage())
@@ -371,7 +446,10 @@ namespace swift::core::db
             // create full list if it was just incremental
             const CAircraftModelList incrementalModels(
                 CAircraftModelList::fromDatabaseJsonCaching(res, icaos, categories, liveries, distributors));
-            if (incrementalModels.isEmpty()) { return; } // currently ignored
+            if (incrementalModels.isEmpty())
+            {
+                return;
+            } // currently ignored
             models = this->getModels();
             models.replaceOrAddObjectsByKey(incrementalModels);
         }
@@ -384,7 +462,10 @@ namespace swift::core::db
         }
 
         // synchronized update
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         const int n = models.size();
         qint64 latestTimestamp = models.latestTimestampMsecsSinceEpoch();
         if (n > 0 && latestTimestamp < 0)
@@ -403,7 +484,10 @@ namespace swift::core::db
                                                            bool overrideNewerOnly)
     {
         const QDir directory(dir);
-        if (!directory.exists()) { return CStatusMessage(this).error(u"Missing directory '%1'") << dir; }
+        if (!directory.exists())
+        {
+            return CStatusMessage(this).error(u"Missing directory '%1'") << dir;
+        }
 
         whatToRead &= CEntityFlags::DistributorLiveryModel; // supported
         CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
@@ -413,7 +497,10 @@ namespace swift::core::db
         {
             const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "liveries.json");
             const QFileInfo fi(fileName);
-            if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
+            if (!fi.exists())
+            {
+                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
+            }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::LiveryEntity, msgs))
             {
                 // void
@@ -450,7 +537,10 @@ namespace swift::core::db
         {
             const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "models.json");
             const QFileInfo fi(fileName);
-            if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
+            if (!fi.exists())
+            {
+                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
+            }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::ModelEntity, msgs))
             {
                 // void
@@ -488,7 +578,10 @@ namespace swift::core::db
         {
             const QString fileName = CFileUtils::appendFilePaths(directory.absolutePath(), "distributors.json");
             const QFileInfo fi(fileName);
-            if (!fi.exists()) { msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName); }
+            if (!fi.exists())
+            {
+                msgs.push_back(CStatusMessage(this).warning(u"File '%1' does not exist") << fileName);
+            }
             else if (!this->overrideCacheFromFile(overrideNewerOnly, fi, CEntityFlags::DistributorEntity, msgs))
             {
                 // void
@@ -530,13 +623,22 @@ namespace swift::core::db
     bool CModelDataReader::readFromJsonFilesInBackground(const QString &dir, CEntityFlags::Entity whatToRead,
                                                          bool overrideNewerOnly)
     {
-        if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity) { return false; }
+        if (dir.isEmpty() || whatToRead == CEntityFlags::NoEntity)
+        {
+            return false;
+        }
 
         QPointer<CModelDataReader> myself(this);
         QTimer::singleShot(0, this, [=, this]() {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             const CStatusMessageList msgs = this->readFromJsonFiles(dir, whatToRead, overrideNewerOnly);
-            if (msgs.isFailure()) { CLogMessage::preformatted(msgs); }
+            if (msgs.isFailure())
+            {
+                CLogMessage::preformatted(msgs);
+            }
         });
         return true;
     }
@@ -544,7 +646,10 @@ namespace swift::core::db
     bool CModelDataReader::writeToJsonFiles(const QString &dir)
     {
         QDir directory(dir);
-        if (!directory.exists()) { return false; }
+        if (!directory.exists())
+        {
+            return false;
+        }
         QList<QPair<QString, QString>> fileContents;
         if (this->getLiveriesCount() > 0)
         {
@@ -580,19 +685,28 @@ namespace swift::core::db
     {
         if (entities.testFlag(CEntityFlags::LiveryEntity))
         {
-            if (m_syncedLiveryCache) { return; }
+            if (m_syncedLiveryCache)
+            {
+                return;
+            }
             m_syncedLiveryCache = true;
             m_liveryCache.synchronize();
         }
         if (entities.testFlag(CEntityFlags::ModelEntity))
         {
-            if (m_syncedModelCache) { return; }
+            if (m_syncedModelCache)
+            {
+                return;
+            }
             m_syncedModelCache = true;
             m_modelCache.synchronize();
         }
         if (entities.testFlag(CEntityFlags::DistributorEntity))
         {
-            if (m_syncedDistributorCache) { return; }
+            if (m_syncedDistributorCache)
+            {
+                return;
+            }
             m_syncedDistributorCache = true;
             m_distributorCache.synchronize();
         }
@@ -600,9 +714,18 @@ namespace swift::core::db
 
     void CModelDataReader::admitCaches(CEntityFlags::Entity entities)
     {
-        if (entities.testFlag(CEntityFlags::LiveryEntity)) { m_liveryCache.admit(); }
-        if (entities.testFlag(CEntityFlags::ModelEntity)) { m_modelCache.admit(); }
-        if (entities.testFlag(CEntityFlags::DistributorEntity)) { m_distributorCache.admit(); }
+        if (entities.testFlag(CEntityFlags::LiveryEntity))
+        {
+            m_liveryCache.admit();
+        }
+        if (entities.testFlag(CEntityFlags::ModelEntity))
+        {
+            m_modelCache.admit();
+        }
+        if (entities.testFlag(CEntityFlags::DistributorEntity))
+        {
+            m_distributorCache.admit();
+        }
     }
 
     void CModelDataReader::invalidateCaches(CEntityFlags::Entity entities)

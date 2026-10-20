@@ -337,7 +337,10 @@ namespace swift::core
             //! Register help
             static void registerHelp()
             {
-                if (swift::misc::CSimpleCommandParser::registered("swift::core::CContextNetwork")) { return; }
+                if (swift::misc::CSimpleCommandParser::registered("swift::core::CContextNetwork"))
+                {
+                    return;
+                }
                 swift::misc::CSimpleCommandParser::registerCommand({ ".m", "alias: .msg, .chat" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".m message text", "send text message" });
                 swift::misc::CSimpleCommandParser::registerCommand({ ".m callsign message text", "send text message" });

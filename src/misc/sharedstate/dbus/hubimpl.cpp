@@ -13,7 +13,10 @@ namespace swift::misc::shared_state::dbus
 {
     CHub::CHub(CDBusServer *server, QObject *parent) : IHub(parent), m_server(server)
     {
-        if (server) { server->addObject(SWIFT_MISC_HUB_PATH, this); }
+        if (server)
+        {
+            server->addObject(SWIFT_MISC_HUB_PATH, this);
+        }
     }
 
     std::pair<QSharedPointer<IDuplex>, QFuture<bool>> CHub::getDuplex(const CIdentifier &identifier)

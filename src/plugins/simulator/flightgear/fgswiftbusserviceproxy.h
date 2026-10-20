@@ -71,8 +71,14 @@ namespace swift::simplugin::flightgear
         {
             return [this, obj](QDBusPendingCallWatcher *watcher) {
                 QDBusPendingReply<T> reply = *watcher;
-                if (reply.isError()) { emit this->asyncMethodError(reply.error()); }
-                else { *obj = reply; }
+                if (reply.isError())
+                {
+                    emit this->asyncMethodError(reply.error());
+                }
+                else
+                {
+                    *obj = reply;
+                }
                 watcher->deleteLater();
             };
         }
@@ -89,7 +95,10 @@ namespace swift::simplugin::flightgear
                     else
                         emit this->asyncMethodError(reply.error());
                 }
-                else { *obj = reply; }
+                else
+                {
+                    *obj = reply;
+                }
                 watcher->deleteLater();
             };
         }

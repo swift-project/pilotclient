@@ -12,7 +12,10 @@ namespace swift::misc::network
     QStringList CEcosystemList::allSystemStrings() const
     {
         QStringList l;
-        for (const CEcosystem &e : *this) { l.push_back(e.getSystemString()); }
+        for (const CEcosystem &e : *this)
+        {
+            l.push_back(e.getSystemString());
+        }
         return l;
     }
 

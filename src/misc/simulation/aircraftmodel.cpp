@@ -94,7 +94,10 @@ namespace swift::misc::simulation
         {
             obj.insert("cgft", QJsonValue()); // null value
         }
-        else { obj.insert("cgft", QJsonValue(m_cg.value(CLengthUnit::ft()))); }
+        else
+        {
+            obj.insert("cgft", QJsonValue(m_cg.value(CLengthUnit::ft())));
+        }
 
         // sims
         const CSimulatorInfo sim(getSimulator());
@@ -151,7 +154,10 @@ namespace swift::misc::simulation
             if constexpr (!decltype(member)::has(MetaFlags<DisabledForJson>()))
             {
                 auto it = json.find(CExplicitLatin1String(member.latin1Name()));
-                if (it != json.end()) { it.value() >> helper.maybeUnmemoize(member.in(*this)).get(); }
+                if (it != json.end())
+                {
+                    it.value() >> helper.maybeUnmemoize(member.in(*this)).get();
+                }
             }
         });
         // NOLINTEND(readability-static-accessed-through-instance)
@@ -224,20 +230,35 @@ namespace swift::misc::simulation
             return this->hasModelString() ? this->getModelString() % this->getDbKeyAsStringInParentheses(" ") :
                                             this->getDbKeyAsString();
         }
-        else { return this->getModelString(); }
+        else
+        {
+            return this->getModelString();
+        }
     }
 
     QString CAircraftModel::getAllModelStringsAndAliases() const
     {
-        if (!this->hasModelStringAlias()) { return m_modelString; }
-        if (!this->hasModelString()) { return m_modelStringAlias; }
+        if (!this->hasModelStringAlias())
+        {
+            return m_modelString;
+        }
+        if (!this->hasModelString())
+        {
+            return m_modelStringAlias;
+        }
         return m_modelString % u", " % m_modelStringAlias;
     }
 
     QString CAircraftModel::getAllModelStringsAliasesAndDbKey() const
     {
-        if (!this->hasModelStringAlias() || m_modelString.isEmpty()) { return this->getModelStringAndDbKey(); }
-        if (!this->isLoadedFromDb()) { return this->getAllModelStringsAndAliases(); }
+        if (!this->hasModelStringAlias() || m_modelString.isEmpty())
+        {
+            return this->getModelStringAndDbKey();
+        }
+        if (!this->isLoadedFromDb())
+        {
+            return this->getAllModelStringsAndAliases();
+        }
         return this->getAllModelStringsAndAliases() % " " % this->getDbKeyAsStringInParentheses();
     }
 
@@ -245,12 +266,18 @@ namespace swift::misc::simulation
 
     QVariant CAircraftModel::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
         }
-        if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
+        if (IOrderable::canHandleIndex(index))
+        {
+            return IOrderable::propertyByIndex(index);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -320,15 +347,24 @@ namespace swift::misc::simulation
             m_callsign.setTypeHint(CCallsign::Aircraft);
             break;
         case IndexFileTimestamp:
-            if (variant.canConvert<QDateTime>()) { this->setFileTimestamp(variant.value<QDateTime>()); }
-            else if (variant.canConvert<qint64>()) { m_fileTimestamp = variant.value<qint64>(); }
+            if (variant.canConvert<QDateTime>())
+            {
+                this->setFileTimestamp(variant.value<QDateTime>());
+            }
+            else if (variant.canConvert<qint64>())
+            {
+                m_fileTimestamp = variant.value<qint64>();
+            }
             break;
         case IndexModelMode:
             if (static_cast<QMetaType::Type>(variant.typeId()) == QMetaType::QString)
             {
                 this->setModelModeAsString(variant.toString());
             }
-            else { m_modelMode = variant.value<ModelMode>(); }
+            else
+            {
+                m_modelMode = variant.value<ModelMode>();
+            }
             break;
         // no setter indexes ignored
         case IndexHasQueriedModelString: break;
@@ -349,8 +385,14 @@ namespace swift::misc::simulation
         {
             return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
         }
-        if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
-        if (index.isMyself()) { return m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive); }
+        if (IOrderable::canHandleIndex(index))
+        {
+            return IOrderable::comparePropertyByIndex(index, compareValue);
+        }
+        if (index.isMyself())
+        {
+            return m_modelString.compare(compareValue.getModelString(), Qt::CaseInsensitive);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -393,7 +435,10 @@ namespace swift::misc::simulation
 
     bool CAircraftModel::setAircraftIcaoCode(const CAircraftIcaoCode &aircraftIcaoCode)
     {
-        if (m_aircraftIcao == aircraftIcaoCode) { return false; }
+        if (m_aircraftIcao == aircraftIcaoCode)
+        {
+            return false;
+        }
         m_aircraftIcao = aircraftIcaoCode;
         return true;
     }
@@ -437,15 +482,24 @@ namespace swift::misc::simulation
 
     bool CAircraftModel::setDistributorOrder(int order)
     {
-        if (order < 0) { return false; }
-        if (!m_distributor.isLoadedFromDb()) { return false; }
+        if (order < 0)
+        {
+            return false;
+        }
+        if (!m_distributor.isLoadedFromDb())
+        {
+            return false;
+        }
         m_distributor.setOrder(order);
         return true;
     }
 
     bool CAircraftModel::setDistributorOrder(const CDistributorList &distributors)
     {
-        if (distributors.isEmpty()) { return false; }
+        if (distributors.isEmpty())
+        {
+            return false;
+        }
         bool found = false;
         const int noDistributorOrder = distributors.size();
         if (this->hasDbDistributor())
@@ -456,9 +510,15 @@ namespace swift::misc::simulation
                 m_distributor.setOrder(d.getOrder());
                 found = true;
             }
-            else { m_distributor.setOrder(noDistributorOrder); }
+            else
+            {
+                m_distributor.setOrder(noDistributorOrder);
+            }
         }
-        else { m_distributor.setOrder(noDistributorOrder); }
+        else
+        {
+            m_distributor.setOrder(noDistributorOrder);
+        }
         return found;
     }
 
@@ -471,15 +531,27 @@ namespace swift::misc::simulation
 
     bool CAircraftModel::matchesDbDistributor(const CDistributor &distributor) const
     {
-        if (!distributor.isLoadedFromDb()) { return false; }
-        if (!this->hasDbDistributor()) { return false; }
+        if (!distributor.isLoadedFromDb())
+        {
+            return false;
+        }
+        if (!this->hasDbDistributor())
+        {
+            return false;
+        }
         return m_distributor.getDbKey() == distributor.getDbKey();
     }
 
     bool CAircraftModel::matchesAnyDbDistributor(const CDistributorList &distributors) const
     {
-        if (distributors.isEmpty()) { return false; }
-        if (!this->hasDbDistributor()) { return false; }
+        if (distributors.isEmpty())
+        {
+            return false;
+        }
+        if (!this->hasDbDistributor())
+        {
+            return false;
+        }
         return distributors.matchesAnyKeyOrAlias(m_distributor.getDbKey());
     }
 
@@ -490,7 +562,10 @@ namespace swift::misc::simulation
 
     bool CAircraftModel::matchesMode(ModelModeFilter mode) const
     {
-        if (mode == All) { return true; }
+        if (mode == All)
+        {
+            return true;
+        }
         return (mode & m_modelMode) > 0;
     }
 
@@ -572,7 +647,10 @@ namespace swift::misc::simulation
 
     QString CAircraftModel::getSwiftLiveryString(bool aircraftIcao, bool livery, bool model) const
     {
-        if (!aircraftIcao && !livery && !model) { return {}; }
+        if (!aircraftIcao && !livery && !model)
+        {
+            return {};
+        }
         const QString l =
             (livery && this->getLivery().hasValidDbKey() ? u'l' % this->getLivery().getDbKeyAsString() : QString()) %
             (aircraftIcao && this->getAircraftIcaoCode().hasValidDbKey() ?
@@ -591,7 +669,10 @@ namespace swift::misc::simulation
     DBTripleIds CAircraftModel::parseNetworkLiveryString(const QString &liveryString)
     {
         // "swift_m22l33a11"
-        if (!CAircraftModel::isSwiftLiveryString(liveryString)) { return {}; }
+        if (!CAircraftModel::isSwiftLiveryString(liveryString))
+        {
+            return {};
+        }
 
         DBTripleIds ids;
         const QString ls = liveryString.mid(liveryStringPrefix().length()).toLower();
@@ -602,16 +683,28 @@ namespace swift::misc::simulation
             {
                 const int cs = c + 1;
                 int cc = cs;
-                while (cc < ls.length() && ls[cc].isDigit()) { cc++; } // find end of id
+                while (cc < ls.length() && ls[cc].isDigit())
+                {
+                    cc++;
+                } // find end of id
                 if (cc > cs)
                 {
                     const QString idString = ls.mid(cs, cc - cs);
                     const int id = idString.toInt();
                     c = cc - 1; // +1 again in for
 
-                    if (m == 'm') { ids.model = id; }
-                    else if (m == 'a') { ids.aircraft = id; }
-                    else if (m == 'l') { ids.livery = id; }
+                    if (m == 'm')
+                    {
+                        ids.model = id;
+                    }
+                    else if (m == 'a')
+                    {
+                        ids.aircraft = id;
+                    }
+                    else if (m == 'l')
+                    {
+                        ids.livery = id;
+                    }
                 }
             }
         }
@@ -638,14 +731,32 @@ namespace swift::misc::simulation
         }
 
         // both are DB data, treat as being the same except for filename maybe
-        if (this->hasValidDbKey() && otherModel.hasValidDbKey()) { return; }
+        if (this->hasValidDbKey() && otherModel.hasValidDbKey())
+        {
+            return;
+        }
 
         // update attributes where applicable
-        if (m_callsign.isEmpty()) { this->setCallsign(otherModel.getCallsign()); }
-        if (m_modelString.isEmpty()) { this->setModelString(otherModel.getModelString()); }
-        if (m_name.isEmpty()) { this->setName(otherModel.getName()); }
-        if (m_modelType == TypeUnknown) { m_modelType = otherModel.getModelType(); }
-        if (m_modelMode == Undefined) { m_modelType = otherModel.getModelType(); }
+        if (m_callsign.isEmpty())
+        {
+            this->setCallsign(otherModel.getCallsign());
+        }
+        if (m_modelString.isEmpty())
+        {
+            this->setModelString(otherModel.getModelString());
+        }
+        if (m_name.isEmpty())
+        {
+            this->setName(otherModel.getName());
+        }
+        if (m_modelType == TypeUnknown)
+        {
+            m_modelType = otherModel.getModelType();
+        }
+        if (m_modelMode == Undefined)
+        {
+            m_modelType = otherModel.getModelType();
+        }
         if (m_description.isEmpty() || m_description.startsWith(CAircraftModel::autoGenerated(), Qt::CaseInsensitive))
         {
             this->setDescription(otherModel.getDescription());
@@ -664,7 +775,10 @@ namespace swift::misc::simulation
 
     void CAircraftModel::updateByExistingDirectories(const CAircraftModel &otherModel)
     {
-        if (otherModel.hasExistingCorrespondingFile()) { this->setFileName(otherModel.getFileName()); }
+        if (otherModel.hasExistingCorrespondingFile())
+        {
+            this->setFileName(otherModel.getFileName());
+        }
     }
 
     bool CAircraftModel::hasQueriedModelString() const
@@ -679,8 +793,14 @@ namespace swift::misc::simulation
 
     bool CAircraftModel::hasDescription(bool ignoreAutoGenerated) const
     {
-        if (m_description.isEmpty()) { return false; }
-        if (!ignoreAutoGenerated) { return true; }
+        if (m_description.isEmpty())
+        {
+            return false;
+        }
+        if (!ignoreAutoGenerated)
+        {
+            return true;
+        }
         return (!this->getDescription().startsWith(autoGenerated(), Qt::CaseInsensitive));
     }
 
@@ -716,12 +836,18 @@ namespace swift::misc::simulation
         }
 
         // both not local, override empty values
-        if (m_fileName.isEmpty()) { this->setFileName(model.getFileName()); }
+        if (m_fileName.isEmpty())
+        {
+            this->setFileName(model.getFileName());
+        }
     }
 
     bool CAircraftModel::adjustLocalFileNames(const QString &newModelDir, const QString &stripModelDirIndicator)
     {
-        if (!this->hasFileName()) { return false; }
+        if (!this->hasFileName())
+        {
+            return false;
+        }
         const QString md = CFileUtils::normalizeFilePathToQtStandard(newModelDir);
         int i = -1;
         if (stripModelDirIndicator.isEmpty())
@@ -729,44 +855,71 @@ namespace swift::misc::simulation
             QString strip = md.mid(md.lastIndexOf('/'));
             i = m_fileName.lastIndexOf(strip);
         }
-        else { i = m_fileName.lastIndexOf(stripModelDirIndicator); }
-        if (i < 0) { return false; }
+        else
+        {
+            i = m_fileName.lastIndexOf(stripModelDirIndicator);
+        }
+        if (i < 0)
+        {
+            return false;
+        }
         m_fileName = CFileUtils::appendFilePaths(newModelDir, m_fileName.mid(i));
         return true;
     }
 
     bool CAircraftModel::hasExistingCorrespondingFile() const
     {
-        if (!this->hasFileName()) { return false; }
+        if (!this->hasFileName())
+        {
+            return false;
+        }
         const QFileInfo fi(CFileUtils::fixWindowsUncPath(this->getFileName()));
-        if (!fi.exists()) { return false; }
+        if (!fi.exists())
+        {
+            return false;
+        }
         const bool r = fi.isReadable();
         return r;
     }
 
     QDir CAircraftModel::getFileDirectory() const
     {
-        if (!this->hasFileName()) { return {}; }
+        if (!this->hasFileName())
+        {
+            return {};
+        }
         const QFileInfo fi(CFileUtils::fixWindowsUncPath(this->getFileName()));
         return fi.absoluteDir();
     }
 
     QString CAircraftModel::getFileDirectoryPath() const
     {
-        if (!this->hasFileName()) { return {}; }
+        if (!this->hasFileName())
+        {
+            return {};
+        }
         return this->getFileDirectory().absolutePath();
     }
 
     bool CAircraftModel::isInPath(const QString &path, Qt::CaseSensitivity cs) const
     {
         const QString p(this->getFileDirectoryPath());
-        if (path.isEmpty() || p.isEmpty()) { return false; }
+        if (path.isEmpty() || p.isEmpty())
+        {
+            return false;
+        }
         if (path.startsWith('/'))
         {
-            if (path.endsWith('/')) { return p.contains(path.mid(1, path.length() - 2), cs); }
+            if (path.endsWith('/'))
+            {
+                return p.contains(path.mid(1, path.length() - 2), cs);
+            }
             return p.contains(path.mid(1));
         }
-        if (path.endsWith('/')) { return p.contains(path.left(path.length() - 1), cs); }
+        if (path.endsWith('/'))
+        {
+            return p.contains(path.left(path.length() - 1), cs);
+        }
         return (p.contains(path, cs));
     }
 
@@ -777,7 +930,10 @@ namespace swift::misc::simulation
 
     bool CAircraftModel::matchesModelStringOrAlias(const QString &modelString, Qt::CaseSensitivity sensitivity) const
     {
-        if (this->matchesModelString(modelString, sensitivity)) { return true; }
+        if (this->matchesModelString(modelString, sensitivity))
+        {
+            return true;
+        }
         return stringCompare(modelString, m_modelStringAlias, sensitivity);
     }
 
@@ -841,7 +997,10 @@ namespace swift::misc::simulation
         {
             static const CStatusMessage msgNoDbModel({ CLogCategories::validation() }, CStatusMessage::SeverityInfo,
                                                      u"No DB model yet");
-            if (details) { details->push_back(msgNoDbModel); }
+            if (details)
+            {
+                details->push_back(msgNoDbModel);
+            }
             return false;
         }
 
@@ -931,7 +1090,10 @@ namespace swift::misc::simulation
             validationMsgs.removeSeverity(CStatusMessage::SeverityWarning);
         }
 
-        if (details) { details->push_back(validationMsgs); }
+        if (details)
+        {
+            details->push_back(validationMsgs);
+        }
         return !changed;
     }
 
@@ -967,14 +1129,23 @@ namespace swift::misc::simulation
     QString CAircraftModel::normalizeFileNameForDb(const QString &filePath)
     {
         const QString n = CFileUtils::normalizeFilePathToQtStandard(filePath).toUpper();
-        if (n.count('/') < 2) { return n; }
+        if (n.count('/') < 2)
+        {
+            return n;
+        }
         return n.section('/', -2, -1);
     }
 
     CAircraftModel::ModelMode CAircraftModel::modelModeFromString(const QString &mode)
     {
-        if (mode.isEmpty() || mode.startsWith('I', Qt::CaseInsensitive)) { return Include; }
-        if (mode.startsWith('E', Qt::CaseInsensitive)) { return Exclude; }
+        if (mode.isEmpty() || mode.startsWith('I', Qt::CaseInsensitive))
+        {
+            return Include;
+        }
+        if (mode.startsWith('E', Qt::CaseInsensitive))
+        {
+            return Exclude;
+        }
         SWIFT_VERIFY_X(false, Q_FUNC_INFO, "wrong mode");
         return Include; // default
     }
@@ -1035,9 +1206,18 @@ namespace swift::misc::simulation
         CAircraftIcaoCode aircraftIcao(CAircraftIcaoCode::fromDatabaseJson(json, prefixAircraftIcao));
         CLivery livery(CLivery::fromDatabaseJson(json, prefixLivery));
 
-        if (!aircraftIcao.isLoadedFromDb() && idAircraftIcao >= 0) { aircraftIcao.setDbKey(idAircraftIcao); }
-        if (!livery.isLoadedFromDb() && idLivery >= 0) { livery.setDbKey(idLivery); }
-        if (!distributor.isLoadedFromDb() && !idDistributor.isEmpty()) { distributor.setDbKey(idDistributor); }
+        if (!aircraftIcao.isLoadedFromDb() && idAircraftIcao >= 0)
+        {
+            aircraftIcao.setDbKey(idAircraftIcao);
+        }
+        if (!livery.isLoadedFromDb() && idLivery >= 0)
+        {
+            livery.setDbKey(idLivery);
+        }
+        if (!distributor.isLoadedFromDb() && !idDistributor.isEmpty())
+        {
+            distributor.setDbKey(idDistributor);
+        }
 
         // full model
         return CAircraftModel::fromDatabaseJsonBaseImpl(json, prefix, aircraftIcao, livery, distributor);
@@ -1068,15 +1248,27 @@ namespace swift::misc::simulation
         CDistributor distributor(cachedDistributor ? distributors[idDistributor] :
                                                      CDistributor::fromDatabaseJson(json, prefixDistributor));
 
-        if (!aircraftIcao.isLoadedFromDb() && idAircraftIcao >= 0) { aircraftIcao.setDbKey(idAircraftIcao); }
-        if (!livery.isLoadedFromDb() && idLivery >= 0) { livery.setDbKey(idLivery); }
-        if (!distributor.isLoadedFromDb() && !idDistributor.isEmpty()) { distributor.setDbKey(idDistributor); }
+        if (!aircraftIcao.isLoadedFromDb() && idAircraftIcao >= 0)
+        {
+            aircraftIcao.setDbKey(idAircraftIcao);
+        }
+        if (!livery.isLoadedFromDb() && idLivery >= 0)
+        {
+            livery.setDbKey(idLivery);
+        }
+        if (!distributor.isLoadedFromDb() && !idDistributor.isEmpty())
+        {
+            distributor.setDbKey(idDistributor);
+        }
 
         // update category
         if (!cachedAircraftIcao)
         {
             const int catId = aircraftIcao.getCategory().getDbKey();
-            if (catId >= 0 && categories.contains(catId)) { aircraftIcao.setCategory(categories[catId]); }
+            if (catId >= 0 && categories.contains(catId))
+            {
+                aircraftIcao.setCategory(categories[catId]);
+            }
         }
 
         // store in temp.cache
@@ -1084,8 +1276,14 @@ namespace swift::misc::simulation
         {
             aircraftIcaos[aircraftIcao.getDbKey()] = aircraftIcao;
         }
-        if (!cachedLivery && livery.isLoadedFromDb()) { liveries[livery.getDbKey()] = livery; }
-        if (!cachedDistributor && distributor.isLoadedFromDb()) { distributors[distributor.getDbKey()] = distributor; }
+        if (!cachedLivery && livery.isLoadedFromDb())
+        {
+            liveries[livery.getDbKey()] = livery;
+        }
+        if (!cachedDistributor && distributor.isLoadedFromDb())
+        {
+            distributors[distributor.getDbKey()] = distributor;
+        }
 
         // full model
         return CAircraftModel::fromDatabaseJsonBaseImpl(json, prefix, aircraftIcao, livery, distributor);
@@ -1099,7 +1297,10 @@ namespace swift::misc::simulation
 
     QString CAircraftModel::cleanUpPartsString(const QString &p)
     {
-        if (p.isEmpty()) { return {}; }
+        if (p.isEmpty())
+        {
+            return {};
+        }
         QString pc = removeChars(p.toUpper(), [](QChar c) { return !supportedParts().contains(c); });
         std::sort(pc.begin(), pc.end());
         return pc;

@@ -31,7 +31,10 @@ namespace swift::gui
     {
         // skip if identifier is missing, which should normally not happen
         SWIFT_VERIFY_X(!identifier.isEmpty(), Q_FUNC_INFO, "Missing identifier");
-        if (identifier.isEmpty()) { return; }
+        if (identifier.isEmpty())
+        {
+            return;
+        }
 
         auto *pw = new QWidget;
         auto *layout = new QHBoxLayout;
@@ -42,8 +45,14 @@ namespace swift::gui
         cb->setObjectName(identifier);
         cb->setProperty("pluginIdentifier", identifier);
         connect(cb, &QCheckBox::checkStateChanged, this, &CPluginSelector::handlePluginStateChange);
-        if (enabled) { cb->setCheckState(Qt::Checked); }
-        else { cb->setCheckState(Qt::Unchecked); }
+        if (enabled)
+        {
+            cb->setCheckState(Qt::Checked);
+        }
+        else
+        {
+            cb->setCheckState(Qt::Unchecked);
+        }
 
         pw->layout()->addWidget(cb);
 

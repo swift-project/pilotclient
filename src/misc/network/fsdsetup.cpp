@@ -54,15 +54,42 @@ namespace swift::misc::network
                                           bool euroscopeSimDataReceive, bool icaoEquipment)
     {
         SendReceiveDetails s = Nothing;
-        if (partsSend) { s |= SendAircraftParts; }
-        if (partsReceive) { s |= ReceiveAircraftParts; }
-        if (gndSend) { s |= SendGndFlag; }
-        if (gndReceive) { s |= ReceiveGndFlag; }
-        if (interimSend) { s |= SendInterimPositions; }
-        if (interimReceive) { s |= ReceiveInterimPositions; }
-        if (visualSend) { s |= SendVisualPositions; }
-        if (euroscopeSimDataReceive) { s |= ReceiveEuroscopeSimData; }
-        if (icaoEquipment) { s |= SendFplWithIcaoEquipment; }
+        if (partsSend)
+        {
+            s |= SendAircraftParts;
+        }
+        if (partsReceive)
+        {
+            s |= ReceiveAircraftParts;
+        }
+        if (gndSend)
+        {
+            s |= SendGndFlag;
+        }
+        if (gndReceive)
+        {
+            s |= ReceiveGndFlag;
+        }
+        if (interimSend)
+        {
+            s |= SendInterimPositions;
+        }
+        if (interimReceive)
+        {
+            s |= ReceiveInterimPositions;
+        }
+        if (visualSend)
+        {
+            s |= SendVisualPositions;
+        }
+        if (euroscopeSimDataReceive)
+        {
+            s |= ReceiveEuroscopeSimData;
+        }
+        if (icaoEquipment)
+        {
+            s |= SendFplWithIcaoEquipment;
+        }
         this->setSendReceiveDetails(s);
     }
 
@@ -97,7 +124,10 @@ namespace swift::misc::network
 
     QVariant CFsdSetup::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -125,7 +155,10 @@ namespace swift::misc::network
 
     int CFsdSetup::comparePropertyByIndex(CPropertyIndexRef index, const CFsdSetup &compareValue) const
     {
-        if (index.isMyself()) { return this->convertToQString(true).compare(compareValue.convertToQString()); }
+        if (index.isMyself())
+        {
+            return this->convertToQString(true).compare(compareValue.convertToQString());
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

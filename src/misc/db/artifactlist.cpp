@@ -16,7 +16,10 @@ namespace swift::misc::db
     CPlatformSet CArtifactList::getPlatforms() const
     {
         CPlatformSet platforms;
-        for (const CArtifact &artifact : *this) { platforms.insert(artifact.getPlatform()); }
+        for (const CArtifact &artifact : *this)
+        {
+            platforms.insert(artifact.getPlatform());
+        }
         return platforms;
     }
 
@@ -29,7 +32,10 @@ namespace swift::misc::db
     {
         for (const CArtifact &artifact : *this)
         {
-            if (artifact.matchesName(name, cs)) { return artifact; }
+            if (artifact.matchesName(name, cs))
+            {
+                return artifact;
+            }
         }
         return {};
     }
@@ -39,7 +45,10 @@ namespace swift::misc::db
         CArtifactList artifacts;
         for (const CArtifact &artifact : *this)
         {
-            if (artifact.matchesAnyPlatform(platform)) { artifacts.push_back(artifact); }
+            if (artifact.matchesAnyPlatform(platform))
+            {
+                artifacts.push_back(artifact);
+            }
         }
         return artifacts;
     }
@@ -60,7 +69,10 @@ namespace swift::misc::db
         CArtifactList al;
         for (const CArtifact &artifact : *this)
         {
-            if (!artifact.isWithDistribution(distribution, findMoreStableDistribution)) { continue; }
+            if (!artifact.isWithDistribution(distribution, findMoreStableDistribution))
+            {
+                continue;
+            }
             al.push_back(artifact);
         }
         return al;
@@ -71,7 +83,10 @@ namespace swift::misc::db
         CArtifactList al;
         for (const CArtifact &artifact : *this)
         {
-            if (!artifact.hasUnrestrictedDistribution()) { continue; }
+            if (!artifact.hasUnrestrictedDistribution())
+            {
+                continue;
+            }
             al.push_back(artifact);
         }
         return al;
@@ -103,7 +118,10 @@ namespace swift::misc::db
             for (const CDistribution &d : artifact.getDistributions())
             {
                 // add only once
-                if (dl.contains(d)) { continue; }
+                if (dl.contains(d))
+                {
+                    continue;
+                }
                 dl.push_back(d);
             }
         }
@@ -121,7 +139,10 @@ namespace swift::misc::db
 
     CArtifact CArtifactList::getLatestArtifactOrDefault() const
     {
-        if (this->size() < 2) { return this->frontOrDefault(); }
+        if (this->size() < 2)
+        {
+            return this->frontOrDefault();
+        }
         CArtifactList copy(*this);
         copy.sortByVersion();
         return copy.back();
@@ -133,7 +154,10 @@ namespace swift::misc::db
         for (const CArtifact &artifact : *this)
         {
             const CRemoteFile rf = artifact.asRemoteFile();
-            if (rf.hasName()) { rfs.push_back(rf); }
+            if (rf.hasName())
+            {
+                rfs.push_back(rf);
+            }
         }
         return rfs;
     }
@@ -149,7 +173,10 @@ namespace swift::misc::db
         QStringList names;
         for (const CArtifact &artifact : std::as_const(copy))
         {
-            if (artifact.hasName()) { names.push_back(artifact.getName()); }
+            if (artifact.hasName())
+            {
+                names.push_back(artifact.getName());
+            }
         }
         return names;
     }
@@ -161,7 +188,10 @@ namespace swift::misc::db
         QStringList versions;
         for (const CArtifact &artifact : std::as_const(copy))
         {
-            if (artifact.hasVersion()) { versions.push_back(artifact.getVersion()); }
+            if (artifact.hasVersion())
+            {
+                versions.push_back(artifact.getVersion());
+            }
         }
         return versions;
     }
@@ -169,7 +199,10 @@ namespace swift::misc::db
     qint64 CArtifactList::getTotalFileSize() const
     {
         qint64 s = 0;
-        for (const CArtifact &a : *this) { s += a.getFileSize(); }
+        for (const CArtifact &a : *this)
+        {
+            s += a.getFileSize();
+        }
         return s;
     }
 
@@ -191,7 +224,10 @@ namespace swift::misc::db
 
     CArtifactList CArtifactList::fromDatabaseJson(const QString &json)
     {
-        if (json.isEmpty()) { return {}; }
+        if (json.isEmpty())
+        {
+            return {};
+        }
         return CArtifactList::fromDatabaseJson(json::jsonArrayFromString(json));
     }
 } // namespace swift::misc::db

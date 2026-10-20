@@ -20,7 +20,10 @@ namespace swift::gui::models
 
     CAirlineIcaoCodeList CAirlineIcaoFilter::filter(const CAirlineIcaoCodeList &inContainer) const
     {
-        if (!this->isValid()) { return inContainer; }
+        if (!this->isValid())
+        {
+            return inContainer;
+        }
         CAirlineIcaoCodeList outContainer;
         for (const CAirlineIcaoCode &icao : inContainer)
         {
@@ -40,32 +43,50 @@ namespace swift::gui::models
                 // based on T72, also find VLHA based on LHA
                 if (m_vDesignator.length() == 4)
                 {
-                    if (!this->stringMatchesFilterExpression(icao.getVDesignator(), m_vDesignator)) { continue; }
+                    if (!this->stringMatchesFilterExpression(icao.getVDesignator(), m_vDesignator))
+                    {
+                        continue;
+                    }
                 }
                 else
                 {
-                    if (!this->stringMatchesFilterExpression(icao.getDesignator(), m_vDesignator)) { continue; }
+                    if (!this->stringMatchesFilterExpression(icao.getDesignator(), m_vDesignator))
+                    {
+                        continue;
+                    }
                 }
             }
 
             if (!this->m_name.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(icao.getName(), this->m_name)) { continue; }
+                if (!this->stringMatchesFilterExpression(icao.getName(), this->m_name))
+                {
+                    continue;
+                }
             }
 
             if (!this->m_countryIso.isEmpty())
             {
-                if (icao.getCountryIso() != m_countryIso) { continue; }
+                if (icao.getCountryIso() != m_countryIso)
+                {
+                    continue;
+                }
             }
 
             if (!m_real && m_va)
             {
-                if (!icao.isVirtualAirline()) { continue; }
+                if (!icao.isVirtualAirline())
+                {
+                    continue;
+                }
             }
 
             if (m_real && !m_va)
             {
-                if (icao.isVirtualAirline()) { continue; }
+                if (icao.isVirtualAirline())
+                {
+                    continue;
+                }
             }
 
             outContainer.push_back(icao);

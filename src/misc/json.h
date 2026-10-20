@@ -315,7 +315,10 @@ namespace swift::misc::json
     bool loadFromJsonFile(T &object, const QString &fileNameAndPath, bool acceptCacheFormat = false)
     {
         const QString jsonString(CFileUtils::readFileToString(fileNameAndPath));
-        if (jsonString.isEmpty()) { return false; }
+        if (jsonString.isEmpty())
+        {
+            return false;
+        }
         object.convertFromJson(jsonString, acceptCacheFormat);
         return true;
     }
@@ -327,7 +330,10 @@ namespace swift::misc::json
     bool saveToJsonFile(const T &object, const QString &fileNameAndPath)
     {
         const QString jsonString(object.toJsonString());
-        if (jsonString.isEmpty()) { return false; }
+        if (jsonString.isEmpty())
+        {
+            return false;
+        }
         return CFileUtils::writeStringToFile(jsonString, fileNameAndPath);
     }
 } // namespace swift::misc::json

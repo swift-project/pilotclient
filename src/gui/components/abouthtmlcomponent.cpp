@@ -27,7 +27,10 @@ namespace swift::gui::components
                 Qt::QueuedConnection);
 
         QTimer::singleShot(2500, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->loadAbout();
         });
     }
@@ -36,7 +39,10 @@ namespace swift::gui::components
 
     void CAboutHtmlComponent::loadAbout()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         // make links absolute
         static const QString htmlFixed = [=] {
@@ -69,6 +75,9 @@ namespace swift::gui::components
         const QString possibleLegalFile =
             CFileUtils::appendFilePaths(CSwiftDirectories::legalDirectory(), url.fileName());
         QFile f(possibleLegalFile);
-        if (f.exists()) { QDesktopServices::openUrl(QUrl::fromLocalFile(possibleLegalFile)); };
+        if (f.exists())
+        {
+            QDesktopServices::openUrl(QUrl::fromLocalFile(possibleLegalFile));
+        };
     }
 } // namespace swift::gui::components

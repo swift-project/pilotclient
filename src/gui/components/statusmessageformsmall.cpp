@@ -25,7 +25,10 @@ namespace swift::gui::components
 
     void CStatusMessageFormSmall::setVariant(const CVariant &messageVariant)
     {
-        if (!this->isVisible()) { return; }
+        if (!this->isVisible())
+        {
+            return;
+        }
         this->setValue(messageVariant.value<CStatusMessage>());
     }
 

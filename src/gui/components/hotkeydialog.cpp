@@ -59,7 +59,10 @@ namespace swift::gui::components
             ui->pb_SelectedHotkey->setText(combination.toQString());
             ui->pb_SelectedHotkey->setToolTip(combination.asStringWithDeviceNames());
         }
-        else { ui->pb_SelectedHotkey->setToolTip("Press to select an new combination..."); }
+        else
+        {
+            ui->pb_SelectedHotkey->setToolTip("Press to select an new combination...");
+        }
 
         // get all remote identifiers in case there is no key for a remote machine yet
         CIdentifierList registeredApplications;
@@ -73,7 +76,10 @@ namespace swift::gui::components
         CIdentifierList machineIdentifiers(identifiers);
         machineIdentifiers.push_back(registeredApplications); // add the registered applications
 
-        if (actionHotkey.isValid()) { machineIdentifiers.push_back(actionHotkey.getApplicableMachine()); }
+        if (actionHotkey.isValid())
+        {
+            machineIdentifiers.push_back(actionHotkey.getApplicableMachine());
+        }
         const CIdentifierList machineIdentifiersUnique = machineIdentifiers.getMachinesUnique();
 
         int index = -1;
@@ -91,7 +97,10 @@ namespace swift::gui::components
             // if nothing was found
             ui->cb_Identifier->setCurrentIndex(0);
         }
-        else if (index != ui->cb_Identifier->currentIndex()) { ui->cb_Identifier->setCurrentIndex(index); }
+        else if (index != ui->cb_Identifier->currentIndex())
+        {
+            ui->cb_Identifier->setCurrentIndex(index);
+        }
 
         connect(ui->pb_AdvancedMode, &QPushButton::clicked, this, &CHotkeyDialog::advancedModeChanged);
         connect(ui->pb_SelectedHotkey, &QPushButton::clicked, this, &CHotkeyDialog::captureHotkey);
@@ -135,7 +144,10 @@ namespace swift::gui::components
 
     void CHotkeyDialog::initStyleSheet()
     {
-        if (!sGui) { return; }
+        if (!sGui)
+        {
+            return;
+        }
         const QString s = sGui->getStyleSheetUtility().styles(
             { CStyleSheetUtility::fileNameFonts(), CStyleSheetUtility::fileNameStandardWidget() });
         this->setStyleSheet(s);
@@ -146,7 +158,10 @@ namespace swift::gui::components
     {
         CHotkeyDialog editDialog(initial, identifiers, parent);
         editDialog.setWindowModality(Qt::WindowModal);
-        if (editDialog.exec()) { return editDialog.getSelectedActionHotkey(); }
+        if (editDialog.exec())
+        {
+            return editDialog.getSelectedActionHotkey();
+        }
         return {};
     }
 
@@ -169,7 +184,10 @@ namespace swift::gui::components
 
     void CHotkeyDialog::captureHotkey()
     {
-        if (!sApp || sApp->isShuttingDown()) { return; }
+        if (!sApp || sApp->isShuttingDown())
+        {
+            return;
+        }
         ui->pb_SelectedHotkey->setText("Press any key/button...");
         ui->pb_SelectedHotkey->setToolTip({});
         sApp->getInputManager()->startCapture();
@@ -190,7 +208,10 @@ namespace swift::gui::components
     void CHotkeyDialog::changeSelectedAction(const QItemSelection &selected, const QItemSelection &deselected)
     {
         Q_UNUSED(deselected)
-        if (selected.indexes().isEmpty()) { return; }
+        if (selected.indexes().isEmpty())
+        {
+            return;
+        }
         const auto index = selected.indexes().first();
         m_actionHotkey.setAction(index.data(CActionModel::ActionRole).toString());
     }
@@ -206,7 +227,10 @@ namespace swift::gui::components
         for (const CKeyboardKey &supportedKey : allSupportedKeys)
         {
             ksb->addItem(supportedKey.toQString(), QVariant::fromValue(supportedKey));
-            if (select && supportedKey == keyboardKey) { currentIndex = ksb->count() - 1; }
+            if (select && supportedKey == keyboardKey)
+            {
+                currentIndex = ksb->count() - 1;
+            }
         }
 
         ksb->setSelectedIndex(currentIndex);
@@ -295,12 +319,18 @@ namespace swift::gui::components
 
     void CHotkeyDialog::synchronizeAdvancedSelection()
     {
-        if (ui->qf_Advanced->isVisible()) { setupAdvancedFrame(); }
+        if (ui->qf_Advanced->isVisible())
+        {
+            setupAdvancedFrame();
+        }
     }
 
     void CHotkeyDialog::setupAdvancedFrame()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         this->clearAdvancedFrame();
         const CKeyboardKeyList allSupportedKeys = CKeyboardKeyList::allSupportedKeys();
         const CJoystickButtonList allAvailableButtons = sGui->getInputManager()->getAllAvailableJoystickButtons();
@@ -322,7 +352,10 @@ namespace swift::gui::components
         }
 
         // add one box more so we can add keys/buttons
-        if (c < 2) { this->addSelectionBox(allSupportedKeys); }
+        if (c < 2)
+        {
+            this->addSelectionBox(allSupportedKeys);
+        }
     }
 
     void CHotkeyDialog::clearAdvancedFrame()
@@ -348,8 +381,14 @@ namespace swift::gui::components
             auto newKey = ksb->itemData(newIndex).value<CKeyboardKey>();
 
             CHotkeyCombination combination = m_actionHotkey.getCombination();
-            if (newKey.isUnknown()) { combination.removeKeyboardKey(oldKey); }
-            else { combination.replaceKey(oldKey, newKey); }
+            if (newKey.isUnknown())
+            {
+                combination.removeKeyboardKey(oldKey);
+            }
+            else
+            {
+                combination.replaceKey(oldKey, newKey);
+            }
             m_actionHotkey.setCombination(combination);
         }
 
@@ -360,8 +399,14 @@ namespace swift::gui::components
             auto newButton = ksb->itemData(newIndex).value<CJoystickButton>();
 
             CHotkeyCombination combination = m_actionHotkey.getCombination();
-            if (!newButton.isValid()) { combination.removeJoystickButton(oldButton); }
-            else { combination.replaceButton(oldButton, newButton); }
+            if (!newButton.isValid())
+            {
+                combination.removeJoystickButton(oldButton);
+            }
+            else
+            {
+                combination.replaceButton(oldButton, newButton);
+            }
             m_actionHotkey.setCombination(combination);
         }
 
@@ -371,7 +416,10 @@ namespace swift::gui::components
 
     void CHotkeyDialog::selectAction()
     {
-        if (m_actionHotkey.getAction().isEmpty()) { return; }
+        if (m_actionHotkey.getAction().isEmpty())
+        {
+            return;
+        }
         const QStringList tokens = m_actionHotkey.getAction().split("/", Qt::SkipEmptyParts);
         QModelIndex parentIndex = QModelIndex();
 
@@ -380,7 +428,10 @@ namespace swift::gui::components
             const QModelIndex startIndex = m_actionModel.index(0, 0, parentIndex);
             const QModelIndexList indexList =
                 m_actionModel.match(startIndex, Qt::DisplayRole, QVariant::fromValue(token));
-            if (indexList.isEmpty()) { return; }
+            if (indexList.isEmpty())
+            {
+                return;
+            }
             parentIndex = indexList.first();
             ui->tv_Actions->expand(parentIndex);
         }

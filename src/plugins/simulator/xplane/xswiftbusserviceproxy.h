@@ -71,8 +71,14 @@ namespace swift::simplugin::xplane
         {
             return [this, obj](QDBusPendingCallWatcher *watcher) {
                 QDBusPendingReply<T> reply = *watcher;
-                if (reply.isError()) { emit this->asyncMethodError(reply.error()); }
-                else { *obj = reply; }
+                if (reply.isError())
+                {
+                    emit this->asyncMethodError(reply.error());
+                }
+                else
+                {
+                    *obj = reply;
+                }
                 watcher->deleteLater();
             };
         }

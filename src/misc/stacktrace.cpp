@@ -93,13 +93,22 @@ namespace swift::misc
         {
             // Using C string functions to avoid unnecessary dynamic memory allocation
             auto *basename = std::strrchr(symbols[i], '/');
-            if (!basename) { continue; }
+            if (!basename)
+            {
+                continue;
+            }
             basename++;
             auto *symbol = std::strchr(basename, '(');
-            if (!symbol) { continue; }
+            if (!symbol)
+            {
+                continue;
+            }
             auto *basenameEnd = symbol++;
             auto *end = std::strrchr(symbol, ')');
-            if (!end) { continue; }
+            if (!end)
+            {
+                continue;
+            }
             auto *offset = std::strrchr(symbol, '+');
             auto *symbolEnd = offset ? offset++ : end;
 

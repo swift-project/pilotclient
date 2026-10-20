@@ -35,7 +35,10 @@ namespace swift::misc::aviation
 
     CAtcStationList CAtcStationList::findIfFrequencyIsWithinSpacing(const CFrequency &frequency)
     {
-        if (frequency.isNull()) { return {}; }
+        if (frequency.isNull())
+        {
+            return {};
+        }
         return this->findBy([&](const CAtcStation &atcStation) { return atcStation.isAtcStationFrequency(frequency); });
     }
 
@@ -48,17 +51,32 @@ namespace swift::misc::aviation
         bool unequal = false;
         for (CAtcStation &station : *this)
         {
-            if (station.getCallsign() != callsign) { continue; }
+            if (station.getCallsign() != callsign)
+            {
+                continue;
+            }
 
             const CInformationMessage m = station.getInformationMessage(type);
-            if (m.getType() == CInformationMessage::Unspecified) { break; }
+            if (m.getType() == CInformationMessage::Unspecified)
+            {
+                break;
+            }
 
             if (m.getMessage() == im.getMessage())
             {
-                if (!overrideWithNewer) { break; }
-                if (!im.isNewerThan(m)) { break; }
+                if (!overrideWithNewer)
+                {
+                    break;
+                }
+                if (!im.isNewerThan(m))
+                {
+                    break;
+                }
             }
-            else { unequal = true; }
+            else
+            {
+                unequal = true;
+            }
             station.setMessage(im);
             break; // only count unequals
         }
@@ -70,8 +88,14 @@ namespace swift::misc::aviation
         int c = 0;
         for (CAtcStation &station : *this)
         {
-            if (station.getCallsign() != callsign) { continue; }
-            if (station.setOnline(online)) { c++; }
+            if (station.getCallsign() != callsign)
+            {
+                continue;
+            }
+            if (station.setOnline(online))
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -91,7 +115,10 @@ namespace swift::misc::aviation
 
     CAtcStationList CAtcStationList::findInRange() const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         CAtcStationList copy(*this);
         copy.removeIfOutsideRange();
         return copy;
@@ -111,7 +138,10 @@ namespace swift::misc::aviation
 
     QHash<QString, CAtcStationList> CAtcStationList::splitPerSuffix(bool sort) const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         const CAtcStationList stations = sort ? this->sortedByAtcSuffixSortOrderAndDistance() : *this;
 
         QString suffix;

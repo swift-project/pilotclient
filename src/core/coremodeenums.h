@@ -24,15 +24,36 @@ namespace swift::core
         static CoreMode stringToCoreMode(const QString &m)
         {
             QString cm(m.toLower().trimmed());
-            if (cm.isEmpty()) { return Standalone; }
-            if (m == coreModeToString(Standalone)) { return Standalone; }
-            if (m == coreModeToString(Distributed)) { return Distributed; }
+            if (cm.isEmpty())
+            {
+                return Standalone;
+            }
+            if (m == coreModeToString(Standalone))
+            {
+                return Standalone;
+            }
+            if (m == coreModeToString(Distributed))
+            {
+                return Distributed;
+            }
 
             // some alternative names
-            if (cm.contains("distribute")) { return Distributed; }
-            if (cm.contains("standalone")) { return Standalone; }
-            if (cm.contains("external")) { return Distributed; }
-            if (cm.contains("gui")) { return Standalone; }
+            if (cm.contains("distribute"))
+            {
+                return Distributed;
+            }
+            if (cm.contains("standalone"))
+            {
+                return Standalone;
+            }
+            if (cm.contains("external"))
+            {
+                return Distributed;
+            }
+            if (cm.contains("gui"))
+            {
+                return Standalone;
+            }
             return Standalone;
         }
 

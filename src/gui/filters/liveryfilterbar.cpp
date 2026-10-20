@@ -77,13 +77,22 @@ namespace swift::gui::filters
             ui->color_Tail->setColor(livery.getColorTail());
             filter = true;
         }
-        if (filter) { ui->filter_Buttons->clickButton(CFilterBarButtons::Filter); }
-        else { ui->filter_Buttons->clickButton(CFilterBarButtons::RemoveFilter); }
+        if (filter)
+        {
+            ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
+        }
+        else
+        {
+            ui->filter_Buttons->clickButton(CFilterBarButtons::RemoveFilter);
+        }
     }
 
     void CLiveryFilterBar::filter(const CAirlineIcaoCode &airlineIcao)
     {
-        if (!airlineIcao.hasValidDesignator()) { return; }
+        if (!airlineIcao.hasValidDesignator())
+        {
+            return;
+        }
         ui->le_AirlineIcaoCode->setText(airlineIcao.getVDesignator());
         ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
     }

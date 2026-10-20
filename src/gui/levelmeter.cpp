@@ -50,7 +50,10 @@ namespace swift::gui
         if (m_peakLevelChanged.elapsed() > PeakHoldLevelDuration)
         {
             m_peakLevel -= DecayValue;
-            if (m_peakLevel < m_level || m_peakLevel < 0) { m_peakLevel = 0.0; }
+            if (m_peakLevel < m_level || m_peakLevel < 0)
+            {
+                m_peakLevel = 0.0;
+            }
         }
         this->update();
     }

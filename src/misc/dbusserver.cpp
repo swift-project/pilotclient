@@ -81,7 +81,10 @@ namespace swift::misc
             {
                 CLogMessage(this).info(u"DBus P2P Server listening on address: '%1'") << m_busServer->address();
             }
-            else { CLogMessage(this).warning(u"DBus P2P connection failed: %1") << lastQDBusServerError().message(); }
+            else
+            {
+                CLogMessage(this).warning(u"DBus P2P connection failed: %1") << lastQDBusServerError().message();
+            }
             connect(m_busServer.data(), &QDBusServer::newConnection, this,
                     &CDBusServer::registerObjectsWithP2PConnection);
         }
@@ -117,7 +120,10 @@ namespace swift::misc
 
     bool CDBusServer::isP2PConnection(const QDBusConnection &connection)
     {
-        if (CDBusServer::isQtDefaultConnection(connection)) { return false; }
+        if (CDBusServer::isQtDefaultConnection(connection))
+        {
+            return false;
+        }
         return connection.name().contains(p2pConnectionName());
     }
 
@@ -141,11 +147,20 @@ namespace swift::misc
                     const QString p = part.mid(part.lastIndexOf("=") + 1).trimmed();
                     bool ok {};
                     port = p.toInt(&ok);
-                    if (!ok) { port = -1; }
+                    if (!ok)
+                    {
+                        port = -1;
+                    }
                 }
             }
-            if (port < 0) { port = 45000; }
-            if (host.isEmpty()) { host = "127.0.0.1"; }
+            if (port < 0)
+            {
+                port = 45000;
+            }
+            if (host.isEmpty())
+            {
+                host = "127.0.0.1";
+            }
             return true;
         }
         else
@@ -182,13 +197,19 @@ namespace swift::misc
 
     QString CDBusServer::getDBusInterfaceFromClassInfo(QObject *object)
     {
-        if (!object) { return {}; }
+        if (!object)
+        {
+            return {};
+        }
         const QMetaObject *mo = object->metaObject();
         for (int i = 0; i < mo->classInfoCount(); i++)
         {
             const QMetaClassInfo ci = mo->classInfo(i);
             const QString name = QString(ci.name()).toLower();
-            if (name == "d-bus interface") { return { ci.value() }; }
+            if (name == "d-bus interface")
+            {
+                return { ci.value() };
+            }
         }
         return {};
     }
@@ -225,7 +246,10 @@ namespace swift::misc
 
     void CDBusServer::addObject(const QString &path, QObject *object)
     {
-        if (!object) { return; }
+        if (!object)
+        {
+            return;
+        }
         m_objects.insert(path, object); // will be registered when P2P connection is established
 
         QObject::connect(object, &QObject::destroyed, this, [this, path] { m_objects.remove(path); });
@@ -286,7 +310,10 @@ namespace swift::misc
 
     QDBusError CDBusServer::lastQDBusServerError() const
     {
-        if (!hasQDBusServer()) { return {}; }
+        if (!hasQDBusServer())
+        {
+            return {};
+        }
         return m_busServer->lastError();
     }
 
@@ -303,7 +330,10 @@ namespace swift::misc
             case SERVERMODE_SESSIONBUS: QDBusConnection::sessionBus().unregisterObject(path); break;
             case SERVERMODE_SYSTEMBUS: QDBusConnection::systemBus().unregisterObject(path); break;
             case SERVERMODE_P2P:
-                for (QDBusConnection connection : std::as_const(m_connections)) { connection.unregisterObject(path); }
+                for (QDBusConnection connection : std::as_const(m_connections))
+                {
+                    connection.unregisterObject(path);
+                }
                 break;
             }
         }
@@ -351,14 +381,23 @@ namespace swift::misc
     void CDBusServer::disconnectFromDBus(const QDBusConnection &connection, const QString &dBusAddress)
     {
         if (CDBusServer::isQtDefaultConnection(connection)) return; // do not touch the default connections
-        if (CDBusServer::isP2PAddress(dBusAddress)) { QDBusConnection::disconnectFromPeer(connection.name()); }
-        else { QDBusConnection::disconnectFromBus(connection.name()); }
+        if (CDBusServer::isP2PAddress(dBusAddress))
+        {
+            QDBusConnection::disconnectFromPeer(connection.name());
+        }
+        else
+        {
+            QDBusConnection::disconnectFromBus(connection.name());
+        }
     }
 
     QString CDBusServer::p2pAddress(const QString &host, const QString &port)
     {
         QString h = host.trimmed().toLower().remove(' ');
-        if (h.isEmpty()) { h = "127.0.0.1"; }
+        if (h.isEmpty())
+        {
+            h = "127.0.0.1";
+        }
 
         // check port
         bool ok = false;
@@ -388,7 +427,10 @@ namespace swift::misc
                 h = parts.at(0).trimmed();
                 p = parts.at(1).trimmed();
             }
-            else { p = "45000"; }
+            else
+            {
+                p = "45000";
+            }
         }
 
         // todo: Replace assert with input validation
@@ -406,24 +448,48 @@ namespace swift::misc
     {
         const QString lc(address.toLower().trimmed());
 
-        if (lc.isEmpty()) { return sessionBusAddress(); }
-        if (lc == sessionBusAddress() || lc == systemBusAddress()) { return lc; }
+        if (lc.isEmpty())
+        {
+            return sessionBusAddress();
+        }
+        if (lc == sessionBusAddress() || lc == systemBusAddress())
+        {
+            return lc;
+        }
 
         // some aliases
-        if (lc.startsWith("sys")) { return systemBusAddress(); }
-        if (lc.startsWith("ses")) { return sessionBusAddress(); }
+        if (lc.startsWith("sys"))
+        {
+            return systemBusAddress();
+        }
+        if (lc.startsWith("ses"))
+        {
+            return sessionBusAddress();
+        }
 
         // Qt / P2P
-        if (isQtDBusAddress(address)) { return address; }
+        if (isQtDBusAddress(address))
+        {
+            return address;
+        }
         return p2pAddress(address);
     }
 
     CDBusServer::ServerMode CDBusServer::modeOfAddress(QString address)
     {
         address = address.toLower();
-        if (address == systemBusAddress()) { return SERVERMODE_SYSTEMBUS; }
-        else if (address == sessionBusAddress()) { return SERVERMODE_SESSIONBUS; }
-        else { return SERVERMODE_P2P; }
+        if (address == systemBusAddress())
+        {
+            return SERVERMODE_SYSTEMBUS;
+        }
+        else if (address == sessionBusAddress())
+        {
+            return SERVERMODE_SESSIONBUS;
+        }
+        else
+        {
+            return SERVERMODE_P2P;
+        }
     }
 
     const QString &CDBusServer::modeToString(CDBusServer::ServerMode mode)

@@ -50,7 +50,10 @@ namespace swift::misc
     {
         QLockFile lock(lockFileName());
         const CStatusMessage lockStatus = lockFile(lock);
-        if (lockStatus.isFailure()) { return lockStatus; }
+        if (lockStatus.isFailure())
+        {
+            return lockStatus;
+        }
 
         return saveToFiles(persistentStore(), keyPrefix);
     }
@@ -59,7 +62,10 @@ namespace swift::misc
     {
         QLockFile lock(lockFileName());
         const CStatusMessage lockStatus = lockFile(lock);
-        if (lockStatus.isFailure()) { return lockStatus; }
+        if (lockStatus.isFailure())
+        {
+            return lockStatus;
+        }
 
         return saveToFiles(persistentStore(), keys);
     }
@@ -88,7 +94,10 @@ namespace swift::misc
     {
         QLockFile lock(lockFileName());
         const CStatusMessage lockStatus = lockFile(lock);
-        if (lockStatus.isFailure()) { return lockStatus; }
+        if (lockStatus.isFailure())
+        {
+            return lockStatus;
+        }
 
         return loadFromFiles(persistentStore());
     }

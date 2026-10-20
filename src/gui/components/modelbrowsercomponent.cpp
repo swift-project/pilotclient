@@ -62,7 +62,10 @@ namespace swift::gui::components
 
     void CModelBrowserComponent::onSetRelativePosition()
     {
-        if (!this->hasContexts()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
         const CAircraftSituation s = sGui->getIContextOwnAircraft()->getOwnAircraftSituation();
         ui->editor_RelativePosition->setOriginCoordinate(s);
         const CCoordinateGeodetic rel = ui->editor_RelativePosition->getRelativeCoordinate(s.getHeading());
@@ -78,14 +81,20 @@ namespace swift::gui::components
     void CModelBrowserComponent::onSetPBH()
     {
         ui->cb_UsePBH->setChecked(true);
-        if (!this->hasContexts()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
         this->updatePartsAndPBH(true, false);
     }
 
     void CModelBrowserComponent::onSetParts()
     {
         ui->cb_UseParts->setChecked(true);
-        if (!this->hasContexts()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
         this->updatePartsAndPBH(false, true);
     }
 
@@ -96,19 +105,34 @@ namespace swift::gui::components
 
     void CModelBrowserComponent::updatePartsAndPBH(bool setPbh, bool setParts)
     {
-        if (!this->hasContexts()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
         CAircraftParts parts = CAircraftParts::null();
-        if (setParts || ui->cb_UseParts->isChecked()) { parts = this->getParts(); }
+        if (setParts || ui->cb_UseParts->isChecked())
+        {
+            parts = this->getParts();
+        }
 
-        if (setPbh || ui->cb_UsePBH->isChecked()) { ui->editor_Pbh->updateSituation(m_situation); }
-        else { m_situation.setZeroPBHandGs(); }
+        if (setPbh || ui->cb_UsePBH->isChecked())
+        {
+            ui->editor_Pbh->updateSituation(m_situation);
+        }
+        else
+        {
+            m_situation.setZeroPBHandGs();
+        }
 
         sGui->getISimulator()->testSendSituationAndParts(ISimulator::getTestCallsign(), m_situation, parts);
     }
 
     void CModelBrowserComponent::fetchSimulatorValues()
     {
-        if (!this->hasContexts()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
     }
 
     void CModelBrowserComponent::onModelDblClicked(const CVariant &object)
@@ -119,9 +143,15 @@ namespace swift::gui::components
 
     void CModelBrowserComponent::display()
     {
-        if (!this->hasContexts()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
         CAircraftModel model = ui->tvp_AircraftModels->selectedObject();
-        if (!model.hasModelString()) { return; }
+        if (!model.hasModelString())
+        {
+            return;
+        }
 
         this->remove(); // only 1 model at a time
 
@@ -129,17 +159,29 @@ namespace swift::gui::components
         {
             CLength cg;
             cg.parseFromString(ui->le_CG->text(), CPqString::SeparatorBestGuess);
-            if (!cg.isNull()) { model.setCG(cg); }
+            if (!cg.isNull())
+            {
+                model.setCG(cg);
+            }
         }
-        else { ui->le_CG->setText(model.getCG().valueRoundedWithUnit(CLengthUnit::ft(), 1)); }
+        else
+        {
+            ui->le_CG->setText(model.getCG().valueRoundedWithUnit(CLengthUnit::ft(), 1));
+        }
 
         m_situation.setZeroPBHandGs();
-        if (ui->cb_UsePBH->isChecked()) { ui->editor_Pbh->updateSituation(m_situation); }
+        if (ui->cb_UsePBH->isChecked())
+        {
+            ui->editor_Pbh->updateSituation(m_situation);
+        }
 
         if (ui->cb_UseParts->isChecked())
         {
             const CAircraftParts parts = ui->editor_AircraftParts->getAircraftPartsFromGui();
-            if (!parts.isNull()) { m_aircraft.setParts(parts); }
+            if (!parts.isNull())
+            {
+                m_aircraft.setParts(parts);
+            }
         }
 
         m_aircraft.setModel(model);
@@ -158,15 +200,24 @@ namespace swift::gui::components
         ui->le_ModelInfo->clear();
         ui->le_Info->clear();
 
-        if (!this->hasContexts()) { return; }
-        if (!m_aircraft.hasCallsign()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
+        if (!m_aircraft.hasCallsign())
+        {
+            return;
+        }
         sGui->getIContextSimulator()->testRemoteAircraft(m_aircraft, false);
         m_aircraft = CSimulatedAircraft(); // reset
     }
 
     void CModelBrowserComponent::loadModelSet()
     {
-        if (!this->hasContexts()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
 
         const CAircraftModelList modelSet = sGui->getIContextSimulator()->getModelSet();
         ui->tvp_AircraftModels->updateContainerMaybeAsync(modelSet);
@@ -176,15 +227,30 @@ namespace swift::gui::components
 
     bool CModelBrowserComponent::hasContexts() const
     {
-        if (!sGui || sGui->isShuttingDown()) { return false; }
-        if (!sGui->getIContextOwnAircraft()) { return false; }
-        if (!sGui->getIContextSimulator()) { return false; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return false;
+        }
+        if (!sGui->getIContextOwnAircraft())
+        {
+            return false;
+        }
+        if (!sGui->getIContextSimulator())
+        {
+            return false;
+        }
         return true;
     }
 
     void CModelBrowserComponent::onCGChecked(bool checked)
     {
-        if (ui->cb_OverrideCG->isChecked() != checked) { ui->cb_OverrideCG->setChecked(true); }
-        if (ui->cb_UseCG->isChecked() != checked) { ui->cb_UseCG->setChecked(true); }
+        if (ui->cb_OverrideCG->isChecked() != checked)
+        {
+            ui->cb_OverrideCG->setChecked(true);
+        }
+        if (ui->cb_UseCG->isChecked() != checked)
+        {
+            ui->cb_UseCG->setChecked(true);
+        }
     }
 } // namespace swift::gui::components

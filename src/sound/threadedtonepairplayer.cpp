@@ -23,18 +23,27 @@ namespace swift::sound
     {
         QPointer<CThreadedTonePairPlayer> myself(this);
         QMutexLocker ml(&m_mutex);
-        if (m_audioOutput->state() != QAudio::StoppedState) { return; }
+        if (m_audioOutput->state() != QAudio::StoppedState)
+        {
+            return;
+        }
 
         m_bufferData = this->getAudioByTonePairs(tonePairs);
         m_audioOutput->setVolume(static_cast<qreal>(0.01 * volume));
         QTimer::singleShot(0, this, [=] {
-            if (myself) { myself->playBuffer(); }
+            if (myself)
+            {
+                myself->playBuffer();
+            }
         });
     }
 
     bool CThreadedTonePairPlayer::reinitializeAudio(const CAudioDeviceInfo &device)
     {
-        if (this->getAudioDevice() == device) { return false; }
+        if (this->getAudioDevice() == device)
+        {
+            return false;
+        }
         {
             QMutexLocker ml(&m_mutex);
             m_deviceInfo = device;
@@ -94,7 +103,10 @@ namespace swift::sound
     void CThreadedTonePairPlayer::playBuffer()
     {
         QMutexLocker ml(&m_mutex);
-        if (!m_audioOutput || m_audioOutput->state() == QAudio::ActiveState) { return; }
+        if (!m_audioOutput || m_audioOutput->state() == QAudio::ActiveState)
+        {
+            return;
+        }
         m_buffer.close();
         m_buffer.setBuffer(&m_bufferData);
         m_buffer.open(QIODevice::ReadOnly);
@@ -159,8 +171,14 @@ namespace swift::sound
 
             // avoid overflow
             Q_ASSERT(amplitude <= 1.0 && amplitude >= -1.0);
-            if (amplitude < -1.0) { amplitude = -1.0; }
-            else if (amplitude > 1.0) { amplitude = 1.0; }
+            if (amplitude < -1.0)
+            {
+                amplitude = -1.0;
+            }
+            else if (amplitude > 1.0)
+            {
+                amplitude = 1.0;
+            }
             else if (qAbs(amplitude) < 1.0 / 65535)
             {
                 amplitude = 0;

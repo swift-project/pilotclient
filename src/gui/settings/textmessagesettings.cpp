@@ -46,20 +46,41 @@ namespace swift::gui::settings
 
     bool CTextMessageSettings::popup(const CTextMessage &textMessage) const
     {
-        if (this->getPopupAllMessages()) { return true; }
-        if (textMessage.isPrivateMessage() && this->popupPrivateMessages()) { return true; }
-        if (textMessage.isSupervisorMessage() && this->popupSupervisorMessages()) { return true; }
-        if (textMessage.isSelcalMessage() && this->popupSelcalMessages()) { return true; }
+        if (this->getPopupAllMessages())
+        {
+            return true;
+        }
+        if (textMessage.isPrivateMessage() && this->popupPrivateMessages())
+        {
+            return true;
+        }
+        if (textMessage.isSupervisorMessage() && this->popupSupervisorMessages())
+        {
+            return true;
+        }
+        if (textMessage.isSelcalMessage() && this->popupSelcalMessages())
+        {
+            return true;
+        }
         return false;
     }
 
     bool CTextMessageSettings::popup(const CTextMessage &textMessage, const CSimulatedAircraft &ownAircraft) const
     {
-        if (this->popup(textMessage)) { return true; }
+        if (this->popup(textMessage))
+        {
+            return true;
+        }
         if (textMessage.isRadioMessage())
         {
-            if (!this->popupFrequencyMessages()) { return false; }
-            if (ownAircraft.hasComActiveFrequency(textMessage.getFrequency())) { return true; }
+            if (!this->popupFrequencyMessages())
+            {
+                return false;
+            }
+            if (ownAircraft.hasComActiveFrequency(textMessage.getFrequency()))
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -75,7 +96,10 @@ namespace swift::gui::settings
 
     QVariant CTextMessageSettings::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

@@ -48,7 +48,10 @@ namespace swift::gui::menus
         //! Delegate down one level
         void nestedCustomMenu(CMenuActions &menuActions) const
         {
-            if (!m_nestedDelegate) { return; }
+            if (!m_nestedDelegate)
+            {
+                return;
+            }
             m_nestedDelegate->customMenu(menuActions);
         }
 
@@ -56,7 +59,10 @@ namespace swift::gui::menus
         bool previousMenuItemContains(const QString &str, const QMenu &menu,
                                       Qt::CaseSensitivity cs = Qt::CaseSensitive) const
         {
-            if (menu.isEmpty() || str.isEmpty()) { return false; }
+            if (menu.isEmpty() || str.isEmpty())
+            {
+                return false;
+            }
             const QString t(menu.actions().last()->text());
             return t.contains(str, cs);
         }

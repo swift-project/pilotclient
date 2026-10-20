@@ -44,12 +44,30 @@ namespace swift::simplugin::xplane
         bool hasSameSizes() const
         {
             const int s = callsigns.size();
-            if (s != latitudesDeg.size()) { return false; }
-            if (s != longitudesDeg.size()) { return false; }
-            if (s != altitudesFt.size()) { return false; }
-            if (s != pitchesDeg.size()) { return false; }
-            if (s != rollsDeg.size()) { return false; }
-            if (s != headingsDeg.size()) { return false; }
+            if (s != latitudesDeg.size())
+            {
+                return false;
+            }
+            if (s != longitudesDeg.size())
+            {
+                return false;
+            }
+            if (s != altitudesFt.size())
+            {
+                return false;
+            }
+            if (s != pitchesDeg.size())
+            {
+                return false;
+            }
+            if (s != rollsDeg.size())
+            {
+                return false;
+            }
+            if (s != headingsDeg.size())
+            {
+                return false;
+            }
             return true;
         }
 

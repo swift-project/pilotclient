@@ -39,7 +39,10 @@ namespace swift::core::vatsim
         Q_ASSERT_X(hasStarted(), Q_FUNC_INFO, "Thread was not started yet!");
         QPointer<CVatsimServerFileReader> myself(this);
         QTimer::singleShot(0, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->read();
         });
     }
@@ -47,11 +50,17 @@ namespace swift::core::vatsim
     void CVatsimServerFileReader::read()
     {
         this->threadAssertCheck();
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
 
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
         const QUrl url = sApp->getVatsimServerFileUrl();
-        if (url.isEmpty()) { return; }
+        if (url.isEmpty())
+        {
+            return;
+        }
         this->getFromNetworkAndLog(url, { this, &CVatsimServerFileReader::parseVatsimFile });
     }
 
@@ -79,14 +88,20 @@ namespace swift::core::vatsim
             const QString dataFileData = nwReply->readAll();
             nwReply->close(); // close asap
 
-            if (dataFileData.isEmpty()) { return; }
+            if (dataFileData.isEmpty())
+            {
+                return;
+            }
             if (!this->didContentChange(dataFileData)) // Quick check by hash
             {
                 CLogMessage(this).info(u"VATSIM file '%1' has same content, skipped") << urlString;
                 return;
             }
             auto jsonDoc = QJsonDocument::fromJson(dataFileData.toUtf8());
-            if (jsonDoc.isEmpty()) { return; }
+            if (jsonDoc.isEmpty())
+            {
+                return;
+            }
 
             // build on local vars for thread safety
             CServerList fsdServers;
@@ -99,7 +114,10 @@ namespace swift::core::vatsim
                     return;
                 }
                 fsdServers.push_back(parseServer(server.toObject()));
-                if (!fsdServers.back().hasName()) { fsdServers.pop_back(); }
+                if (!fsdServers.back().hasName())
+                {
+                    fsdServers.pop_back();
+                }
             }
 
             // Setup for VATSIM servers and sorting for comparison

@@ -19,13 +19,19 @@ namespace swift::gui
 
     CEcosystem CEcosystemComboBox::getSelectedEcosystem() const
     {
-        if (this->currentIndex() < 0 || this->currentIndex() >= m_systems.size()) { return {}; }
+        if (this->currentIndex() < 0 || this->currentIndex() >= m_systems.size())
+        {
+            return {};
+        }
         return m_systems[this->currentIndex()];
     }
 
     void CEcosystemComboBox::setCurrentEcosystem(const CEcosystem &ecosystem)
     {
-        if (m_systems.contains(ecosystem)) { this->setCurrentText(ecosystem.getSystemString()); }
+        if (m_systems.contains(ecosystem))
+        {
+            this->setCurrentText(ecosystem.getSystemString());
+        }
     }
 
     void CEcosystemComboBox::setEcosystems(const CEcosystemList &systems)
@@ -37,6 +43,9 @@ namespace swift::gui
     void CEcosystemComboBox::initAllItems()
     {
         this->clear();
-        for (const CEcosystem &e : m_systems) { this->addItem(e.getSystemString()); }
+        for (const CEcosystem &e : m_systems)
+        {
+            this->addItem(e.getSystemString());
+        }
     }
 } // namespace swift::gui

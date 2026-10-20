@@ -42,15 +42,27 @@ namespace swift::core::db
             ownModel.setModelType(CAircraftModel::TypeOwnSimulatorModel);
             myModified = true;
         }
-        if (modified) { *modified = myModified; }
+        if (modified)
+        {
+            *modified = myModified;
+        }
         return ownModel;
     }
 
     CAircraftModel CDatabaseUtils::consolidateModelWithDbData(const CAircraftModel &model, bool force, bool *modified)
     {
-        if (modified) { *modified = false; }
-        if (!model.hasModelString()) { return model; }
-        if (!hasDbAircraftData()) { return model; }
+        if (modified)
+        {
+            *modified = false;
+        }
+        if (!model.hasModelString())
+        {
+            return model;
+        }
+        if (!hasDbAircraftData())
+        {
+            return model;
+        }
 
         CAircraftModel dbModel(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
         return CDatabaseUtils::consolidateModelWithDbData(model, dbModel, force, modified);
@@ -62,15 +74,27 @@ namespace swift::core::db
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application object");
         Q_ASSERT_X(sApp->hasWebDataServices(), Q_FUNC_INFO, "No web services");
 
-        if (modified) { *modified = false; }
-        if (!model.hasModelString()) { return model; }
-        if (!force && model.hasValidDbKey()) { return model; }
+        if (modified)
+        {
+            *modified = false;
+        }
+        if (!model.hasModelString())
+        {
+            return model;
+        }
+        if (!force && model.hasValidDbKey())
+        {
+            return model;
+        }
         const int distributorOrder = model.getDistributorOrder(); // later restore that order
 
         if (dbModel.isLoadedFromDb())
         {
             // take the db model as original
-            if (modified) { *modified = true; }
+            if (modified)
+            {
+                *modified = true;
+            }
             CAircraftModel dbModelModified(dbModel);
             dbModelModified.updateMissingParts(model);
             dbModelModified.setDistributorOrder(distributorOrder);
@@ -86,7 +110,10 @@ namespace swift::core::db
             const CLivery dbLivery(sApp->getWebDataServices()->smartLiverySelector(consolidatedModel.getLivery()));
             if (dbLivery.hasValidDbKey())
             {
-                if (modified) { *modified = true; }
+                if (modified)
+                {
+                    *modified = true;
+                }
                 consolidatedModel.setLivery(dbLivery);
             }
         }
@@ -97,7 +124,10 @@ namespace swift::core::db
                 sApp->getWebDataServices()->smartAircraftIcaoSelector(consolidatedModel.getAircraftIcaoCode()));
             if (dbIcao.hasValidDbKey())
             {
-                if (modified) { *modified = true; }
+                if (modified)
+                {
+                    *modified = true;
+                }
                 consolidatedModel.setAircraftIcaoCode(dbIcao);
             }
         }
@@ -106,7 +136,10 @@ namespace swift::core::db
             sApp->getWebDataServices()->getDistributors().smartDistributorSelector(model.getDistributor(), model));
         if (dbDistributor.isLoadedFromDb())
         {
-            if (modified) { *modified = true; }
+            if (modified)
+            {
+                *modified = true;
+            }
             consolidatedModel.setDistributor(dbDistributor);
         }
         consolidatedModel.updateLocalFileNames(model);
@@ -155,7 +188,10 @@ namespace swift::core::db
                     changed = true;
                 }
             }
-            if (changed) { c++; }
+            if (changed)
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -164,7 +200,10 @@ namespace swift::core::db
         const CAircraftModelList &models, const CAircraftModelList &simulatorModels, QStringList &removedModelStrings,
         bool processEvents)
     {
-        if (models.isEmpty() || simulatorModels.isEmpty()) { return models; }
+        if (models.isEmpty() || simulatorModels.isEmpty())
+        {
+            return models;
+        }
 
         QElapsedTimer timer;
         timer.start();
@@ -178,12 +217,18 @@ namespace swift::core::db
             c++;
             if (processEvents && c % 125 == 0)
             {
-                if (!sApp || sApp->isShuttingDown()) { return models; }
+                if (!sApp || sApp->isShuttingDown())
+                {
+                    return models;
+                }
                 CApplication::processEventsFor(25);
             }
 
             const QString ms(model.getModelString());
-            if (ms.isEmpty()) { continue; }
+            if (ms.isEmpty())
+            {
+                continue;
+            }
             if (!allOwnModelsModelStrings.contains(ms))
             {
                 removedModelStrings.push_back(ms);
@@ -195,7 +240,10 @@ namespace swift::core::db
                 CDatabaseUtils::consolidateModelWithDbData(consolidated, true);
                 consolidatedModels.push_back(consolidated);
             }
-            else { consolidatedModels.push_back(model); }
+            else
+            {
+                consolidatedModels.push_back(model);
+            }
         }
         CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"Consolidated %1 vs. %2 in %3 ms")
             << models.size() << simulatorModels.size() << timer.elapsed() << "ms";
@@ -207,7 +255,10 @@ namespace swift::core::db
                                                             const CAircraftModelList &simulatorModels,
                                                             QStringList &removedModelStrings, bool processEvents)
     {
-        if (models.isEmpty() || simulatorModels.isEmpty()) { return models; }
+        if (models.isEmpty() || simulatorModels.isEmpty())
+        {
+            return models;
+        }
 
         QElapsedTimer timer;
         timer.start();
@@ -221,12 +272,18 @@ namespace swift::core::db
             c++;
             if (processEvents && c % 125 == 0)
             {
-                if (!sApp || sApp->isShuttingDown()) { return models; }
+                if (!sApp || sApp->isShuttingDown())
+                {
+                    return models;
+                }
                 CApplication::processEventsFor(25);
             }
 
             const QString ms(model.getModelString());
-            if (ms.isEmpty()) { continue; }
+            if (ms.isEmpty())
+            {
+                continue;
+            }
             if (!allOwnModelsModelStrings.contains(ms))
             {
                 removedModelStrings.push_back(ms);
@@ -246,7 +303,10 @@ namespace swift::core::db
                     consolidatedModels.push_back(model);
                 }
             }
-            else { consolidatedModels.push_back(model); }
+            else
+            {
+                consolidatedModels.push_back(model);
+            }
         }
         CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"Updated directories %1 vs. %2 in %3 ms")
             << models.size() << simulatorModels.size() << timer.elapsed() << "ms";
@@ -259,16 +319,25 @@ namespace swift::core::db
         QElapsedTimer timer;
         timer.start();
         int c = 0;
-        if (models.isEmpty()) { return c; }
+        if (models.isEmpty())
+        {
+            return c;
+        }
         for (CAircraftModel &model : models)
         {
-            if (!force && model.isLoadedFromDb()) { continue; }
+            if (!force && model.isLoadedFromDb())
+            {
+                continue;
+            }
             bool modified = false;
             model = CDatabaseUtils::consolidateModelWithDbData(model, force, &modified);
             if (modified || model.hasValidDbKey())
             {
                 c++;
-                if (processEvents && c % 125 == 0) { CApplication::processEventsFor(25); }
+                if (processEvents && c % 125 == 0)
+                {
+                    CApplication::processEventsFor(25);
+                }
             }
         }
         CLogMessage(static_cast<CDatabaseUtils *>(nullptr)).info(u"Consolidated %1 models in %2ms")
@@ -279,7 +348,10 @@ namespace swift::core::db
     int CDatabaseUtils::consolidateModelsWithDbData(const CAircraftModelList &dbModels,
                                                     CAircraftModelList &simulatorModels, bool force)
     {
-        if (dbModels.isEmpty() || simulatorModels.isEmpty()) { return 0; }
+        if (dbModels.isEmpty() || simulatorModels.isEmpty())
+        {
+            return 0;
+        }
 
         QElapsedTimer timer;
         timer.start();
@@ -289,12 +361,21 @@ namespace swift::core::db
         for (CAircraftModel &model : simulatorModels)
         {
             const QString ms(model.getModelString());
-            if (ms.isEmpty()) { continue; }
-            if (!dbModelsModelStrings.contains(ms)) { continue; }
+            if (ms.isEmpty())
+            {
+                continue;
+            }
+            if (!dbModelsModelStrings.contains(ms))
+            {
+                continue;
+            }
             bool modified = false;
             const CAircraftModel consolidated = CDatabaseUtils::consolidateModelWithDbData(
                 model, dbModels.findFirstByModelStringAliasOrDefault(ms), force, &modified);
-            if (!modified) { continue; }
+            if (!modified)
+            {
+                continue;
+            }
             model = consolidated;
             c++;
         }
@@ -306,10 +387,16 @@ namespace swift::core::db
     int CDatabaseUtils::consolidateModelsWithDbModelAndDistributor(CAircraftModelList &models, bool force)
     {
         int c = 0;
-        if (models.isEmpty()) { return c; }
+        if (models.isEmpty())
+        {
+            return c;
+        }
         for (CAircraftModel &model : models)
         {
-            if (!force && model.hasValidDbKey()) { continue; }
+            if (!force && model.hasValidDbKey())
+            {
+                continue;
+            }
             const CAircraftModel dbModel(sApp->getWebDataServices()->getModelForModelString(model.getModelString()));
             if (dbModel.hasValidDbKey())
             {
@@ -319,17 +406,26 @@ namespace swift::core::db
             }
             const CDistributor distributor =
                 sApp->getWebDataServices()->smartDistributorSelector(model.getDistributor(), model);
-            if (distributor.isLoadedFromDb()) { model.setDistributor(distributor); }
+            if (distributor.isLoadedFromDb())
+            {
+                model.setDistributor(distributor);
+            }
         }
         return c;
     }
 
     CAircraftModel CDatabaseUtils::consolidateModelWithDbDistributor(const CAircraftModel &model, bool force)
     {
-        if (!force && model.getDistributor().isLoadedFromDb()) { return model; }
+        if (!force && model.getDistributor().isLoadedFromDb())
+        {
+            return model;
+        }
         const CDistributor distributor =
             sApp->getWebDataServices()->smartDistributorSelector(model.getDistributor(), model);
-        if (!distributor.isLoadedFromDb()) { return model; }
+        if (!distributor.isLoadedFromDb())
+        {
+            return model;
+        }
         CAircraftModel newModel(model);
         newModel.setDistributor(distributor);
         return newModel;
@@ -338,12 +434,21 @@ namespace swift::core::db
     int CDatabaseUtils::consolidateModelsWithDbDistributor(CAircraftModelList &models, bool force)
     {
         int c = 0;
-        if (models.isEmpty()) { return c; }
+        if (models.isEmpty())
+        {
+            return c;
+        }
         for (CAircraftModel &model : models)
         {
-            if (model.hasValidDbKey() || model.getDistributor().hasValidDbKey()) { continue; }
+            if (model.hasValidDbKey() || model.getDistributor().hasValidDbKey())
+            {
+                continue;
+            }
             model = CDatabaseUtils::consolidateModelWithDbDistributor(model, force);
-            if (model.getDistributor().hasValidDbKey()) { c++; }
+            if (model.getDistributor().hasValidDbKey())
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -353,13 +458,22 @@ namespace swift::core::db
                                                                   IProgressIndicator *progressIndicator,
                                                                   bool processEvents)
     {
-        if (!sApp || !sApp->getWebDataServices() || sApp->isShuttingDown()) { return {}; }
+        if (!sApp || !sApp->getWebDataServices() || sApp->isShuttingDown())
+        {
+            return {};
+        }
         const CAircraftModelList dbFsFamilyModels(sApp->getWebDataServices()->getModels().findFsFamilyModels());
         CAircraftModelList stashModels;
-        if (dbFsFamilyModels.isEmpty() || ownModels.isEmpty()) { return stashModels; }
+        if (dbFsFamilyModels.isEmpty() || ownModels.isEmpty())
+        {
+            return stashModels;
+        }
         const QSet<QString> dbKeys = dbFsFamilyModels.getModelStringSet();
         const int maxModelsCount = (maxToStash >= 0) ? maxToStash : ownModels.size();
-        if (maxModelsCount < 1) { return stashModels; }
+        if (maxModelsCount < 1)
+        {
+            return stashModels;
+        }
 
         int c = 0; // counter
         for (const CAircraftModel &ownModel : ownModels)
@@ -374,23 +488,41 @@ namespace swift::core::db
                     const int percentage = c * 100 / maxModelsCount;
                     progressIndicator->updateProgressIndicatorAndProcessEvents(percentage);
                 }
-                else { CApplication::processEventsFor(10); }
+                else
+                {
+                    CApplication::processEventsFor(10);
+                }
             }
 
             // values to be skipped
-            if (maxToStash >= 0 && stashModels.size() > maxToStash) { break; }
-            if (!dbKeys.contains(ownModel.getModelString())) { continue; }
-            if (ownModel.matchesSimulatorFlag(CSimulatorInfo::XPLANE)) { continue; }
+            if (maxToStash >= 0 && stashModels.size() > maxToStash)
+            {
+                break;
+            }
+            if (!dbKeys.contains(ownModel.getModelString()))
+            {
+                continue;
+            }
+            if (ownModel.matchesSimulatorFlag(CSimulatorInfo::XPLANE))
+            {
+                continue;
+            }
 
             // in DB
             CAircraftModel dbModel = dbFsFamilyModels.findFirstByModelStringAliasOrDefault(ownModel.getModelString());
-            if (!dbModel.isLoadedFromDb()) { continue; }
+            if (!dbModel.isLoadedFromDb())
+            {
+                continue;
+            }
 
             // update simulator and add
             CSimulatorInfo simulator(dbModel.getSimulator());
             const CSimulatorInfo dbModelSimulator(simulator);
             const CSimulatorInfo delta = simulator.add(ownModel.getSimulator());
-            if (delta.getSimulator() == CSimulatorInfo::None) { continue; }
+            if (delta.getSimulator() == CSimulatorInfo::None)
+            {
+                continue;
+            }
 
             dbModel.setSimulator(simulator);
             stashModels.push_back(dbModel); // changed DB model
@@ -410,7 +542,10 @@ namespace swift::core::db
     QJsonDocument CDatabaseUtils::databaseJsonToQJsonDocument(const QString &content)
     {
         static const QString compressed("swift:");
-        if (content.isEmpty()) { return {}; }
+        if (content.isEmpty())
+        {
+            return {};
+        }
         QByteArray byteData;
         if (json::looksLikeJson(content))
         {
@@ -419,7 +554,8 @@ namespace swift::core::db
         }
         else if (content.startsWith(compressed) && content.length() > compressed.length() + 3)
         {
-            do {
+            do
+            {
                 // "swift:1234:base64encoded
                 const int cl = compressed.length();
                 const int contentIndex = content.indexOf(':', cl);
@@ -439,21 +575,30 @@ namespace swift::core::db
             while (false);
         }
 
-        if (byteData.isEmpty()) { return {}; }
+        if (byteData.isEmpty())
+        {
+            return {};
+        }
         return QJsonDocument::fromJson(byteData);
     }
 
     QJsonDocument CDatabaseUtils::readQJsonDocumentFromDatabaseFile(const QString &filename)
     {
         const QString raw = CFileUtils::readFileToString(filename);
-        if (raw.isEmpty()) { return {}; }
+        if (raw.isEmpty())
+        {
+            return {};
+        }
         return CDatabaseUtils::databaseJsonToQJsonDocument(raw);
     }
 
     QJsonObject CDatabaseUtils::readQJsonObjectFromDatabaseFile(const QString &filename)
     {
         const QString raw = CFileUtils::readFileToString(filename);
-        if (raw.isEmpty()) { return {}; }
+        if (raw.isEmpty())
+        {
+            return {};
+        }
 
         // allow also compressed format
         const QJsonDocument jsonDoc = CDatabaseUtils::databaseJsonToQJsonDocument(raw);
@@ -506,7 +651,10 @@ namespace swift::core::db
             ba.remove(0, 4); // remove the non standard header
             textPart.setBody(ba);
         }
-        else { textPart.setBody(bytes); }
+        else
+        {
+            textPart.setBody(bytes);
+        }
         return textPart;
     }
 
@@ -524,7 +672,10 @@ namespace swift::core::db
                                                                   const CSimulatorInfo &simulator)
     {
         ChangedAutoPublishData changed;
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return changed; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices())
+        {
+            return changed;
+        }
         const CAircraftModel model = sApp->getWebDataServices()->getModelForModelString(modelString);
         return CDatabaseUtils::autoPublishDataChanged(model, cg, simulator);
     }
@@ -535,7 +686,10 @@ namespace swift::core::db
     {
         ChangedAutoPublishData changed;
         changed.modelKnown = model.hasValidDbKey();
-        if (!changed.modelKnown) { return changed; }
+        if (!changed.modelKnown)
+        {
+            return changed;
+        }
         changed.changedCG = !(cg == model.getCG());
         changed.changedSim = !(model.getSimulator().matchesAll(simulator));
         return changed;

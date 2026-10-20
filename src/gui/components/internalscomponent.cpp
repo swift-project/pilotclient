@@ -115,19 +115,46 @@ namespace swift::gui::components
         const bool debug = (checkState == Qt::Checked);
         const QObject *sender = QObject::sender();
 
-        if (sender == ui->cb_DebugContextApplication) { sGui->getIContextApplication()->setDebugEnabled(debug); }
-        else if (sender == ui->cb_DebugContextAudio) { sGui->getIContextAudio()->setDebugEnabled(debug); }
-        else if (sender == ui->cb_DebugContextNetwork) { sGui->getIContextNetwork()->setDebugEnabled(debug); }
-        else if (sender == ui->cb_DebugContextOwnAircraft) { sGui->getIContextOwnAircraft()->setDebugEnabled(debug); }
-        else if (sender == ui->cb_DebugContextSimulator) { sGui->getIContextSimulator()->setDebugEnabled(debug); }
+        if (sender == ui->cb_DebugContextApplication)
+        {
+            sGui->getIContextApplication()->setDebugEnabled(debug);
+        }
+        else if (sender == ui->cb_DebugContextAudio)
+        {
+            sGui->getIContextAudio()->setDebugEnabled(debug);
+        }
+        else if (sender == ui->cb_DebugContextNetwork)
+        {
+            sGui->getIContextNetwork()->setDebugEnabled(debug);
+        }
+        else if (sender == ui->cb_DebugContextOwnAircraft)
+        {
+            sGui->getIContextOwnAircraft()->setDebugEnabled(debug);
+        }
+        else if (sender == ui->cb_DebugContextSimulator)
+        {
+            sGui->getIContextSimulator()->setDebugEnabled(debug);
+        }
     }
 
     void CInternalsComponent::sendTextMessage()
     {
-        if (!sGui || !sGui->getIContextNetwork()) { return; }
-        if (ui->le_TxtMsgFrom->text().isEmpty()) { return; }
-        if (ui->pte_TxtMsg->toPlainText().isEmpty()) { return; }
-        if (ui->le_TxtMsgTo->text().isEmpty() && ui->dsb_TxtMsgFrequency->text().isEmpty()) { return; }
+        if (!sGui || !sGui->getIContextNetwork())
+        {
+            return;
+        }
+        if (ui->le_TxtMsgFrom->text().isEmpty())
+        {
+            return;
+        }
+        if (ui->pte_TxtMsg->toPlainText().isEmpty())
+        {
+            return;
+        }
+        if (ui->le_TxtMsgTo->text().isEmpty() && ui->dsb_TxtMsgFrequency->text().isEmpty())
+        {
+            return;
+        }
 
         // send in some time
         const QObject *senderObj = QObject::sender();
@@ -149,16 +176,28 @@ namespace swift::gui::components
             CComSystem::roundToChannelSpacing(f, CComSystem::ChannelSpacing8_33KHz);
             tm = CTextMessage(msgTxt, f, sender);
         }
-        else { tm = CTextMessage(msgTxt, sender, recipient); }
+        else
+        {
+            tm = CTextMessage(msgTxt, sender, recipient);
+        }
         tm.setCurrentUtcTime();
         sGui->getIContextNetwork()->testReceivedTextMessages(CTextMessageList({ tm }));
     }
 
     void CInternalsComponent::sendAtis()
     {
-        if (!sGui || !sGui->getIContextNetwork()) { return; }
-        if (ui->le_AtisCallsign->text().isEmpty()) { return; }
-        if (ui->pte_Atis->toPlainText().isEmpty()) { return; }
+        if (!sGui || !sGui->getIContextNetwork())
+        {
+            return;
+        }
+        if (ui->le_AtisCallsign->text().isEmpty())
+        {
+            return;
+        }
+        if (ui->pte_Atis->toPlainText().isEmpty())
+        {
+            return;
+        }
         const CCallsign cs(ui->le_AtisCallsign->text());
         const QString text(ui->pte_Atis->toPlainText());
 
@@ -168,11 +207,23 @@ namespace swift::gui::components
 
     void CInternalsComponent::logStatusMessage()
     {
-        if (ui->le_StatusMessage->text().isEmpty()) { return; }
+        if (ui->le_StatusMessage->text().isEmpty())
+        {
+            return;
+        }
         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;
-        if (ui->rb_StatusMessageError->isChecked()) { s = CStatusMessage::SeverityError; }
-        else if (ui->rb_StatusMessageWarning->isChecked()) { s = CStatusMessage::SeverityWarning; }
-        else if (ui->rb_StatusMessageInfo->isChecked()) { s = CStatusMessage::SeverityInfo; }
+        if (ui->rb_StatusMessageError->isChecked())
+        {
+            s = CStatusMessage::SeverityError;
+        }
+        else if (ui->rb_StatusMessageWarning->isChecked())
+        {
+            s = CStatusMessage::SeverityWarning;
+        }
+        else if (ui->rb_StatusMessageInfo->isChecked())
+        {
+            s = CStatusMessage::SeverityInfo;
+        }
         const CStatusMessage sm = CStatusMessage(this, s, ui->le_StatusMessage->text().trimmed());
         CLogMessage::preformatted(sm);
     }
@@ -181,10 +232,19 @@ namespace swift::gui::components
     {
         QString file;
         const QObject *sender = QObject::sender();
-        if (sender == ui->pb_LatestInterpolationLog) { file = CInterpolationLogger::getLatestLogFiles().first(); }
-        else if (sender == ui->pb_LatestPartsLog) { file = CInterpolationLogger::getLatestLogFiles().last(); }
+        if (sender == ui->pb_LatestInterpolationLog)
+        {
+            file = CInterpolationLogger::getLatestLogFiles().first();
+        }
+        else if (sender == ui->pb_LatestPartsLog)
+        {
+            file = CInterpolationLogger::getLatestLogFiles().last();
+        }
 
-        if (file.isEmpty()) { return; }
+        if (file.isEmpty())
+        {
+            return;
+        }
         QDesktopServices::openUrl(QUrl::fromLocalFile(file));
     }
 
@@ -206,7 +266,10 @@ namespace swift::gui::components
 
         const QMessageBox::StandardButton reply = QMessageBox::question(
             this, "crash simulation", "Really simulate crash?", QMessageBox::Yes | QMessageBox::No);
-        if (!sGui || reply != QMessageBox::Yes) { return; }
+        if (!sGui || reply != QMessageBox::Yes)
+        {
+            return;
+        }
         sGui->simulateCrash();
     }
 
@@ -220,7 +283,10 @@ namespace swift::gui::components
 
         const QMessageBox::StandardButton reply = QMessageBox::question(
             this, "ASSERT simulation", "Really create an ASSERT?", QMessageBox::Yes | QMessageBox::No);
-        if (!sGui || reply != QMessageBox::Yes) { return; }
+        if (!sGui || reply != QMessageBox::Yes)
+        {
+            return;
+        }
         sGui->simulateAssert();
     }
 
@@ -229,14 +295,20 @@ namespace swift::gui::components
         if (sGui && sGui->isSupportingCrashpad())
         {
             const bool current = CCrashHandler::instance()->isCrashDumpUploadEnabled();
-            if (current == checked) { return; }
+            if (current == checked)
+            {
+                return;
+            }
             sGui->enableCrashDumpUpload(checked);
         }
     }
 
     void CInternalsComponent::networkStatistics()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork())
+        {
+            return;
+        }
         const bool reset = (QObject::sender() == ui->pb_NetworkUpdateAndReset);
         const QString statistics = sGui->getIContextNetwork()->getNetworkStatistics(reset, "\n");
         ui->pte_NetworkCalls->setPlainText(statistics);
@@ -244,7 +316,10 @@ namespace swift::gui::components
 
     void CInternalsComponent::onNetworkStatisticsToggled(bool checked)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork())
+        {
+            return;
+        }
         const bool on = sGui->getIContextNetwork()->setNetworkStatisticsEnable(checked);
         CLogMessage(this).info(u"Network statistics is %1") << boolToOnOff(on);
     }

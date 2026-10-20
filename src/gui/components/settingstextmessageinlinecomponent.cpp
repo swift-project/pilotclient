@@ -69,7 +69,10 @@ namespace swift::gui::components
 
         QPointer<CSettingsTextMessageInlineComponent> myself(this);
         QTimer::singleShot(500, this, [=] {
-            if (myself) { myself->settingsChanged(); }
+            if (myself)
+            {
+                myself->settingsChanged();
+            }
         });
     }
 
@@ -81,7 +84,10 @@ namespace swift::gui::components
 
         QPointer<CSettingsTextMessageInlineComponent> myself(this);
         QTimer::singleShot(500, this, [=] {
-            if (myself) { myself->settingsChanged(); }
+            if (myself)
+            {
+                myself->settingsChanged();
+            }
         });
     }
 } // namespace swift::gui::components

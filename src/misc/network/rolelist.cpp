@@ -29,14 +29,20 @@ namespace swift::misc::network
     {
         QStringList rolesString;
         rolesString.reserve(size());
-        for (const CRole &role : (*this)) { rolesString.append(role.getName()); }
+        for (const CRole &role : (*this))
+        {
+            rolesString.append(role.getName());
+        }
         return rolesString.join(separator);
     }
 
     CRoleList CRoleList::fromDatabaseJson(const QJsonArray &array)
     {
         CRoleList roles;
-        for (const QJsonValue &value : array) { roles.push_back(CRole::fromDatabaseJson(value.toObject())); }
+        for (const QJsonValue &value : array)
+        {
+            roles.push_back(CRole::fromDatabaseJson(value.toObject()));
+        }
         return roles;
     }
 

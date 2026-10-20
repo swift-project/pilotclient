@@ -54,8 +54,14 @@ namespace swift::gui
         //! \remark usefule for text messages, as history will be already available
         void initOverlayMessages(QSize inner = {})
         {
-            if (m_overlayMessages) { return; }
-            if (inner.isNull()) { inner = this->innerFrameSize(); }
+            if (m_overlayMessages)
+            {
+                return;
+            }
+            if (inner.isNull())
+            {
+                inner = this->innerFrameSize();
+            }
 
             m_overlayMessages = new COverlayMessages(inner.width(), inner.height(), this);
             m_overlayMessages->hide();
@@ -78,21 +84,30 @@ namespace swift::gui
         {
             m_widthFactor = widthFactor;
             m_heightFactor = heightFactor;
-            if (middleFactor >= 0) { m_middleFactor = middleFactor; }
+            if (middleFactor >= 0)
+            {
+                m_middleFactor = middleFactor;
+            }
         }
 
         //! \copydoc swift::gui::COverlayMessages::setForceSmall
         void setForceSmall(bool force)
         {
             m_forceSmallMsgs = force;
-            if (m_overlayMessages) { m_overlayMessages->setForceSmall(force); }
+            if (m_overlayMessages)
+            {
+                m_overlayMessages->setForceSmall(force);
+            }
         }
 
         //! \copydoc swift::gui::COverlayMessages::setReducedInfo
         void setReducedInfo(bool reduced)
         {
             m_reducedInfo = reduced;
-            if (m_overlayMessages) { m_overlayMessages->setReducedInfo(reduced); }
+            if (m_overlayMessages)
+            {
+                m_overlayMessages->setReducedInfo(reduced);
+            }
         }
 
         //! \copydoc swift::gui::COverlayMessages::showOverlayMessagesWithConfirmation
@@ -102,9 +117,15 @@ namespace swift::gui
                                                  QMessageBox::StandardButton defaultButton = QMessageBox::Cancel,
                                                  std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
-            if (messages.isEmpty()) { return; }
+            if (messages.isEmpty())
+            {
+                return;
+            }
             this->initInnerFrame();
-            if (!this->hasMinimumSize(150, 150)) { return; }
+            if (!this->hasMinimumSize(150, 150))
+            {
+                return;
+            }
             m_overlayMessages->showOverlayMessagesWithConfirmation(messages, appendOldMessages, confirmationMessage,
                                                                    okLambda, defaultButton, timeout);
             WIDGET::repaint();
@@ -113,14 +134,20 @@ namespace swift::gui
         //! \copydoc swift::gui::COverlayMessages::clearOverlayMessages
         void clearOverlayMessages()
         {
-            if (!m_overlayMessages) { return; }
+            if (!m_overlayMessages)
+            {
+                return;
+            }
             m_overlayMessages->clearOverlayMessages();
         }
 
         //! \copydoc swift::gui::COverlayMessages::close
         void closeOverlay()
         {
-            if (!m_overlayMessages) { return; }
+            if (!m_overlayMessages)
+            {
+                return;
+            }
             m_overlayMessages->close();
         }
 
@@ -128,7 +155,10 @@ namespace swift::gui
         void showOverlayMessages(const swift::misc::CStatusMessageList &messages, bool appendOldMessages = false,
                                  std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
-            if (messages.isEmpty()) { return; }
+            if (messages.isEmpty())
+            {
+                return;
+            }
             this->initInnerFrame();
             m_overlayMessages->showOverlayMessages(messages, appendOldMessages, timeout);
             WIDGET::repaint();
@@ -139,7 +169,10 @@ namespace swift::gui
                                                 bool appendOldMessages = false,
                                                 std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
-            if (messages.isEmpty()) { return; }
+            if (messages.isEmpty())
+            {
+                return;
+            }
             this->initInnerFrame();
             m_overlayMessages->showOverlayMessagesOrSingleMessage(messages, appendOldMessages, timeout);
             WIDGET::repaint();
@@ -150,7 +183,10 @@ namespace swift::gui
                                               bool appendOldMessages = false,
                                               std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
-            if (messages.isEmpty()) { return; }
+            if (messages.isEmpty())
+            {
+                return;
+            }
             this->initInnerFrame();
             m_overlayMessages->showOverlayMessagesOrHTMLMessage(messages, appendOldMessages, timeout);
             WIDGET::repaint();
@@ -172,7 +208,10 @@ namespace swift::gui
         bool showOverlayMessage(const swift::misc::CStatusMessage &message,
                                 std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
-            if (message.isEmpty()) { return false; }
+            if (message.isEmpty())
+            {
+                return false;
+            }
             this->initInnerFrame();
             m_overlayMessages->showOverlayMessage(message, timeout);
             WIDGET::repaint();
@@ -183,7 +222,10 @@ namespace swift::gui
         bool showOverlayTextMessage(const swift::misc::network::CTextMessage &textMessage,
                                     std::chrono::milliseconds timeout = std::chrono::milliseconds(0))
         {
-            if (textMessage.isEmpty()) { return false; }
+            if (textMessage.isEmpty())
+            {
+                return false;
+            }
             this->initInnerFrame();
             m_overlayMessages->showOverlayTextMessage(textMessage, timeout);
             WIDGET::repaint();
@@ -198,9 +240,15 @@ namespace swift::gui
                 variant.canConvert<swift::misc::network::CTextMessage>())
             {
                 this->initInnerFrame(0.75, 0.75);
-                if (!this->hasMinimumSize(150, 150)) { return; }
+                if (!this->hasMinimumSize(150, 150))
+                {
+                    return;
+                }
             }
-            else { this->initInnerFrame(); }
+            else
+            {
+                this->initInnerFrame();
+            }
 
             m_overlayMessages->showOverlayVariant(variant, timeout);
             WIDGET::repaint();
@@ -248,7 +296,10 @@ namespace swift::gui
         void showOverlayInlineTextMessage(components::TextMessageTab tab)
         {
             this->initInnerFrame(0.75, 0.75);
-            if (!this->hasMinimumSize(150, 150)) { return; }
+            if (!this->hasMinimumSize(150, 150))
+            {
+                return;
+            }
             m_overlayMessages->showOverlayInlineTextMessage(tab);
             WIDGET::repaint();
         }
@@ -257,7 +308,10 @@ namespace swift::gui
         void showOverlayInlineTextMessage(const swift::misc::aviation::CCallsign &callsign)
         {
             this->initInnerFrame(0.75, 0.75);
-            if (!this->hasMinimumSize(150, 150)) { return; }
+            if (!this->hasMinimumSize(150, 150))
+            {
+                return;
+            }
             m_overlayMessages->showOverlayInlineTextMessage(callsign);
             WIDGET::repaint();
         }
@@ -303,7 +357,10 @@ namespace swift::gui
             // get logical resolution
             constexpr int MinHeight = 100;
             QSizeF s = CGuiUtility::fontMetricsEstimateSize(100, lines, true); // 2 lines for header
-            if (s.height() < MinHeight) { s.setHeight(MinHeight); }
+            if (s.height() < MinHeight)
+            {
+                s.setHeight(MinHeight);
+            }
 
             const QSize inner(innerFrameSize());
             const QPoint middle = WIDGET::geometry().center();
@@ -339,14 +396,20 @@ namespace swift::gui
                 m_overlayMessages->close();
                 event->accept();
             }
-            else { WIDGET::keyPressEvent(event); }
+            else
+            {
+                WIDGET::keyPressEvent(event);
+            }
         }
 
         //! \copydoc QFrame::resizeEvent
         void resizeEvent(QResizeEvent *event) override
         {
             WIDGET::resizeEvent(event);
-            if (m_overlayMessages && m_overlayMessages->isVisible()) { this->initInnerFrame(); }
+            if (m_overlayMessages && m_overlayMessages->isVisible())
+            {
+                this->initInnerFrame();
+            }
         }
 
     private:
@@ -362,8 +425,14 @@ namespace swift::gui
 
             int wInner = qRound(widthFactor * w);
             int hInner = qRound(heightFactor * h);
-            if (wInner > WIDGET::maximumWidth()) { wInner = WIDGET::maximumWidth(); }
-            if (hInner > WIDGET::maximumHeight()) { hInner = WIDGET::maximumHeight(); }
+            if (wInner > WIDGET::maximumWidth())
+            {
+                wInner = WIDGET::maximumWidth();
+            }
+            if (hInner > WIDGET::maximumHeight())
+            {
+                hInner = WIDGET::maximumHeight();
+            }
             return { wInner, hInner };
         }
 

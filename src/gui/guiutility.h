@@ -135,15 +135,24 @@ namespace swift::gui
         template <class OverlayWidget>
         static OverlayWidget *nextOverlayMessageWidget(QWidget *widget, int maxLevels = 10)
         {
-            if (!widget || maxLevels < 1) { return nullptr; }
+            if (!widget || maxLevels < 1)
+            {
+                return nullptr;
+            }
             auto *o = qobject_cast<OverlayWidget *>(widget);
-            if (o) { return o; }
+            if (o)
+            {
+                return o;
+            }
             int cl = 0;
             QWidget *cw = widget->parentWidget();
             while (cl < maxLevels && cw)
             {
                 o = qobject_cast<OverlayWidget *>(cw);
-                if (o) { return o; }
+                if (o)
+                {
+                    return o;
+                }
                 cl++;
                 cw = cw->parentWidget();
             }
@@ -175,9 +184,15 @@ namespace swift::gui
         template <class WIDGET>
         static void childrenSetEnabled(QWidget *parent, bool enabled)
         {
-            if (!parent) { return; }
+            if (!parent)
+            {
+                return;
+            }
             QList<WIDGET *> children = parent->findChildren<WIDGET *>();
-            for (WIDGET *w : children) { w->setEnabled(enabled); }
+            for (WIDGET *w : children)
+            {
+                w->setEnabled(enabled);
+            }
         }
 
         //! Toggle window flags / stay on top

@@ -60,9 +60,15 @@ namespace swift::misc::aviation
 
     CAltitude CAltitude::withOffset(const CLength &offset) const
     {
-        if (this->isNull()) { return CAltitude::null(); }
+        if (this->isNull())
+        {
+            return CAltitude::null();
+        }
         CAltitude copy(*this);
-        if (!offset.isNull() && !offset.isZeroEpsilonConsidered()) { copy += offset.switchedUnit(this->getUnit()); }
+        if (!offset.isNull() && !offset.isZeroEpsilonConsidered())
+        {
+            copy += offset.switchedUnit(this->getUnit());
+        }
         return copy;
     }
 
@@ -70,14 +76,20 @@ namespace swift::misc::aviation
 
     CAltitude &CAltitude::switchUnit(const CLengthUnit &newUnit)
     {
-        if (newUnit.isNull() || this->getUnit().isNull() || this->getUnit() == newUnit) { return *this; }
+        if (newUnit.isNull() || this->getUnit().isNull() || this->getUnit() == newUnit)
+        {
+            return *this;
+        }
         CLength::switchUnit(newUnit);
         return *this;
     }
 
     CAltitude CAltitude::switchedUnit(const CLengthUnit &newUnit) const
     {
-        if (newUnit.isNull() || this->getUnit().isNull() || this->getUnit() == newUnit) { return *this; }
+        if (newUnit.isNull() || this->getUnit().isNull() || this->getUnit() == newUnit)
+        {
+            return *this;
+        }
         CAltitude copy(*this);
         copy.switchUnit(newUnit);
         return copy;
@@ -86,40 +98,61 @@ namespace swift::misc::aviation
     QString CAltitude::convertToQString(bool i18n) const
     {
         static const QString n("null");
-        if (this->isNull()) { return n; }
+        if (this->isNull())
+        {
+            return n;
+        }
 
         if (m_datum == FlightLevel)
         {
             const int fl = qRound(this->CLength::value(CLengthUnit::ft()) / 100.0);
             return QStringLiteral("FL%1").arg(fl);
         }
-        else { return this->CLength::valueRoundedWithUnit(1, i18n) % (this->isMeanSeaLevel() ? u" MSL" : u" AGL"); }
+        else
+        {
+            return this->CLength::valueRoundedWithUnit(1, i18n) % (this->isMeanSeaLevel() ? u" MSL" : u" AGL");
+        }
     }
 
     int CAltitude::comparePropertyByIndex(CPropertyIndexRef index, const CAltitude &compareValue) const
     {
-        if (index.isMyself()) { return this->compare(compareValue); }
+        if (index.isMyself())
+        {
+            return this->compare(compareValue);
+        }
         return CLength::comparePropertyByIndex(index, compareValue);
     }
 
     bool CAltitude::toFlightLevel()
     {
-        if (m_datum != MeanSeaLevel && m_datum != FlightLevel) { return false; }
+        if (m_datum != MeanSeaLevel && m_datum != FlightLevel)
+        {
+            return false;
+        }
         m_datum = FlightLevel;
         return true;
     }
 
     bool CAltitude::toMeanSeaLevel()
     {
-        if (m_datum != MeanSeaLevel && m_datum != FlightLevel) { return false; }
+        if (m_datum != MeanSeaLevel && m_datum != FlightLevel)
+        {
+            return false;
+        }
         m_datum = MeanSeaLevel;
         return true;
     }
 
     void CAltitude::convertToPressureAltitude(const CPressure &seaLevelPressure)
     {
-        if (m_altitudeType == PressureAltitude) { return; }
-        if (this->isNull()) { return; }
+        if (m_altitudeType == PressureAltitude)
+        {
+            return;
+        }
+        if (this->isNull())
+        {
+            return;
+        }
         const CPressure deltaPressure = standardISASeaLevelPressure() - seaLevelPressure;
         const double deltaPressureV = deltaPressure.value(CPressureUnit::mbar());
         const double deltaAltitudeV = deltaPressureV * 30.0; // 30.0 ft per mbar
@@ -130,8 +163,14 @@ namespace swift::misc::aviation
 
     CAltitude CAltitude::toPressureAltitude(const CPressure &seaLevelPressure) const
     {
-        if (seaLevelPressure.isNull()) { return CAltitude::null(); }
-        if (this->isNull()) { return CAltitude::null(); }
+        if (seaLevelPressure.isNull())
+        {
+            return CAltitude::null();
+        }
+        if (this->isNull())
+        {
+            return CAltitude::null();
+        }
         CAltitude other(*this);
         other.convertToPressureAltitude(seaLevelPressure);
         return other;
@@ -198,7 +237,10 @@ namespace swift::misc::aviation
         this->setNull();
         if (v.length() < 3)
         {
-            if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude empty or too short")); }
+            if (msgs)
+            {
+                msgs->push_back(CStatusMessage(this).validationError(u"Altitude empty or too short"));
+            }
             return false;
         }
 
@@ -230,7 +272,10 @@ namespace swift::misc::aviation
 
         if (numericPart.isEmpty())
         {
-            if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude '%1' has no numeric part")); }
+            if (msgs)
+            {
+                msgs->push_back(CStatusMessage(this).validationError(u"Altitude '%1' has no numeric part"));
+            }
             return false;
         }
 
@@ -283,7 +328,10 @@ namespace swift::misc::aviation
 
         // further checks
         const bool valid = this->isValidFpAltitude(msgs);
-        if (!valid) { this->setNull(); }
+        if (!valid)
+        {
+            this->setNull();
+        }
         return valid;
     }
 
@@ -291,12 +339,18 @@ namespace swift::misc::aviation
     {
         if (this->isNull())
         {
-            if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude NULL value")); }
+            if (msgs)
+            {
+                msgs->push_back(CStatusMessage(this).validationError(u"Altitude NULL value"));
+            }
             return false;
         }
         if (this->getReferenceDatum() != FlightLevel && this->getReferenceDatum() != MeanSeaLevel)
         {
-            if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude, must be FL or MSL")); }
+            if (msgs)
+            {
+                msgs->push_back(CStatusMessage(this).validationError(u"Altitude, must be FL or MSL"));
+            }
             return false;
         }
         if (!(this->getUnit() == CLengthUnit::m() || this->getUnit() == CLengthUnit::ft()))
@@ -309,14 +363,20 @@ namespace swift::misc::aviation
         }
         if (this->isNegativeWithEpsilonConsidered())
         {
-            if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"Altitude must be positive")); }
+            if (msgs)
+            {
+                msgs->push_back(CStatusMessage(this).validationError(u"Altitude must be positive"));
+            }
             return false;
         }
         if (this->isFlightLevel())
         {
             if (!this->isInteger())
             {
-                if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"FL needs to be positive integer")); }
+                if (msgs)
+                {
+                    msgs->push_back(CStatusMessage(this).validationError(u"FL needs to be positive integer"));
+                }
                 return false;
             }
 
@@ -325,12 +385,18 @@ namespace swift::misc::aviation
                 const int flInt = this->valueInteger() / 100; // internally represented as ft: FL10->1000
                 if (flInt < 10 || flInt >= 1000)
                 {
-                    if (msgs) { msgs->push_back(CStatusMessage(this).validationError(u"FL range is 10-999")); }
+                    if (msgs)
+                    {
+                        msgs->push_back(CStatusMessage(this).validationError(u"FL range is 10-999"));
+                    }
                     return false;
                 }
                 if (!CMathUtils::epsilonZero(fmod(flInt, 5)))
                 {
-                    if (msgs) { msgs->push_back(CStatusMessage(this).validationWarning(u"FL should end with 0 or 5")); }
+                    if (msgs)
+                    {
+                        msgs->push_back(CStatusMessage(this).validationWarning(u"FL should end with 0 or 5"));
+                    }
                 }
             }
         }
@@ -339,7 +405,10 @@ namespace swift::misc::aviation
 
     QString CAltitude::asFpICAOAltitudeString() const
     {
-        if (this->isNull()) { return {}; }
+        if (this->isNull())
+        {
+            return {};
+        }
         if (this->isFlightLevel())
         {
             if (this->getUnit() == CLengthUnit::m())
@@ -362,7 +431,10 @@ namespace swift::misc::aviation
 
     QString CAltitude::asFpVatsimAltitudeString() const
     {
-        if (this->isFlightLevel()) { return this->asFpICAOAltitudeString(); }
+        if (this->isFlightLevel())
+        {
+            return this->asFpICAOAltitudeString();
+        }
         // the M/A formats are not supported by VATSIM, means by other clients
 
         // as feed, as none of the other clients

@@ -176,7 +176,10 @@ namespace swift::misc
         {
             return [index = *this](const auto &a, const auto &b) {
                 using T = std::decay_t<decltype(a)>;
-                if constexpr (THasComparePropertyByIndex<T>::value) { return a.comparePropertyByIndex(index, b); }
+                if constexpr (THasComparePropertyByIndex<T>::value)
+                {
+                    return a.comparePropertyByIndex(index, b);
+                }
                 else if constexpr (THasPropertyByIndex<T>::value)
                 {
                     return compare(a.propertyByIndex(index), b.propertyByIndex(index));

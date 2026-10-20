@@ -55,8 +55,14 @@ namespace swift::core::db
 
     void CBackgroundDataUpdater::doWork()
     {
-        if (!this->doWorkCheck()) { return; }
-        if (m_inWork) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
+        if (m_inWork)
+        {
+            return;
+        }
         m_inWork = true;
 
         emit this->consolidating(true);
@@ -98,7 +104,10 @@ namespace swift::core::db
 
     void CBackgroundDataUpdater::triggerInfoReads()
     {
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         sApp->getWebDataServices()->triggerReadOfDbInfoObjects();
         sApp->getWebDataServices()->triggerReadOfSharedInfoObjects();
     }
@@ -106,35 +115,59 @@ namespace swift::core::db
     void CBackgroundDataUpdater::syncModelOrModelSetCacheWithDbData(bool modelSetFlag,
                                                                     const CAircraftModelList &dbModelsConsidered)
     {
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         IMultiSimulatorModelCaches &modelCaches = this->modelCaches(modelSetFlag);
         const QDateTime latestDbModelsTs =
             dbModelsConsidered.isEmpty() ? sApp->getWebDataServices()->getCacheTimestamp(CEntityFlags::ModelEntity) :
                                            dbModelsConsidered.latestTimestamp();
-        if (!latestDbModelsTs.isValid()) { return; }
+        if (!latestDbModelsTs.isValid())
+        {
+            return;
+        }
 
         // newer DB models as cache
         const QDateTime dbModelsLatestSync = m_syncedModelsLatestChange.value(modelCaches.getDescription());
-        if (dbModelsLatestSync.isValid() && latestDbModelsTs <= dbModelsLatestSync) { return; }
+        if (dbModelsLatestSync.isValid() && latestDbModelsTs <= dbModelsLatestSync)
+        {
+            return;
+        }
 
         const QString description = modelCaches.getDescription();
         m_syncedModelsLatestChange[description] = latestDbModelsTs;
         const CSimulatorInfo simulators = modelCaches.simulatorsWithInitializedCache(); // simulators ever used
-        if (simulators.isNoSimulator()) { return; }
+        if (simulators.isNoSimulator())
+        {
+            return;
+        }
 
         const CAircraftModelList dbModels =
             dbModelsConsidered.isEmpty() ? sApp->getWebDataServices()->getModels() : dbModelsConsidered;
-        if (dbModels.isEmpty()) { return; }
+        if (dbModels.isEmpty())
+        {
+            return;
+        }
         const QSet<CSimulatorInfo> simulatorsSet = simulators.asSingleSimulatorSet();
         QElapsedTimer time;
         for (const CSimulatorInfo &singleSimulator : simulatorsSet)
         {
-            if (!this->doWorkCheck()) { return; }
+            if (!this->doWorkCheck())
+            {
+                return;
+            }
             CAircraftModelList simulatorModels = modelCaches.getSynchronizedCachedModels(singleSimulator);
-            if (simulatorModels.isEmpty()) { continue; }
+            if (simulatorModels.isEmpty())
+            {
+                continue;
+            }
             time.restart();
             const CAircraftModelList dbModelsForSimulator = dbModels.matchesSimulator(singleSimulator);
-            if (dbModelsForSimulator.isEmpty()) { continue; }
+            if (dbModelsForSimulator.isEmpty())
+            {
+                continue;
+            }
 
             // time consuming part
             const int c = CDatabaseUtils::consolidateModelsWithDbData(dbModelsForSimulator, simulatorModels, true);
@@ -156,7 +189,10 @@ namespace swift::core::db
             if (simulatorsSet.size() > 1)
             {
                 // just give the system some time to relax, consolidation is time consuming
-                if (!this->doWorkCheck()) { return; }
+                if (!this->doWorkCheck())
+                {
+                    return;
+                }
                 CEventLoop eventLoop(this);
                 eventLoop.exec(1000);
             }
@@ -165,15 +201,24 @@ namespace swift::core::db
 
     void CBackgroundDataUpdater::syncDbEntity(CEntityFlags::Entity entity)
     {
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         const QDateTime latestCacheTs = sApp->getWebDataServices()->getCacheTimestamp(entity);
-        if (!latestCacheTs.isValid()) { return; }
+        if (!latestCacheTs.isValid())
+        {
+            return;
+        }
 
         const QDateTime latestDbTs = sApp->getWebDataServices()->getLatestDbEntityTimestamp(entity);
         const QString entityStr = CEntityFlags::entitiesToString(entity);
         const QString latestCacheTsStr = latestCacheTs.toString(Qt::ISODate);
 
-        if (!latestDbTs.isValid()) { return; }
+        if (!latestDbTs.isValid())
+        {
+            return;
+        }
         if (latestDbTs <= latestCacheTs)
         {
             this->addHistory(
@@ -191,18 +236,39 @@ namespace swift::core::db
 
     bool CBackgroundDataUpdater::doWorkCheck() const
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return false; }
-        if (!this->isEnabled()) { return false; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return false;
+        }
+        if (!this->isEnabled())
+        {
+            return false;
+        }
         return true;
     }
 
     void CBackgroundDataUpdater::onModelsPublished(const CAircraftModelList &modelsPublished, bool directWrite)
     {
-        if (!this->doWorkCheck()) { return; }
-        if (modelsPublished.isEmpty()) { return; }
-        if (!m_updatePublishedModels) { return; }
-        if (!directWrite) { return; } // those models are CRs and have to be released first
-        if (m_inWork) { return; } // no 2 updates at the same time
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
+        if (modelsPublished.isEmpty())
+        {
+            return;
+        }
+        if (!m_updatePublishedModels)
+        {
+            return;
+        }
+        if (!directWrite)
+        {
+            return;
+        } // those models are CRs and have to be released first
+        if (m_inWork)
+        {
+            return;
+        } // no 2 updates at the same time
 
         emit this->consolidating(true);
         this->syncModelOrModelSetCacheWithDbData(true, modelsPublished);
@@ -212,7 +278,10 @@ namespace swift::core::db
 
     IMultiSimulatorModelCaches &CBackgroundDataUpdater::modelCaches(bool modelSetFlag)
     {
-        if (modelSetFlag) { return m_modelSets; }
+        if (modelSetFlag)
+        {
+            return m_modelSets;
+        }
         return m_modelCaches;
     }
 

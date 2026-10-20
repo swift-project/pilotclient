@@ -12,13 +12,19 @@ namespace swift::misc
 {
     bool CCacheSettingsUtils::isSetting(const QString &fileName)
     {
-        if (!fileName.contains(CSettingsCache::relativeFilePath())) { return false; }
+        if (!fileName.contains(CSettingsCache::relativeFilePath()))
+        {
+            return false;
+        }
         return fileName.contains(binSettings(), Qt::CaseInsensitive);
     }
 
     bool CCacheSettingsUtils::isCache(const QString &fileName)
     {
-        if (!fileName.contains(CDataCache::relativeFilePath())) { return false; }
+        if (!fileName.contains(CDataCache::relativeFilePath()))
+        {
+            return false;
+        }
         return fileName.contains(binData(), Qt::CaseInsensitive);
     }
 
@@ -36,17 +42,29 @@ namespace swift::misc
 
     QString CCacheSettingsUtils::relativeSettingsPath(const QString &fileName)
     {
-        if (!isSetting(fileName)) { return {}; }
+        if (!isSetting(fileName))
+        {
+            return {};
+        }
         const int index = fileName.lastIndexOf(binSettings());
-        if (index < 0) { return {}; }
+        if (index < 0)
+        {
+            return {};
+        }
         return fileName.mid(index);
     }
 
     QString CCacheSettingsUtils::relativeCachePath(const QString &fileName)
     {
-        if (!isCache(fileName)) { return {}; }
+        if (!isCache(fileName))
+        {
+            return {};
+        }
         const int index = fileName.lastIndexOf(binData());
-        if (index < 0) { return {}; }
+        if (index < 0)
+        {
+            return {};
+        }
         return fileName.mid(index);
     }
 
@@ -76,12 +94,21 @@ namespace swift::misc
     QString CCacheSettingsUtils::otherVersionFileName(const CApplicationInfo &info, const QString &relativeFileName)
     {
         thread_local const QRegularExpression re("bin$");
-        if (relativeFileName.isEmpty()) { return {}; }
+        if (relativeFileName.isEmpty())
+        {
+            return {};
+        }
         QString otherFile = info.getApplicationDataDirectory();
         otherFile.replace(re, relativeFileName);
         const QFileInfo fi(otherFile);
-        if (!fi.isFile()) { return {}; }
-        if (fi.exists()) { return fi.absoluteFilePath(); }
+        if (!fi.isFile())
+        {
+            return {};
+        }
+        if (fi.exists())
+        {
+            return fi.absoluteFilePath();
+        }
         return {};
     }
 
@@ -89,7 +116,10 @@ namespace swift::misc
                                                                  const QString &mySettingFile)
     {
         const QString file = otherVersionSettingsFileName(info, mySettingFile);
-        if (file.isEmpty()) { return {}; }
+        if (file.isEmpty())
+        {
+            return {};
+        }
         const QString jsonStr = CFileUtils::readFileToString(file);
         return jsonStr;
     }
@@ -97,7 +127,10 @@ namespace swift::misc
     QString CCacheSettingsUtils::otherVersionCacheFileContent(const CApplicationInfo &info, const QString &myCacheFile)
     {
         const QString file = otherVersionCacheFileName(info, myCacheFile);
-        if (file.isEmpty()) { return {}; }
+        if (file.isEmpty())
+        {
+            return {};
+        }
         const QString jsonStr = CFileUtils::readFileToString(file);
         return jsonStr;
     }

@@ -15,16 +15,28 @@ namespace swift::gui
 
     bool IMainWindowAccess::displayInStatusBar(const CStatusMessage &message)
     {
-        if (message.isEmpty()) { return false; }
-        if (!m_mwaStatusBar) { return false; }
+        if (message.isEmpty())
+        {
+            return false;
+        }
+        if (!m_mwaStatusBar)
+        {
+            return false;
+        }
         m_mwaStatusBar->displayStatusMessage(message);
         return true;
     }
 
     bool IMainWindowAccess::displayInOverlayWindow(const CStatusMessage &message, std::chrono::milliseconds timeout)
     {
-        if (message.isEmpty()) { return false; }
-        if (!m_mwaOverlayFrame) { return false; }
+        if (message.isEmpty())
+        {
+            return false;
+        }
+        if (!m_mwaOverlayFrame)
+        {
+            return false;
+        }
         m_mwaOverlayFrame->showOverlayMessage(message, timeout);
         return true;
     }
@@ -32,16 +44,28 @@ namespace swift::gui
     bool IMainWindowAccess::displayInOverlayWindow(const CStatusMessageList &messages,
                                                    std::chrono::milliseconds timeout)
     {
-        if (messages.isEmpty()) { return false; }
-        if (!m_mwaOverlayFrame) { return false; }
+        if (messages.isEmpty())
+        {
+            return false;
+        }
+        if (!m_mwaOverlayFrame)
+        {
+            return false;
+        }
         m_mwaOverlayFrame->showOverlayMessages(messages, false, timeout);
         return true;
     }
 
     bool IMainWindowAccess::displayInOverlayWindow(const QString &html, std::chrono::milliseconds timeout)
     {
-        if (html.isEmpty()) { return false; }
-        if (!m_mwaOverlayFrame) { return false; }
+        if (html.isEmpty())
+        {
+            return false;
+        }
+        if (!m_mwaOverlayFrame)
+        {
+            return false;
+        }
         m_mwaOverlayFrame->showOverlayHTMLMessage(html, timeout);
         return true;
     }

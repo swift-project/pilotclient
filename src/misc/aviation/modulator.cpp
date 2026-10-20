@@ -65,17 +65,35 @@ namespace swift::misc::aviation
     template <class AVIO>
     void CModulator<AVIO>::setVolumeReceive(int volume)
     {
-        if (volume >= 100) { m_volumeReceive = 100; }
-        else if (volume <= 0) { m_volumeReceive = 0; }
-        else { m_volumeReceive = volume; }
+        if (volume >= 100)
+        {
+            m_volumeReceive = 100;
+        }
+        else if (volume <= 0)
+        {
+            m_volumeReceive = 0;
+        }
+        else
+        {
+            m_volumeReceive = volume;
+        }
     }
 
     template <class AVIO>
     void CModulator<AVIO>::setVolumeTransmit(int volume)
     {
-        if (volume >= 100) { m_volumeTransmit = 100; }
-        else if (volume <= 0) { m_volumeTransmit = 0; }
-        else { m_volumeTransmit = volume; }
+        if (volume >= 100)
+        {
+            m_volumeTransmit = 100;
+        }
+        else if (volume <= 0)
+        {
+            m_volumeTransmit = 0;
+        }
+        else
+        {
+            m_volumeTransmit = volume;
+        }
     }
 
     template <class AVIO>
@@ -111,7 +129,10 @@ namespace swift::misc::aviation
     template <class AVIO>
     QVariant CModulator<AVIO>::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*derived()); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*derived());
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

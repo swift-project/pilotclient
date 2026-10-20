@@ -55,14 +55,23 @@ namespace swift::misc
             for (int i = superMetaObject->methodOffset(), count = metaObject->methodCount(); i < count; ++i)
             {
                 const QMetaMethod method = metaObject->method(i);
-                if (method.methodType() != QMetaMethod::Signal) { continue; }
-                if (method.tag() && strcmp(method.tag(), "SWIFT_NO_RELAY") == 0) { continue; }
+                if (method.methodType() != QMetaMethod::Signal)
+                {
+                    continue;
+                }
+                if (method.tag() && strcmp(method.tag(), "SWIFT_NO_RELAY") == 0)
+                {
+                    continue;
+                }
 
                 const QByteArray signature = method.methodSignature().prepend(
                     "2"); // the reason for this "2" can be found in the definition of SIGNAL() macro
                 const bool c = this->connection().connect(this->service(), this->path(), this->interface(),
                                                           method.name(), this->parent(), signature);
-                if (!c) { CLogMessage(this).error(u"Cannot connect signal: %1") << QString(signature); }
+                if (!c)
+                {
+                    CLogMessage(this).error(u"Cannot connect signal: %1") << QString(signature);
+                }
             }
         }
 
@@ -117,7 +126,10 @@ namespace swift::misc
         void cancelAllPendingAsyncCalls()
         {
             auto watchers = this->findChildren<QDBusPendingCallWatcher *>(QString(), Qt::FindDirectChildrenOnly);
-            for (auto w : watchers) { delete w; }
+            for (auto w : watchers)
+            {
+                delete w;
+            }
         }
     };
 } // namespace swift::misc

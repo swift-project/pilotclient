@@ -29,7 +29,10 @@ namespace swift::misc
             CPromiseData() { this->reportStarted(); }
             ~CPromiseData() override
             {
-                if (this->isRunning()) { this->cancel(); }
+                if (this->isRunning())
+                {
+                    this->cancel();
+                }
             }
 
             CPromiseData(const CPromiseData &) = delete;
@@ -41,10 +44,16 @@ namespace swift::misc
         void doAfter(QFuture<T> future, QObject *context, F &&func)
         {
             QSharedPointer<QFutureWatcher<T>> watcher(new QFutureWatcher<T>, &QObject::deleteLater);
-            if (!context) { context = watcher.data(); }
+            if (!context)
+            {
+                context = watcher.data();
+            }
             QObject::connect(watcher.data(), &QFutureWatcher<T>::finished, context,
                              [watcher, func = std::forward<F>(func)]() mutable {
-                                 if (!watcher->isCanceled()) { func(watcher->future()); }
+                                 if (!watcher->isCanceled())
+                                 {
+                                     func(watcher->future());
+                                 }
                                  watcher.reset();
                              });
             watcher->setFuture(future);

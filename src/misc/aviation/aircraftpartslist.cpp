@@ -16,7 +16,10 @@ namespace swift::misc::aviation
         int c = 0;
         for (CAircraftParts &p : *this)
         {
-            if (p.isOnGround() == onGround) { continue; }
+            if (p.isOnGround() == onGround)
+            {
+                continue;
+            }
             p.setOnGround(onGround);
             c++;
         }

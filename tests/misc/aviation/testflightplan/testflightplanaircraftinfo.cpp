@@ -110,7 +110,10 @@ namespace MiscTest
             {
                 QCOMPARE(info.getWtc(), entry.m_wtc);
             }
-            else { QVERIFY2(info.getWtc().isUnknown(), "Should have UNKNOWN wake turbulence category"); }
+            else
+            {
+                QVERIFY2(info.getWtc().isUnknown(), "Should have UNKNOWN wake turbulence category");
+            }
 
             // Cannot compare COM/NAV equipment and SSR equipment as the FAA code does not contain that much detail
 

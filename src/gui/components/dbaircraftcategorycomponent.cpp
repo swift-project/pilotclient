@@ -45,8 +45,14 @@ namespace swift::gui::components
     {
         using namespace std::chrono_literals;
         Q_UNUSED(count);
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-        if (!entity.testFlag(CEntityFlags::AircraftCategoryEntity)) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
+        if (!entity.testFlag(CEntityFlags::AircraftCategoryEntity))
+        {
+            return;
+        }
 
         if (CEntityFlags::isFinishedReadState(readState))
         {
@@ -68,14 +74,20 @@ namespace swift::gui::components
     {
         using namespace std::chrono_literals;
 
-        if (!entity.testFlag(CEntityFlags::AircraftCategoryEntity)) { return; }
+        if (!entity.testFlag(CEntityFlags::AircraftCategoryEntity))
+        {
+            return;
+        }
         this->showDownloadProgress(progress, current, max, url, 5s);
         Q_UNUSED(logId);
     }
 
     void CDbAircraftCategoryComponent::onReload()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AircraftCategoryEntity, QDateTime());
     }
 

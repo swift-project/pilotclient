@@ -69,7 +69,10 @@ namespace swift::gui::components
                                                               setIcao.getCombinedIcaoStringWithKey());
         ui->le_Aircraft->setText(icaoStr);
         ui->lbl_Description->setText(setIcao.getManufacturer());
-        if (setIcao == m_currentIcao) { return false; }
+        if (setIcao == m_currentIcao)
+        {
+            return false;
+        }
 
         m_currentIcao = setIcao;
         emit changedAircraftIcao(setIcao);
@@ -90,7 +93,10 @@ namespace swift::gui::components
         if (key < 0)
         {
             const QString icaoOnly = CDatastoreUtility::stripKeyInParentheses(text);
-            if (m_currentIcao.getDesignator() == icaoOnly) { return m_currentIcao; }
+            if (m_currentIcao.getDesignator() == icaoOnly)
+            {
+                return m_currentIcao;
+            }
             return { icaoOnly };
         }
         CAircraftIcaoCode icao(sGui->getWebDataServices()->getAircraftIcaoCodeForDbKey(key));
@@ -98,7 +104,10 @@ namespace swift::gui::components
         {
             // did not find by key
             const QString icaoOnly = CDatastoreUtility::stripKeyInParentheses(text);
-            if (m_currentIcao.getDesignator() == icaoOnly) { return m_currentIcao; }
+            if (m_currentIcao.getDesignator() == icaoOnly)
+            {
+                return m_currentIcao;
+            }
             return { icaoOnly };
         }
         return icao;
@@ -126,39 +135,57 @@ namespace swift::gui::components
 
     void CDbAircraftIcaoSelectorComponent::dragEnterEvent(QDragEnterEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         setBackgroundRole(QPalette::Highlight);
         event->acceptProposedAction();
     }
 
     void CDbAircraftIcaoSelectorComponent::dragMoveEvent(QDragMoveEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         event->acceptProposedAction();
     }
 
     void CDbAircraftIcaoSelectorComponent::dragLeaveEvent(QDragLeaveEvent *event)
     {
-        if (!event) { return; }
+        if (!event)
+        {
+            return;
+        }
         event->accept();
     }
 
     void CDbAircraftIcaoSelectorComponent::dropEvent(QDropEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         const CVariant valueVariant(toCVariant(event->mimeData()));
         if (valueVariant.isValid())
         {
             if (valueVariant.canConvert<CAircraftIcaoCode>())
             {
                 auto icao(valueVariant.value<CAircraftIcaoCode>());
-                if (!icao.hasValidDbKey()) { return; }
+                if (!icao.hasValidDbKey())
+                {
+                    return;
+                }
                 this->setAircraftIcao(icao);
             }
             else if (valueVariant.canConvert<CAircraftIcaoCodeList>())
             {
                 auto icaos(valueVariant.value<CAircraftIcaoCodeList>());
-                if (icaos.isEmpty()) { return; }
+                if (icaos.isEmpty())
+                {
+                    return;
+                }
                 this->setAircraftIcao(icaos.front());
             }
         }
@@ -167,7 +194,10 @@ namespace swift::gui::components
     const QStringList &CDbAircraftIcaoSelectorComponent::completerStrings()
     {
         static const QStringList empty;
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return empty; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return empty;
+        }
         const int c = sGui->getWebDataServices()->getAircraftIcaoCodesCount();
         if (c != m_completerStrings.size())
         {
@@ -181,7 +211,10 @@ namespace swift::gui::components
     void CDbAircraftIcaoSelectorComponent::onCodesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState,
                                                        int count)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         if (entity.testFlag(CEntityFlags::AircraftIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
         {
             if (count > 0)
@@ -200,13 +233,19 @@ namespace swift::gui::components
                 m_completerIcaoDescription.reset(c); // deletes any old completer
                 this->setReadOnly(false);
             }
-            else { m_completerIcaoDescription.reset(nullptr); }
+            else
+            {
+                m_completerIcaoDescription.reset(nullptr);
+            }
         }
     }
 
     void CDbAircraftIcaoSelectorComponent::onDataChanged()
     {
-        if (!sGui || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         const int key = CDatastoreUtility::extractIntegerKey(ui->le_Aircraft->text());
         CAircraftIcaoCode icao;
         if (key >= 0)
@@ -225,7 +264,10 @@ namespace swift::gui::components
     void CDbAircraftIcaoSelectorComponent::onCompleterActivated(const QString &icaoString)
     {
         const int dbKey = CDatastoreUtility::extractIntegerKey(icaoString);
-        if (dbKey < 0) { return; }
+        if (dbKey < 0)
+        {
+            return;
+        }
         this->setAircraftIcao(dbKey);
     }
 } // namespace swift::gui::components

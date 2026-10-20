@@ -36,7 +36,10 @@ namespace swift::misc::aviation
     {
         // sync callsigns
         m_callsign.setTypeHint(CCallsign::Atc);
-        if (!m_controller.hasCallsign() && !callsign.isEmpty()) { m_controller.setCallsign(m_callsign); }
+        if (!m_controller.hasCallsign() && !callsign.isEmpty())
+        {
+            m_controller.setCallsign(m_callsign);
+        }
     }
 
     bool CAtcStation::hasLogoffTimeUtc() const { return !m_logoffTimeUtc.isNull(); }
@@ -45,7 +48,10 @@ namespace swift::misc::aviation
 
     QString CAtcStation::getCallsignAsStringCrossCoupled() const
     {
-        if (!this->isAfvCrossCoupled()) { return this->getCallsignAsString(); }
+        if (!this->isAfvCrossCoupled())
+        {
+            return this->getCallsignAsString();
+        }
         return QStringLiteral("*") % this->getCallsignAsString();
     }
 
@@ -62,8 +68,14 @@ namespace swift::misc::aviation
 
     QString CAtcStation::getCallsignAndControllerRealName() const
     {
-        if (m_callsign.isEmpty()) { return this->getControllerRealName(); }
-        if (!m_controller.hasRealName()) { return m_callsign.asString(); }
+        if (m_callsign.isEmpty())
+        {
+            return this->getControllerRealName();
+        }
+        if (!m_controller.hasRealName())
+        {
+            return m_callsign.asString();
+        }
         return m_callsign.asString() % u' ' % this->getControllerRealName();
     }
 
@@ -121,13 +133,19 @@ namespace swift::misc::aviation
 
     bool CAtcStation::isInRange() const
     {
-        if (m_range.isNull() || !hasValidRelativeDistance()) { return false; }
+        if (m_range.isNull() || !hasValidRelativeDistance())
+        {
+            return false;
+        }
         return (this->getRelativeDistance() <= m_range);
     }
 
     bool CAtcStation::setOnline(bool online)
     {
-        if (online == m_isOnline) { return false; }
+        if (online == m_isOnline)
+        {
+            return false;
+        }
         m_isOnline = online;
         return true;
     }
@@ -176,7 +194,10 @@ namespace swift::misc::aviation
 
     QVariant CAtcStation::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -235,7 +256,10 @@ namespace swift::misc::aviation
             {
                 ICoordinateWithRelativePosition::setPropertyByIndex(index, variant);
             }
-            else { CValueObject::setPropertyByIndex(index, variant); }
+            else
+            {
+                CValueObject::setPropertyByIndex(index, variant);
+            }
             break;
         }
     }

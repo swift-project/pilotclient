@@ -21,7 +21,10 @@ namespace swift::misc
           m_version(CBuildConfig::getVersionString()), m_compileInfo(CBuildConfig::compiledWithInfo()),
           m_platform(CBuildConfig::getPlatformString()), m_process(CProcessInfo::currentProcess())
     {
-        if (app == CApplicationInfo::Unknown) { m_app = guessApplication(); }
+        if (app == CApplicationInfo::Unknown)
+        {
+            m_app = guessApplication();
+        }
     }
 
     const QString &CApplicationInfo::getApplicationAsString() const
@@ -49,7 +52,10 @@ namespace swift::misc
 
     bool CApplicationInfo::isExecutablePathExisting() const
     {
-        if (this->getExecutablePath().isEmpty()) { return false; }
+        if (this->getExecutablePath().isEmpty())
+        {
+            return false;
+        }
         const QDir d(this->getExecutablePath());
         return d.exists();
     }
@@ -95,7 +101,10 @@ namespace swift::misc
 
     QVariant CApplicationInfo::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -141,7 +150,10 @@ namespace swift::misc
 
     int CApplicationInfo::comparePropertyByIndex(CPropertyIndexRef index, const CApplicationInfo &compareValue) const
     {
-        if (index.isMyself()) { return this->getExecutablePath().compare(compareValue.getExecutablePath()); }
+        if (index.isMyself())
+        {
+            return this->getExecutablePath().compare(compareValue.getExecutablePath());
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -207,12 +219,30 @@ namespace swift::misc
     CApplicationInfo::Application CApplicationInfo::guessApplication()
     {
         const QString a(QCoreApplication::applicationName().toLower());
-        if (a.contains("test")) { return CApplicationInfo::UnitTest; } // names like testcore
-        if (a.contains("sample")) { return CApplicationInfo::Sample; }
-        if (a.contains("core")) { return CApplicationInfo::PilotClientCore; }
-        if (a.contains("launcher")) { return CApplicationInfo::Launcher; }
-        if (a.contains("gui")) { return CApplicationInfo::PilotClientGui; }
-        if (a.contains("data") || a.contains("mapping")) { return CApplicationInfo::MappingTool; }
+        if (a.contains("test"))
+        {
+            return CApplicationInfo::UnitTest;
+        } // names like testcore
+        if (a.contains("sample"))
+        {
+            return CApplicationInfo::Sample;
+        }
+        if (a.contains("core"))
+        {
+            return CApplicationInfo::PilotClientCore;
+        }
+        if (a.contains("launcher"))
+        {
+            return CApplicationInfo::Launcher;
+        }
+        if (a.contains("gui"))
+        {
+            return CApplicationInfo::PilotClientGui;
+        }
+        if (a.contains("data") || a.contains("mapping"))
+        {
+            return CApplicationInfo::MappingTool;
+        }
         return CApplicationInfo::Unknown;
     }
 } // namespace swift::misc

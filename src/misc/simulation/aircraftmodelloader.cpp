@@ -72,11 +72,26 @@ namespace swift::misc::simulation
     QString IAircraftModelLoader::enumToString(LoadMode mode)
     {
         QStringList modes;
-        if (mode.testFlag(NotSet)) { modes << enumToString(NotSet); }
-        if (mode.testFlag(LoadDirectly)) { modes << enumToString(LoadDirectly); }
-        if (mode.testFlag(LoadInBackground)) { modes << enumToString(LoadInBackground); }
-        if (mode.testFlag(CacheFirst)) { modes << enumToString(CacheFirst); }
-        if (mode.testFlag(CacheSkipped)) { modes << enumToString(CacheSkipped); }
+        if (mode.testFlag(NotSet))
+        {
+            modes << enumToString(NotSet);
+        }
+        if (mode.testFlag(LoadDirectly))
+        {
+            modes << enumToString(LoadDirectly);
+        }
+        if (mode.testFlag(LoadInBackground))
+        {
+            modes << enumToString(LoadInBackground);
+        }
+        if (mode.testFlag(CacheFirst))
+        {
+            modes << enumToString(CacheFirst);
+        }
+        if (mode.testFlag(CacheSkipped))
+        {
+            modes << enumToString(CacheSkipped);
+        }
         return modes.join(", ");
     }
 
@@ -103,14 +118,23 @@ namespace swift::misc::simulation
                                             const IAircraftModelLoader::ModelConsolidationCallback &modelConsolidation,
                                             const QStringList &modelDirectories)
     {
-        if (m_loadingInProgress) { return; }
-        if (mode == NotSet) { return; }
+        if (m_loadingInProgress)
+        {
+            return;
+        }
+        if (mode == NotSet)
+        {
+            return;
+        }
         m_loadingInProgress = true;
         m_loadingMessages.clear();
 
         const CSimulatorInfo simulator = this->getSimulator();
         const bool needsCacheSynced = IAircraftModelLoader::needsCacheSynchronized(mode);
-        if (needsCacheSynced) { this->synchronizeCache(simulator); }
+        if (needsCacheSynced)
+        {
+            this->synchronizeCache(simulator);
+        }
 
         const bool useCachedData = !mode.testFlag(CacheSkipped) && this->hasCachedData();
         if (useCachedData && (mode.testFlag(CacheFirst) || mode.testFlag(CacheOnly)))
@@ -181,7 +205,10 @@ namespace swift::misc::simulation
     void IAircraftModelLoader::onLoadingFinished(const CStatusMessageList &statusMsgs, const CSimulatorInfo &simulator,
                                                  IAircraftModelLoader::LoadFinishedInfo info)
     {
-        if (!this->supportsSimulator(simulator)) { return; } // none of my business
+        if (!this->supportsSimulator(simulator))
+        {
+            return;
+        } // none of my business
         this->setObjectInfo(simulator);
 
         // remark: in the past status used to be bool, now it is CStatusMessage
@@ -211,7 +238,10 @@ namespace swift::misc::simulation
         {
             return;
         } // this change signal is redundant as it will be handled by onLoadingFinished
-        if (!this->supportsSimulator(simulator)) { return; } // none of my business
+        if (!this->supportsSimulator(simulator))
+        {
+            return;
+        } // none of my business
         emit this->cacheChanged(simulator);
     }
 

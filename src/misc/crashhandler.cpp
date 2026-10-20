@@ -58,7 +58,10 @@ namespace swift::misc
         const QString database = CSwiftDirectories::crashpadDatabaseDirectory();
         const QString metrics = CSwiftDirectories::crashpadMetricsDirectory();
 
-        if (!QFileInfo::exists(handler)) { return; }
+        if (!QFileInfo::exists(handler))
+        {
+            return;
+        }
 
         const std::string serverUrl("http://swift-project.sp.backtrace.io:6097/");
         std::map<std::string, std::string> annotations;
@@ -89,7 +92,10 @@ namespace swift::misc
         arguments.push_back(crashAttachment.toStdString());
 
         // for testing purposes
-        if (CBuildConfig::isLocalDeveloperDebugBuild()) { arguments.push_back("--no-rate-limit"); }
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            arguments.push_back("--no-rate-limit");
+        }
 
         QDir().mkpath(database);
 
@@ -105,7 +111,10 @@ namespace swift::misc
     void CCrashHandler::setUploadsEnabled(bool enable)
     {
 #ifdef SWIFT_USE_CRASHPAD
-        if (!m_crashReportDatabase) { return; }
+        if (!m_crashReportDatabase)
+        {
+            return;
+        }
         crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
         settings->SetUploadsEnabled(enable);
 #else
@@ -116,7 +125,10 @@ namespace swift::misc
     bool CCrashHandler::isCrashDumpUploadEnabled() const
     {
 #ifdef SWIFT_USE_CRASHPAD
-        if (!m_crashReportDatabase) { return false; }
+        if (!m_crashReportDatabase)
+        {
+            return false;
+        }
         crashpad::Settings *settings = m_crashReportDatabase->GetSettings();
         bool enabled = false;
         bool ok = settings->GetUploadsEnabled(&enabled);

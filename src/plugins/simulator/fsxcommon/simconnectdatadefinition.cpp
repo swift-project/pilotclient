@@ -81,8 +81,14 @@ namespace swift::simplugin::fsxcommon
         hr += initRemoteAircraftSimDataSet(hSimConnect);
         hr += initSimulatorEnvironment(hSimConnect);
         hr += initSbDataArea(hSimConnect);
-        if (simInfo.isMSFS()) { hr += initMSFSTransponder(hSimConnect); }
-        if (simInfo.isMSFS2024()) { hr += initMSFS2024Transponder(hSimConnect); }
+        if (simInfo.isMSFS())
+        {
+            hr += initMSFSTransponder(hSimConnect);
+        }
+        if (simInfo.isMSFS2024())
+        {
+            hr += initMSFS2024Transponder(hSimConnect);
+        }
         return hr;
     }
 

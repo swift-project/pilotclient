@@ -57,14 +57,29 @@ namespace swift::gui::components
 
     void CTransponderModeSelector::setSelectedTransponderMode(CTransponder::TransponderMode mode)
     {
-        if (mode != CTransponder::StateIdent) { m_resetMode = mode; }
-        if (m_currentMode == mode) { return; }
-        if (m_currentMode == CTransponder::StateIdent) { emit this->transponderStateIdentEnded(); }
+        if (mode != CTransponder::StateIdent)
+        {
+            m_resetMode = mode;
+        }
+        if (m_currentMode == mode)
+        {
+            return;
+        }
+        if (m_currentMode == CTransponder::StateIdent)
+        {
+            emit this->transponderStateIdentEnded();
+        }
         m_currentMode = mode;
         const QString m = CTransponder::modeAsString(mode);
         QComboBox::setCurrentText(m);
-        if (mode == CTransponder::StateIdent) { m_resetTimer.start(); }
-        else { m_resetTimer.stop(); }
+        if (mode == CTransponder::StateIdent)
+        {
+            m_resetTimer.start();
+        }
+        else
+        {
+            m_resetTimer.stop();
+        }
         emit this->transponderModeChanged(m_currentMode);
     }
 

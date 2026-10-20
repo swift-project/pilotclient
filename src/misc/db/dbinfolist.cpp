@@ -15,7 +15,10 @@ namespace swift::misc::db
     {
         for (const CDbInfo &info : *this)
         {
-            if (info.matchesEntity(entity)) { return info; }
+            if (info.matchesEntity(entity))
+            {
+                return info;
+            }
         }
         return {};
     }

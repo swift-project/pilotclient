@@ -54,11 +54,17 @@ namespace swift::misc
 
     QString CSimpleCommandParser::partAndRemainingStringAfter(int index) const
     {
-        if (index < 0) { return m_cleanedLine; }
+        if (index < 0)
+        {
+            return m_cleanedLine;
+        }
         const QString p = this->part(index);
         const int from = index < 1 ? 0 : nthIndexOf(m_cleanedLine, ' ', index, Qt::CaseInsensitive);
         const int fi = m_cleanedLine.indexOf(p, from, Qt::CaseInsensitive);
-        if (fi < 0) { return {}; }
+        if (fi < 0)
+        {
+            return {};
+        }
         return m_originalLine.mid(fi).trimmed();
     }
 
@@ -75,7 +81,10 @@ namespace swift::misc
     bool CSimpleCommandParser::isInt(int index) const
     {
         const QString p = this->part(index);
-        if (p.isEmpty()) { return false; }
+        if (p.isEmpty())
+        {
+            return false;
+        }
         bool ok = false;
         p.toInt(&ok); // cppcheck-suppress ignoredReturnValue
         return ok;
@@ -84,7 +93,10 @@ namespace swift::misc
     bool CSimpleCommandParser::isDouble(int index) const
     {
         const QString p = this->part(index);
-        if (p.isEmpty()) { return false; }
+        if (p.isEmpty())
+        {
+            return false;
+        }
         bool ok = false;
         CPqString::parseNumber(p, ok, CPqString::SeparatorBestGuess);
         return ok;
@@ -93,7 +105,10 @@ namespace swift::misc
     int CSimpleCommandParser::toInt(int index, int def) const
     {
         const QString p = this->part(index);
-        if (p.isEmpty()) { return def; }
+        if (p.isEmpty())
+        {
+            return def;
+        }
         bool ok = false;
         int i = p.toInt(&ok);
         return ok ? i : def;
@@ -102,7 +117,10 @@ namespace swift::misc
     bool CSimpleCommandParser::toBool(int index, bool def) const
     {
         const QString p = this->part(index);
-        if (p.isEmpty()) { return def; }
+        if (p.isEmpty())
+        {
+            return def;
+        }
         const bool b = stringToBool(p);
         return b;
     }
@@ -110,7 +128,10 @@ namespace swift::misc
     double CSimpleCommandParser::toDouble(int index, double def) const
     {
         const QString p = this->part(index);
-        if (p.isEmpty()) { return def; }
+        if (p.isEmpty())
+        {
+            return def;
+        }
         bool ok = false;
         double d = CPqString::parseNumber(p, ok, CPqString::SeparatorBestGuess);
         return ok ? d : def;
@@ -118,10 +139,19 @@ namespace swift::misc
 
     bool CSimpleCommandParser::matchesPart(int index, const QString &toMatch, Qt::CaseSensitivity cs) const
     {
-        if (toMatch.isEmpty()) { return false; }
-        if (!this->hasPart(index)) { return false; }
+        if (toMatch.isEmpty())
+        {
+            return false;
+        }
+        if (!this->hasPart(index))
+        {
+            return false;
+        }
         const QString p(this->part(index));
-        if (p.isEmpty()) { return false; }
+        if (p.isEmpty())
+        {
+            return false;
+        }
         return (p.length() == toMatch.length() && p.startsWith(toMatch, cs));
     }
 
@@ -130,21 +160,30 @@ namespace swift::misc
         for (const CommandHtmlHelp &help : std::as_const(s_commands))
         {
             // avoid duplicates
-            if (help.command == command.command) { return; }
+            if (help.command == command.command)
+            {
+                return;
+            }
         }
         s_commands.append(command);
     }
 
     bool CSimpleCommandParser::registered(const QString &helpContext)
     {
-        if (s_registered.contains(helpContext)) { return true; }
+        if (s_registered.contains(helpContext))
+        {
+            return true;
+        }
         s_registered.insert(helpContext);
         return false;
     }
 
     QString CSimpleCommandParser::commandsHtmlHelp()
     {
-        if (s_commands.isEmpty()) { return {}; }
+        if (s_commands.isEmpty())
+        {
+            return {};
+        }
 
         static const QString html("<table style=\"font-size: 8pt; white-space: nowrap;\">\n%1\n</table>");
         static const QString row("<td>%1</td><td>%2</td>");
@@ -169,7 +208,10 @@ namespace swift::misc
                 help = cmds[i];
                 rows += row.arg(help.command, help.help);
             }
-            else { rows += row.arg("", ""); }
+            else
+            {
+                rows += row.arg("", "");
+            }
             rows += "</tr>\n";
         }
         return html.arg(rows);
@@ -177,7 +219,10 @@ namespace swift::misc
 
     QString CSimpleCommandParser::removeLeadingDot(const QString &candidate)
     {
-        if (!candidate.startsWith('.')) { return candidate; }
+        if (!candidate.startsWith('.'))
+        {
+            return candidate;
+        }
         return candidate.right(candidate.length() - 1);
     }
 
@@ -190,27 +235,48 @@ namespace swift::misc
 
     bool CSimpleCommandParser::matchesCommand(const QString &checkCommand, const QString &alias1, const QString &alias2)
     {
-        if (m_commandPart.isEmpty()) { return false; }
-        if (!checkCommand.isEmpty() && formatCommand(checkCommand) == m_commandPart) { return true; }
-        if (!alias1.isEmpty() && formatCommand(alias1) == m_commandPart) { return true; }
-        if (!alias2.isEmpty() && formatCommand(alias2) == m_commandPart) { return true; }
+        if (m_commandPart.isEmpty())
+        {
+            return false;
+        }
+        if (!checkCommand.isEmpty() && formatCommand(checkCommand) == m_commandPart)
+        {
+            return true;
+        }
+        if (!alias1.isEmpty() && formatCommand(alias1) == m_commandPart)
+        {
+            return true;
+        }
+        if (!alias2.isEmpty() && formatCommand(alias2) == m_commandPart)
+        {
+            return true;
+        }
         return false;
     }
 
     bool CSimpleCommandParser::commandStartsWith(const QString &startPattern) const
     {
-        if (m_commandPart.isEmpty()) { return false; }
+        if (m_commandPart.isEmpty())
+        {
+            return false;
+        }
         return m_commandPart.startsWith(formatCommand(startPattern));
     }
 
     bool CSimpleCommandParser::commandEndsWith(const QString &endPattern) const
     {
-        if (m_commandPart.isEmpty()) { return false; }
+        if (m_commandPart.isEmpty())
+        {
+            return false;
+        }
         return m_commandPart.endsWith(endPattern);
     }
 
     void CSimpleCommandParser::setCheckedCommandList(const QStringList &commands)
     {
-        for (const QString &c : commands) { m_knownCommands.append(formatCommand(c)); }
+        for (const QString &c : commands)
+        {
+            m_knownCommands.append(formatCommand(c));
+        }
     }
 } // namespace swift::misc

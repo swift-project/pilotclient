@@ -20,27 +20,42 @@ namespace swift::misc::geo
                                                                    const CLength &range, const CLength &maxDeviation,
                                                                    int minValues, int sufficentValues) const
     {
-        if (this->size() < minValues) { return CElevationPlane::null(); } // no chance to succeed
+        if (this->size() < minValues)
+        {
+            return CElevationPlane::null();
+        } // no chance to succeed
 
         QList<double> valuesInFt;
         const CCoordinateGeodeticList sorted = this->findWithGeodeticMSLHeight()
                                                    .findWithinRange(reference, range)
                                                    .sortedByEuclideanDistanceSquared(reference);
-        if (sorted.size() < minValues) { return CElevationPlane::null(); }
+        if (sorted.size() < minValues)
+        {
+            return CElevationPlane::null();
+        }
 
         // we know all values have MSL and are within range
         for (const CCoordinateGeodetic &coordinate : sorted)
         {
             const double elvFt = coordinate.geodeticHeight().value(CLengthUnit::ft());
             valuesInFt.push_back(elvFt);
-            if (valuesInFt.size() >= sufficentValues) { break; }
+            if (valuesInFt.size() >= sufficentValues)
+            {
+                break;
+            }
         }
 
-        if (valuesInFt.size() < minValues) { return CElevationPlane::null(); }
+        if (valuesInFt.size() < minValues)
+        {
+            return CElevationPlane::null();
+        }
 
         const double MaxDevFt = maxDeviation.value(CLengthUnit::ft());
         const QPair<double, double> elvStdDevMean = CMathUtils::standardDeviationAndMean(valuesInFt);
-        if (elvStdDevMean.first > MaxDevFt) { return CElevationPlane::null(); }
+        if (elvStdDevMean.first > MaxDevFt)
+        {
+            return CElevationPlane::null();
+        }
         return { reference, elvStdDevMean.second, CElevationPlane::singlePointRadius() };
     }
 

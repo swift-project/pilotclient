@@ -33,28 +33,49 @@ namespace swift::misc::aviation
 
     QString CAirport::getLocationPlusOptionalName() const
     {
-        if (m_location.isEmpty()) { return this->getDescriptiveName(); }
-        if (m_descriptiveName.isEmpty()) { return this->getLocation(); }
-        if (this->getDescriptiveName() == this->getLocation()) { return this->getLocation(); }
+        if (m_location.isEmpty())
+        {
+            return this->getDescriptiveName();
+        }
+        if (m_descriptiveName.isEmpty())
+        {
+            return this->getLocation();
+        }
+        if (this->getDescriptiveName() == this->getLocation())
+        {
+            return this->getLocation();
+        }
         return this->getLocation() % u" (" % this->getDescriptiveName() % u')';
     }
 
     bool CAirport::matchesLocation(const QString &location) const
     {
-        if (location.isEmpty()) { return false; }
+        if (location.isEmpty())
+        {
+            return false;
+        }
         return caseInsensitiveStringCompare(location, this->getLocation());
     }
 
     bool CAirport::matchesDescriptiveName(const QString &name) const
     {
-        if (name.isEmpty()) { return false; }
+        if (name.isEmpty())
+        {
+            return false;
+        }
         return caseInsensitiveStringCompare(name, this->getDescriptiveName());
     }
 
     void CAirport::updateMissingParts(const CAirport &airport)
     {
-        if (!m_country.hasIsoCode() && airport.getCountry().hasIsoCode()) { m_country = airport.getCountry(); }
-        if (m_descriptiveName.isEmpty()) { m_descriptiveName = airport.getDescriptiveName(); }
+        if (!m_country.hasIsoCode() && airport.getCountry().hasIsoCode())
+        {
+            m_country = airport.getCountry();
+        }
+        if (m_descriptiveName.isEmpty())
+        {
+            m_descriptiveName = airport.getDescriptiveName();
+        }
     }
 
     bool CAirport::isNull() const { return (m_icao.isEmpty() && m_descriptiveName.isEmpty()); }
@@ -62,7 +83,10 @@ namespace swift::misc::aviation
     QString CAirport::convertToQString(bool i18n) const
     {
         QString s = i18n ? QCoreApplication::translate("Aviation", "Airport") : "Airport";
-        if (!m_icao.isEmpty()) { s.append(' ').append(m_icao.toQString(i18n)); }
+        if (!m_icao.isEmpty())
+        {
+            s.append(' ').append(m_icao.toQString(i18n));
+        }
 
         // position
         s.append(' ').append(m_position.toQString(i18n));
@@ -92,7 +116,10 @@ namespace swift::misc::aviation
 
     QVariant CAirport::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -129,7 +156,10 @@ namespace swift::misc::aviation
             {
                 ICoordinateWithRelativePosition::setPropertyByIndex(index, variant);
             }
-            else { CValueObject::setPropertyByIndex(index, variant); }
+            else
+            {
+                CValueObject::setPropertyByIndex(index, variant);
+            }
             break;
         }
     }

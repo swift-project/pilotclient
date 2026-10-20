@@ -18,7 +18,10 @@ namespace swift::misc::physical_quantities
     {
         bool negative = (hours < 0);
         double value = qAbs(hours) + minutes / 100.0 + seconds / 10000.0;
-        if (minutes == 0 && seconds == 0) { (*this) = CTime(hours, CTimeUnit::h()); }
+        if (minutes == 0 && seconds == 0)
+        {
+            (*this) = CTime(hours, CTimeUnit::h());
+        }
         else
         {
             if (seconds == 0)
@@ -26,14 +29,20 @@ namespace swift::misc::physical_quantities
             else
                 (*this) = CTime(value, CTimeUnit::hms());
         }
-        if (negative) { this->makeNegative(); }
+        if (negative)
+        {
+            this->makeNegative();
+        }
     }
 
     CTime::CTime(QTime time, bool negative) : CPhysicalQuantity(0, CTimeUnit::nullUnit())
     {
         CTime converted(time.hour(), time.minute(), time.second());
         (*this) = converted;
-        if (negative) { this->makeNegative(); }
+        if (negative)
+        {
+            this->makeNegative();
+        }
     }
 
     void CTime::parseFromString(const QString &time)
@@ -42,7 +51,10 @@ namespace swift::misc::physical_quantities
 
         // deal with sign
         double factor = 1.0;
-        if (ts.startsWith('+')) { ts.remove(0, 1); }
+        if (ts.startsWith('+'))
+        {
+            ts.remove(0, 1);
+        }
         else if (ts.startsWith('-'))
         {
             factor = -1.0;
@@ -58,23 +70,38 @@ namespace swift::misc::physical_quantities
             (*this) = CTime(hour, minute, second);
 
             // fix sign if required
-            if (factor < 0) { this->setValueSameUnit(this->value() * factor); }
+            if (factor < 0)
+            {
+                this->setValueSameUnit(this->value() * factor);
+            }
         }
-        else { CPhysicalQuantity::parseFromString(time); }
+        else
+        {
+            CPhysicalQuantity::parseFromString(time);
+        }
     }
 
     bool CTime::parseFromString_hhmm(const QString &hhmm)
     {
-        if (hhmm.length() != 4) { return false; }
+        if (hhmm.length() != 4)
+        {
+            return false;
+        }
         const QString hStr = hhmm.left(2);
         const QString mStr = hhmm.right(2);
 
         bool ok {};
         const int h = hStr.toInt(&ok);
-        if (!ok || h < 0 || h > 23) { return false; }
+        if (!ok || h < 0 || h > 23)
+        {
+            return false;
+        }
 
         const int m = mStr.toInt(&ok);
-        if (!ok || m < 0 || m > 59) { return false; }
+        if (!ok || m < 0 || m > 59)
+        {
+            return false;
+        }
 
         *this = CTime(h, m, 0);
         return true;
@@ -110,8 +137,14 @@ namespace swift::misc::physical_quantities
         const QString s = QStringLiteral("00%1").arg(QString::number(parts.at(2))).right(2);
 
         const QString fs = QStringLiteral("%1:%2:%3").arg(h, m, s);
-        if (this->isNegativeWithEpsilonConsidered()) { return QStringLiteral("-").append(fs); }
-        else { return fs; }
+        if (this->isNegativeWithEpsilonConsidered())
+        {
+            return QStringLiteral("-").append(fs);
+        }
+        else
+        {
+            return fs;
+        }
     }
 
     int CTime::toMs() const
@@ -132,8 +165,14 @@ namespace swift::misc::physical_quantities
         const QString h = QStringLiteral("00%1").arg(QString::number(parts.at(0))).right(2);
         const QString m = QStringLiteral("00%1").arg(QString::number(parts.at(1))).right(2);
         const QString fs = QStringLiteral("%1:%2").arg(h, m);
-        if (this->isNegativeWithEpsilonConsidered()) { return QString("-").append(fs); }
-        else { return fs; }
+        if (this->isNegativeWithEpsilonConsidered())
+        {
+            return QString("-").append(fs);
+        }
+        else
+        {
+            return fs;
+        }
     }
 
     QDateTime CTime::toQDateTime() const

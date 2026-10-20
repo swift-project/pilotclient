@@ -37,7 +37,10 @@ namespace swift::gui
     bool CDockWidgetInfoArea::isSelectedDockWidget() const
     {
         const CInfoArea *ia = getParentInfoArea();
-        if (!ia) { return false; }
+        if (!ia)
+        {
+            return false;
+        }
         return ia->isSelectedDockWidgetInfoArea(this);
     }
 
@@ -45,11 +48,20 @@ namespace swift::gui
     {
         // if the widget is invisible we are done
         // but if it is visible, there is no guarantee it can be seen by the user
-        if (!this->isVisible()) { return false; }
+        if (!this->isVisible())
+        {
+            return false;
+        }
 
         // further checks
-        if (this->isFloating()) { return !this->isMinimized(); }
-        else { return isSelectedDockWidget(); }
+        if (this->isFloating())
+        {
+            return !this->isMinimized();
+        }
+        else
+        {
+            return isSelectedDockWidget();
+        }
     }
 
     void CDockWidgetInfoArea::addToContextMenu(QMenu *contextMenu) const
@@ -60,20 +72,29 @@ namespace swift::gui
 
         // Dockable widget's context menu
         CDockWidget::addToContextMenu(contextMenu);
-        if (!contextMenu->isEmpty()) { contextMenu->addSeparator(); }
+        if (!contextMenu->isEmpty())
+        {
+            contextMenu->addSeparator();
+        }
 
         // first info area, myself's direct parent info area
         parentInfoAreas.first()->addToContextMenu(contextMenu);
 
         // top info areas other than direct parent
         // (parent's parent when nested info areas are used)
-        if (parentInfoAreas.size() < 2) { return; }
+        if (parentInfoAreas.size() < 2)
+        {
+            return;
+        }
         contextMenu->addSeparator();
         for (int i = 1; i < parentInfoAreas.size(); i++)
         {
             const CInfoArea *infoArea = parentInfoAreas.at(i);
             QString title(infoArea->windowTitle());
-            if (title.isEmpty()) { title = infoArea->objectName(); }
+            if (title.isEmpty())
+            {
+                title = infoArea->objectName();
+            }
             QMenu *m = contextMenu->addMenu(title);
             infoArea->addToContextMenu(m);
         }
@@ -102,7 +123,10 @@ namespace swift::gui
 
             // CEnableForDockWidgetInfoArea is no QObject, so we use dynamic_cast
             auto *dwc = dynamic_cast<CEnableForDockWidgetInfoArea *>(w);
-            if (dwc) { widgetsWithDockWidgetInfoAreaComponent.append(dwc); }
+            if (dwc)
+            {
+                widgetsWithDockWidgetInfoAreaComponent.append(dwc);
+            }
         }
         QList<CDockWidgetInfoArea *> nestedInfoAreas = this->findNestedInfoAreas();
         if (nestedInfoAreas.isEmpty()) return widgetsWithDockWidgetInfoAreaComponent;
@@ -112,7 +136,10 @@ namespace swift::gui
         {
             QList<CEnableForDockWidgetInfoArea *> nestedInfoAreaComponents =
                 ia->findEmbeddedDockWidgetInfoAreaComponents();
-            if (nestedInfoAreaComponents.isEmpty()) { continue; }
+            if (nestedInfoAreaComponents.isEmpty())
+            {
+                continue;
+            }
             for (CEnableForDockWidgetInfoArea *iac : nestedInfoAreaComponents)
             {
                 const bool r = widgetsWithDockWidgetInfoAreaComponent.removeOne(iac);
@@ -137,7 +164,10 @@ namespace swift::gui
         while (currentWidget)
         {
             const CInfoArea *ia = qobject_cast<CInfoArea *>(currentWidget);
-            if (ia) { parents.append(ia); }
+            if (ia)
+            {
+                parents.append(ia);
+            }
             currentWidget = currentWidget->parentWidget();
         }
         return parents;

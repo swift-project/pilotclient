@@ -41,9 +41,18 @@ namespace XSwiftBus
             {
                 m_logMessageCount++;
                 std::string error;
-                if (result == xplm_ProbeError) { error = "probe error"; }
-                else if (result == xplm_ProbeMissed) { error = "probe missed"; }
-                else { error = "unknown probe result"; }
+                if (result == xplm_ProbeError)
+                {
+                    error = "probe error";
+                }
+                else if (result == xplm_ProbeMissed)
+                {
+                    error = "probe missed";
+                }
+                else
+                {
+                    error = "unknown probe result";
+                }
                 WARNING_LOG(callsign + " " + error + " at " + std::to_string(degreesLatitude) + ", " +
                             std::to_string(degreesLongitude) + ", " + std::to_string(metersAltitude));
             }

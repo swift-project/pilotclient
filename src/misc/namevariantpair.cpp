@@ -26,7 +26,10 @@ namespace swift::misc
 
     QVariant CNameVariantPair::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -54,7 +57,10 @@ namespace swift::misc
                 const auto iconIndex = variant.value<CIcons::IconIndex>();
                 this->m_icon = CIcon::iconByIndex(iconIndex);
             }
-            else { this->m_icon = variant.value<swift::misc::CIcon>(); }
+            else
+            {
+                this->m_icon = variant.value<swift::misc::CIcon>();
+            }
             return;
         }
 

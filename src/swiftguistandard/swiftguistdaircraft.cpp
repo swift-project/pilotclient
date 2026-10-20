@@ -27,12 +27,21 @@ using namespace swift::misc::audio;
 
 bool SwiftGuiStd::reloadOwnAircraft()
 {
-    if (!sApp || sApp->isShuttingDown()) { return false; }
-    if (!sApp->getIContextOwnAircraft() || !sApp->getIContextNetwork()) { return false; }
+    if (!sApp || sApp->isShuttingDown())
+    {
+        return false;
+    }
+    if (!sApp->getIContextOwnAircraft() || !sApp->getIContextNetwork())
+    {
+        return false;
+    }
 
     // check for changed aircraft
     const CSimulatedAircraft contextAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
-    if (contextAircraft == m_ownAircraft) { return false; }
+    if (contextAircraft == m_ownAircraft)
+    {
+        return false;
+    }
     m_ownAircraft = contextAircraft;
     return true;
 }
@@ -40,7 +49,10 @@ bool SwiftGuiStd::reloadOwnAircraft()
 void SwiftGuiStd::setTestPosition(const QString &wgsLatitude, const QString &wgsLongitude, const CAltitude &altitude,
                                   const CAltitude &pressureAltitude)
 {
-    if (!sGui) { return; }
+    if (!sGui)
+    {
+        return;
+    }
     CCoordinateGeodetic coordinate(CLatitude::fromWgs84(wgsLatitude), CLongitude::fromWgs84(wgsLongitude),
                                    CAltitude(0, CLengthUnit::m()));
 

@@ -61,7 +61,10 @@ namespace swift::gui::components
 
     bool CDbDistributorComponent::selectDistributor(const CDistributor &distributor)
     {
-        if (ui->tvp_Distributors->isEmpty() || !distributor.isLoadedFromDb()) { return false; }
+        if (ui->tvp_Distributors->isEmpty() || !distributor.isLoadedFromDb())
+        {
+            return false;
+        }
         return ui->tvp_Distributors->selectDbKey(distributor.getDbKey());
     }
 
@@ -71,7 +74,10 @@ namespace swift::gui::components
                                                      int count)
     {
         Q_UNUSED(count)
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         if (entity.testFlag(CEntityFlags::DistributorEntity) && CEntityFlags::isFinishedReadState(readState))
         {
             const CDistributorList distributors = sGui->getWebDataServices()->getDistributors();
@@ -102,14 +108,20 @@ namespace swift::gui::components
         // deferred because filter must first work and update
         const QPointer<CDbDistributorComponent> myself(this);
         QTimer::singleShot(2000, this, [=, this] {
-            if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+            if (!myself || !sApp || sApp->isShuttingDown())
+            {
+                return;
+            }
             ui->tvp_Distributors->selectDbKeys(keys);
         });
     }
 
     void CDbDistributorComponent::reload()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::DistributorEntity);
     }
 } // namespace swift::gui::components

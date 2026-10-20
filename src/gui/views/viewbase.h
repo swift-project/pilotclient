@@ -662,7 +662,10 @@ namespace swift::gui
             //! Destructor
             ~CViewBase() override
             {
-                if (m_model) { m_model->markDestroyed(); }
+                if (m_model)
+                {
+                    m_model->markDestroyed();
+                }
             }
 
             //! Model
@@ -741,10 +744,16 @@ namespace swift::gui
             template <class K0, class V0, class... KeysValues>
             int removeIf(K0 k0, V0 v0, KeysValues... keysValues)
             {
-                if (this->rowCount() < 1) { return 0; }
+                if (this->rowCount() < 1)
+                {
+                    return 0;
+                }
                 ContainerType cp(container());
                 int r = cp.removeIf(k0, v0, keysValues...);
-                if (r < 1) { return 0; }
+                if (r < 1)
+                {
+                    return 0;
+                }
                 this->updateContainerMaybeAsync(cp);
                 return r;
             }

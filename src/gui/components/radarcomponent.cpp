@@ -31,8 +31,14 @@ namespace swift::gui::components
         ui->gv_RadarView->setScene(&m_scene);
 
         ui->cb_RadarRange->addItem(QString::number(0.5) % u" nm", 0.5);
-        for (int r = 1; r <= 9; ++r) { ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r); }
-        for (int r = 10; r <= 90; r += 10) { ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r); }
+        for (int r = 1; r <= 9; ++r)
+        {
+            ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r);
+        }
+        for (int r = 10; r <= 90; r += 10)
+        {
+            ui->cb_RadarRange->addItem(QString::number(r) % u" nm", r);
+        }
 
         ui->cb_RadarRange->setCurrentText(QString::number(m_rangeNM) % u" nm");
         ui->sb_FontSize->setRange(1, 100);
@@ -135,7 +141,10 @@ namespace swift::gui::components
 
     void CRadarComponent::refreshTargets()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         qDeleteAll(m_radarTargets.childItems());
 
@@ -160,7 +169,10 @@ namespace swift::gui::components
 
                     auto *tag = new QGraphicsTextItem(&m_radarTargets);
                     QString tagText;
-                    if (ui->cb_Callsign->isChecked()) { tagText += sa.getCallsignAsString() % u"\n"; }
+                    if (ui->cb_Callsign->isChecked())
+                    {
+                        tagText += sa.getCallsignAsString() % u"\n";
+                    }
                     if (ui->cb_Altitude->isChecked())
                     {
                         int flightLeveL = sa.getAltitude().valueInteger(CLengthUnit::ft()) / 100;
@@ -234,9 +246,15 @@ namespace swift::gui::components
     {
         qreal direction = zoomIn ? 1.0 : -1.0;
         double factor = 10.0;
-        if (m_rangeNM < 10.0 || (qFuzzyCompare(m_rangeNM, 10.0) && zoomIn)) { factor = 1.0; }
+        if (m_rangeNM < 10.0 || (qFuzzyCompare(m_rangeNM, 10.0) && zoomIn))
+        {
+            factor = 1.0;
+        }
 
-        if (m_rangeNM < 1.0 || (qFuzzyCompare(m_rangeNM, 1.0) && zoomIn)) { factor = 0.5; }
+        if (m_rangeNM < 1.0 || (qFuzzyCompare(m_rangeNM, 1.0) && zoomIn))
+        {
+            factor = 0.5;
+        }
 
         m_rangeNM = m_rangeNM - direction * factor;
         m_rangeNM = qMin(90.0, qMax(0.5, m_rangeNM));
@@ -272,7 +290,10 @@ namespace swift::gui::components
         // here I know I am the selected widget, update, but keep GUI responsive (hence I use a timer)
         QPointer<CRadarComponent> myself(this);
         QTimer::singleShot(1000, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->refreshTargets();
         });
     }

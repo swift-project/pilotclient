@@ -36,10 +36,16 @@ namespace swift::simplugin::flightgear
 
     void CFGSwiftBusServiceProxy::getOwnAircraftSituationData(FlightgearData *o_flightgearData)
     {
-        if (!o_flightgearData) { return; }
+        if (!o_flightgearData)
+        {
+            return;
+        }
         QPointer<CFGSwiftBusServiceProxy> myself(this);
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             QDBusPendingReply<double, double, double, double, double, double, double, double> reply = *watcher;
             if (!reply.isError())
             {
@@ -59,10 +65,16 @@ namespace swift::simplugin::flightgear
 
     void CFGSwiftBusServiceProxy::getOwnAircraftVelocityData(FlightgearData *o_flightgearData)
     {
-        if (!o_flightgearData) { return; }
+        if (!o_flightgearData)
+        {
+            return;
+        }
         QPointer<CFGSwiftBusServiceProxy> myself(this);
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             QDBusPendingReply<double, double, double, double, double, double> reply = *watcher;
             if (!reply.isError())
             {

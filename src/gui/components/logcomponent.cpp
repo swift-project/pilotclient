@@ -66,7 +66,10 @@ namespace swift::gui::components
 
     void CLogComponent::displayLog(bool attention)
     {
-        if (attention) { emit this->requestAttention(); }
+        if (attention)
+        {
+            emit this->requestAttention();
+        }
     }
 
     void CLogComponent::filterUseRadioButtonDescriptiveIcons(bool oneLetterText)

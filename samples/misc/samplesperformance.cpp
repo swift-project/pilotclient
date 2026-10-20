@@ -417,7 +417,10 @@ namespace swift::sample
         strings = temp;
 
         timer.start();
-        for (QString &s : strings) { s.remove(upperRegex); }
+        for (QString &s : strings)
+        {
+            s.remove(upperRegex);
+        }
         out << "Remove from 100,000 strings all uppercase letters: (regex)           " << timer.elapsed() << "ms"
             << Qt::endl
             << Qt::endl;
@@ -457,7 +460,10 @@ namespace swift::sample
 
         QElapsedTimer time;
         time.start();
-        for (int i = 0; i < loop; i++) { x += "12-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; }
+        for (int i = 0; i < loop; i++)
+        {
+            x += "12-1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        }
         out << "+= String " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
@@ -478,12 +484,18 @@ namespace swift::sample
         x.clear();
 
         time.start();
-        for (int i = 0; i < loop; i++) { x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9; }
+        for (int i = 0; i < loop; i++)
+        {
+            x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9;
+        }
         out << "+ String multiple " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
         time.start();
-        for (int i = 0; i < loop; i++) { x = x1 % x2 % x3 % x4 % x5 % x6 % x7 % x8 % x9; }
+        for (int i = 0; i < loop; i++)
+        {
+            x = x1 % x2 % x3 % x4 % x5 % x6 % x7 % x8 % x9;
+        }
         out << "% String multiple " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
@@ -497,7 +509,10 @@ namespace swift::sample
 
         static const QString xArgString("%1 %2 %3 %4 %5 %6 %7 %8 %9");
         time.start();
-        for (int i = 0; i < loop; i++) { x = xArgString.arg(x1, x2, x3, x4, x5, x6, x7, x8, x9); }
+        for (int i = 0; i < loop; i++)
+        {
+            x = xArgString.arg(x1, x2, x3, x4, x5, x6, x7, x8, x9);
+        }
         out << "arg String multiple " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
@@ -518,12 +533,18 @@ namespace swift::sample
         QElapsedTimer time;
         QString x;
         time.start();
-        for (int i = 0; i < loop; i++) { x = fooString(); }
+        for (int i = 0; i < loop; i++)
+        {
+            x = fooString();
+        }
         out << "by constQString " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
         time.start();
-        for (int i = 0; i < loop; i++) { x = fooStringLiteral(); }
+        for (int i = 0; i < loop; i++)
+        {
+            x = fooStringLiteral();
+        }
         out << "by QStringLiteral " << time.elapsed() << "ms" << Qt::endl;
         x.clear();
 
@@ -717,7 +738,10 @@ namespace swift::sample
 
     void CSamplesPerformance::calculateDistance(int n)
     {
-        if (n < 1) { return; }
+        if (n < 1)
+        {
+            return;
+        }
         CAtcStation atc = CTesting::createStation(1);
         const QList<CCoordinateGeodetic> pos(
             { CCoordinateGeodetic(10.0, 10.0, 10.0), CCoordinateGeodetic(20.0, 20.0, 20.0),
@@ -785,7 +809,10 @@ namespace swift::sample
     {
         CCallsignSet set;
         static const QString cs("FOO%1");
-        for (int i = 0; i < number; i++) { set.insert(CCallsign(cs.arg(i))); }
+        for (int i = 0; i < number; i++)
+        {
+            set.insert(CCallsign(cs.arg(i)));
+        }
         return set;
     }
 

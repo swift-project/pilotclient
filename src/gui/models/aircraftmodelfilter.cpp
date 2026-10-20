@@ -33,7 +33,10 @@ namespace swift::gui::models
 
     CAircraftModelList CAircraftModelFilter::filter(const CAircraftModelList &inContainer) const
     {
-        if (!this->isEnabled()) { return inContainer; }
+        if (!this->isEnabled())
+        {
+            return inContainer;
+        }
         CAircraftModelList outContainer;
         for (const CAircraftModel &model : inContainer)
         {
@@ -50,12 +53,18 @@ namespace swift::gui::models
 
             if (!m_simulatorInfo.isAllSimulators())
             {
-                if (!m_simulatorInfo.matchesAny(model.getSimulator())) { continue; }
+                if (!m_simulatorInfo.matchesAny(model.getSimulator()))
+                {
+                    continue;
+                }
             }
 
             if (!m_modelKey.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(model.getModelString(), m_modelKey)) { continue; }
+                if (!this->stringMatchesFilterExpression(model.getModelString(), m_modelKey))
+                {
+                    continue;
+                }
             }
 
             if (m_military != Qt::PartiallyChecked)
@@ -63,12 +72,18 @@ namespace swift::gui::models
                 if (m_military == Qt::Checked)
                 {
                     // military only
-                    if (!model.isMilitary()) { continue; }
+                    if (!model.isMilitary())
+                    {
+                        continue;
+                    }
                 }
                 else if (m_military == Qt::Unchecked)
                 {
                     // civilian only
-                    if (model.isMilitary()) { continue; }
+                    if (model.isMilitary())
+                    {
+                        continue;
+                    }
                 }
             }
 
@@ -77,33 +92,51 @@ namespace swift::gui::models
                 if (m_colorLiveries == Qt::Checked)
                 {
                     // only color liveries
-                    if (!model.getLivery().isColorLivery()) { continue; }
+                    if (!model.getLivery().isColorLivery())
+                    {
+                        continue;
+                    }
                 }
                 else if (m_colorLiveries == Qt::Unchecked)
                 {
                     // Only airline liveries
-                    if (model.getLivery().isColorLivery()) { continue; }
+                    if (model.getLivery().isColorLivery())
+                    {
+                        continue;
+                    }
                 }
             }
 
             if (!m_description.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(model.getDescription(), m_description)) { continue; }
+                if (!this->stringMatchesFilterExpression(model.getDescription(), m_description))
+                {
+                    continue;
+                }
             }
 
             if (m_modelMode != CAircraftModel::All && m_modelMode != CAircraftModel::Undefined)
             {
-                if (!model.matchesMode(m_modelMode)) { continue; }
+                if (!model.matchesMode(m_modelMode))
+                {
+                    continue;
+                }
             }
 
             if (m_dbKeyFilter != swift::misc::db::All && m_dbKeyFilter != swift::misc::db::Undefined)
             {
-                if (!model.matchesDbKeyState(m_dbKeyFilter)) { continue; }
+                if (!model.matchesDbKeyState(m_dbKeyFilter))
+                {
+                    continue;
+                }
             }
 
             if (!m_fileName.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(model.getFileName(), m_fileName)) { continue; }
+                if (!this->stringMatchesFilterExpression(model.getFileName(), m_fileName))
+                {
+                    continue;
+                }
             }
 
             if (!m_aircraftIcao.isEmpty())
@@ -149,12 +182,18 @@ namespace swift::gui::models
 
             if (m_distributor.hasValidDbKey())
             {
-                if (!model.getDistributor().matchesKeyOrAlias(m_distributor)) { continue; }
+                if (!model.getDistributor().matchesKeyOrAlias(m_distributor))
+                {
+                    continue;
+                }
             }
 
             if (!m_combinedType.isEmpty())
             {
-                if (!model.getAircraftIcaoCode().matchesCombinedType(m_combinedType)) { continue; }
+                if (!model.getAircraftIcaoCode().matchesCombinedType(m_combinedType))
+                {
+                    continue;
+                }
             }
 
             outContainer.push_back(model);
@@ -168,7 +207,10 @@ namespace swift::gui::models
                               m_aircraftManufacturer.isEmpty() && m_aircraftIcao.isEmpty() && m_airlineIcao.isEmpty() &&
                               m_airlineName.isEmpty() && m_liveryCode.isEmpty() && m_fileName.isEmpty() &&
                               m_combinedType.isEmpty();
-        if (!allEmpty) { return true; }
+        if (!allEmpty)
+        {
+            return true;
+        }
         const bool noSim = m_simulatorInfo.isNoSimulator() || m_simulatorInfo.isAllSimulators();
         const bool noModelMode = (m_modelMode == CAircraftModel::Undefined || m_modelMode == CAircraftModel::All);
         const bool noDbState = (m_dbKeyFilter == swift::misc::db::Undefined || m_dbKeyFilter == swift::misc::db::All);

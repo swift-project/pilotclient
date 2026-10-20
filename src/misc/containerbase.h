@@ -69,11 +69,23 @@ namespace swift::misc
         {
             for (auto i = a.cbegin(), j = b.cbegin(); i != a.cend() && j != b.cend(); ++i, ++j)
             {
-                if (*i < *j) { return -1; }
-                if (*j < *i) { return 1; }
+                if (*i < *j)
+                {
+                    return -1;
+                }
+                if (*j < *i)
+                {
+                    return 1;
+                }
             }
-            if (a.size() < b.size()) { return -1; }
-            if (b.size() < a.size()) { return 1; }
+            if (a.size() < b.size())
+            {
+                return -1;
+            }
+            if (b.size() < a.size())
+            {
+                return 1;
+            }
             return 0;
         }
 
@@ -92,7 +104,10 @@ namespace swift::misc
         template <template <class> class Other, class T>
         Other<T> to(Other<T> other) const
         {
-            for (auto it = derived().cbegin(); it != derived().cend(); ++it) { other.push_back(*it); }
+            for (auto it = derived().cbegin(); it != derived().cend(); ++it)
+            {
+                other.push_back(*it);
+            }
             return other;
         }
 
@@ -115,7 +130,10 @@ namespace swift::misc
         {
             QJsonArray array;
             QJsonObject json;
-            for (auto it = derived().cbegin(); it != derived().cend(); ++it) { array << (*it); }
+            for (auto it = derived().cbegin(); it != derived().cend(); ++it)
+            {
+                array << (*it);
+            }
             json.insert("containerbase", array);
             return json;
         }
@@ -133,7 +151,10 @@ namespace swift::misc
         {
             derived().clear();
             QJsonValue value = json.value("containerbase");
-            if (value.isUndefined()) { throw CJsonException("Missing 'containerbase'"); }
+            if (value.isUndefined())
+            {
+                throw CJsonException("Missing 'containerbase'");
+            }
             QJsonArray array = value.toArray();
             int index = 0;
             for (auto ref : array)
@@ -149,7 +170,10 @@ namespace swift::misc
         //! Assign from JSON object string
         void convertFromJson(const QString &jsonString, bool acceptCacheFormat = false)
         {
-            if (jsonString.isEmpty()) { return; }
+            if (jsonString.isEmpty())
+            {
+                return;
+            }
             const QJsonObject jsonObject = json::jsonObjectFromString(jsonString, acceptCacheFormat);
             this->convertFromJson(jsonObject);
         }
@@ -166,7 +190,10 @@ namespace swift::misc
         static Derived fromJson(const QString &jsonString, bool acceptCacheJson = false)
         {
             Derived obj;
-            if (jsonString.isEmpty()) { return obj; }
+            if (jsonString.isEmpty())
+            {
+                return obj;
+            }
             const QJsonObject jsonObj =
                 acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
             obj.convertFromJson(jsonObj);
@@ -180,7 +207,10 @@ namespace swift::misc
             Derived obj;
             try
             {
-                if (jsonString.isEmpty()) { return obj; }
+                if (jsonString.isEmpty())
+                {
+                    return obj;
+                }
                 const QJsonObject jsonObj =
                     acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
                 obj.convertFromJson(jsonObj);
@@ -209,7 +239,10 @@ namespace swift::misc
             {
                 str += (str.isEmpty() ? "{" : ", ") + CContainerHelper::stringify(value, i18n);
             }
-            if (str.isEmpty()) { str = "{"; }
+            if (str.isEmpty())
+            {
+                str = "{";
+            }
             return str += "}";
         }
 
@@ -217,7 +250,10 @@ namespace swift::misc
         QStringList toStringList(bool i18n = false) const
         {
             QStringList sl;
-            for (const auto &obj : this->derived()) { sl.append(obj.toQString(i18n)); }
+            for (const auto &obj : this->derived())
+            {
+                sl.append(obj.toQString(i18n));
+            }
             return sl;
         }
 

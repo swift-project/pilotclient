@@ -50,14 +50,20 @@ namespace swift::misc::shared_state
         for (const auto &observerWeak : std::as_const(getChannel(channel).passiveObservers))
         {
             auto observer = observerWeak.lock();
-            if (observer && observer->eventSubscription().matches(param)) { observer->handleEvent(param); }
+            if (observer && observer->eventSubscription().matches(param))
+            {
+                observer->handleEvent(param);
+            }
         }
     }
 
     QFuture<CVariant> CDataLinkLocal::handleRequest(const CVariant &param, const QString &channel)
     {
         auto mutator = getChannel(channel).activeMutator.lock();
-        if (mutator) { return mutator->handleRequest(param); }
+        if (mutator)
+        {
+            return mutator->handleRequest(param);
+        }
         return {};
     }
 

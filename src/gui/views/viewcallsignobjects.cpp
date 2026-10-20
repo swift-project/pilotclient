@@ -38,14 +38,20 @@ namespace swift::gui::views
     template <class T>
     void CViewWithCallsignObjects<T>::selectCallsigns(const CCallsignSet &callsigns)
     {
-        if (callsigns.isEmpty()) { return; }
+        if (callsigns.isEmpty())
+        {
+            return;
+        }
         this->clearSelection();
         int r = -1;
         QSet<int> rows;
         for (const ObjectType &obj : CViewBase<T>::containerOrFilteredContainer())
         {
             r++;
-            if (callsigns.contains(obj.getCallsign())) { rows.insert(r); }
+            if (callsigns.contains(obj.getCallsign()))
+            {
+                rows.insert(r);
+            }
         }
         this->selectRows(rows);
     }
@@ -53,7 +59,10 @@ namespace swift::gui::views
     template <class T>
     CCallsignSet CViewWithCallsignObjects<T>::selectedCallsigns() const
     {
-        if (!this->hasSelection()) { return {}; }
+        if (!this->hasSelection())
+        {
+            return {};
+        }
         const ContainerType selected(this->selectedObjects());
         return selected.getCallsigns();
     }
@@ -61,7 +70,10 @@ namespace swift::gui::views
     template <class T>
     int CViewWithCallsignObjects<T>::removeCallsign(const CCallsign &callsign)
     {
-        if (callsign.isEmpty()) { return 0; }
+        if (callsign.isEmpty())
+        {
+            return 0;
+        }
         const CCallsignSet set({ callsign });
         return this->removeCallsigns(set);
     }
@@ -69,22 +81,37 @@ namespace swift::gui::views
     template <class T>
     int CViewWithCallsignObjects<T>::removeCallsigns(const CCallsignSet &callsigns)
     {
-        if (callsigns.isEmpty()) { return 0; }
-        if (this->isEmpty()) { return 0; }
+        if (callsigns.isEmpty())
+        {
+            return 0;
+        }
+        if (this->isEmpty())
+        {
+            return 0;
+        }
 
         ContainerType newObjects(this->container());
         int delta = newObjects.removeByCallsigns(callsigns);
-        if (delta > 0) { this->updateContainerMaybeAsync(newObjects); }
+        if (delta > 0)
+        {
+            this->updateContainerMaybeAsync(newObjects);
+        }
         return delta;
     }
 
     template <class T>
     int CViewWithCallsignObjects<T>::replaceOrAddObjectsByCallsign(const ContainerType &container)
     {
-        if (container.isEmpty()) { return 0; }
+        if (container.isEmpty())
+        {
+            return 0;
+        }
         ContainerType copy(this->container());
         const int c = copy.replaceOrAddObjectsByCallsign(container);
-        if (c == 0) { return 0; }
+        if (c == 0)
+        {
+            return 0;
+        }
         this->updateContainerMaybeAsync(copy);
         return c;
     }
@@ -94,7 +121,10 @@ namespace swift::gui::views
     {
         ContainerType copy(this->container());
         const int c = copy.replaceOrAddObjectByCallsign(object);
-        if (c == 0) { return 0; }
+        if (c == 0)
+        {
+            return 0;
+        }
         this->updateContainerMaybeAsync(copy);
         return c;
     }
@@ -102,7 +132,10 @@ namespace swift::gui::views
     template <class T>
     void CViewWithCallsignObjects<T>::selectObjects(const ContainerType &selectedObjects)
     {
-        if (!selectedObjects.isEmpty()) { this->selectCallsigns(selectedObjects.getCallsigns()); }
+        if (!selectedObjects.isEmpty())
+        {
+            this->selectCallsigns(selectedObjects.getCallsigns());
+        }
     }
 
     template class CViewWithCallsignObjects<swift::gui::models::CAtcStationListModel>;

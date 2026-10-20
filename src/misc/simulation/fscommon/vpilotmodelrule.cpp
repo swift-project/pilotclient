@@ -30,22 +30,55 @@ namespace swift::misc::simulation::fscommon
         QString f(this->getFolder().toUpper().simplified());
         f.replace(" ", "");
         if (f.isEmpty()) return ("UNKNOWN");
-        if (f.startsWith("WOAI", Qt::CaseInsensitive)) { return "WOAI"; }
-        if (f.startsWith("WORLDOFAI", Qt::CaseInsensitive)) { return "WOAI"; }
-        if (f.startsWith("IVAO", Qt::CaseInsensitive)) { return "IVAO"; }
-        if (f.startsWith("P3D", Qt::CaseInsensitive)) { return "P3D"; }
-        if (f.startsWith("FSX", Qt::CaseInsensitive)) { return "FSX"; }
-        if (f.startsWith("MYTRAFFIC", Qt::CaseInsensitive)) { return "MYTRAFFIC"; }
-        if (f.startsWith("JUSTFLIGHT", Qt::CaseInsensitive)) { return "JUSTFLIGHT"; }
-        if (f.startsWith("ULTIMATETRAFFIC", Qt::CaseInsensitive)) { return "ULTIMATETRAFFIC"; }
-        if (f.startsWith("VIP", Qt::CaseInsensitive)) { return "VIP"; }
+        if (f.startsWith("WOAI", Qt::CaseInsensitive))
+        {
+            return "WOAI";
+        }
+        if (f.startsWith("WORLDOFAI", Qt::CaseInsensitive))
+        {
+            return "WOAI";
+        }
+        if (f.startsWith("IVAO", Qt::CaseInsensitive))
+        {
+            return "IVAO";
+        }
+        if (f.startsWith("P3D", Qt::CaseInsensitive))
+        {
+            return "P3D";
+        }
+        if (f.startsWith("FSX", Qt::CaseInsensitive))
+        {
+            return "FSX";
+        }
+        if (f.startsWith("MYTRAFFIC", Qt::CaseInsensitive))
+        {
+            return "MYTRAFFIC";
+        }
+        if (f.startsWith("JUSTFLIGHT", Qt::CaseInsensitive))
+        {
+            return "JUSTFLIGHT";
+        }
+        if (f.startsWith("ULTIMATETRAFFIC", Qt::CaseInsensitive))
+        {
+            return "ULTIMATETRAFFIC";
+        }
+        if (f.startsWith("VIP", Qt::CaseInsensitive))
+        {
+            return "VIP";
+        }
         return "??? - " + f;
     }
 
     QVariant CVPilotModelRule::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -93,7 +126,10 @@ namespace swift::misc::simulation::fscommon
         if (al.length() > 3)
         {
             // some known hardcoded fixes
-            if (al.startsWith("USAF")) { al = "AIO"; }
+            if (al.startsWith("USAF"))
+            {
+                al = "AIO";
+            }
         }
         const QString liveryPseudoCode(al.length() != 3 ? "" : al + "." + CLivery::standardLiveryMarker());
         const CAircraftIcaoCode aircraftIcao(m_typeCode);

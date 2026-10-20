@@ -44,7 +44,10 @@ namespace swift::gui::views
     {
         QPointer<CAircraftModelValidationDialog> myself(this);
         QTimer::singleShot(delayMs, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->validate();
         });
     }
@@ -53,7 +56,10 @@ namespace swift::gui::views
     {
         // in view validation of models
         ui->comp_StatusMessage->clear();
-        if (m_models.isEmpty()) { return; }
+        if (m_models.isEmpty())
+        {
+            return;
+        }
 
         CAircraftModelList valid;
         CAircraftModelList invalid;

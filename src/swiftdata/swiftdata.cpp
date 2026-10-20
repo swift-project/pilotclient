@@ -66,7 +66,10 @@ void CSwiftData::closeEvent(QCloseEvent *event)
     if (sGui)
     {
         // save settings?
-        if (sGui->showCloseDialog(this, event) == QDialog::Rejected) { return; }
+        if (sGui->showCloseDialog(this, event) == QDialog::Rejected)
+        {
+            return;
+        }
     }
     this->performGracefulShutdown();
 }
@@ -97,7 +100,10 @@ void CSwiftData::init()
     sGui->triggerNewVersionCheck(20 * 1000);
     QPointer<CSwiftData> myself(this);
     QTimer::singleShot(15 * 1000, this, [=, this] {
-        if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+        if (!myself || !sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         this->checkMinimumVersion();
         this->checkAutoPublishing();
     });
@@ -136,7 +142,10 @@ void CSwiftData::initMenu()
 
 void CSwiftData::performGracefulShutdown()
 {
-    if (m_updater) { m_updater->abandonAndWait(); }
+    if (m_updater)
+    {
+        m_updater->abandonAndWait();
+    }
 }
 
 void CSwiftData::consolidationSettingChanged()
@@ -170,7 +179,10 @@ void CSwiftData::displayLog() { ui->comp_MainInfoArea->displayLog(); }
 
 void CSwiftData::checkMinimumVersion()
 {
-    if (!sApp || sApp->isShuttingDown()) { return; }
+    if (!sApp || sApp->isShuttingDown())
+    {
+        return;
+    }
     if (sApp->getGlobalSetup().isSwiftVersionMinimumMappingVersion())
     {
         CLogMessage(this).info(u"Checked mapping tool version, required '%1', this version '%2'")
@@ -189,13 +201,22 @@ void CSwiftData::checkMinimumVersion()
 
 void CSwiftData::checkAutoPublishing()
 {
-    if (!CAutoPublishData::existAutoPublishFiles()) { return; }
+    if (!CAutoPublishData::existAutoPublishFiles())
+    {
+        return;
+    }
     this->showAutoPublishing();
 }
 
 void CSwiftData::showAutoPublishing()
 {
-    if (!sApp || sApp->isShuttingDown()) { return; }
-    if (!m_autoPublishDialog) { m_autoPublishDialog = new CAutoPublishDialog(this); }
+    if (!sApp || sApp->isShuttingDown())
+    {
+        return;
+    }
+    if (!m_autoPublishDialog)
+    {
+        m_autoPublishDialog = new CAutoPublishDialog(this);
+    }
     m_autoPublishDialog->readAndShow();
 }

@@ -91,7 +91,10 @@ namespace swift::gui::components
     void CSimulatorComponent::clear(bool addInternalsAfterwards)
     {
         ui->tvp_LiveData->clear();
-        if (addInternalsAfterwards) { this->refreshInternals(); }
+        if (addInternalsAfterwards)
+        {
+            this->refreshInternals();
+        }
     }
 
     void CSimulatorComponent::update()
@@ -118,7 +121,10 @@ namespace swift::gui::components
         }
 
         // clear old warnings / information
-        if (this->rowCount() < 5) { this->clear(true); }
+        if (this->rowCount() < 5)
+        {
+            this->clear(true);
+        }
 
         const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
         const CAircraftSituation s = ownAircraft.getSituation();
@@ -173,7 +179,10 @@ namespace swift::gui::components
             this->addOrUpdateLiveDataByName(QStringLiteral("elevation (m)"),
                                             s.getGroundElevation().valueRoundedWithUnit(CLengthUnit::m(), 2), iconAlt);
         }
-        else { this->addOrUpdateLiveDataByName(QStringLiteral("elevation"), QStringLiteral("N/A"), iconAlt); }
+        else
+        {
+            this->addOrUpdateLiveDataByName(QStringLiteral("elevation"), QStringLiteral("N/A"), iconAlt);
+        }
 
         if (ownAircraft.hasCG())
         {
@@ -182,7 +191,10 @@ namespace swift::gui::components
             this->addOrUpdateLiveDataByName(QStringLiteral("CG (m)"),
                                             ownAircraft.getCG().valueRoundedWithUnit(CLengthUnit::m(), 2), iconPlane);
         }
-        else { this->addOrUpdateLiveDataByName(QStringLiteral("CG"), QStringLiteral("N/A"), iconPlane); }
+        else
+        {
+            this->addOrUpdateLiveDataByName(QStringLiteral("CG"), QStringLiteral("N/A"), iconPlane);
+        }
 
         this->addOrUpdateLiveDataByName(QStringLiteral("pitch"), s.getPitch().toQString(), iconAttitude);
         this->addOrUpdateLiveDataByName(QStringLiteral("bank"), s.getBank().toQString(), iconAttitude);
@@ -240,13 +252,19 @@ namespace swift::gui::components
 
     void CSimulatorComponent::onSimulatorMessages(const CStatusMessageList &messages)
     {
-        if (messages.isEmpty()) { return; }
+        if (messages.isEmpty())
+        {
+            return;
+        }
         ui->comp_StatusMessages->appendStatusMessagesToList(messages);
     }
 
     void CSimulatorComponent::refreshInternals()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
         const CSimulatorInternals internals = sGui->getIContextSimulator()->getSimulatorInternals();
         const CSimulatorInfo simulatorInfo = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo();
         m_simulator = simulatorInfo;
@@ -273,7 +291,10 @@ namespace swift::gui::components
     int CSimulatorComponent::getUpdateIntervalMs() const
     {
         // much slower updates via DBus
-        if (!sGui || sGui->isShuttingDown()) { return 10000; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return 10000;
+        }
         return sGui->getIContextSimulator()->isUsingImplementingObject() ? 1000 : 5000;
     }
 } // namespace swift::gui::components

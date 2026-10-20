@@ -71,7 +71,10 @@ namespace swift::misc::aviation
         {
             this->setTransponderMode(StateStandby);
         }
-        else { this->setTransponderMode(ModeC); }
+        else
+        {
+            this->setTransponderMode(ModeC);
+        }
     }
 
     QString CTransponder::convertToQString(bool /* i18n */) const
@@ -97,7 +100,10 @@ namespace swift::misc::aviation
     bool CTransponder::setTransponderMode(CTransponder::TransponderMode mode)
     {
         const int m = static_cast<int>(mode);
-        if (m == m_transponderMode) { return false; }
+        if (m == m_transponderMode)
+        {
+            return false;
+        }
         m_transponderMode = m;
         return true;
     }
@@ -123,7 +129,10 @@ namespace swift::misc::aviation
             bool ok {};
             this->setTransponderCode(transponderCode.toInt(&ok));
         }
-        else { Q_ASSERT_X(false, "CTransponder::setTransponderCode", "illegal transponder value"); }
+        else
+        {
+            Q_ASSERT_X(false, "CTransponder::setTransponderCode", "illegal transponder value");
+        }
     }
 
     bool CTransponder::isValidTransponderCode(const QString &transponderCode)
@@ -206,7 +215,10 @@ namespace swift::misc::aviation
 
     QVariant CTransponder::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -238,8 +250,14 @@ namespace swift::misc::aviation
         case IndexModeAsString: this->setTransponderMode(modeFromString(variant.toString())); break;
         case IndexTransponderCode:
         case IndexTransponderCodeFormatted:
-            if (variant.canConvert<int>()) { this->setTransponderCode(variant.toInt()); }
-            else { this->setTransponderCode(variant.toString()); }
+            if (variant.canConvert<int>())
+            {
+                this->setTransponderCode(variant.toInt());
+            }
+            else
+            {
+                this->setTransponderCode(variant.toString());
+            }
             break;
         case IndexTransponderCodeAndModeFormatted:
         default: Q_ASSERT_X(false, "CTransponder", "index unknown"); break;

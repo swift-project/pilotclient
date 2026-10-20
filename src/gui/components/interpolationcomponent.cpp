@@ -31,9 +31,15 @@ namespace swift::gui::components
 
     void CInterpolationComponent::displayInterpolationMessages()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
         const CCallsign cs = ui->comp_CallsignCompleter->getCallsign();
-        if (!cs.isValid()) { return; }
+        if (!cs.isValid())
+        {
+            return;
+        }
 
         const CStatusMessageList messages = sGui->getIContextSimulator()->getInterpolationMessages(cs);
         ui->tvp_InterpolationMessages->updateContainerMaybeAsync(messages);

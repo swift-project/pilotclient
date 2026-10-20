@@ -22,10 +22,16 @@ namespace swift::misc::simulation::data
     int IMultiSimulatorModelCaches::updateModelsForSimulator(const CAircraftModelList &models,
                                                              const CSimulatorInfo &simulator)
     {
-        if (models.isEmpty()) { return 0; }
+        if (models.isEmpty())
+        {
+            return 0;
+        }
         CAircraftModelList allModels(this->getSynchronizedCachedModels(simulator));
         const int c = allModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
-        if (c < 1) { return 0; }
+        if (c < 1)
+        {
+            return 0;
+        }
         this->setCachedModels(allModels, simulator);
         return allModels.size();
     }
@@ -92,10 +98,22 @@ namespace swift::misc::simulation::data
     CSimulatorInfo IMultiSimulatorModelCaches::otherVersionSimulatorsWithFile(const CApplicationInfo &info) const
     {
         CSimulatorInfo sim(CSimulatorInfo::None);
-        if (this->hasOtherVersionFile(info, CSimulatorInfo::p3d())) { sim.addSimulator(CSimulatorInfo::p3d()); }
-        if (this->hasOtherVersionFile(info, CSimulatorInfo::fg())) { sim.addSimulator(CSimulatorInfo::fg()); }
-        if (this->hasOtherVersionFile(info, CSimulatorInfo::xplane())) { sim.addSimulator(CSimulatorInfo::xplane()); }
-        if (this->hasOtherVersionFile(info, CSimulatorInfo::msfs())) { sim.addSimulator(CSimulatorInfo::msfs()); }
+        if (this->hasOtherVersionFile(info, CSimulatorInfo::p3d()))
+        {
+            sim.addSimulator(CSimulatorInfo::p3d());
+        }
+        if (this->hasOtherVersionFile(info, CSimulatorInfo::fg()))
+        {
+            sim.addSimulator(CSimulatorInfo::fg());
+        }
+        if (this->hasOtherVersionFile(info, CSimulatorInfo::xplane()))
+        {
+            sim.addSimulator(CSimulatorInfo::xplane());
+        }
+        if (this->hasOtherVersionFile(info, CSimulatorInfo::msfs()))
+        {
+            sim.addSimulator(CSimulatorInfo::msfs());
+        }
         if (this->hasOtherVersionFile(info, CSimulatorInfo::msfs2024()))
         {
             sim.addSimulator(CSimulatorInfo::msfs2024());
@@ -116,7 +134,10 @@ namespace swift::misc::simulation::data
 
     CSimulatorInfo IMultiSimulatorModelCaches::getSimulatorForFilename(const QString &filename) const
     {
-        if (filename.isEmpty()) { return {}; }
+        if (filename.isEmpty())
+        {
+            return {};
+        }
         CSimulatorInfo sims;
         const QString compareFileName(QFileInfo(filename).fileName());
         for (const CSimulatorInfo &singleSim : CSimulatorInfo::allSimulatorsSet())
@@ -154,7 +175,10 @@ namespace swift::misc::simulation::data
         for (const CSimulatorInfo &simInfo : CSimulatorInfo::allSimulators().asSingleSimulatorSet())
         {
             const QDateTime ts = this->getCacheTimestamp(simInfo);
-            if (ts.isValid() && ts > outdated) { withInitializedCache.add(simInfo); }
+            if (ts.isValid() && ts > outdated)
+            {
+                withInitializedCache.add(simInfo);
+            }
         }
         return withInitializedCache;
     }
@@ -164,7 +188,10 @@ namespace swift::misc::simulation::data
         CSimulatorInfo withModels;
         for (const CSimulatorInfo &simInfo : CSimulatorInfo::allSimulators().asSingleSimulatorSet())
         {
-            if (this->getCachedModelsCount(simInfo) > 0) { withModels.add(simInfo); }
+            if (this->getCachedModelsCount(simInfo) > 0)
+            {
+                withModels.add(simInfo);
+            }
         }
         return withModels;
     }
@@ -336,7 +363,10 @@ namespace swift::misc::simulation::data
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
 
-        if (this->isCacheAlreadySynchronized(simulator)) { return; }
+        if (this->isCacheAlreadySynchronized(simulator))
+        {
+            return;
+        }
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::P3D: m_modelCacheP3D.synchronize(); break;
@@ -354,7 +384,10 @@ namespace swift::misc::simulation::data
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
 
-        if (this->isCacheAlreadySynchronized(simulator)) { return false; }
+        if (this->isCacheAlreadySynchronized(simulator))
+        {
+            return false;
+        }
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::P3D: m_modelCacheP3D.admit(); break;
@@ -417,11 +450,20 @@ namespace swift::misc::simulation::data
             // see https://discordapp.com/channels/539048679160676382/539064750055751690/648974956306366499
             // this solves the issue that ACF models are loaded in CSimulatorXPlane::loadCslPackages
             const int removed = orderedModels.removeXPlaneFlyablePlanes();
-            if (removed > 0) { CLogMessage(this).info(u"Removed %1 flyable models from XPlane model set!"); }
+            if (removed > 0)
+            {
+                CLogMessage(this).info(u"Removed %1 flyable models from XPlane model set!");
+            }
         }
 
-        if (orderedModels.needsOrder()) { orderedModels.resetOrder(); }
-        else { orderedModels.sortAscendingByOrder(); }
+        if (orderedModels.needsOrder())
+        {
+            orderedModels.resetOrder();
+        }
+        else
+        {
+            orderedModels.sortAscendingByOrder();
+        }
 
         CStatusMessage msg;
         switch (simulator.getSimulator())
@@ -509,7 +551,10 @@ namespace swift::misc::simulation::data
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
 
-        if (this->isCacheAlreadySynchronized(simulator)) { return; }
+        if (this->isCacheAlreadySynchronized(simulator))
+        {
+            return;
+        }
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::P3D: m_modelCacheP3D.synchronize(); break;
@@ -527,7 +572,10 @@ namespace swift::misc::simulation::data
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "No single simulator");
 
-        if (this->isCacheAlreadySynchronized(simulator)) { return false; }
+        if (this->isCacheAlreadySynchronized(simulator))
+        {
+            return false;
+        }
         switch (simulator.getSimulator())
         {
         case CSimulatorInfo::P3D: m_modelCacheP3D.admit(); break;

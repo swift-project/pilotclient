@@ -29,16 +29,31 @@ namespace swift::misc::weather
 
     CCloudLayer::Coverage CCloudLayer::getCoverage() const
     {
-        if (m_coveragePercent > 85) { return Overcast; }
-        if (m_coveragePercent > 60 && m_coveragePercent <= 85) { return Broken; }
-        if (m_coveragePercent > 30 && m_coveragePercent <= 60) { return Scattered; }
-        if (m_coveragePercent > 10 && m_coveragePercent <= 30) { return Few; }
+        if (m_coveragePercent > 85)
+        {
+            return Overcast;
+        }
+        if (m_coveragePercent > 60 && m_coveragePercent <= 85)
+        {
+            return Broken;
+        }
+        if (m_coveragePercent > 30 && m_coveragePercent <= 60)
+        {
+            return Scattered;
+        }
+        if (m_coveragePercent > 10 && m_coveragePercent <= 30)
+        {
+            return Few;
+        }
         return None;
     }
 
     QVariant CCloudLayer::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         switch (index.frontCasted<ColumnIndex>())
         {
         case IndexBase: return QVariant::fromValue(m_base);

@@ -199,17 +199,29 @@ namespace swift::input
         if (inputFile->open(QIODevice::ReadOnly))
         {
             int fd = inputFile->handle();
-            if (fd < 0) { return; }
+            if (fd < 0)
+            {
+                return;
+            }
 
             int version = 0;
-            if (ioctl(fd, EVIOCGVERSION, &version) < 0) { return; }
+            if (ioctl(fd, EVIOCGVERSION, &version) < 0)
+            {
+                return;
+            }
 
             char deviceName[255];
-            if (ioctl(fd, EVIOCGNAME(sizeof(deviceName)), deviceName) < 0) { return; }
+            if (ioctl(fd, EVIOCGNAME(sizeof(deviceName)), deviceName) < 0)
+            {
+                return;
+            }
 
             uint8_t bitmask[EV_MAX / 8 + 1];
             memset(bitmask, 0, sizeof(bitmask));
-            if (ioctl(fd, EVIOCGBIT(0, sizeof(bitmask)), &bitmask) < 0) { return; }
+            if (ioctl(fd, EVIOCGBIT(0, sizeof(bitmask)), &bitmask) < 0)
+            {
+                return;
+            }
 
             // Keyboards support EV_SYN and EV_KEY
             // but do NOT support EV_REL and EV_ABS
@@ -252,25 +264,37 @@ namespace swift::input
 
     void CKeyboardLinux::keyEvent(int keyCode, bool isPressed)
     {
-        if (isMouseButton(keyCode)) { return; }
+        if (isMouseButton(keyCode))
+        {
+            return;
+        }
 
         swift::misc::input::CHotkeyCombination oldCombination(m_keyCombination);
         if (isPressed)
         {
             auto key = convertToKey(keyCode);
-            if (key == Key_Unknown) { return; }
+            if (key == Key_Unknown)
+            {
+                return;
+            }
 
             m_keyCombination.addKeyboardKey(key);
         }
         else
         {
             auto key = convertToKey(keyCode);
-            if (key == Key_Unknown) { return; }
+            if (key == Key_Unknown)
+            {
+                return;
+            }
 
             m_keyCombination.removeKeyboardKey(key);
         }
 
-        if (oldCombination != m_keyCombination) { emit keyCombinationChanged(m_keyCombination); }
+        if (oldCombination != m_keyCombination)
+        {
+            emit keyCombinationChanged(m_keyCombination);
+        }
     }
 
     swift::misc::input::KeyCode CKeyboardLinux::convertToKey(int keyCode)

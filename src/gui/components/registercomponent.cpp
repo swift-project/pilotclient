@@ -40,7 +40,10 @@ namespace swift::gui::components
     void CRegisterComponent::update()
     {
         // if not supported, do nothing
-        if (!sGui || !sGui->supportsContexts() || sGui->isShuttingDown()) { return; }
+        if (!sGui || !sGui->supportsContexts() || sGui->isShuttingDown())
+        {
+            return;
+        }
         ui->tvp_RegisteredComponents->updateContainer(sGui->getIContextApplication()->getRegisteredApplications());
     }
 } // namespace swift::gui::components

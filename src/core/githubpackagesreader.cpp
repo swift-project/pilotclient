@@ -31,7 +31,10 @@ namespace swift::core
             if (reply->error() == QNetworkReply::NoError)
             {
                 const auto updateInfo = CUpdateInfo::fromGitHubReleasesJson(reply->readAll());
-                if (!updateInfo.isEmpty()) { m_updateInfo.set(updateInfo); }
+                if (!updateInfo.isEmpty())
+                {
+                    m_updateInfo.set(updateInfo);
+                }
             }
             reply->deleteLater();
         });

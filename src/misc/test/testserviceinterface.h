@@ -412,7 +412,10 @@ namespace swift::misc::test
             if (!equal)
             {
                 errors++;
-                if (verbose) { ts << "I: " << in.toQString() << Qt::endl << "O: " << out.toQString() << Qt::endl; }
+                if (verbose)
+                {
+                    ts << "I: " << in.toQString() << Qt::endl << "O: " << out.toQString() << Qt::endl;
+                }
             }
             return equal;
         }
@@ -429,10 +432,22 @@ namespace swift::misc::test
                                  const swift::misc::aviation::CFlightPlan &out)
         {
             // flight plan: check units are preserved
-            if (in.getEnrouteTime().getUnit() != out.getEnrouteTime().getUnit()) { return false; }
-            if (in.getFuelTime().getUnit() != out.getFuelTime().getUnit()) { return false; }
-            if (in.getCruiseAltitude().getUnit() != out.getCruiseAltitude().getUnit()) { return false; }
-            if (in.getCruiseTrueAirspeed().getUnit() != out.getCruiseTrueAirspeed().getUnit()) { return false; }
+            if (in.getEnrouteTime().getUnit() != out.getEnrouteTime().getUnit())
+            {
+                return false;
+            }
+            if (in.getFuelTime().getUnit() != out.getFuelTime().getUnit())
+            {
+                return false;
+            }
+            if (in.getCruiseAltitude().getUnit() != out.getCruiseAltitude().getUnit())
+            {
+                return false;
+            }
+            if (in.getCruiseTrueAirspeed().getUnit() != out.getCruiseTrueAirspeed().getUnit())
+            {
+                return false;
+            }
             return true;
         }
         //! @}

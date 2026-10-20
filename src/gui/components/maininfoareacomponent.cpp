@@ -65,13 +65,28 @@ namespace swift::gui::components
 
         const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
         const bool shift = km.testFlag(Qt::ShiftModifier);
-        if (!shift) { return; }
+        if (!shift)
+        {
+            return;
+        }
 
         // pressing shift will go to overview
-        if (infoArea == InfoAreaSettings) { ui->comp_Settings->setSettingsOverviewTab(); }
-        else if (infoArea == InfoAreaAircraft) { ui->comp_Aircraft->setTab(CAircraftComponent::TabAircraftInRange); }
-        else if (infoArea == InfoAreaAtc) { ui->comp_AtcStations->setTab(CAtcStationComponent::TabAtcOnline); }
-        else if (infoArea == InfoAreaMapping) { ui->comp_Mappings->setTab(CMappingComponent::TabRenderedAircraft); }
+        if (infoArea == InfoAreaSettings)
+        {
+            ui->comp_Settings->setSettingsOverviewTab();
+        }
+        else if (infoArea == InfoAreaAircraft)
+        {
+            ui->comp_Aircraft->setTab(CAircraftComponent::TabAircraftInRange);
+        }
+        else if (infoArea == InfoAreaAtc)
+        {
+            ui->comp_AtcStations->setTab(CAtcStationComponent::TabAtcOnline);
+        }
+        else if (infoArea == InfoAreaMapping)
+        {
+            ui->comp_Mappings->setTab(CMappingComponent::TabRenderedAircraft);
+        }
     }
 
     void CMainInfoAreaComponent::selectLog() { this->selectArea(InfoAreaLog); }

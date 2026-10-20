@@ -150,7 +150,10 @@ namespace swift::gui::components
         ui->le_Status->clear();
 
         const CApplicationInfo otherVersionInfo = ui->comp_OtherSwiftVersions->selectedOtherVersion();
-        if (otherVersionInfo.isNull()) { return 0; }
+        if (otherVersionInfo.isNull())
+        {
+            return 0;
+        }
 
         bool success = false;
         int copied = 0;
@@ -429,19 +432,28 @@ namespace swift::gui::components
 
     void CCopySettingsAndCachesComponent::selectAll()
     {
-        for (QCheckBox *cb : this->checkBoxes()) { cb->setChecked(cb->isEnabled()); }
+        for (QCheckBox *cb : this->checkBoxes())
+        {
+            cb->setChecked(cb->isEnabled());
+        }
     }
 
     void CCopySettingsAndCachesComponent::deselectAll()
     {
-        for (QCheckBox *cb : this->checkBoxes()) { cb->setChecked(false); }
+        for (QCheckBox *cb : this->checkBoxes())
+        {
+            cb->setChecked(false);
+        }
     }
 
     QList<QCheckBox *> CCopySettingsAndCachesComponent::checkBoxes() const { return this->findChildren<QCheckBox *>(); }
 
     bool CCopySettingsAndCachesComponent::parsingMessage(bool success, const QString &msg, const QString &value)
     {
-        if (success) { return true; }
+        if (success)
+        {
+            return true;
+        }
         const CStatusMessage sm(this, msg);
         this->displayStatusMessage(sm, value);
         return false;
@@ -449,22 +461,40 @@ namespace swift::gui::components
 
     void CCopySettingsAndCachesComponent::displayStatusMessage(const CStatusMessage &msg, const QString &value)
     {
-        if (msg.isEmpty()) { return; }
-        if (value.isEmpty()) { ui->le_Status->setText(msg.getMessage()); }
-        else { ui->le_Status->setText(msg.getMessage() % u' ' % value); }
-        if (sGui) { sGui->processEventsToRefreshGui(); }
+        if (msg.isEmpty())
+        {
+            return;
+        }
+        if (value.isEmpty())
+        {
+            ui->le_Status->setText(msg.getMessage());
+        }
+        else
+        {
+            ui->le_Status->setText(msg.getMessage() % u' ' % value);
+        }
+        if (sGui)
+        {
+            sGui->processEventsToRefreshGui();
+        }
     }
 
     void CCopySettingsAndCachesComponent::allCheckBoxesReadOnly()
     {
-        for (QCheckBox *cb : checkBoxes()) { readOnlyCheckbox(cb, true); }
+        for (QCheckBox *cb : checkBoxes())
+        {
+            readOnlyCheckbox(cb, true);
+        }
     }
 
     void CCopySettingsAndCachesComponent::readOnlyCheckbox(QCheckBox *cb, bool readOnly)
     {
         Q_ASSERT_X(cb, Q_FUNC_INFO, "need checkbox");
         CGuiUtility::checkBoxReadOnly(cb, readOnly);
-        if (readOnly) { cb->setChecked(false); }
+        if (readOnly)
+        {
+            cb->setChecked(false);
+        }
         cb->setEnabled(!readOnly);
         // cb->setIcon(readOnly ? CIcons::cross16() : CIcons::tick16());
     }
@@ -477,7 +507,10 @@ namespace swift::gui::components
     void CCopySettingsAndCachesWizardPage::initializePage()
     {
         // re-init other versions
-        if (m_copyCachesAndSettings) { m_copyCachesAndSettings->reloadOtherVersions(1000); }
+        if (m_copyCachesAndSettings)
+        {
+            m_copyCachesAndSettings->reloadOtherVersions(1000);
+        }
     }
 
     bool CCopySettingsAndCachesWizardPage::validatePage() { return true; }

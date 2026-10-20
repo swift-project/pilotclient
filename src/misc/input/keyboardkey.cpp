@@ -32,7 +32,10 @@ namespace swift::misc::input
             { Key_AltLeft, QStringLiteral("AltLeft") },      { Key_AltRight, QStringLiteral("AltRight") }
         };
 
-        if (isModifier()) { return keyStrings.value(m_keyCode); }
+        if (isModifier())
+        {
+            return keyStrings.value(m_keyCode);
+        }
 
         switch (m_keyCode)
         {
@@ -112,7 +115,10 @@ namespace swift::misc::input
 
     QVariant CKeyboardKey::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

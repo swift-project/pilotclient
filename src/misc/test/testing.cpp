@@ -33,7 +33,10 @@ namespace swift::misc::test
     CAtcStationList CTesting::createAtcStations(int number, bool byPropertyIndex)
     {
         CAtcStationList atcs;
-        for (int i = 0; i < number; i++) { atcs.push_back(createStation(i, byPropertyIndex)); }
+        for (int i = 0; i < number; i++)
+        {
+            atcs.push_back(createStation(i, byPropertyIndex));
+        }
         return atcs;
     }
 

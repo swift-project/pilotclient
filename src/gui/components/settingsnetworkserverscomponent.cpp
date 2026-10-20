@@ -80,7 +80,10 @@ namespace swift::gui::components
         else if (sender == ui->pb_SaveServer)
         {
             CStatusMessageList msgs = server.validate();
-            if (!msgs.isEmpty()) { msgs.addCategories(this); }
+            if (!msgs.isEmpty())
+            {
+                msgs.addCategories(this);
+            }
 
             // error?
             if (msgs.isFailure())

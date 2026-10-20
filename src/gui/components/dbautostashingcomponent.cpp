@@ -172,9 +172,18 @@ namespace swift::gui::components
 
     int CDbAutoStashingComponent::getSelectedOrAllCount() const
     {
-        if (!this->currentModelView()) { return 0; }
-        if (ui->rb_Selected->isChecked()) { return this->currentModelView()->selectedRowCount(); }
-        else { return this->currentModelView()->rowCount(); }
+        if (!this->currentModelView())
+        {
+            return 0;
+        }
+        if (ui->rb_Selected->isChecked())
+        {
+            return this->currentModelView()->selectedRowCount();
+        }
+        else
+        {
+            return this->currentModelView()->rowCount();
+        }
     }
 
     CAircraftModelView *CDbAutoStashingComponent::currentModelView() const
@@ -184,20 +193,29 @@ namespace swift::gui::components
 
     void CDbAutoStashingComponent::addStatusMessage(const CStatusMessage &msg)
     {
-        if (msg.isEmpty()) { return; }
+        if (msg.isEmpty())
+        {
+            return;
+        }
         ui->tvp_StatusMessages->insert(msg);
     }
 
     void CDbAutoStashingComponent::addStatusMessage(const CStatusMessage &msg, const CAircraftModel &model)
     {
-        if (msg.isEmpty()) { return; }
+        if (msg.isEmpty())
+        {
+            return;
+        }
         if (model.hasModelString())
         {
             CStatusMessage prefixMessage(msg);
             prefixMessage.prependMessage(QString(model.getModelString() + ", " + model.getMembersDbStatus() + ": "));
             ui->tvp_StatusMessages->insert(prefixMessage);
         }
-        else { ui->tvp_StatusMessages->insert(msg); }
+        else
+        {
+            ui->tvp_StatusMessages->insert(msg);
+        }
     }
 
     void CDbAutoStashingComponent::tryToStashModels()
@@ -206,8 +224,14 @@ namespace swift::gui::components
         const CAircraftModelList models(ui->rb_Selected->isChecked() ?
                                             this->currentModelView()->selectedObjects() :
                                             this->currentModelView()->containerOrFilteredContainer());
-        if (models.isEmpty()) { return; }
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (models.isEmpty())
+        {
+            return;
+        }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         // we have data and are good to go
         m_state = Running;
@@ -217,8 +241,14 @@ namespace swift::gui::components
         int max = CDbStashComponent::MaxModelPublished;
         const QString maxStr(ui->le_MaxModelsStashed->text());
         bool okMaxStr = true;
-        if (!maxStr.isEmpty()) { max = maxStr.toInt(&okMaxStr); }
-        if (!okMaxStr || max > all) { max = all; }
+        if (!maxStr.isEmpty())
+        {
+            max = maxStr.toInt(&okMaxStr);
+        }
+        if (!okMaxStr || max > all)
+        {
+            max = all;
+        }
 
         // override description
         const QString description(ui->le_Description->text().trimmed());
@@ -234,7 +264,10 @@ namespace swift::gui::components
             const bool stashed = this->tryToStashModel(stashModel, tempLivery);
             if (stashed)
             {
-                if (!description.isEmpty()) { this->setModelDescription(stashModel, description); }
+                if (!description.isEmpty())
+                {
+                    this->setModelDescription(stashModel, description);
+                }
                 autoStashed.push_back(stashModel);
             }
 
@@ -252,7 +285,10 @@ namespace swift::gui::components
                 }
                 this->updateProgressIndicator(percent);
             }
-            if (autoStashed.size() >= max) { break; }
+            if (autoStashed.size() >= max)
+            {
+                break;
+            }
         }
 
         this->updateProgressIndicator(100);
@@ -323,7 +359,10 @@ namespace swift::gui::components
         CStatusMessageList validationMsgs(stashModel.validate(true));
         validationMsgs.removeWarningsAndBelow();
         CStatusMessage msg = validationMsgs.toSingleMessage();
-        if (msg.getSeverity() == CStatusMessage::SeverityError) { m_noValidationFailed++; }
+        if (msg.getSeverity() == CStatusMessage::SeverityError)
+        {
+            m_noValidationFailed++;
+        }
         else
         {
             msg = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Stashed succesfully");
@@ -337,19 +376,31 @@ namespace swift::gui::components
 
     void CDbAutoStashingComponent::setModelDescription(CAircraftModel &model, const QString &description) const
     {
-        if (description.isEmpty()) { return; }
-        if (ui->rb_All->isChecked()) { model.setDescription(description); }
+        if (description.isEmpty())
+        {
+            return;
+        }
+        if (ui->rb_All->isChecked())
+        {
+            model.setDescription(description);
+        }
         else
         {
             // only for "empty" ones
-            if (model.hasDescription(true)) { return; }
+            if (model.hasDescription(true))
+            {
+                return;
+            }
             model.setDescription(description);
         }
     }
 
     swift::misc::aviation::CLivery CDbAutoStashingComponent::getTempLivery()
     {
-        if (!sGui || !sGui->hasWebDataServices()) { return {}; }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return {};
+        }
         return sGui->getWebDataServices()->getTempLiveryOrDefault();
     }
 } // namespace swift::gui::components

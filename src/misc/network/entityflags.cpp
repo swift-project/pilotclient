@@ -73,7 +73,10 @@ namespace swift::misc::network
 
     bool CEntityFlags::isFinishedReadStateOrFailure(CEntityFlags::ReadState state)
     {
-        if (isFinishedReadState(state)) { return true; }
+        if (isFinishedReadState(state))
+        {
+            return true;
+        }
         return state == ReadFailed || state == ReadSkipped;
     }
 
@@ -131,7 +134,10 @@ namespace swift::misc::network
 
     CEntityFlags::Entity CEntityFlags::iterateDbEntities(Entity &entities)
     {
-        if (entities == NoEntity || entities == DbInfoObjectEntity) { return NoEntity; }
+        if (entities == NoEntity || entities == DbInfoObjectEntity)
+        {
+            return NoEntity;
+        }
         if (entities.testFlag(AircraftIcaoEntity))
         {
             entities &= ~AircraftIcaoEntity;
@@ -195,14 +201,38 @@ namespace swift::misc::network
     CEntityFlags::Entity CEntityFlags::singleEntityByName(const QString &name)
     {
         // order here is crucial
-        if (name.contains("model", Qt::CaseInsensitive)) { return ModelEntity; }
-        if (name.contains("category", Qt::CaseInsensitive)) { return AircraftCategoryEntity; }
-        if (name.contains("aircraft", Qt::CaseInsensitive)) { return AircraftIcaoEntity; }
-        if (name.contains("airline", Qt::CaseInsensitive)) { return AirlineIcaoEntity; }
-        if (name.contains("airport", Qt::CaseInsensitive)) { return AirportEntity; }
-        if (name.contains("distributor", Qt::CaseInsensitive)) { return DistributorEntity; }
-        if (name.contains("countr", Qt::CaseInsensitive)) { return CountryEntity; } // singular/plural
-        if (name.contains("liver", Qt::CaseInsensitive)) { return LiveryEntity; } // singular/plural
+        if (name.contains("model", Qt::CaseInsensitive))
+        {
+            return ModelEntity;
+        }
+        if (name.contains("category", Qt::CaseInsensitive))
+        {
+            return AircraftCategoryEntity;
+        }
+        if (name.contains("aircraft", Qt::CaseInsensitive))
+        {
+            return AircraftIcaoEntity;
+        }
+        if (name.contains("airline", Qt::CaseInsensitive))
+        {
+            return AirlineIcaoEntity;
+        }
+        if (name.contains("airport", Qt::CaseInsensitive))
+        {
+            return AirportEntity;
+        }
+        if (name.contains("distributor", Qt::CaseInsensitive))
+        {
+            return DistributorEntity;
+        }
+        if (name.contains("countr", Qt::CaseInsensitive))
+        {
+            return CountryEntity;
+        } // singular/plural
+        if (name.contains("liver", Qt::CaseInsensitive))
+        {
+            return LiveryEntity;
+        } // singular/plural
         return NoEntity;
     }
 
@@ -212,7 +242,10 @@ namespace swift::misc::network
         for (const QString &name : names)
         {
             const CEntityFlags::Entity singleEntity = CEntityFlags::singleEntityByName(name);
-            if (singleEntity == NoEntity) { continue; }
+            if (singleEntity == NoEntity)
+            {
+                continue;
+            }
             entities |= singleEntity;
         }
         return entities;

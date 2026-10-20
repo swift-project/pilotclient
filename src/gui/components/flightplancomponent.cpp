@@ -206,10 +206,16 @@ namespace swift::gui::components
         // prefill some data derived from what was used last
         const QPointer<CFlightPlanComponent> myself(this);
         QTimer::singleShot(2500, this, [=, this] {
-            if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+            if (!sGui || sGui->isShuttingDown() || !myself)
+            {
+                return;
+            }
 
             this->loadTemplateFromDisk();
-            if (sGui->getIContextSimulator()->isSimulatorAvailable()) { this->prefillWithOwnAircraftData(); }
+            if (sGui->getIContextSimulator()->isSimulatorAvailable())
+            {
+                this->prefillWithOwnAircraftData();
+            }
             else
             {
                 const CAircraftModel model = m_lastAircraftModel.get();
@@ -225,22 +231,37 @@ namespace swift::gui::components
 
     void CFlightPlanComponent::loginDataSet()
     {
-        if (m_sentFlightPlan.wasSentOrLoaded()) { return; } // when loaded or sent do not override
+        if (m_sentFlightPlan.wasSentOrLoaded())
+        {
+            return;
+        } // when loaded or sent do not override
         this->prefillWithOwnAircraftData();
     }
 
     void CFlightPlanComponent::prefillWithOwnAircraftData()
     {
-        if (!sGui->getIContextOwnAircraft()) { return; }
-        if (!sGui->getIContextSimulator()) { return; }
-        if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
+        if (!sGui->getIContextOwnAircraft())
+        {
+            return;
+        }
+        if (!sGui->getIContextSimulator())
+        {
+            return;
+        }
+        if (!sGui->getIContextSimulator()->isSimulatorAvailable())
+        {
+            return;
+        }
         const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
         this->prefillWithAircraftData(ownAircraft);
     }
 
     void CFlightPlanComponent::prefillWithAircraftData(const CSimulatedAircraft &aircraft, bool force)
     {
-        if (!force && m_sentFlightPlan.wasSentOrLoaded()) { return; }
+        if (!force && m_sentFlightPlan.wasSentOrLoaded())
+        {
+            return;
+        }
 
         // only override with valid values
         if (CCallsign::isValidAircraftCallsign(aircraft.getCallsignAsString()))
@@ -263,12 +284,24 @@ namespace swift::gui::components
 
     void CFlightPlanComponent::prefillWithUserData(const CUser &user)
     {
-        if (m_sentFlightPlan.wasSentOrLoaded()) { return; }
+        if (m_sentFlightPlan.wasSentOrLoaded())
+        {
+            return;
+        }
 
         // only override with valid values
-        if (user.hasRealName()) { ui->le_PilotsName->setText(user.getRealName()); }
-        if (user.hasHomeBase()) { ui->le_PilotsHomeBase->setText(user.getHomeBase().getIcaoCode()); }
-        if (user.hasCallsign()) { ui->le_Callsign->setText(user.getCallsign().asString()); }
+        if (user.hasRealName())
+        {
+            ui->le_PilotsName->setText(user.getRealName());
+        }
+        if (user.hasHomeBase())
+        {
+            ui->le_PilotsHomeBase->setText(user.getHomeBase().getIcaoCode());
+        }
+        if (user.hasCallsign())
+        {
+            ui->le_Callsign->setText(user.getCallsign().asString());
+        }
     }
 
     void CFlightPlanComponent::fillWithFlightPlanData(const CFlightPlan &flightPlan)
@@ -288,7 +321,10 @@ namespace swift::gui::components
         ui->lep_CrusingAltitude->setAltitude(cruiseAlt);
 
         const QString r = flightPlan.getFlightRulesAsString();
-        if (CFlightPlan::flightRules().contains(r, Qt::CaseInsensitive)) { ui->cb_FlightRule->setCurrentText(r); }
+        if (CFlightPlan::flightRules().contains(r, Qt::CaseInsensitive))
+        {
+            ui->cb_FlightRule->setCurrentText(r);
+        }
         else if (flightPlan.getFlightRules() == CFlightPlan::UNKNOWN)
         {
             ui->cb_FlightRule->setCurrentText(CFlightPlan::flightRulesToString(CFlightPlan::IFR));
@@ -374,7 +410,10 @@ namespace swift::gui::components
                 CStatusMessage(this).validationError(u"Flight plan route length exceeded (%1 chars max.)")
                 << CFlightPlan::MaxRouteLength);
         }
-        else { flightPlan.setRoute(v); }
+        else
+        {
+            flightPlan.setRoute(v);
+        }
 
         // remarks
         v = ui->pte_Remarks->toPlainText().trimmed();
@@ -390,7 +429,10 @@ namespace swift::gui::components
                 CStatusMessage(this).validationError(u"Flight plan remarks length exceeded (%1 chars max.)")
                 << CFlightPlan::MaxRemarksLength);
         }
-        else { flightPlan.setRemarks(v); }
+        else
+        {
+            flightPlan.setRemarks(v);
+        }
 
         // Total length
         if ((remarksLength + routeLength) > CFlightPlan::MaxRouteAndRemarksLength)
@@ -479,7 +521,10 @@ namespace swift::gui::components
                 << ui->lbl_CruiseTrueAirspeed->text());
             flightPlan.setDestinationAirportIcao(defaultIcao());
         }
-        else { flightPlan.setCruiseTrueAirspeed(cruiseTAS); }
+        else
+        {
+            flightPlan.setCruiseTrueAirspeed(cruiseTAS);
+        }
 
         // Optional fields
         v = ui->le_AlternateAirport->text();
@@ -492,7 +537,10 @@ namespace swift::gui::components
             }
             flightPlan.setAlternateAirportIcao(QString());
         }
-        else { flightPlan.setAlternateAirportIcao(v); }
+        else
+        {
+            flightPlan.setAlternateAirportIcao(v);
+        }
 
         // OK
         if (!messages.isFailure())
@@ -529,10 +577,16 @@ namespace swift::gui::components
                 this->showOverlayHTMLMessage(m, OverlayTimeout);
                 this->updateRemarksHistories(); // all OK, we keep that in history
             }
-            else { this->showOverlayMessage(m, OverlayTimeout); }
+            else
+            {
+                this->showOverlayMessage(m, OverlayTimeout);
+            }
             m_sentFlightPlan = flightPlan; // last valid FP
         }
-        else { this->showOverlayMessages(messages); }
+        else
+        {
+            this->showOverlayMessages(messages);
+        }
     }
 
     void CFlightPlanComponent::resetFlightPlan()
@@ -560,27 +614,45 @@ namespace swift::gui::components
             QFileDialog::getOpenFileName(this, tr("Load flight plan"), this->getDefaultFilename(true),
                                          "Flight plans (*.json *.sfp *.vfp *.xml);;swift (*.json *.txt);;SimBrief "
                                          "(*.xml);;vPilot (*.vfp);;SB4 (*.sfp)");
-        if (fileName.isEmpty()) { return; }
+        if (fileName.isEmpty())
+        {
+            return;
+        }
         CFlightPlan fp = CFlightPlan::loadFromMultipleFormats(fileName, &msgs);
-        if (!fp.hasCallsign()) { fp.setCallsign(ui->le_Callsign->text()); } // set callsign if it wasn't set
+        if (!fp.hasCallsign())
+        {
+            fp.setCallsign(ui->le_Callsign->text());
+        } // set callsign if it wasn't set
 
         if (msgs.isSuccess())
         {
             this->fillWithFlightPlanData(fp);
             this->updateDirectorySettings(fileName);
         }
-        else { this->showOverlayMessages(msgs, true, OverlayTimeout); }
+        else
+        {
+            this->showOverlayMessages(msgs, true, OverlayTimeout);
+        }
     }
 
     void CFlightPlanComponent::loadTemplateFromDisk()
     {
         const QFile f(this->getTemplateName());
-        if (!f.exists()) { return; }
+        if (!f.exists())
+        {
+            return;
+        }
 
         CStatusMessageList msgs;
         CFlightPlan fp = CFlightPlan::loadFromMultipleFormats(f.fileName(), &msgs);
-        if (!fp.hasCallsign()) { fp.setCallsign(ui->le_Callsign->text()); } // set callsign if it wasn't set
-        if (msgs.isSuccess()) { this->fillWithFlightPlanData(fp); }
+        if (!fp.hasCallsign())
+        {
+            fp.setCallsign(ui->le_Callsign->text());
+        } // set callsign if it wasn't set
+        if (msgs.isSuccess())
+        {
+            this->fillWithFlightPlanData(fp);
+        }
     }
 
     void CFlightPlanComponent::saveToDisk()
@@ -588,7 +660,8 @@ namespace swift::gui::components
         CStatusMessage m;
         const QString fileName = QFileDialog::getSaveFileName(
             nullptr, tr("Save flight plan"), this->getDefaultFilename(false), tr("swift (*.json;*.txt)"));
-        do {
+        do
+        {
             if (fileName.isEmpty())
             {
                 m = CStatusMessage(this, CStatusMessage::SeverityDebug, u"Save canceled", true);
@@ -605,7 +678,10 @@ namespace swift::gui::components
                                              "'\n\nThis is not recommended!"
                                              "\n\nDo you want to really do this?",
                                          QMessageBox::Save | QMessageBox::Cancel);
-                if (ret != QMessageBox::Save) { return; }
+                if (ret != QMessageBox::Save)
+                {
+                    return;
+                }
             }
 
             const bool ok = this->saveFPToDisk(fileName);
@@ -614,10 +690,16 @@ namespace swift::gui::components
                 m = CStatusMessage(this, CStatusMessage::SeverityInfo, u"Written " % fileName, true);
                 this->updateDirectorySettings(fileName);
             }
-            else { m = CStatusMessage(this, CStatusMessage::SeverityError, u"Writing " % fileName % u" failed", true); }
+            else
+            {
+                m = CStatusMessage(this, CStatusMessage::SeverityError, u"Writing " % fileName % u" failed", true);
+            }
         }
         while (false);
-        if (m.isFailure()) { CLogMessage::preformatted(m); }
+        if (m.isFailure())
+        {
+            CLogMessage::preformatted(m);
+        }
     }
 
     bool CFlightPlanComponent::saveFPToDisk(const QString &fileName)
@@ -639,16 +721,28 @@ namespace swift::gui::components
     {
         const QString fn = this->getTemplateName();
         const bool ok = this->saveFPToDisk(fn);
-        if (ok) { CLogMessage(this).info(u"Saved FP template '%1'") << fn; }
-        else { CLogMessage(this).warning(u"Saving FP template '%1' failed") << fn; }
+        if (ok)
+        {
+            CLogMessage(this).info(u"Saved FP template '%1'") << fn;
+        }
+        else
+        {
+            CLogMessage(this).warning(u"Saving FP template '%1' failed") << fn;
+        }
     }
 
     void CFlightPlanComponent::clearTemplate()
     {
         QFile f(this->getTemplateName());
-        if (!f.exists()) { return; }
+        if (!f.exists())
+        {
+            return;
+        }
         const bool r = f.remove();
-        if (r) { CLogMessage(this).info(u"Deleted FP template '%1'") << f.fileName(); }
+        if (r)
+        {
+            CLogMessage(this).info(u"Deleted FP template '%1'") << f.fileName();
+        }
     }
 
     QString CFlightPlanComponent::getTemplateName() const
@@ -660,8 +754,14 @@ namespace swift::gui::components
 
     void CFlightPlanComponent::setSelcalInOwnAircraft()
     {
-        if (!sGui || !sGui->getIContextOwnAircraft()) { return; }
-        if (!ui->frp_SelcalCode->hasValidCode()) { return; }
+        if (!sGui || !sGui->getIContextOwnAircraft())
+        {
+            return;
+        }
+        if (!ui->frp_SelcalCode->hasValidCode())
+        {
+            return;
+        }
         sGui->getIContextOwnAircraft()->updateSelcal(ui->frp_SelcalCode->getSelcal(), flightPlanIdentifier());
     }
 
@@ -682,7 +782,10 @@ namespace swift::gui::components
         {
             const QMessageBox::StandardButton r = QMessageBox::warning(
                 this, "Loaded FP", "Override current flight plan data?", QMessageBox::Yes | QMessageBox::No);
-            if (r != QMessageBox::Yes) { return; }
+            if (r != QMessageBox::Yes)
+            {
+                return;
+            }
             this->fillWithFlightPlanData(loadedPlan);
             CLogMessage(this).info(u"Updated with loaded flight plan");
         }
@@ -705,22 +808,58 @@ namespace swift::gui::components
         if (!v.isEmpty()) rem.append("REG/").append(v).append(" ");
 
         v = ui->cb_PilotRating->currentText().toUpper();
-        if (v.contains("P1")) { rem.append("PR/P1 "); }
-        else if (v.contains("P2")) { rem.append("PR/P2 "); }
-        else if (v.contains("P3")) { rem.append("PR/P3 "); }
-        else if (v.contains("P4")) { rem.append("PR/P4 "); }
-        else if (v.contains("P5")) { rem.append("PR/P5 "); }
+        if (v.contains("P1"))
+        {
+            rem.append("PR/P1 ");
+        }
+        else if (v.contains("P2"))
+        {
+            rem.append("PR/P2 ");
+        }
+        else if (v.contains("P3"))
+        {
+            rem.append("PR/P3 ");
+        }
+        else if (v.contains("P4"))
+        {
+            rem.append("PR/P4 ");
+        }
+        else if (v.contains("P5"))
+        {
+            rem.append("PR/P5 ");
+        }
 
         v = ui->cb_RequiredNavigationPerformance->currentText().toUpper();
-        if (v.contains("10")) { rem.append("RNP10 "); }
-        else if (v.contains("4")) { rem.append("RNP4 "); }
+        if (v.contains("10"))
+        {
+            rem.append("RNP10 ");
+        }
+        else if (v.contains("4"))
+        {
+            rem.append("RNP4 ");
+        }
 
         v = ui->cb_PerformanceCategory->currentText().toUpper();
-        if (v.startsWith("A")) { rem.append("PER/A "); }
-        else if (v.startsWith("B")) { rem.append("PER/B "); }
-        else if (v.startsWith("C")) { rem.append("PER/C "); }
-        else if (v.startsWith("D")) { rem.append("PER/D "); }
-        else if (v.startsWith("E")) { rem.append("PER/E "); }
+        if (v.startsWith("A"))
+        {
+            rem.append("PER/A ");
+        }
+        else if (v.startsWith("B"))
+        {
+            rem.append("PER/B ");
+        }
+        else if (v.startsWith("C"))
+        {
+            rem.append("PER/C ");
+        }
+        else if (v.startsWith("D"))
+        {
+            rem.append("PER/D ");
+        }
+        else if (v.startsWith("E"))
+        {
+            rem.append("PER/E ");
+        }
 
         if (ui->frp_SelcalCode->hasValidCode())
         {
@@ -728,10 +867,16 @@ namespace swift::gui::components
             rem.append(" ");
         }
 
-        if (ui->cb_NoSidsStarts->isChecked()) { rem.append("NO SID/STAR "); }
+        if (ui->cb_NoSidsStarts->isChecked())
+        {
+            rem.append("NO SID/STAR ");
+        }
 
         v = ui->pte_AdditionalRemarks->toPlainText().trimmed();
-        if (!v.isEmpty()) { rem.append(v); }
+        if (!v.isEmpty())
+        {
+            rem.append(v);
+        }
 
         rem = rem.simplified().trimmed();
         ui->pte_RemarksGenerated->setPlainText(rem);
@@ -740,7 +885,10 @@ namespace swift::gui::components
     void CFlightPlanComponent::copyRemarks(bool confirm)
     {
         const QString generated = ui->pte_RemarksGenerated->toPlainText().trimmed();
-        if (confirm && !this->overrideRemarks()) { return; }
+        if (confirm && !this->overrideRemarks())
+        {
+            return;
+        }
         ui->pte_Remarks->setPlainText(generated);
         CLogMessage(this).info(u"Copied remarks");
     }
@@ -752,21 +900,33 @@ namespace swift::gui::components
     void CFlightPlanComponent::aircraftTypeChanged()
     {
         const CAircraftIcaoCode icao = this->getAircraftIcaoCode();
-        if (!icao.isLoadedFromDb()) { return; }
+        if (!icao.isLoadedFromDb())
+        {
+            return;
+        }
         QPointer<CFlightPlanComponent> myself(this);
         QTimer::singleShot(25, this, [=, this] {
-            if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+            if (!myself || !sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             updateWakeTurbulenceCategorySelector(icao.getWtc());
         });
     }
 
     void CFlightPlanComponent::syncWithSimulator()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft())
+        {
+            return;
+        }
         const QMessageBox::StandardButton reply = QMessageBox::question(
             this, QStringLiteral("Override aircraft data"),
             QStringLiteral("Override aircraft ICAO data from simulator"), QMessageBox::Yes | QMessageBox::No);
-        if (reply != QMessageBox::Yes) { return; }
+        if (reply != QMessageBox::Yes)
+        {
+            return;
+        }
 
         const CSimulatedAircraft aircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
         this->prefillWithAircraftData(aircraft, true);
@@ -775,12 +935,18 @@ namespace swift::gui::components
     CAircraftIcaoCode CFlightPlanComponent::getAircraftIcaoCode() const
     {
         const QString designator(ui->le_AircraftType->text());
-        if (!CAircraftIcaoCode::isValidDesignator(designator)) { return {}; }
+        if (!CAircraftIcaoCode::isValidDesignator(designator))
+        {
+            return {};
+        }
         if (sApp && sApp->hasWebDataServices())
         {
             const CAircraftIcaoCode designatorFromDb =
                 sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(designator);
-            if (designatorFromDb.isLoadedFromDb()) { return designatorFromDb; }
+            if (designatorFromDb.isLoadedFromDb())
+            {
+                return designatorFromDb;
+            }
         }
         return designator;
     }
@@ -803,14 +969,20 @@ namespace swift::gui::components
         {
             const int reply = QMessageBox::question(this, "Remarks", "Override existing remarks?",
                                                     QMessageBox::Yes | QMessageBox::No);
-            if (reply != QMessageBox::Yes) { return false; }
+            if (reply != QMessageBox::Yes)
+            {
+                return false;
+            }
         }
         return true;
     }
 
     void CFlightPlanComponent::updateDirectorySettings(const QString &fileOrDirectory)
     {
-        if (fileOrDirectory.isEmpty()) { return; }
+        if (fileOrDirectory.isEmpty())
+        {
+            return;
+        }
 
         CDirectories swiftDirs = m_directories.get();
         swiftDirs.setFlightPlanDirectory(CDirectories::fileNameToDirectory(fileOrDirectory));
@@ -820,10 +992,16 @@ namespace swift::gui::components
 
     void CFlightPlanComponent::altitudeDialog()
     {
-        if (!m_altitudeDialog) { m_altitudeDialog = new CAltitudeDialog(this); }
+        if (!m_altitudeDialog)
+        {
+            m_altitudeDialog = new CAltitudeDialog(this);
+        }
 
         const auto ret = static_cast<QDialog::DialogCode>(m_altitudeDialog->exec());
-        if (ret != QDialog::Accepted) { return; }
+        if (ret != QDialog::Accepted)
+        {
+            return;
+        }
 
         if (!m_altitudeDialog->getAltitudeString().isEmpty())
         {
@@ -858,7 +1036,10 @@ namespace swift::gui::components
 
     void CFlightPlanComponent::setRemarksUIValues(const QString &remarks)
     {
-        if (remarks.isEmpty()) { return; }
+        if (remarks.isEmpty())
+        {
+            return;
+        }
 
         if (remarks.contains("/V"))
         {
@@ -880,16 +1061,28 @@ namespace swift::gui::components
         if (selcal >= 0 && remarks.length() > selcal + 7)
         {
             const QString code = remarks.mid(selcal + 4, 4);
-            if (code.length() == 4) { ui->frp_SelcalCode->setSelcal(code); }
+            if (code.length() == 4)
+            {
+                ui->frp_SelcalCode->setSelcal(code);
+            }
         }
     }
 
     void CFlightPlanComponent::loadFromSimBrief()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
-        if (!m_simBriefDialog) { m_simBriefDialog = new CSimBriefDownloadDialog(this); }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
+        if (!m_simBriefDialog)
+        {
+            m_simBriefDialog = new CSimBriefDownloadDialog(this);
+        }
         const int rv = m_simBriefDialog->exec();
-        if (rv != QDialog::Accepted) { return; }
+        if (rv != QDialog::Accepted)
+        {
+            return;
+        }
 
         const CUrl url = m_simBriefDialog->getSimBriefData().getUrlAndUsername();
         sApp->getFromNetwork(url.toNetworkRequest(), { this, &CFlightPlanComponent::handleSimBriefResponse });
@@ -900,7 +1093,10 @@ namespace swift::gui::components
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         const QUrl url(nwReply->url());
         const QString urlString(url.toString());
@@ -910,7 +1106,10 @@ namespace swift::gui::components
             // const qint64 lastModified = CNetworkUtils::lastModifiedMsSinceEpoch(nwReply.data());
             const QString simBriefFP(nwReplyPtr->readAll());
             nwReplyPtr->close();
-            if (simBriefFP.isEmpty()) { this->showOverlayHTMLMessage("No SimBrief data from " % urlString); }
+            if (simBriefFP.isEmpty())
+            {
+                this->showOverlayHTMLMessage("No SimBrief data from " % urlString);
+            }
             else
             {
                 CFlightPlan fp = CFlightPlan::fromSimBriefFormat(simBriefFP);
@@ -968,7 +1167,10 @@ namespace swift::gui::components
 
         QString equipmentString;
 
-        for (auto equipment : list->selectedItems()) { equipmentString.append(equipment->text()); }
+        for (auto equipment : list->selectedItems())
+        {
+            equipmentString.append(equipment->text());
+        }
 
         m_navComEquipment = CComNavEquipment(equipmentString);
         updateNavComEquipmentUi();
@@ -980,7 +1182,10 @@ namespace swift::gui::components
 
         QString ssrEquipmentString;
 
-        for (auto equipment : list->selectedItems()) { ssrEquipmentString.append(equipment->text()); }
+        for (auto equipment : list->selectedItems())
+        {
+            ssrEquipmentString.append(equipment->text());
+        }
 
         m_ssrEquipment = CSsrEquipment(ssrEquipmentString);
         updateSsrEquipmentUi();
@@ -1040,7 +1245,10 @@ namespace swift::gui::components
 
     bool CFlightPlanComponent::consolidateRemarks(QStringList &remarks, const QString &newRemarks)
     {
-        if (newRemarks.isEmpty()) { return false; }
+        if (newRemarks.isEmpty())
+        {
+            return false;
+        }
         remarks.removeAll(newRemarks);
         remarks.push_front(newRemarks);
         return true;
@@ -1054,24 +1262,42 @@ namespace swift::gui::components
             m_fpRemarksDialog = new CStringListDialog(this);
             m_fpRemarksDialog->setModal(true);
         }
-        if (sender == ui->pb_Remarks) { m_fpRemarksDialog->setStrings(m_remarksHistory.getThreadLocal()); }
+        if (sender == ui->pb_Remarks)
+        {
+            m_fpRemarksDialog->setStrings(m_remarksHistory.getThreadLocal());
+        }
         else if (sender == ui->pb_AddRemarks)
         {
             m_fpRemarksDialog->setStrings(m_remarksHistoryAdditional.getThreadLocal());
         }
 
         const int rv = m_fpRemarksDialog->exec();
-        if (rv != QDialog::Accepted) { return; }
+        if (rv != QDialog::Accepted)
+        {
+            return;
+        }
         const QString remarks = m_fpRemarksDialog->getSelectedValue();
-        if (remarks.isEmpty()) { return; }
+        if (remarks.isEmpty())
+        {
+            return;
+        }
 
-        if (sender == ui->pb_Remarks) { ui->pte_Remarks->setPlainText(remarks); }
-        else if (sender == ui->pb_AddRemarks) { ui->pte_AdditionalRemarks->setPlainText(remarks); }
+        if (sender == ui->pb_Remarks)
+        {
+            ui->pte_Remarks->setPlainText(remarks);
+        }
+        else if (sender == ui->pb_AddRemarks)
+        {
+            ui->pte_AdditionalRemarks->setPlainText(remarks);
+        }
     }
 
     void CFlightPlanComponent::initCompleters()
     {
-        if (!sGui || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         const QStringList aircraft(sGui->getWebDataServices()->getAircraftIcaoCodes().allDesignators().values());
         auto *aircraftCompleter = new QCompleter(aircraft, this);
         aircraftCompleter->setMaxVisibleItems(10);
@@ -1097,7 +1323,10 @@ namespace swift::gui::components
     {
         // some logic to find a useful default name
         const QString dir = m_directories.get().getFlightPlanDirectoryOrDefault();
-        if (load) { return dir; }
+        if (load)
+        {
+            return dir;
+        }
 
         // Save file path
         QString name("Flight plan");
@@ -1106,7 +1335,10 @@ namespace swift::gui::components
             name += u' ' % ui->le_OriginAirport->text() % u'-' % ui->le_DestinationAirport->text();
         }
 
-        if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive)) { name += CFileUtils::jsonAppendix(); }
+        if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive))
+        {
+            name += CFileUtils::jsonAppendix();
+        }
         return CFileUtils::appendFilePaths(dir, name);
     }
 
@@ -1116,7 +1348,10 @@ namespace swift::gui::components
         if (sender == ui->cb_VoiceCapabilities)
         {
             const QString ct = ui->cb_VoiceCapabilitiesFirstPage->currentText();
-            if (stringCompare(ct, text, Qt::CaseInsensitive)) { return; }
+            if (stringCompare(ct, text, Qt::CaseInsensitive))
+            {
+                return;
+            }
             ui->cb_VoiceCapabilitiesFirstPage->setCurrentText(text);
         }
         else
@@ -1129,7 +1364,10 @@ namespace swift::gui::components
             }
             const QString r = CFlightPlanRemarks::replaceVoiceCapabilities(
                 CFlightPlanRemarks::textToVoiceCapabilitiesRemarks(text), ui->pte_Remarks->toPlainText());
-            if (ui->pte_Remarks->toPlainText() != r) { ui->pte_Remarks->setPlainText(r); }
+            if (ui->pte_Remarks->toPlainText() != r)
+            {
+                ui->pte_Remarks->setPlainText(r);
+            }
         }
     }
 } // namespace swift::gui::components

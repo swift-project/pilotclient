@@ -39,22 +39,46 @@ namespace swift::gui::components
     void CCockpitTransponderModeLedsComponent::onAircraftCockpitChanged(const CSimulatedAircraft &aircraft,
                                                                         const swift::misc::CIdentifier &originator)
     {
-        if (isMyIdentifier(originator)) { return; }
+        if (isMyIdentifier(originator))
+        {
+            return;
+        }
         this->setMode(aircraft.getTransponderMode(), true);
     }
 
     void CCockpitTransponderModeLedsComponent::onLedClicked()
     {
         QWidget *w = qobject_cast<QWidget *>(QObject::sender());
-        if (!w) { return; }
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
+        if (!w)
+        {
+            return;
+        }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft())
+        {
+            return;
+        }
         CTransponder::TransponderMode mode {};
-        if (m_ledStandby.data() == w) { mode = CTransponder::StateStandby; }
-        else if (m_ledIdent.data() == w) { mode = CTransponder::StateIdent; }
-        else if (m_ledModes.data() == w) { mode = CTransponder::ModeC; }
-        else { return; }
+        if (m_ledStandby.data() == w)
+        {
+            mode = CTransponder::StateStandby;
+        }
+        else if (m_ledIdent.data() == w)
+        {
+            mode = CTransponder::StateIdent;
+        }
+        else if (m_ledModes.data() == w)
+        {
+            mode = CTransponder::ModeC;
+        }
+        else
+        {
+            return;
+        }
         CSimulatedAircraft ownAircraft(this->getOwnAircraft());
-        if (ownAircraft.getTransponderMode() == mode) { return; }
+        if (ownAircraft.getTransponderMode() == mode)
+        {
+            return;
+        }
 
         this->setMode(mode, true);
         CTransponder xpdr = ownAircraft.getTransponder();
@@ -70,8 +94,14 @@ namespace swift::gui::components
     void CCockpitTransponderModeLedsComponent::init(bool horizontal)
     {
         QBoxLayout *ledLayout = nullptr;
-        if (horizontal) { ledLayout = new QHBoxLayout(this); }
-        else { ledLayout = new QVBoxLayout(this); }
+        if (horizontal)
+        {
+            ledLayout = new QHBoxLayout(this);
+        }
+        else
+        {
+            ledLayout = new QVBoxLayout(this);
+        }
 
         ledLayout->setContentsMargins(0, 0, 0, 0);
         ledLayout->addWidget(m_ledStandby.data());
@@ -83,12 +113,18 @@ namespace swift::gui::components
         this->setLayout(ledLayout);
 
         // if context is already available set mode
-        if (sGui && sGui->getIContextOwnAircraft()) { this->setMode(getOwnTransponder().getTransponderMode(), true); }
+        if (sGui && sGui->getIContextOwnAircraft())
+        {
+            this->setMode(getOwnTransponder().getTransponderMode(), true);
+        }
     }
 
     void CCockpitTransponderModeLedsComponent::setMode(CTransponder::TransponderMode mode, bool force)
     {
-        if (!force && m_mode == mode) { return; }
+        if (!force && m_mode == mode)
+        {
+            return;
+        }
         m_ledStandby->setOn(false);
         m_ledModes->setOn(false);
         m_ledIdent->setOn(false);
@@ -114,13 +150,19 @@ namespace swift::gui::components
 
     CTransponder CCockpitTransponderModeLedsComponent::getOwnTransponder() const
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return {}; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft())
+        {
+            return {};
+        }
         return sGui->getIContextOwnAircraft()->getOwnAircraft().getTransponder();
     }
 
     CSimulatedAircraft CCockpitTransponderModeLedsComponent::getOwnAircraft() const
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return {}; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft())
+        {
+            return {};
+        }
         return sGui->getIContextOwnAircraft()->getOwnAircraft();
     }
 } // namespace swift::gui::components

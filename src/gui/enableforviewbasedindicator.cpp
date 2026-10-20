@@ -16,27 +16,39 @@ namespace swift::gui
     void CEnableForViewBasedIndicator::enableLoadIndicator(bool enable)
     {
         Q_ASSERT_X(m_viewWithIndicator, Q_FUNC_INFO, "Missing view to display indicator");
-        if (m_viewWithIndicator) { m_viewWithIndicator->enableLoadIndicator(enable); }
+        if (m_viewWithIndicator)
+        {
+            m_viewWithIndicator->enableLoadIndicator(enable);
+        }
     }
 
     bool CEnableForViewBasedIndicator::isShowingLoadIndicator() const
     {
         Q_ASSERT_X(m_viewWithIndicator, Q_FUNC_INFO, "Missing view to display indicator");
-        if (m_viewWithIndicator) { return m_viewWithIndicator->isShowingLoadIndicator(); }
+        if (m_viewWithIndicator)
+        {
+            return m_viewWithIndicator->isShowingLoadIndicator();
+        }
         return false;
     }
 
     int CEnableForViewBasedIndicator::showLoadIndicator(std::chrono::milliseconds timeout)
     {
         Q_ASSERT_X(m_viewWithIndicator, Q_FUNC_INFO, "Missing view to display indicator");
-        if (m_viewWithIndicator) { return m_viewWithIndicator->showLoadIndicatorWithTimeout(timeout); }
+        if (m_viewWithIndicator)
+        {
+            return m_viewWithIndicator->showLoadIndicatorWithTimeout(timeout);
+        }
         return -1;
     }
 
     void CEnableForViewBasedIndicator::hideLoadIndicator()
     {
         Q_ASSERT_X(m_viewWithIndicator, Q_FUNC_INFO, "Missing view to display indicator");
-        if (m_viewWithIndicator) { m_viewWithIndicator->hideLoadIndicator(); }
+        if (m_viewWithIndicator)
+        {
+            m_viewWithIndicator->hideLoadIndicator();
+        }
     }
 
     CEnableForViewBasedIndicator::CEnableForViewBasedIndicator(

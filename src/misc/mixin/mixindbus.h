@@ -104,9 +104,15 @@ namespace swift::misc
                         {
                             value.marshallToDbus(arg, LosslessTag());
                         }
-                        else { value.marshallToDbus(arg); }
+                        else
+                        {
+                            value.marshallToDbus(arg);
+                        }
                     }
-                    else { arg << value; }
+                    else
+                    {
+                        arg << value;
+                    }
                 }
             });
         }
@@ -125,9 +131,15 @@ namespace swift::misc
                         {
                             value.unmarshallFromDbus(arg, LosslessTag());
                         }
-                        else { value.unmarshallFromDbus(arg); }
+                        else
+                        {
+                            value.unmarshallFromDbus(arg);
+                        }
                     }
-                    else { arg >> value; }
+                    else
+                    {
+                        arg >> value;
+                    }
                 }
             });
         }

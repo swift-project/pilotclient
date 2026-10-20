@@ -70,7 +70,10 @@ namespace swift::misc::shared_state
         void initialize(IDataLink *dataLink) override
         {
             CGenericListObserver::initialize(dataLink);
-            if (std::is_same_v<U, CAnyMatch>) { setFilter({}); }
+            if (std::is_same_v<U, CAnyMatch>)
+            {
+                setFilter({});
+            }
         }
 
         //! Set filter to choose list elements.

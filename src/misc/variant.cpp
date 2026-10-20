@@ -42,7 +42,10 @@ namespace swift::misc
     bool CVariant::canConvert(int typeId) const
     {
         const QMetaType mt(typeId);
-        if (m_v.canConvert(mt)) { return true; }
+        if (m_v.canConvert(mt))
+        {
+            return true;
+        }
         if (typeId == qMetaTypeId_CVariantList)
         {
             return m_v.canConvert<QVector<CVariant>>() || m_v.canConvert<QVariantList>();
@@ -60,30 +63,48 @@ namespace swift::misc
         const QMetaType mt(typeId);
         if (!m_v.canConvert(mt))
         {
-            if (!canConvert(typeId)) { return false; }
+            if (!canConvert(typeId))
+            {
+                return false;
+            }
             if (typeId == qMetaTypeId_CVariantList)
             {
                 if (m_v.canConvert<QVector<CVariant>>())
                 {
-                    if (!m_v.convert(QMetaType(qMetaTypeId<QVector<CVariant>>()))) { return false; }
+                    if (!m_v.convert(QMetaType(qMetaTypeId<QVector<CVariant>>())))
+                    {
+                        return false;
+                    }
                 }
                 else if (m_v.canConvert<QVariantList>())
                 {
                     QVector<CVariant> vec;
                     const auto seqit = m_v.value<QMetaSequence::Iterable>();
                     vec.reserve(seqit.size());
-                    for (auto it = seqit.begin(); it != seqit.end(); ++it) { vec.push_back(*it); }
+                    for (auto it = seqit.begin(); it != seqit.end(); ++it)
+                    {
+                        vec.push_back(*it);
+                    }
                     m_v.setValue(vec);
                 }
-                else { return false; }
+                else
+                {
+                    return false;
+                }
             }
             if (userType() == qMetaTypeId_CVariantList)
             {
                 if (QVariant::fromValue(QVector<CVariant>()).canConvert(mt))
                 {
-                    if (!m_v.convert(QMetaType(qMetaTypeId<QVector<CVariant>>()))) { return false; }
+                    if (!m_v.convert(QMetaType(qMetaTypeId<QVector<CVariant>>())))
+                    {
+                        return false;
+                    }
                 }
-                else { return false; }
+                else
+                {
+                    return false;
+                }
             }
         }
         return m_v.convert(mt);
@@ -94,7 +115,10 @@ namespace swift::misc
     QString CVariant::convertToQString(bool i18n) const
     {
         auto *meta = getValueObjectMetaInfo();
-        if (meta) { return meta->toQString(data(), i18n); }
+        if (meta)
+        {
+            return meta->toQString(data(), i18n);
+        }
         return m_v.toString();
     }
 
@@ -125,14 +149,23 @@ namespace swift::misc
 
     qint64 CVariant::toQInt64(bool *ok) const
     {
-        if (this->type() == QMetaType::LongLong) { return this->toLongLong(ok); }
+        if (this->type() == QMetaType::LongLong)
+        {
+            return this->toLongLong(ok);
+        }
         return this->toInt(ok);
     }
 
     int CVariant::compareImpl(const CVariant &a, const CVariant &b)
     {
-        if (a.userType() < b.userType()) { return -1; }
-        if (a.userType() > b.userType()) { return 1; }
+        if (a.userType() < b.userType())
+        {
+            return -1;
+        }
+        if (a.userType() > b.userType())
+        {
+            return 1;
+        }
         auto *aMeta = a.getValueObjectMetaInfo();
         auto *bMeta = b.getValueObjectMetaInfo();
         if (aMeta && bMeta)
@@ -160,8 +193,14 @@ namespace swift::misc
             }
         }
         const QPartialOrdering order = QVariant::compare(a.m_v, b.m_v);
-        if (order == QPartialOrdering::Less) { return -1; }
-        if (order == QPartialOrdering::Greater) { return 1; }
+        if (order == QPartialOrdering::Less)
+        {
+            return -1;
+        }
+        if (order == QPartialOrdering::Greater)
+        {
+            return 1;
+        }
         return 0; // for "Equivalent" and "Unordered"
     }
 
@@ -190,8 +229,14 @@ namespace swift::misc
             try
             {
                 auto *meta = getValueObjectMetaInfo();
-                if (meta) { json.insert("value", meta->toJson(data())); }
-                else if (m_v.canConvert<QString>()) { json.insert("value", m_v.toString()); }
+                if (meta)
+                {
+                    json.insert("value", meta->toJson(data()));
+                }
+                else if (m_v.canConvert<QString>())
+                {
+                    json.insert("value", m_v.toString());
+                }
                 else
                 {
                     CLogMessage(this).warning(u"Unsupported CVariant type for toJson: %1 (%2)")
@@ -217,7 +262,10 @@ namespace swift::misc
         // Remark: Names "type" and "value" are also used for drag and drop
         // Changing the names here requires the change for drag and drop too
         const QJsonValue typeValue = json.value("type");
-        if (typeValue.isUndefined()) { throw CJsonException("Missing 'type'"); }
+        if (typeValue.isUndefined())
+        {
+            throw CJsonException("Missing 'type'");
+        }
         const QString typeName = typeValue.toString();
         if (typeName.isEmpty())
         {
@@ -228,7 +276,10 @@ namespace swift::misc
         const QMetaType mt = QMetaType::fromName(qPrintable(typeName));
 
         const QJsonValue value = json.value("value");
-        if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
+        if (value.isUndefined())
+        {
+            throw CJsonException("Missing 'value'");
+        }
         switch (mt.id())
         {
         case QMetaType::UnknownType: throw CJsonException("Type not recognized by QMetaType");
@@ -261,9 +312,15 @@ namespace swift::misc
                 else if (QMetaType::hasRegisteredConverterFunction(QMetaType(qMetaTypeId<QString>()), mt))
                 {
                     m_v.setValue(value.toString());
-                    if (!m_v.convert(mt)) { throw CJsonException("Failed to convert from JSON string"); }
+                    if (!m_v.convert(mt))
+                    {
+                        throw CJsonException("Failed to convert from JSON string");
+                    }
                 }
-                else { throw CJsonException("Type not supported by convertFromJson"); }
+                else
+                {
+                    throw CJsonException("Type not supported by convertFromJson");
+                }
             }
             catch (const private_ns::CVariantException &ex)
             {
@@ -304,13 +361,19 @@ namespace swift::misc
                 return {};
             }
         }
-        else { return toJson(); }
+        else
+        {
+            return toJson();
+        }
     }
 
     void CVariant::convertFromMemoizedJson(const QJsonObject &json, bool allowFallbackToJson)
     {
         QJsonValue typeValue = json.value("type");
-        if (typeValue.isUndefined()) { throw CJsonException("Missing 'type'"); }
+        if (typeValue.isUndefined())
+        {
+            throw CJsonException("Missing 'type'");
+        }
         QString typeName = typeValue.toString();
         if (typeName.isEmpty())
         {
@@ -325,7 +388,10 @@ namespace swift::misc
             try
             {
                 QJsonValue value = json.value("value");
-                if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
+                if (value.isUndefined())
+                {
+                    throw CJsonException("Missing 'value'");
+                }
 
                 CJsonScope scope("value");
                 m_v = QVariant(mt, nullptr);
@@ -336,7 +402,10 @@ namespace swift::misc
                 throw CJsonException(ex.what());
             }
         }
-        else { convertFromJson(json); }
+        else
+        {
+            convertFromJson(json);
+        }
     }
 
     CStatusMessage CVariant::convertFromMemoizedJsonNoThrow(const QJsonObject &json, const CLogCategoryList &categories,
@@ -371,8 +440,14 @@ namespace swift::misc
             try
             {
                 auto *meta = getValueObjectMetaInfo();
-                if (meta) { return meta->getValueHash(data()); }
-                else if (m_v.canConvert<QString>()) { return qHash(m_v.toString()); }
+                if (meta)
+                {
+                    return meta->getValueHash(data());
+                }
+                else if (m_v.canConvert<QString>())
+                {
+                    return qHash(m_v.toString());
+                }
                 else
                 {
                     CLogMessage(this).warning(u"Unsupported CVariant type for getValueHash: %1 (%2)")
@@ -390,8 +465,14 @@ namespace swift::misc
 
     void CVariant::marshallToDbus(QDBusArgument &arg) const
     {
-        if (isValid()) { arg << QString(typeName()) << QDBusVariant(getQVariant()); }
-        else { arg << QString() << QDBusVariant(QVariant(0)); }
+        if (isValid())
+        {
+            arg << QString(typeName()) << QDBusVariant(getQVariant());
+        }
+        else
+        {
+            arg << QString() << QDBusVariant(QVariant(0));
+        }
     }
 
     //! @{
@@ -409,7 +490,10 @@ namespace swift::misc
         QDBusVariant dbusVar;
         arg >> typeName >> dbusVar;
 
-        if (typeName.isEmpty()) { *this = CVariant(); }
+        if (typeName.isEmpty())
+        {
+            *this = CVariant();
+        }
         else
         {
             *this = fixQVariantFromDbusArgument(dbusVar.variant(), QMetaType::fromName(qPrintable(typeName)), typeName);
@@ -469,7 +553,10 @@ namespace swift::misc
     CIcons::IconIndex CVariant::toIcon() const
     {
         auto *meta = getValueObjectMetaInfo();
-        if (!meta) { return {}; }
+        if (!meta)
+        {
+            return {};
+        }
         try
         {
             return static_cast<CIcons::IconIndex>(meta->toIcon(data()));
@@ -483,9 +570,18 @@ namespace swift::misc
 
     QPixmap CVariant::toPixmap() const
     {
-        if (m_v.typeId() == QMetaType::QPixmap) { return m_v.value<QPixmap>(); }
-        if (m_v.typeId() == QMetaType::QImage) { return QPixmap::fromImage(m_v.value<QImage>()); }
-        if (m_v.typeId() == QMetaType::QIcon) { return iconToPixmap(m_v.value<QIcon>()); }
+        if (m_v.typeId() == QMetaType::QPixmap)
+        {
+            return m_v.value<QPixmap>();
+        }
+        if (m_v.typeId() == QMetaType::QImage)
+        {
+            return QPixmap::fromImage(m_v.value<QImage>());
+        }
+        if (m_v.typeId() == QMetaType::QIcon)
+        {
+            return iconToPixmap(m_v.value<QIcon>());
+        }
         return CIcon(toIcon()).toPixmap();
     }
 
@@ -497,13 +593,19 @@ namespace swift::misc
 
     bool CVariant::isA(int metaTypeId) const
     {
-        if (metaTypeId == QMetaType::UnknownType) { return false; }
+        if (metaTypeId == QMetaType::UnknownType)
+        {
+            return false;
+        }
         return metaTypeId == getMetaTypeId();
     }
 
     bool CVariant::matches(const CVariant &value) const
     {
-        if (!isValid()) { return false; }
+        if (!isValid())
+        {
+            return false;
+        }
         auto *meta = getValueObjectMetaInfo();
         if (!meta)
         {
@@ -528,7 +630,10 @@ namespace swift::misc
             CLogMessage(&variant).warning(u"Invalid type for unmarshall: %1") << typeName;
         }
         // my business?
-        if (!variant.canConvert<QDBusArgument>()) { return variant; }
+        if (!variant.canConvert<QDBusArgument>())
+        {
+            return variant;
+        }
 
         // complex, user type
         // it has to be made sure, that the cast works

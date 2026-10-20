@@ -35,11 +35,20 @@ namespace swift::misc
     {
         if (this->isSet())
         {
-            if (this->isGenerated()) { return m_pixmap; }
-            if (this->isFileBased()) { return m_pixmap; }
+            if (this->isGenerated())
+            {
+                return m_pixmap;
+            }
+            if (this->isFileBased())
+            {
+                return m_pixmap;
+            }
             return CIcons::pixmapByIndex(this->getIndex(), m_rotateDegrees);
         }
-        else { return CIcons::pixmapByIndex(this->getIndex()); }
+        else
+        {
+            return CIcons::pixmapByIndex(this->getIndex());
+        }
     }
 
     QIcon CIcon::toQIcon() const { return { toPixmap() }; }

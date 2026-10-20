@@ -51,12 +51,18 @@ namespace swiftcoretest
 
     void CTestConnectivity::checkSetupReader()
     {
-        if (!sApp->hasSetupReader()) { QSKIP("Cannot load bootstrap file, skip unit test"); }
+        if (!sApp->hasSetupReader())
+        {
+            QSKIP("Cannot load bootstrap file, skip unit test");
+        }
     }
 
     void CTestConnectivity::connectServer()
     {
-        if (!sApp->hasSetupReader()) { QSKIP("Cannot load bootstrap file, skip unit test"); }
+        if (!sApp->hasSetupReader())
+        {
+            QSKIP("Cannot load bootstrap file, skip unit test");
+        }
         const CUrl url = sApp->getGlobalSetup().getDbHomePageUrl();
         QElapsedTimer timer;
         timer.start();
@@ -64,7 +70,10 @@ namespace swiftcoretest
         for (int i = 0; i < max; i++)
         {
             bool ok = CNetworkUtils::canConnect(url, CNetworkUtils::getLongTimeoutMs());
-            if (!ok) { QSKIP(qPrintable("Cannot connect " + url.getFullUrl())); }
+            if (!ok)
+            {
+                QSKIP(qPrintable("Cannot connect " + url.getFullUrl()));
+            }
         }
         int elapsedMs = timer.elapsed();
         qDebug() << "Completed" << max << "connection tests in" << elapsedMs << "ms to" << url.getFullUrl();
@@ -73,7 +82,10 @@ namespace swiftcoretest
 
     void CTestConnectivity::pingServer()
     {
-        if (!sApp->hasSetupReader()) { QSKIP("Cannot load bootstrap file, skip unit test"); }
+        if (!sApp->hasSetupReader())
+        {
+            QSKIP("Cannot load bootstrap file, skip unit test");
+        }
         const CUrl url = sApp->getGlobalSetup().getDbHomePageUrl();
         const QString host(url.getHost());
         QElapsedTimer timer;
@@ -82,7 +94,10 @@ namespace swiftcoretest
         for (int i = 0; i < max; i++)
         {
             bool ok = canPing(host);
-            if (!ok) { QSKIP(qPrintable("Cannot ping " + url.getFullUrl())); }
+            if (!ok)
+            {
+                QSKIP(qPrintable("Cannot ping " + url.getFullUrl()));
+            }
         }
         int elapsedMs = timer.elapsed();
         qDebug() << "Completed" << max << "ping tests in" << elapsedMs << "ms to" << url.getFullUrl();
@@ -98,9 +113,15 @@ int main(int argc, char *argv[])
     CApplication a(CApplicationInfo::UnitTest);
     a.addNetworkOptions();
     const bool setup = a.parseCommandLineArgsAndLoadSetup();
-    if (!setup) { qWarning() << "No setup loaded"; }
+    if (!setup)
+    {
+        qWarning() << "No setup loaded";
+    }
     int r = EXIT_FAILURE;
-    if (a.start()) { r = QTest::qExec(&to, args); }
+    if (a.start())
+    {
+        r = QTest::qExec(&to, args);
+    }
     a.gracefulShutdown();
     return r;
 }

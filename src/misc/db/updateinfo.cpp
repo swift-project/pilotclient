@@ -62,9 +62,15 @@ namespace swift::misc::db
 
     CDistribution CUpdateInfo::anticipateOwnDistribution() const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         const CArtifactList ownArtifacts = this->getArtifactsPilotClientForCurrentPlatform();
-        if (ownArtifacts.isEmpty()) { return {}; }
+        if (ownArtifacts.isEmpty())
+        {
+            return {};
+        }
 
         const QVersionNumber myVersion = CBuildConfig::getVersion();
         const QVersionNumber latestVersion = ownArtifacts.getLatestQVersion();
@@ -75,7 +81,10 @@ namespace swift::misc::db
         }
 
         const CArtifact exactVersion = ownArtifacts.findFirstByVersionOrDefault(myVersion);
-        if (!exactVersion.isUnknown()) { return exactVersion.getDistributions().getMostStableOrDefault(); }
+        if (!exactVersion.isUnknown())
+        {
+            return exactVersion.getDistributions().getMostStableOrDefault();
+        }
 
         return CDistribution::localDeveloperBuild();
     }
@@ -99,7 +108,10 @@ namespace swift::misc::db
 
     QVariant CUpdateInfo::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -141,7 +153,10 @@ namespace swift::misc::db
 
     CUpdateInfo CUpdateInfo::fromDatabaseJson(const QString &jsonString)
     {
-        if (jsonString.isEmpty()) { return {}; }
+        if (jsonString.isEmpty())
+        {
+            return {};
+        }
         return CUpdateInfo::fromDatabaseJson(json::jsonObjectFromString(jsonString));
     }
 
@@ -161,9 +176,15 @@ namespace swift::misc::db
         for (const QJsonValue release : QJsonDocument::fromJson(jsonData).array())
         {
             QString version = release[QLatin1String("tag_name")].toString();
-            if (version.isEmpty() || version[0] != 'v') { continue; }
+            if (version.isEmpty() || version[0] != 'v')
+            {
+                continue;
+            }
             version.remove(0, 1);
-            if (containsChar(version, [](QChar c) { return c != '.' && !is09(c); })) { continue; }
+            if (containsChar(version, [](QChar c) { return c != '.' && !is09(c); }))
+            {
+                continue;
+            }
 
             bool existing = !release[QLatin1String("draft")].toBool();
             bool alpha = release[QLatin1String("prerelease")].toBool();
@@ -175,22 +196,52 @@ namespace swift::misc::db
                 int size = asset[QLatin1String("size")].toInt();
 
                 CArtifact::ArtifactType type = CArtifact::UnknownArtifact;
-                if (name.startsWith(QStringLiteral("swiftinstaller"))) { type = CArtifact::PilotClientInstaller; }
-                else if (name.startsWith(QStringLiteral("swiftsymbols"))) { type = CArtifact::Symbols; }
-                else if (name.startsWith(QStringLiteral("xswiftbus"))) { type = CArtifact::XSwiftBus; }
+                if (name.startsWith(QStringLiteral("swiftinstaller")))
+                {
+                    type = CArtifact::PilotClientInstaller;
+                }
+                else if (name.startsWith(QStringLiteral("swiftsymbols")))
+                {
+                    type = CArtifact::Symbols;
+                }
+                else if (name.startsWith(QStringLiteral("xswiftbus")))
+                {
+                    type = CArtifact::XSwiftBus;
+                }
 
                 CPlatform platform;
-                if (name.contains(QStringLiteral("windows-32"))) { platform = CPlatform::win32Platform(); }
-                else if (name.contains(QStringLiteral("windows-64"))) { platform = CPlatform::win64Platform(); }
-                else if (name.contains(QStringLiteral("linux-64"))) { platform = CPlatform::linuxPlatform(); }
-                else if (name.contains(QStringLiteral("macos-64"))) { platform = CPlatform::macOSPlatform(); }
-                else if (name.contains(QStringLiteral("allos"))) { platform = CPlatform::allOs(); }
+                if (name.contains(QStringLiteral("windows-32")))
+                {
+                    platform = CPlatform::win32Platform();
+                }
+                else if (name.contains(QStringLiteral("windows-64")))
+                {
+                    platform = CPlatform::win64Platform();
+                }
+                else if (name.contains(QStringLiteral("linux-64")))
+                {
+                    platform = CPlatform::linuxPlatform();
+                }
+                else if (name.contains(QStringLiteral("macos-64")))
+                {
+                    platform = CPlatform::macOSPlatform();
+                }
+                else if (name.contains(QStringLiteral("allos")))
+                {
+                    platform = CPlatform::allOs();
+                }
 
                 CArtifact artifact(filename, version, {}, type, size, existing, platform);
                 artifact.setDistributions({ alpha ? alphaDistribution : betaDistribution });
 
-                if (type == CArtifact::PilotClientInstaller) { result.m_artifactsPilotClient.push_back(artifact); }
-                else if (type == CArtifact::XSwiftBus) { result.m_artifactsXSwiftBus.push_back(artifact); }
+                if (type == CArtifact::PilotClientInstaller)
+                {
+                    result.m_artifactsPilotClient.push_back(artifact);
+                }
+                else if (type == CArtifact::XSwiftBus)
+                {
+                    result.m_artifactsXSwiftBus.push_back(artifact);
+                }
             }
         }
         return result;

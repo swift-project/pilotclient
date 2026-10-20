@@ -85,7 +85,10 @@ namespace swift::gui
 
     bool CGuiApplication::removeAllWindowsSwiftRegistryEntries()
     {
-        if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return false; }
+        if (!CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
+            return false;
+        }
 
         // On Windows, NativeFormat settings are stored in the following registry paths:
         // HKEY_CURRENT_USER\Software\MySoft\Star Runner.
@@ -161,8 +164,14 @@ namespace swift::gui
 
     Qt::WindowState CGuiApplication::getWindowState() const
     {
-        if (m_cmdWindowStateMinimized.valueName() == "empty") { return Qt::WindowNoState; }
-        if (m_parser.isSet(m_cmdWindowStateMinimized)) { return Qt::WindowMinimized; }
+        if (m_cmdWindowStateMinimized.valueName() == "empty")
+        {
+            return Qt::WindowNoState;
+        }
+        if (m_parser.isSet(m_cmdWindowStateMinimized))
+        {
+            return Qt::WindowMinimized;
+        }
         return Qt::WindowNoState;
     }
 
@@ -173,7 +182,10 @@ namespace swift::gui
             const QString v(this->getParserValue(m_cmdWindowMode));
             return CEnableForFramelessWindow::stringToWindowMode(v);
         }
-        else { return CEnableForFramelessWindow::WindowNormal; }
+        else
+        {
+            return CEnableForFramelessWindow::WindowNormal;
+        }
     }
 
     void CGuiApplication::splashScreen(const QPixmap &pixmap)
@@ -196,7 +208,10 @@ namespace swift::gui
 
     void CGuiApplication::processEventsToRefreshGui() const
     {
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     }
 
@@ -209,7 +224,10 @@ namespace swift::gui
 
     bool CGuiApplication::hasMinimumMappingVersion() const
     {
-        if (this->getGlobalSetup().isSwiftVersionMinimumMappingVersion()) { return true; }
+        if (this->getGlobalSetup().isSwiftVersionMinimumMappingVersion())
+        {
+            return true;
+        }
 
         const QString msg =
             QStringLiteral("Your are using swift version: '%1'.\nCreating mappings requires at least '%2'.")
@@ -231,8 +249,14 @@ namespace swift::gui
 
     void CGuiApplication::initMainApplicationWidget(QWidget *mainWidget)
     {
-        if (!mainWidget) { return; }
-        if (m_uiSetupCompleted) { return; }
+        if (!mainWidget)
+        {
+            return;
+        }
+        if (m_uiSetupCompleted)
+        {
+            return;
+        }
         m_uiSetupCompleted = true;
 
         const QString name = this->setExtraWindowTitle("", mainWidget);
@@ -257,7 +281,10 @@ namespace swift::gui
         {
             QPointer<CGuiApplication> myself(this);
             connectOnce(this, &CGuiApplication::uiObjectTreeReady, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->addWindowFlags(flags);
             });
         }
@@ -266,8 +293,14 @@ namespace swift::gui
     QString CGuiApplication::setExtraWindowTitle(const QString &extraInfo, QWidget *mainWindowWidget) const
     {
         QString name(this->getApplicationNameVersionDetailed());
-        if (!extraInfo.isEmpty()) { name = extraInfo % u' ' % name; }
-        if (!mainWindowWidget) { return name; }
+        if (!extraInfo.isEmpty())
+        {
+            name = extraInfo % u' ' % name;
+        }
+        if (!mainWindowWidget)
+        {
+            return name;
+        }
         mainWindowWidget->setWindowTitle(name);
         return name;
     }
@@ -303,7 +336,10 @@ namespace swift::gui
 
     void CGuiApplication::modalWindowToFront()
     {
-        if (!QGuiApplication::modalWindow()) { return; }
+        if (!QGuiApplication::modalWindow())
+        {
+            return;
+        }
         QGuiApplication::modalWindow()->raise();
     }
 
@@ -334,7 +370,10 @@ namespace swift::gui
 
     bool CGuiApplication::saveWindowGeometryAndState(const QMainWindow *window) const
     {
-        if (!window) { return false; }
+        if (!window)
+        {
+            return false;
+        }
         QSettings settings(fileForWindowGeometryAndStateSettings(), QSettings::IniFormat);
         settings.setValue("geometry", window->saveGeometry());
         settings.setValue("windowState", window->saveState(hashForStateSettingsSchema(window)));
@@ -351,14 +390,20 @@ namespace swift::gui
 
     bool CGuiApplication::restoreWindowGeometryAndState(QMainWindow *window)
     {
-        if (!window) { return false; }
+        if (!window)
+        {
+            return false;
+        }
         const QSettings settings(fileForWindowGeometryAndStateSettings(), QSettings::IniFormat);
         const QString location = settings.fileName();
         CLogMessage(this).info(u"GUI settings are here: '%1'") << location;
 
         const QByteArray g = settings.value("geometry").toByteArray();
         const QByteArray s = settings.value("windowState").toByteArray();
-        if (g.isEmpty() || s.isEmpty()) { return false; }
+        if (g.isEmpty() || s.isEmpty())
+        {
+            return false;
+        }
 
         // block for subscriber
         {
@@ -407,8 +452,14 @@ namespace swift::gui
             {
                 // setMinimumSizeInCharacters sets m_minHeightChars/m_minWidthChars
                 QSize cs = mw->size();
-                if (m_minWidthChars > 0) { cs.setWidth(qRound(fontMetricEstSize.width())); }
-                if (m_minHeightChars > 0) { cs.setHeight(qRound(fontMetricEstSize.height())); }
+                if (m_minWidthChars > 0)
+                {
+                    cs.setWidth(qRound(fontMetricEstSize.width()));
+                }
+                if (m_minHeightChars > 0)
+                {
+                    cs.setHeight(qRound(fontMetricEstSize.height()));
+                }
                 mw->resize(cs);
             }
         }
@@ -416,7 +467,10 @@ namespace swift::gui
         {
             const Qt::KeyboardModifiers km = QGuiApplication::queryKeyboardModifiers();
             const bool shiftAlt = km.testFlag(Qt::ShiftModifier) && km.testFlag(Qt::AltModifier);
-            if (!shiftAlt) { this->restoreWindowGeometryAndState(); }
+            if (!shiftAlt)
+            {
+                this->restoreWindowGeometryAndState();
+            }
         }
 
         if (m_splashScreen)
@@ -441,8 +495,14 @@ namespace swift::gui
 
     void CGuiApplication::cmdLineErrorMessage(const CStatusMessageList &msgs) const
     {
-        if (msgs.isEmpty()) { return; }
-        if (!msgs.hasErrorMessages()) { return; }
+        if (msgs.isEmpty())
+        {
+            return;
+        }
+        if (!msgs.hasErrorMessages())
+        {
+            return;
+        }
         static const CPropertyIndexList propertiesSingle({ CStatusMessage::IndexMessage });
         static const CPropertyIndexList propertiesMulti(
             { CStatusMessage::IndexSeverityAsString, CStatusMessage::IndexMessage });
@@ -458,34 +518,55 @@ namespace swift::gui
     {
         IMainWindowAccess *m = mainWindowAccess();
         SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
-        if (!m) { return false; }
+        if (!m)
+        {
+            return false;
+        }
         return m->displayInStatusBar(message);
     }
 
     bool CGuiApplication::displayInOverlayWindow(const CStatusMessage &message, std::chrono::milliseconds timeout)
     {
-        if (message.isEmpty()) { return false; }
+        if (message.isEmpty())
+        {
+            return false;
+        }
         IMainWindowAccess *m = mainWindowAccess();
         SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
-        if (!m) { return IMainWindowAccess::displayInOverlayWindow(message, timeout); }
+        if (!m)
+        {
+            return IMainWindowAccess::displayInOverlayWindow(message, timeout);
+        }
         return m->displayInOverlayWindow(message, timeout);
     }
 
     bool CGuiApplication::displayInOverlayWindow(const CStatusMessageList &messages, std::chrono::milliseconds timeout)
     {
-        if (messages.isEmpty()) { return false; }
+        if (messages.isEmpty())
+        {
+            return false;
+        }
         IMainWindowAccess *m = mainWindowAccess();
         SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
-        if (!m) { return IMainWindowAccess::displayInOverlayWindow(messages, timeout); }
+        if (!m)
+        {
+            return IMainWindowAccess::displayInOverlayWindow(messages, timeout);
+        }
         return m->displayInOverlayWindow(messages, timeout);
     }
 
     bool CGuiApplication::displayInOverlayWindow(const QString &html, std::chrono::milliseconds timeout)
     {
-        if (html.isEmpty()) { return false; }
+        if (html.isEmpty())
+        {
+            return false;
+        }
         IMainWindowAccess *m = mainWindowAccess();
         SWIFT_VERIFY_X(m, Q_FUNC_INFO, "No access interface");
-        if (!m) { return IMainWindowAccess::displayInOverlayWindow(html, timeout); }
+        if (!m)
+        {
+            return IMainWindowAccess::displayInOverlayWindow(html, timeout);
+        }
         return m->displayInOverlayWindow(html, timeout);
     }
 
@@ -495,15 +576,24 @@ namespace swift::gui
         sm->setIcon(CIcons::appSettings16());
         QAction *a = sm->addAction(CIcons::disk16(), "Settings directory");
         bool c = connect(a, &QAction::triggered, this, [=]() {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             const QString path(QDir::toNativeSeparators(CSettingsCache::persistentStore()));
-            if (QDir(path).exists()) { QDesktopServices::openUrl(QUrl::fromLocalFile(path)); }
+            if (QDir(path).exists())
+            {
+                QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+            }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("Reset settings");
         c = connect(a, &QAction::triggered, this, [=, this] {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             CSettingsCache::instance()->clearAllValues();
             CLogMessage(this).info(u"Cleared all settings!");
         });
@@ -511,7 +601,10 @@ namespace swift::gui
 
         a = sm->addAction("List settings files");
         c = connect(a, &QAction::triggered, this, [=, this]() {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             const QStringList files(CSettingsCache::instance()->enumerateStore());
             CLogMessage(this).info(files.join("\n"));
         });
@@ -522,13 +615,19 @@ namespace swift::gui
         a = sm->addAction(CIcons::disk16(), "Cache directory");
         c = connect(a, &QAction::triggered, this, [=]() {
             const QString path(QDir::toNativeSeparators(CDataCache::persistentStore()));
-            if (QDir(path).exists()) { QDesktopServices::openUrl(QUrl::fromLocalFile(path)); }
+            if (QDir(path).exists())
+            {
+                QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+            }
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = sm->addAction("Reset cache");
         c = connect(a, &QAction::triggered, this, [=, this]() {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             const QStringList files = CApplication::clearCaches();
             CLogMessage(this).info(u"Cleared caches! " % QString::number(files.size()) + " files");
         });
@@ -536,7 +635,10 @@ namespace swift::gui
 
         a = sm->addAction("List cache files");
         c = connect(a, &QAction::triggered, this, [=, this]() {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             const QStringList files(CDataCache::instance()->enumerateStore());
             CLogMessage(this).info(files.join("\n"));
         });
@@ -544,14 +646,20 @@ namespace swift::gui
 
         a = menu.addAction(CIcons::disk16(), "Log directory");
         c = connect(a, &QAction::triggered, this, [=, this]() {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             this->openStandardLogDirectory();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction(CIcons::disk16(), "Crash dumps directory");
         c = connect(a, &QAction::triggered, this, [=, this]() {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             this->openStandardCrashDumpDirectory();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -567,14 +675,20 @@ namespace swift::gui
         QMenu *sm = menu.addMenu("Style sheet");
         QAction *aReload = sm->addAction(CIcons::refresh16(), "Reload");
         bool c = connect(aReload, &QAction::triggered, this, [=, this]() {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             this->reloadStyleSheets();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         QAction *aOpen = sm->addAction(CIcons::text16(), "Open qss file");
         c = connect(aOpen, &QAction::triggered, this, [=, this]() {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             this->openStandardWidgetStyleSheet();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -595,8 +709,14 @@ namespace swift::gui
             a, &QAction::triggered, this,
             [=]() {
                 // a close event might already trigger a shutdown
-                if (!sGui || sGui->isShuttingDown()) { return; }
-                if (!CGuiApplication::mainApplicationWidget()) { return; }
+                if (!sGui || sGui->isShuttingDown())
+                {
+                    return;
+                }
+                if (!CGuiApplication::mainApplicationWidget())
+                {
+                    return;
+                }
                 CGuiApplication::mainApplicationWidget()->close();
 
                 // T596, do not shutdown here, as close can be canceled
@@ -615,7 +735,10 @@ namespace swift::gui
         bool c = connect(
             a, &QAction::triggered, this,
             [=, this]() {
-                if (!sGui || sGui->isShuttingDown()) { return; }
+                if (!sGui || sGui->isShuttingDown())
+                {
+                    return;
+                }
                 const CGlobalSetup s = this->getGlobalSetup();
                 CLogMessage(this).info(s.toJsonString());
             },
@@ -626,7 +749,10 @@ namespace swift::gui
         c = connect(
             a, &QAction::triggered, this,
             [=, this]() {
-                if (!sGui || sGui->isShuttingDown()) { return; }
+                if (!sGui || sGui->isShuttingDown())
+                {
+                    return;
+                }
                 const CUpdateInfo info = this->getUpdateInfo();
                 CLogMessage(this).info(info.toJsonString());
             },
@@ -639,7 +765,10 @@ namespace swift::gui
             c = connect(
                 a, &QAction::triggered, this,
                 [=, this]() {
-                    if (!sGui || sGui->isShuttingDown()) { return; }
+                    if (!sGui || sGui->isShuttingDown())
+                    {
+                        return;
+                    }
                     CLogMessage(this).info(this->getWebDataServices()->getReadersLog());
                 },
                 Qt::QueuedConnection);
@@ -649,8 +778,14 @@ namespace swift::gui
             c = connect(
                 a, &QAction::triggered, this,
                 [=, this]() {
-                    if (!sGui || sGui->isShuttingDown()) { return; }
-                    if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
+                    if (!sGui || sGui->isShuttingDown())
+                    {
+                        return;
+                    }
+                    if (!this->getWebDataServices()->getDbInfoDataReader())
+                    {
+                        return;
+                    }
                     const CDbInfoList info = this->getWebDataServices()->getDbInfoDataReader()->getInfoObjects();
                     CLogMessage(this).info(u"DB info:\n" % info.toJsonString());
                 },
@@ -661,8 +796,14 @@ namespace swift::gui
             c = connect(
                 a, &QAction::triggered, this,
                 [=, this]() {
-                    if (!sGui || sGui->isShuttingDown()) { return; }
-                    if (!this->getWebDataServices()->getDbInfoDataReader()) { return; }
+                    if (!sGui || sGui->isShuttingDown())
+                    {
+                        return;
+                    }
+                    if (!this->getWebDataServices()->getDbInfoDataReader())
+                    {
+                        return;
+                    }
                     const CDbInfoList info = this->getWebDataServices()->getSharedInfoDataReader()->getInfoObjects();
                     CLogMessage(this).info(u"Shared info:\n" % info.toJsonString());
                 },
@@ -674,7 +815,10 @@ namespace swift::gui
         c = connect(
             a, &QAction::triggered, this,
             [=, this]() {
-                if (!sGui || sGui->isShuttingDown()) { return; }
+                if (!sGui || sGui->isShuttingDown())
+                {
+                    return;
+                }
                 CLogMessage(this).info(getAllUserMetatypesTypes());
             },
             Qt::QueuedConnection);
@@ -685,14 +829,20 @@ namespace swift::gui
     void CGuiApplication::addMenuWindow(QMenu &menu)
     {
         QPointer<QWidget> w = CGuiApplication::mainApplicationWidget();
-        if (!w) { return; }
+        if (!w)
+        {
+            return;
+        }
         const QSize iconSize = CIcons::empty16().size();
         static QPixmap iconEmpty;
 
         QPixmap icon = w->style()->standardIcon(QStyle::SP_TitleBarMaxButton).pixmap(iconSize);
         QAction *a = menu.addAction(icon.isNull() ? iconEmpty : icon.scaled(iconSize), "Fullscreen");
         bool c = connect(a, &QAction::triggered, this, [=]() {
-            if (!w) { return; }
+            if (!w)
+            {
+                return;
+            }
             w->showFullScreen();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -700,7 +850,10 @@ namespace swift::gui
         icon = w->style()->standardIcon(QStyle::SP_TitleBarMinButton).pixmap(iconSize);
         a = menu.addAction(icon.isNull() ? iconEmpty : icon.scaled(iconSize), "Minimize");
         c = connect(a, &QAction::triggered, this, [=]() {
-            if (!w) { return; }
+            if (!w)
+            {
+                return;
+            }
             w->showMinimized();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -708,14 +861,20 @@ namespace swift::gui
         icon = w->style()->standardIcon(QStyle::SP_TitleBarNormalButton).pixmap(iconSize);
         a = menu.addAction(icon.isNull() ? iconEmpty : icon.scaled(iconSize), "Normal");
         c = connect(a, &QAction::triggered, this, [=]() {
-            if (!w) { return; }
+            if (!w)
+            {
+                return;
+            }
             w->showNormal();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction("Toggle stay on top");
         c = connect(a, &QAction::triggered, this, [=, this]() {
-            if (!w) { return; }
+            if (!w)
+            {
+                return;
+            }
             this->toggleStayOnTop();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -734,7 +893,10 @@ namespace swift::gui
 
         a = menu.addAction("Toggle normal or minimized");
         c = connect(a, &QAction::triggered, this, [=, this]() {
-            if (!w) { return; }
+            if (!w)
+            {
+                return;
+            }
             this->windowMinimizeNormalToggle();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
@@ -743,25 +905,37 @@ namespace swift::gui
 
     void CGuiApplication::openUrl(const CUrl &url)
     {
-        if (url.isEmpty() || this->isShuttingDown()) { return; }
+        if (url.isEmpty() || this->isShuttingDown())
+        {
+            return;
+        }
         QDesktopServices::openUrl(url);
     }
 
     void CGuiApplication::addMenuHelp(QMenu &menu)
     {
         QPointer<QWidget> w = mainApplicationWidget();
-        if (!w) { return; }
+        if (!w)
+        {
+            return;
+        }
         QAction *a = menu.addAction(w->style()->standardIcon(QStyle::SP_TitleBarContextHelpButton), "Online help");
 
         bool c = connect(a, &QAction::triggered, this, [=, this]() {
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             this->showHelp();
         });
         Q_ASSERT_X(c, Q_FUNC_INFO, "Connect failed");
 
         a = menu.addAction(QApplication::windowIcon(), "About swift");
         c = connect(a, &QAction::triggered, this, [=]() {
-            if (!w) { return; }
+            if (!w)
+            {
+                return;
+            }
             CAboutDialog dialog(w);
             dialog.exec();
         });
@@ -782,7 +956,10 @@ namespace swift::gui
 
     void CGuiApplication::showHelp(const QString &subpath) const
     {
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
         const CGlobalSetup gs = this->getGlobalSetup();
         const CUrl helpPage = gs.getHelpPageUrl().withAppendedPath(subpath);
         QDesktopServices::openUrl(helpPage);
@@ -790,10 +967,16 @@ namespace swift::gui
 
     void CGuiApplication::showChangelog() const
     {
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
 
         QWidget *parent = CGuiApplication::mainApplicationWidget();
-        if (!parent) { return; }
+        if (!parent)
+        {
+            return;
+        }
 
         const QString changelogPath = CFileUtils::appendFilePaths(CSwiftDirectories::shareDirectory(), "CHANGELOG.md");
         const QString changelog = CFileUtils::readFileToString(changelogPath);
@@ -827,7 +1010,10 @@ namespace swift::gui
     QString CGuiApplication::getWidgetStyle() const
     {
         QString currentWidgetStyle(QApplication::style()->metaObject()->className());
-        if (currentWidgetStyle.startsWith('Q')) { currentWidgetStyle.remove(0, 1); }
+        if (currentWidgetStyle.startsWith('Q'))
+        {
+            currentWidgetStyle.remove(0, 1);
+        }
         return currentWidgetStyle.replace("Style", "");
     }
 
@@ -842,14 +1028,20 @@ namespace swift::gui
     bool CGuiApplication::openStandardLogDirectory()
     {
         const QString path(QDir::toNativeSeparators(CSwiftDirectories::logDirectory()));
-        if (!QDir(path).exists()) { return false; }
+        if (!QDir(path).exists())
+        {
+            return false;
+        }
         return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     }
 
     bool CGuiApplication::openStandardCrashDumpDirectory()
     {
         const QString path(QDir::toNativeSeparators(CSwiftDirectories::crashpadDatabaseDirectory()));
-        if (!QDir(path).exists()) { return false; }
+        if (!QDir(path).exists())
+        {
+            return false;
+        }
         return QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     }
 
@@ -889,7 +1081,10 @@ namespace swift::gui
     {
         this->saveSettingsOnShutdown(false); // saving itself will be handled in dialog
         const bool needsDialog = this->hasUnsavedSettings();
-        if (!needsDialog) { return QDialog::Accepted; }
+        if (!needsDialog)
+        {
+            return QDialog::Accepted;
+        }
         if (!m_closeDialog)
         {
             m_closeDialog = new CApplicationCloseDialog(mainWindow);
@@ -907,7 +1102,10 @@ namespace swift::gui
         switch (c)
         {
         case QDialog::Rejected:
-            if (closeEvent) { closeEvent->ignore(); }
+            if (closeEvent)
+            {
+                closeEvent->ignore();
+            }
             break;
         default: break;
         }
@@ -929,15 +1127,24 @@ namespace swift::gui
             m_updateDialog = new CUpdateInfoDialog(CGuiApplication::mainApplicationWidget());
         }
 
-        if (onlyIfNew && !m_updateDialog->isNewVersionAvailable()) { return; }
+        if (onlyIfNew && !m_updateDialog->isNewVersionAvailable())
+        {
+            return;
+        }
         const int result = m_updateDialog->exec();
-        if (result != QDialog::Accepted) { return; }
+        if (result != QDialog::Accepted)
+        {
+            return;
+        }
     }
 
     QString CGuiApplication::getFontInfo() const
     {
         const QWidget *w = CGuiApplication::mainApplicationWidget();
-        if (!w) { return QStringLiteral("Font info not available"); }
+        if (!w)
+        {
+            return QStringLiteral("Font info not available");
+        }
         return QStringLiteral("Family: '%1', average width: %2")
             .arg(w->font().family())
             .arg(w->fontMetrics().averageCharWidth());
@@ -946,7 +1153,10 @@ namespace swift::gui
     bool CGuiApplication::toggleStayOnTop()
     {
         QMainWindow *w = CGuiApplication::mainApplicationWindow();
-        if (!w) { return false; }
+        if (!w)
+        {
+            return false;
+        }
         const bool onTop = CGuiUtility::toggleStayOnTop(w);
         CLogMessage(w).info(onTop ? QStringLiteral("Window on top") : QStringLiteral("Window not always on top"));
         emit this->alwaysOnTop(onTop);
@@ -956,9 +1166,15 @@ namespace swift::gui
 
     void CGuiApplication::windowToFront()
     {
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
         QMainWindow *w = CGuiApplication::mainApplicationWindow();
-        if (!w) { return; }
+        if (!w)
+        {
+            return;
+        }
 
         m_frontBack = true;
         w->showNormal(); // bring window to top on OSX
@@ -970,9 +1186,15 @@ namespace swift::gui
 
     void CGuiApplication::windowToBack()
     {
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
         QMainWindow *w = CGuiApplication::mainApplicationWindow();
-        if (!w) { return; }
+        if (!w)
+        {
+            return;
+        }
 
         m_frontBack = false;
         if (CGuiUtility::staysOnTop(w))
@@ -985,9 +1207,15 @@ namespace swift::gui
 
     void CGuiApplication::windowToFrontBackToggle()
     {
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
         QMainWindow *w = CGuiApplication::mainApplicationWindow();
-        if (!w) { return; }
+        if (!w)
+        {
+            return;
+        }
         if (w->isMinimized())
         {
             this->windowToFront();
@@ -1004,16 +1232,31 @@ namespace swift::gui
             return;
         }
 
-        if (m_frontBack) { this->windowToBack(); }
-        else { this->windowToFront(); }
+        if (m_frontBack)
+        {
+            this->windowToBack();
+        }
+        else
+        {
+            this->windowToFront();
+        }
     }
 
     void CGuiApplication::windowMinimizeNormalToggle()
     {
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
         QMainWindow *w = CGuiApplication::mainApplicationWindow();
-        if (!w) { return; }
-        if (m_normalizeMinimize) { w->showMinimized(); }
+        if (!w)
+        {
+            return;
+        }
+        if (m_normalizeMinimize)
+        {
+            w->showMinimized();
+        }
         else
         {
             // trick here is to minimize first and the normalize from minimized state
@@ -1025,18 +1268,33 @@ namespace swift::gui
 
     void CGuiApplication::triggerNewVersionCheck(int delayedMs)
     {
-        if (!m_updateSetting.get()) { return; }
+        if (!m_updateSetting.get())
+        {
+            return;
+        }
         QTimer::singleShot(delayedMs, this, [=, this] {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            if (m_updateDialog) { return; } // already checked elsewhere
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
+            if (m_updateDialog)
+            {
+                return;
+            } // already checked elsewhere
             this->checkNewVersion(true);
         });
     }
 
     void CGuiApplication::gracefulShutdown()
     {
-        if (m_shutdown) { return; }
-        if (m_shutdownInProgress) { return; }
+        if (m_shutdown)
+        {
+            return;
+        }
+        if (m_shutdownInProgress)
+        {
+            return;
+        }
 
         CLogMessage(this).info(u"Graceful shutdown of GUI application started");
         if (m_saveMainWidgetState)
@@ -1096,7 +1354,10 @@ namespace swift::gui
                         CLogMessage(this).info(u"Changed style to '%1', req.: '%2'")
                             << style->objectName() << widgetStyle;
                     }
-                    else { CLogMessage(this).error(u"Unable to set requested style '%1'") << widgetStyle; }
+                    else
+                    {
+                        CLogMessage(this).error(u"Unable to set requested style '%1'") << widgetStyle;
+                    }
                 }
             } // valid style
         }

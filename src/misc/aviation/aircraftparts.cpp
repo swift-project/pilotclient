@@ -97,7 +97,10 @@ namespace swift::misc::aviation
 
     QVariant CAircraftParts::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         if (ITimestampWithOffsetBased::canHandleIndex(index))
         {
             return ITimestampWithOffsetBased::propertyByIndex(index);

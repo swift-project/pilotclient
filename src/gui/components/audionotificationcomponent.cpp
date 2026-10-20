@@ -37,14 +37,20 @@ namespace swift::gui::components
         // this is leading to undesired "save settings" messages and played sounds
         QPointer<CAudioNotificationComponent> myself(this);
         QTimer::singleShot(2500, this, [=, this] {
-            if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+            if (!myself || !sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             this->init();
         });
     }
 
     void CAudioNotificationComponent::init()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         this->reloadSettings();
 
         // checkboxes for notifications
@@ -130,17 +136,29 @@ namespace swift::gui::components
     {
         volume = qMax(25, qMin(100, volume));
         CSettings as(m_audioSettings.getThreadLocal());
-        if (as.getNotificationVolume() == volume) { return; }
+        if (as.getNotificationVolume() == volume)
+        {
+            return;
+        }
         as.setNotificationVolume(volume);
         m_audioSettings.set(as);
     }
 
     CNotificationSounds::NotificationFlag CAudioNotificationComponent::checkBoxToFlag(const QCheckBox *cb) const
     {
-        if (!cb) { return CNotificationSounds::NoNotifications; }
+        if (!cb)
+        {
+            return CNotificationSounds::NoNotifications;
+        }
 
-        if (cb == ui->cb_SetupAudioPTTClickDown) { return CNotificationSounds::PTTClickKeyDown; }
-        if (cb == ui->cb_SetupAudioPTTClickUp) { return CNotificationSounds::PTTClickKeyUp; }
+        if (cb == ui->cb_SetupAudioPTTClickDown)
+        {
+            return CNotificationSounds::PTTClickKeyDown;
+        }
+        if (cb == ui->cb_SetupAudioPTTClickUp)
+        {
+            return CNotificationSounds::PTTClickKeyUp;
+        }
 
         if (cb == ui->cb_SetupAudioNotificationTextCallsignMentioned)
         {
@@ -163,18 +181,33 @@ namespace swift::gui::components
             return CNotificationSounds::NotificationTextMessageUnicom;
         }
 
-        if (cb == ui->cb_SetupAfvBlocked) { return CNotificationSounds::AFVBlocked; }
-        if (cb == ui->cb_SetupAfvClicked) { return CNotificationSounds::AFVClicked; }
+        if (cb == ui->cb_SetupAfvBlocked)
+        {
+            return CNotificationSounds::AFVBlocked;
+        }
+        if (cb == ui->cb_SetupAfvClicked)
+        {
+            return CNotificationSounds::AFVClicked;
+        }
 
-        if (cb == ui->cb_SetupAudioNotificationLogin) { return CNotificationSounds::NotificationLogin; }
-        if (cb == ui->cb_SetupAudioNotificationLogoff) { return CNotificationSounds::NotificationLogoff; }
+        if (cb == ui->cb_SetupAudioNotificationLogin)
+        {
+            return CNotificationSounds::NotificationLogin;
+        }
+        if (cb == ui->cb_SetupAudioNotificationLogoff)
+        {
+            return CNotificationSounds::NotificationLogoff;
+        }
 
         return CNotificationSounds::NoNotifications;
     }
 
     void CAudioNotificationComponent::onNotificationsToggled(bool checked)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio())
+        {
+            return;
+        }
         CSettings as(m_audioSettings.getThreadLocal());
 
         as.setNotificationFlag(CNotificationSounds::PTTClickKeyDown, ui->cb_SetupAudioPTTClickDown->isChecked());

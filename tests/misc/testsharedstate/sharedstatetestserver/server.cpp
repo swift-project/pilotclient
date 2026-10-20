@@ -42,7 +42,10 @@ int main(int argc, char *argv[])
     listJournal.initialize(&dataLink);
 
     scalarMutator.setValue(42);
-    for (int e = 1; e <= 6; ++e) { listMutator.addElement(e); }
+    for (int e = 1; e <= 6; ++e)
+    {
+        listMutator.addElement(e);
+    }
     return app.exec();
 }
 

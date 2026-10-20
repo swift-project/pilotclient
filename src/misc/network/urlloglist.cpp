@@ -20,7 +20,10 @@ namespace swift::misc::network
     int CUrlLogList::addPendingUrl(const CUrl &url, QNetworkReply *nwReply, int maxNumber)
     {
         const int id = this->addPendingUrl(url, maxNumber);
-        if (nwReply) { nwReply->setProperty(CUrlLog::propertyNameId(), QVariant::fromValue(id)); }
+        if (nwReply)
+        {
+            nwReply->setProperty(CUrlLog::propertyNameId(), QVariant::fromValue(id));
+        }
         return id;
     }
 
@@ -28,7 +31,10 @@ namespace swift::misc::network
 
     CUrlLogList CUrlLogList::findOutdatedPending(int outdatedOffsetMs) const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         return this->findPending().findBeforeNowMinusOffset(outdatedOffsetMs);
     }
 
@@ -92,7 +98,10 @@ namespace swift::misc::network
         qint64 max = 0;
         for (const CUrlLog &rl : *this)
         {
-            if (rl.isPending()) { continue; }
+            if (rl.isPending())
+            {
+                continue;
+            }
             max = std::max(rl.getResponseTimeMs(), max);
         }
         return max;
@@ -100,11 +109,17 @@ namespace swift::misc::network
 
     qint64 CUrlLogList::getMinResponseTime() const
     {
-        if (!this->hasCompleted()) { return 0; }
+        if (!this->hasCompleted())
+        {
+            return 0;
+        }
         qint64 min = std::numeric_limits<qint64>::max();
         for (const CUrlLog &rl : *this)
         {
-            if (rl.isPending()) { continue; }
+            if (rl.isPending())
+            {
+                continue;
+            }
             min = std::min(rl.getResponseTimeMs(), min);
         }
         return min;
@@ -116,7 +131,10 @@ namespace swift::misc::network
         int c = 0;
         for (const CUrlLog &rl : *this)
         {
-            if (rl.isPending()) { continue; }
+            if (rl.isPending())
+            {
+                continue;
+            }
             sum += rl.getResponseTimeMs();
             c++;
         }

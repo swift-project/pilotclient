@@ -21,13 +21,28 @@ namespace swift::gui::models
 
     QVariant CListModelBaseNonTemplate::headerData(int section, Qt::Orientation orientation, int role) const
     {
-        if (orientation != Qt::Horizontal) { return {}; }
+        if (orientation != Qt::Horizontal)
+        {
+            return {};
+        }
         const bool handled = (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == Qt::InitialSortOrderRole);
-        if (!handled) { return {}; }
-        if (section < 0 || section >= m_columns.size()) { return {}; }
+        if (!handled)
+        {
+            return {};
+        }
+        if (section < 0 || section >= m_columns.size())
+        {
+            return {};
+        }
 
-        if (role == Qt::DisplayRole) { return { m_columns.at(section).getColumnName() }; }
-        if (role == Qt::ToolTipRole) { return { m_columns.at(section).getColumnToolTip() }; }
+        if (role == Qt::DisplayRole)
+        {
+            return { m_columns.at(section).getColumnName() };
+        }
+        if (role == Qt::ToolTipRole)
+        {
+            return { m_columns.at(section).getColumnToolTip() };
+        }
         return {};
     }
 
@@ -67,7 +82,10 @@ namespace swift::gui::models
     bool CListModelBaseNonTemplate::setSortColumnByPropertyIndex(const CPropertyIndex &propertyIndex)
     {
         const int column = m_columns.propertyIndexToColumn(propertyIndex);
-        if (m_sortColumn == column) { return false; } // not changed
+        if (m_sortColumn == column)
+        {
+            return false;
+        } // not changed
         m_sortColumn = column;
         return true; // changed
     }
@@ -88,26 +106,38 @@ namespace swift::gui::models
 
     CPropertyIndex CListModelBaseNonTemplate::getSortProperty() const
     {
-        if (!this->hasValidSortColumn()) { return CPropertyIndex::empty(); }
+        if (!this->hasValidSortColumn())
+        {
+            return CPropertyIndex::empty();
+        }
         return m_columns.at(m_sortColumn).getPropertyIndex();
     }
 
     bool CListModelBaseNonTemplate::hasValidSortColumn() const
     {
-        if (m_sortColumn < 0 || m_sortColumn >= m_columns.size()) { return false; }
+        if (m_sortColumn < 0 || m_sortColumn >= m_columns.size())
+        {
+            return false;
+        }
         return m_columns.isSortable(m_sortColumn);
     }
 
     Qt::ItemFlags CListModelBaseNonTemplate::flags(const QModelIndex &index) const
     {
         Qt::ItemFlags f = QStandardItemModel::flags(index);
-        if (!index.isValid()) { return f; }
+        if (!index.isValid())
+        {
+            return f;
+        }
         const bool editable = m_columns.isEditable(index);
         f = editable ? (f | Qt::ItemIsEditable) : (f & ~Qt::ItemIsEditable);
 
         // flags from formatter
         const CDefaultFormatter *formatter = m_columns.getFormatter(index);
-        if (formatter) { f = formatter->flags(f, editable); }
+        if (formatter)
+        {
+            f = formatter->flags(f, editable);
+        }
 
         // drag and drop
         f = f | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
@@ -149,9 +179,15 @@ namespace swift::gui::models
 
         const int columns = columnCount();
         const int rows = rowCount();
-        if (columns < 1) { return; }
+        if (columns < 1)
+        {
+            return;
+        }
         startRowIndex = std::max(startRowIndex, 0);
-        if (endRowIndex >= rows) { endRowIndex = rows - 1; }
+        if (endRowIndex >= rows)
+        {
+            endRowIndex = rows - 1;
+        }
         const QModelIndex topLeft(createIndex(startRowIndex, 0));
         const QModelIndex bottomRight(createIndex(endRowIndex, columns - 1));
         emit this->dataChanged(topLeft, bottomRight);

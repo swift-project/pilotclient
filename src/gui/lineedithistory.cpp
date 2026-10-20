@@ -29,7 +29,10 @@ namespace swift::gui
         if (key == Qt::Key_Up)
         {
             // move back in history
-            if (m_history.size() > m_position) { this->setText(m_history.at(m_position++)); }
+            if (m_history.size() > m_position)
+            {
+                this->setText(m_history.at(m_position++));
+            }
         }
         else if (key == Qt::Key_Down)
         {
@@ -39,8 +42,14 @@ namespace swift::gui
                 this->clear();
                 return;
             }
-            if (m_position == m_history.size()) { --m_position; } // avoid need of 2xKeyDown at end
-            if (m_position > 0 && m_history.size() > --m_position) { this->setText(m_history.at(m_position)); }
+            if (m_position == m_history.size())
+            {
+                --m_position;
+            } // avoid need of 2xKeyDown at end
+            if (m_position > 0 && m_history.size() > --m_position)
+            {
+                this->setText(m_history.at(m_position));
+            }
         }
         else if (key == Qt::Key_Return || key == Qt::Key_Enter) // normal and keypad enter
         {
@@ -57,12 +66,18 @@ namespace swift::gui
         QLineEdit::keyPressEvent(event);
 
         // signal
-        if (nonEmpty) { emit this->returnPressedUnemptyLine(); }
+        if (nonEmpty)
+        {
+            emit this->returnPressedUnemptyLine();
+        }
     }
 
     void CLineEditHistory::contextMenuEvent(QContextMenuEvent *event)
     {
-        if (!event) { return; }
+        if (!event)
+        {
+            return;
+        }
         QMenu *menu = this->createStandardContextMenu();
         menu->addSeparator();
         menu->addAction("Clear history");

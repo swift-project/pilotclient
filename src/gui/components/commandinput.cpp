@@ -24,11 +24,17 @@ namespace swift::gui::components
             CSimpleCommandParser::registerCommand({ ".help", "show help" });
         }
 
-        if (this->placeholderText().isEmpty()) { this->setPlaceholderText(".dot commands"); }
+        if (this->placeholderText().isEmpty())
+        {
+            this->setPlaceholderText(".dot commands");
+        }
 
         const QPointer<CCommandInput> myself(this);
         QTimer::singleShot(5000, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             m_dsCommandTooltip.inputSignal();
         });
 
@@ -58,7 +64,10 @@ namespace swift::gui::components
     void CCommandInput::validateCommand()
     {
         const QString c(this->getLastEnteredLineFormatted());
-        if (c.isEmpty()) { return; }
+        if (c.isEmpty())
+        {
+            return;
+        }
         if (c.startsWith('.'))
         {
             if (c.contains("help", Qt::CaseInsensitive))
@@ -73,13 +82,22 @@ namespace swift::gui::components
             }
             emit this->commandEntered(c, this->identifier());
         }
-        else { emit this->textEntered(c, this->identifier()); }
+        else
+        {
+            emit this->textEntered(c, this->identifier());
+        }
     }
 
     void CCommandInput::setCommandToolTip()
     {
-        if (m_showToolTip) { this->setToolTip(CSimpleCommandParser::commandsHtmlHelp()); }
-        else { this->setToolTip(""); }
+        if (m_showToolTip)
+        {
+            this->setToolTip(CSimpleCommandParser::commandsHtmlHelp());
+        }
+        else
+        {
+            this->setToolTip("");
+        }
     }
 
     void CCommandInput::onSimulatorPluginChanged(const CSimulatorPluginInfo &info)

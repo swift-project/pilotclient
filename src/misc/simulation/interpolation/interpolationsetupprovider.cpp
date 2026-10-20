@@ -11,7 +11,10 @@ namespace swift::misc::simulation
     IInterpolationSetupProvider::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
     {
         QReadLocker l(&m_lockSetup);
-        if (!m_setupsPerCallsign.contains(callsign)) { return { callsign, m_globalSetup }; }
+        if (!m_setupsPerCallsign.contains(callsign))
+        {
+            return { callsign, m_globalSetup };
+        }
         return m_setupsPerCallsign.value(callsign);
     }
 
@@ -34,12 +37,18 @@ namespace swift::misc::simulation
         SetupsPerCallsign setupsPerCs;
         for (const CInterpolationAndRenderingSetupPerCallsign &setup : setups)
         {
-            if (ignoreSameAsGlobal && setup.isEqualToGlobal(gs)) { continue; }
+            if (ignoreSameAsGlobal && setup.isEqualToGlobal(gs))
+            {
+                continue;
+            }
             setupsPerCs.insert(setup.getCallsign(), setup);
         }
         {
             QWriteLocker l(&m_lockSetup);
-            if (m_setupsPerCallsign.isEmpty() && setupsPerCs.isEmpty()) { return false; }
+            if (m_setupsPerCallsign.isEmpty() && setupsPerCs.isEmpty())
+            {
+                return false;
+            }
             m_setupsPerCallsign = setupsPerCs;
         }
         this->emitInterpolationSetupChanged();
@@ -58,7 +67,10 @@ namespace swift::misc::simulation
         CCallsignSet callsigns;
         for (const auto [callsign, setup] : makePairsRange(setups))
         {
-            if (setup.logInterpolation()) { callsigns.insert(callsign); }
+            if (setup.logInterpolation())
+            {
+                callsigns.insert(callsign);
+            }
         }
         return callsigns;
     }
@@ -66,14 +78,20 @@ namespace swift::misc::simulation
     bool IInterpolationSetupProvider::isLogCallsign(const CCallsign &callsign) const
     {
         QReadLocker l(&m_lockSetup);
-        if (!m_setupsPerCallsign.contains(callsign)) { return false; }
+        if (!m_setupsPerCallsign.contains(callsign))
+        {
+            return false;
+        }
         return m_setupsPerCallsign[callsign].logInterpolation();
     }
 
     bool IInterpolationSetupProvider::setInterpolationMode(const QString &modeAsString, const CCallsign &callsign)
     {
         CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
-        if (!setup.setInterpolatorMode(modeAsString)) { return false; }
+        if (!setup.setInterpolatorMode(modeAsString))
+        {
+            return false;
+        }
 
         // changed value
         return this->setInterpolationSetupPerCallsign(setup, callsign, true);
@@ -82,7 +100,10 @@ namespace swift::misc::simulation
     bool IInterpolationSetupProvider::setLogInterpolation(bool log, const CCallsign &callsign)
     {
         CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
-        if (!setup.setLogInterpolation(log)) { return false; }
+        if (!setup.setLogInterpolation(log))
+        {
+            return false;
+        }
 
         // changed value
         return this->setInterpolationSetupPerCallsign(setup, callsign, true);
@@ -92,7 +113,10 @@ namespace swift::misc::simulation
     {
         {
             QWriteLocker l(&m_lockSetup);
-            if (m_globalSetup == setup) { return false; }
+            if (m_globalSetup == setup)
+            {
+                return false;
+            }
             m_globalSetup = setup;
         }
         this->emitInterpolationSetupChanged();
@@ -127,14 +151,20 @@ namespace swift::misc::simulation
             QWriteLocker l(&m_lockSetup);
             removed = m_setupsPerCallsign.remove(callsign) > 0;
         }
-        if (removed) { this->emitInterpolationSetupChanged(); }
+        if (removed)
+        {
+            this->emitInterpolationSetupChanged();
+        }
         return removed;
     }
 
     void IInterpolationSetupProvider::setLogCallsign(bool log, const CCallsign &callsign)
     {
         CInterpolationAndRenderingSetupPerCallsign setup = this->getInterpolationSetupPerCallsignOrDefault(callsign);
-        if (setup.logInterpolation() == log) { return; }
+        if (setup.logInterpolation() == log)
+        {
+            return;
+        }
         setup.setLogInterpolation(log);
         this->setInterpolationSetupPerCallsign(setup, callsign);
     }
@@ -142,7 +172,10 @@ namespace swift::misc::simulation
     void IInterpolationSetupProvider::clearInterpolationLogCallsigns()
     {
         SetupsPerCallsign setupsCopy = this->getSetupsPerCallsign();
-        if (setupsCopy.isEmpty()) { return; }
+        if (setupsCopy.isEmpty())
+        {
+            return;
+        }
 
         // potential risk, changes inbetween in another thread are missed now
         // on the other side, we keep locks for a minimal time frame
@@ -151,7 +184,10 @@ namespace swift::misc::simulation
         for (auto [callsign, setup] : makePairsRange(setupsCopy))
         {
             setup.setLogInterpolation(false);
-            if (setup.isEqualToGlobal(global)) { continue; }
+            if (setup.isEqualToGlobal(global))
+            {
+                continue;
+            }
             setupsToKeep.insert(callsign, setup);
         }
         {
@@ -170,14 +206,20 @@ namespace swift::misc::simulation
             m_setupsPerCallsign.clear();
         }
 
-        if (r > 0) { this->emitInterpolationSetupChanged(); }
+        if (r > 0)
+        {
+            this->emitInterpolationSetupChanged();
+        }
         return r;
     }
 
     bool IInterpolationSetupProvider::logAnyCallsign() const
     {
         const SetupsPerCallsign setupsCopy = this->getSetupsPerCallsign();
-        if (setupsCopy.isEmpty()) { return false; }
+        if (setupsCopy.isEmpty())
+        {
+            return false;
+        }
         return std::any_of(
             setupsCopy.cbegin(), setupsCopy.cend(),
             [](const CInterpolationAndRenderingSetupPerCallsign &setup) { return setup.logInterpolation(); });
@@ -195,13 +237,19 @@ namespace swift::misc::simulation
     CInterpolationAndRenderingSetupPerCallsign
     CInterpolationSetupAware::getInterpolationSetupPerCallsignOrDefault(const CCallsign &callsign) const
     {
-        if (!this->hasProvider()) { return {}; }
+        if (!this->hasProvider())
+        {
+            return {};
+        }
         return this->provider()->getInterpolationSetupPerCallsignOrDefault(callsign);
     }
 
     CInterpolationAndRenderingSetupGlobal CInterpolationSetupAware::getInterpolationSetupGlobal() const
     {
-        if (!this->hasProvider()) { return {}; }
+        if (!this->hasProvider())
+        {
+            return {};
+        }
         return this->provider()->getInterpolationSetupGlobal();
     }
 } // namespace swift::misc::simulation

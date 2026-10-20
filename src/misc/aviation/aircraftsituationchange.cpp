@@ -39,7 +39,10 @@ namespace swift::misc::aviation
                                                        const physical_quantities::CLength &cg, bool isVtol,
                                                        bool alreadySortedLatestFirst, bool calcStdDeviations)
     {
-        if (situations.size() < 2) { return; }
+        if (situations.size() < 2)
+        {
+            return;
+        }
         const CAircraftSituationList sorted(alreadySortedLatestFirst ? situations :
                                                                        situations.getSortedAdjustedLatestFirst());
 
@@ -82,13 +85,19 @@ namespace swift::misc::aviation
             this->calculateStdDeviations(situations, cg);
             m_rotateUp = sorted.front().getPitch() > (m_pitchMean + m_pitchStdDev);
         }
-        else { m_rotateUp = sorted.isRotatingUp(true); }
+        else
+        {
+            m_rotateUp = sorted.isRotatingUp(true);
+        }
     }
 
     bool CAircraftSituationChange::guessOnGround(CAircraftSituation &situation,
                                                  const simulation::CAircraftModel &model) const
     {
-        if (!situation.shouldGuessOnGround()) { return false; }
+        if (!situation.shouldGuessOnGround())
+        {
+            return false;
+        }
 
         // for debugging purposed
         QString *details = /*CBuildConfig::isLocalDeveloperDebugBuild() ? &m_onGroundGuessingDetails :*/ nullptr;
@@ -100,14 +109,20 @@ namespace swift::misc::aviation
             if (situation.getGroundSpeed().isNegativeWithEpsilonConsidered())
             {
                 situation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByGuessing });
-                if (details) { *details = QStringLiteral("No VTOL, push back"); }
+                if (details)
+                {
+                    *details = QStringLiteral("No VTOL, push back");
+                }
                 return true;
             }
 
             if (!situation.isMoving())
             {
                 situation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByGuessing });
-                if (details) { *details = QStringLiteral("No VTOL, not moving => on ground"); }
+                if (details)
+                {
+                    *details = QStringLiteral("No VTOL, not moving => on ground");
+                }
                 return true;
             }
         }
@@ -124,24 +139,36 @@ namespace swift::misc::aviation
             // does the value make any sense?
             const bool validGuessedSpeed = (guessedRotateSpeed.value(CSpeedUnit::km_h()) > 5.0);
             SWIFT_VERIFY_X(validGuessedSpeed, Q_FUNC_INFO, "Wrong guessed value for lift off");
-            if (!validGuessedSpeed) { guessedRotateSpeed = CSpeed(80, CSpeedUnit::kts()); } // fix
+            if (!validGuessedSpeed)
+            {
+                guessedRotateSpeed = CSpeed(80, CSpeedUnit::kts());
+            } // fix
             sureRotateSpeed = guessedRotateSpeed * 1.25;
         }
 
         // "extreme" values for which we are surely not on ground
         if (qAbs(situation.getPitch().value(CAngleUnit::deg())) > 20)
         {
-            if (details) { *details = QStringLiteral("max.pitch"); }
+            if (details)
+            {
+                *details = QStringLiteral("max.pitch");
+            }
             return true;
         } // some tail wheel aircraft already have 11° pitch on ground
         if (qAbs(situation.getBank().value(CAngleUnit::deg())) > 10)
         {
-            if (details) { *details = QStringLiteral("max.bank"); }
+            if (details)
+            {
+                *details = QStringLiteral("max.bank");
+            }
             return true;
         }
         if (situation.getGroundSpeed() > sureRotateSpeed)
         {
-            if (details) { *details = u"gs. > vr " % sureRotateSpeed.valueRoundedWithUnit(1); }
+            if (details)
+            {
+                *details = u"gs. > vr " % sureRotateSpeed.valueRoundedWithUnit(1);
+            }
             return true;
         }
 
@@ -154,7 +181,10 @@ namespace swift::misc::aviation
         COnGroundInfo og(cg, situation.getGroundDistance(cg));
         if (og.getOnGround() == COnGroundInfo::OnGround)
         {
-            if (details) { *details = QStringLiteral("elevation on ground"); }
+            if (details)
+            {
+                *details = QStringLiteral("elevation on ground");
+            }
             og.setOnGroundDetails(COnGroundInfo::OnGroundByGuessing);
             situation.setOnGroundInfo(og);
             return true;
@@ -167,20 +197,29 @@ namespace swift::misc::aviation
                 if (isRotatingUp())
                 {
                     // not OG
-                    if (details) { *details = QStringLiteral("rotating up detected"); }
+                    if (details)
+                    {
+                        *details = QStringLiteral("rotating up detected");
+                    }
                     return true;
                 }
 
                 // here we stick to ground until we detect rotate up
                 situation.setOnGroundInfo({ COnGroundInfo::OnGround, COnGroundInfo::OnGroundByGuessing });
-                if (details) { *details = QStringLiteral("waiting for rotating up"); }
+                if (details)
+                {
+                    *details = QStringLiteral("waiting for rotating up");
+                }
                 return true;
             }
 
             if (isConstAscending())
             {
                 // not OG
-                if (details) { *details = QStringLiteral("const ascending"); }
+                if (details)
+                {
+                    *details = QStringLiteral("const ascending");
+                }
                 return true;
             }
         }
@@ -210,7 +249,10 @@ namespace swift::misc::aviation
         }
 
         // not sure, but this is a guess
-        if (details) { *details = QStringLiteral("Fall through"); }
+        if (details)
+        {
+            *details = QStringLiteral("Fall through");
+        }
         return true;
     }
 
@@ -218,13 +260,19 @@ namespace swift::misc::aviation
 
     bool CAircraftSituationChange::hasElevationDevWithinAllowedRange() const
     {
-        if (m_elvStdDev.isNull()) { return false; }
+        if (m_elvStdDev.isNull())
+        {
+            return false;
+        }
         return m_elvStdDev < CAircraftSituation::allowedAltitudeDeviation();
     }
 
     bool CAircraftSituationChange::hasAltitudeDevWithinAllowedRange() const
     {
-        if (m_altStdDev.isNull()) { return false; }
+        if (m_altStdDev.isNull())
+        {
+            return false;
+        }
         return m_altStdDev < CAircraftSituation::allowedAltitudeDeviation();
     }
 
@@ -232,7 +280,10 @@ namespace swift::misc::aviation
     {
         Q_UNUSED(i18n)
         static const QString null("null");
-        if (this->isNull()) { return null; }
+        if (this->isNull())
+        {
+            return null;
+        }
         return u"CS: '" % this->getCallsign().asString() % u" ' ts: " % this->getTimestampAndOffset(true) %
                u" | situations:" % QString::number(m_situationsCount) % u" | ts adj.: " %
                QString::number(m_oldestAdjustedTimestampMSecsSinceEpoch) % u'-' %
@@ -256,7 +307,10 @@ namespace swift::misc::aviation
 
     QVariant CAircraftSituationChange::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         if (ITimestampWithOffsetBased::canHandleIndex(index))
         {
             return ITimestampWithOffsetBased::propertyByIndex(index);
@@ -365,7 +419,10 @@ namespace swift::misc::aviation
 
     bool CAircraftSituationChange::calculateStdDeviations(const CAircraftSituationList &situations, const CLength &cg)
     {
-        if (situations.isEmpty()) { return false; }
+        if (situations.isEmpty())
+        {
+            return false;
+        }
 
         const QPair<CSpeed, CSpeed> gsStdDevMean = situations.groundSpeedStandardDeviationAndMean();
         m_gsStdDev = gsStdDevMean.first;
@@ -449,8 +506,14 @@ namespace swift::misc::aviation
     {
         m_guessedSceneryDeviation = CLength::null();
         this->setSceneryDeviationHint(NoDeviationInfo);
-        if (m_gndDistStdDev.isNull()) { return; }
-        if (m_gndDistMean.isNull()) { return; }
+        if (m_gndDistStdDev.isNull())
+        {
+            return;
+        }
+        if (m_gndDistMean.isNull())
+        {
+            return;
+        }
 
         // only for a small deviation we can calculate scenery differemce
         static const CLength maxDeviation(2, CLengthUnit::ft());
@@ -458,7 +521,8 @@ namespace swift::misc::aviation
         // Small deviation means "const" AGL
         if (m_gndDistStdDev <= maxDeviation)
         {
-            do {
+            do
+            {
                 if (this->isConstOnGround())
                 {
                     this->setSceneryDeviation(m_gndDistMean, cg, AllOnGround);

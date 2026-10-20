@@ -42,13 +42,19 @@ namespace swift::gui::views
 
     void CStatusMessageView::addFilterDialog()
     {
-        if (this->getFilterDialog()) { return; } // already existing
+        if (this->getFilterDialog())
+        {
+            return;
+        } // already existing
         this->setFilterDialog(new CStatusMessageFilterDialog(this));
     }
 
     void CStatusMessageView::keepLatest(int desiredSize)
     {
-        if (desiredSize >= this->rowCount()) { return; }
+        if (desiredSize >= this->rowCount())
+        {
+            return;
+        }
         if (desiredSize < 1)
         {
             this->clear();

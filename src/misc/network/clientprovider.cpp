@@ -35,16 +35,25 @@ namespace swift::misc::network
 
     CClientList CClientProvider::getClientsForCallsigns(const CCallsignSet &callsigns) const
     {
-        if (callsigns.isEmpty()) { return {}; }
+        if (callsigns.isEmpty())
+        {
+            return {};
+        }
         return this->getClients().findByCallsigns(callsigns);
     }
 
     CClient CClientProvider::getClientOrDefaultForCallsign(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return {}; }
+        if (callsign.isEmpty())
+        {
+            return {};
+        }
         {
             QReadLocker l(&m_lockClient);
-            if (m_clients.contains(callsign)) { return m_clients.value(callsign); }
+            if (m_clients.contains(callsign))
+            {
+                return m_clients.value(callsign);
+            }
         }
         return {};
     }
@@ -53,7 +62,10 @@ namespace swift::misc::network
     {
         const bool hasCallsign = !client.getCallsign().isEmpty();
         SWIFT_VERIFY_X(hasCallsign, Q_FUNC_INFO, "Need callsign in client");
-        if (!hasCallsign) { return false; }
+        if (!hasCallsign)
+        {
+            return false;
+        }
         QWriteLocker l(&m_lockClient);
         m_clients[client.getCallsign()] = client;
         return true;
@@ -61,7 +73,10 @@ namespace swift::misc::network
 
     bool CClientProvider::hasClientInfo(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return false; }
+        if (callsign.isEmpty())
+        {
+            return false;
+        }
         QReadLocker l(&m_lockClient);
         return m_clients.contains(callsign);
     }
@@ -70,8 +85,14 @@ namespace swift::misc::network
     {
         const CCallsign callsign = client.getCallsign();
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
-        if (callsign.isEmpty()) { return false; }
-        if (this->hasClientInfo(callsign)) { return false; }
+        if (callsign.isEmpty())
+        {
+            return false;
+        }
+        if (this->hasClientInfo(callsign))
+        {
+            return false;
+        }
         QWriteLocker l(&m_lockClient);
         m_clients[callsign] = client;
         return true;
@@ -81,7 +102,10 @@ namespace swift::misc::network
                                            bool skipEqualValues)
     {
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
-        if (callsign.isEmpty()) { return 0; }
+        if (callsign.isEmpty())
+        {
+            return 0;
+        }
         int c = 0;
         if (this->hasClientInfo(callsign))
         {
@@ -107,8 +131,14 @@ namespace swift::misc::network
 
     bool CClientProvider::autoAdjustCientGndCapability(const CAircraftSituation &situation)
     {
-        if (situation.getCallsign().isEmpty()) { return false; } // no callsign
-        if (!situation.isOnGround()) { return false; } // nothing to adjust
+        if (situation.getCallsign().isEmpty())
+        {
+            return false;
+        } // no callsign
+        if (!situation.isOnGround())
+        {
+            return false;
+        } // nothing to adjust
         if (situation.getOnGroundInfo().getGroundDetails() != COnGroundInfo::InFromNetwork)
         {
             return false;
@@ -124,15 +154,30 @@ namespace swift::misc::network
     bool CClientProvider::setClientGndCapability(const CCallsign &callsign, bool supportGndFlag)
     {
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing client callsign");
-        if (callsign.isEmpty()) { return false; }
+        if (callsign.isEmpty())
+        {
+            return false;
+        }
 
         CClient client = this->getClientOrDefaultForCallsign(callsign);
 
         // need to change?
-        if (!client.isValid()) { return false; } // no client
-        if (client.hasGndFlagCapability() == supportGndFlag) { return true; } // already set, but set
-        if (supportGndFlag) { client.addCapability(CClient::FsdWithGroundFlag); }
-        else { client.removeCapability(CClient::FsdWithGroundFlag); }
+        if (!client.isValid())
+        {
+            return false;
+        } // no client
+        if (client.hasGndFlagCapability() == supportGndFlag)
+        {
+            return true;
+        } // already set, but set
+        if (supportGndFlag)
+        {
+            client.addCapability(CClient::FsdWithGroundFlag);
+        }
+        else
+        {
+            client.removeCapability(CClient::FsdWithGroundFlag);
+        }
         QWriteLocker l(&m_lockClient);
         m_clients[callsign] = client;
         return true;
@@ -140,9 +185,15 @@ namespace swift::misc::network
 
     void CClientProvider::markAsSwiftClient(const CCallsign &callsign)
     {
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
         QWriteLocker l(&m_lockClient);
-        if (!m_clients.contains(callsign)) { return; }
+        if (!m_clients.contains(callsign))
+        {
+            return;
+        }
         m_clients[callsign].setSwiftClient(true);
     }
 
@@ -151,56 +202,83 @@ namespace swift::misc::network
 
     CClientList CClientAware::getClients() const
     {
-        if (this->provider()) { return this->provider()->getClients(); }
+        if (this->provider())
+        {
+            return this->provider()->getClients();
+        }
         return {};
     }
 
     CClient CClientAware::getClientOrDefaultForCallsign(const aviation::CCallsign &callsign) const
     {
-        if (this->provider()) { return this->provider()->getClientOrDefaultForCallsign(callsign); }
+        if (this->provider())
+        {
+            return this->provider()->getClientOrDefaultForCallsign(callsign);
+        }
         return {};
     }
 
     bool CClientAware::hasClientInfo(const CCallsign &callsign) const
     {
-        if (this->provider()) { return this->provider()->hasClientInfo(callsign); }
+        if (this->provider())
+        {
+            return this->provider()->hasClientInfo(callsign);
+        }
         return false;
     }
 
     bool CClientAware::addNewClient(const CClient &client)
     {
-        if (this->provider()) { return this->provider()->addNewClient(client); }
+        if (this->provider())
+        {
+            return this->provider()->addNewClient(client);
+        }
         return false;
     }
 
     int CClientAware::updateOrAddClient(const CCallsign &callsign, const CPropertyIndexVariantMap &vm,
                                         bool skipEqualValues)
     {
-        if (this->provider()) { return this->provider()->updateOrAddClient(callsign, vm, skipEqualValues); }
+        if (this->provider())
+        {
+            return this->provider()->updateOrAddClient(callsign, vm, skipEqualValues);
+        }
         return 0;
     }
 
     int CClientAware::removeClient(const CCallsign &callsign)
     {
-        if (this->provider()) { return this->provider()->removeClient(callsign); }
+        if (this->provider())
+        {
+            return this->provider()->removeClient(callsign);
+        }
         return 0;
     }
 
     bool CClientAware::autoAdjustCientGndCapability(const CAircraftSituation &situation)
     {
-        if (this->provider()) { return this->provider()->autoAdjustCientGndCapability(situation); }
+        if (this->provider())
+        {
+            return this->provider()->autoAdjustCientGndCapability(situation);
+        }
         return false;
     }
 
     bool CClientAware::addClientGndCapability(const CCallsign &callsign)
     {
-        if (this->provider()) { return this->provider()->addClientGndCapability(callsign); }
+        if (this->provider())
+        {
+            return this->provider()->addClientGndCapability(callsign);
+        }
         return false;
     }
 
     void CClientAware::markAsSwiftClient(const CCallsign &callsign)
     {
-        if (!this->provider()) { return; }
+        if (!this->provider())
+        {
+            return;
+        }
         this->provider()->markAsSwiftClient(callsign);
     }
 

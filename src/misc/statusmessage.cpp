@@ -23,7 +23,10 @@ namespace swift::misc
 
         QString arg(QStringView format, const QStringList &args)
         {
-            if (format.isEmpty()) { return args.join(u' '); }
+            if (format.isEmpty())
+            {
+                return args.join(u' ');
+            }
 
             QString &temp = t_tempBuffer.localData();
             temp.resize(
@@ -34,7 +37,10 @@ namespace swift::misc
             {
                 const auto pc = std::find(it, format.end(), u'%');
                 temp.append(&*it, std::distance(it, pc));
-                if (it = pc; it == format.end()) { break; }
+                if (it = pc; it == format.end())
+                {
+                    break;
+                }
                 if (++it == format.end())
                 {
                     temp += u'%';
@@ -62,11 +68,20 @@ namespace swift::misc
                         temp += args[n - 1];
                         unusedArgs &= ~(1ULL << (n - 1));
                     }
-                    else { temp += u'%' % QString::number(n); }
+                    else
+                    {
+                        temp += u'%' % QString::number(n);
+                    }
                 }
-                else { temp += u'%'; }
+                else
+                {
+                    temp += u'%';
+                }
             }
-            if (unusedArgs) { temp += QStringLiteral(" [SOME MESSAGE ARGUMENT(S) UNUSED]"); }
+            if (unusedArgs)
+            {
+                temp += QStringLiteral(" [SOME MESSAGE ARGUMENT(S) UNUSED]");
+            }
 
             QString result = temp;
             result.squeeze(); // release unused capacity and implicitly detach so temp keeps its capacity for next time
@@ -101,7 +116,10 @@ namespace swift::misc
 
     CStatusMessage &CStatusMessage::operator=(const CStatusMessage &other)
     {
-        if (this == &other) { return *this; }
+        if (this == &other)
+        {
+            return *this;
+        }
 
         static_cast<CMessageBase &>(*this) = other;
         static_cast<ITimestampBased &>(*this) = other;
@@ -142,7 +160,10 @@ namespace swift::misc
         : CStatusMessage(severity, message)
     {
         m_categories = categories;
-        if (validation) { this->addValidationCategory(); }
+        if (validation)
+        {
+            this->addValidationCategory();
+        }
     }
 
     CStatusMessage::CStatusMessage(const CLogCategoryList &categories, StatusSeverity severity, const QString &message,
@@ -150,7 +171,10 @@ namespace swift::misc
         : CStatusMessage(severity, message)
     {
         m_categories = categories;
-        if (validation) { this->addValidationCategory(); }
+        if (validation)
+        {
+            this->addValidationCategory();
+        }
     }
 
     CStatusMessage::CStatusMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)
@@ -188,7 +212,10 @@ namespace swift::misc
 
     bool CStatusMessage::clampSeverity(CStatusMessage::StatusSeverity severity)
     {
-        if (this->getSeverity() <= severity) { return false; }
+        if (this->getSeverity() <= severity)
+        {
+            return false;
+        }
         this->setSeverity(severity);
         return true;
     }
@@ -205,19 +232,28 @@ namespace swift::misc
     QString CStatusMessage::getMessageNoLineBreaks() const
     {
         const QString m = this->getMessage();
-        if (!containsLineBreakOrTab(m)) { return m; } // by far most messages will NOT contain tabs/CR
+        if (!containsLineBreakOrTab(m))
+        {
+            return m;
+        } // by far most messages will NOT contain tabs/CR
         return removeLineBreakAndTab(m);
     }
 
     void CStatusMessage::prependMessage(const QString &msg)
     {
-        if (msg.isEmpty()) { return; }
+        if (msg.isEmpty())
+        {
+            return;
+        }
         m_message = QString(msg % m_message.view());
     }
 
     void CStatusMessage::appendMessage(const QString &msg)
     {
-        if (msg.isEmpty()) { return; }
+        if (msg.isEmpty())
+        {
+            return;
+        }
         m_message = QString(m_message.view() % msg);
     }
 
@@ -307,23 +343,47 @@ namespace swift::misc
     {
         // pre-check
         QString severityString(severity.trimmed().toLower());
-        if (severityString.isEmpty()) { return SeverityInfo; }
+        if (severityString.isEmpty())
+        {
+            return SeverityInfo;
+        }
 
         // hard check
-        if (severityString.compare(severityToString(SeverityDebug), Qt::CaseInsensitive) == 0) { return SeverityDebug; }
-        if (severityString.compare(severityToString(SeverityInfo), Qt::CaseInsensitive) == 0) { return SeverityInfo; }
+        if (severityString.compare(severityToString(SeverityDebug), Qt::CaseInsensitive) == 0)
+        {
+            return SeverityDebug;
+        }
+        if (severityString.compare(severityToString(SeverityInfo), Qt::CaseInsensitive) == 0)
+        {
+            return SeverityInfo;
+        }
         if (severityString.compare(severityToString(SeverityWarning), Qt::CaseInsensitive) == 0)
         {
             return SeverityWarning;
         }
-        if (severityString.compare(severityToString(SeverityError), Qt::CaseInsensitive) == 0) { return SeverityError; }
+        if (severityString.compare(severityToString(SeverityError), Qt::CaseInsensitive) == 0)
+        {
+            return SeverityError;
+        }
 
         // not found yet, lenient checks
         QChar s = severityString.at(0);
-        if (s == 'd') { return SeverityDebug; }
-        if (s == 'i') { return SeverityInfo; }
-        if (s == 'w') { return SeverityWarning; }
-        if (s == 'e') { return SeverityError; }
+        if (s == 'd')
+        {
+            return SeverityDebug;
+        }
+        if (s == 'i')
+        {
+            return SeverityInfo;
+        }
+        if (s == 'w')
+        {
+            return SeverityWarning;
+        }
+        if (s == 'e')
+        {
+            return SeverityError;
+        }
 
         return SeverityInfo;
     }
@@ -363,7 +423,10 @@ namespace swift::misc
 
     QString CStatusMessage::severitiesToString(const QSet<CStatusMessage::StatusSeverity> &severities)
     {
-        if (severities.isEmpty()) { return {}; }
+        if (severities.isEmpty())
+        {
+            return {};
+        }
         auto minmax = std::minmax_element(severities.begin(), severities.end());
         auto min = *minmax.first;
         auto max = *minmax.second;
@@ -372,8 +435,14 @@ namespace swift::misc
             static const QString all("all severities");
             return all;
         }
-        if (min == SeverityDebug) { return u"at or below " % severityToString(max); }
-        if (max == SeverityError) { return u"at or above " % severityToString(min); }
+        if (min == SeverityDebug)
+        {
+            return u"at or below " % severityToString(max);
+        }
+        if (max == SeverityError)
+        {
+            return u"at or above " % severityToString(min);
+        }
         auto list = severities.values();
         std::sort(list.begin(), list.end());
         QStringList ret;
@@ -394,9 +463,18 @@ namespace swift::misc
 
     QVariant CStatusMessage::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
-        if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
+        if (IOrderable::canHandleIndex(index))
+        {
+            return IOrderable::propertyByIndex(index);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -442,12 +520,18 @@ namespace swift::misc
 
     int CStatusMessage::comparePropertyByIndex(CPropertyIndexRef index, const CStatusMessage &compareValue) const
     {
-        if (index.isMyself()) { return Compare::compare(this->getSeverity(), compareValue.getSeverity()); }
+        if (index.isMyself())
+        {
+            return Compare::compare(this->getSeverity(), compareValue.getSeverity());
+        }
         if (ITimestampBased::canHandleIndex(index))
         {
             return ITimestampBased::comparePropertyByIndex(index, compareValue);
         }
-        if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
+        if (IOrderable::canHandleIndex(index))
+        {
+            return IOrderable::comparePropertyByIndex(index, compareValue);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -469,7 +553,10 @@ namespace swift::misc
         if (withIcon)
         {
             const QString r = convertToIconResource(this->getSeverity());
-            if (!r.isEmpty()) { img = QStringLiteral("<img src=\"%1\"> ").arg(r); }
+            if (!r.isEmpty())
+            {
+                img = QStringLiteral("<img src=\"%1\"> ").arg(r);
+            }
         }
 
         if (withColors)

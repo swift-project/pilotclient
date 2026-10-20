@@ -33,24 +33,36 @@ namespace swift::gui::menus
 
     bool CMenuAction::isCheckableQAction() const
     {
-        if (!m_action) { return false; }
+        if (!m_action)
+        {
+            return false;
+        }
         return m_action->isCheckable();
     }
 
     void CMenuAction::setActionChecked(bool checked)
     {
-        if (m_action) { m_action->setChecked(checked); }
+        if (m_action)
+        {
+            m_action->setChecked(checked);
+        }
     }
 
     bool CMenuAction::isActionEnabled() const
     {
-        if (!m_action) { return false; }
+        if (!m_action)
+        {
+            return false;
+        }
         return m_action->isEnabled();
     }
 
     void CMenuAction::setActionEnabled(bool enabled)
     {
-        if (m_action) { m_action->setEnabled(enabled); }
+        if (m_action)
+        {
+            m_action->setEnabled(enabled);
+        }
     }
 
     bool CMenuAction::hasNoPathWithSeparator() const { return m_separator && this->hasNoPath(); }
@@ -59,7 +71,10 @@ namespace swift::gui::menus
 
     QPixmap CMenuAction::getPixmap() const
     {
-        if (m_icon.isNull()) { return {}; }
+        if (m_icon.isNull())
+        {
+            return {};
+        }
         return m_icon.pixmap(m_icon.actualSize(QSize(16, 16)));
     }
 
@@ -119,7 +134,10 @@ namespace swift::gui::menus
     {
         if (m_path.contains('/'))
         {
-            if (m_path.endsWith('/')) { return {}; }
+            if (m_path.endsWith('/'))
+            {
+                return {};
+            }
             const int i = m_path.lastIndexOf('/');
             return m_path.mid(i + 1);
         }
@@ -133,12 +151,24 @@ namespace swift::gui::menus
         std::reverse(myActions.begin(), myActions.end()); // the order is reverse because of the insert multi value
         for (const CMenuAction &action : myActions)
         {
-            if (action.isSeparator()) { actions.append(action); }
-            else if (action.isSubMenu() || !action.getQAction()) { menus.append(action); }
+            if (action.isSeparator())
+            {
+                actions.append(action);
+            }
+            else if (action.isSubMenu() || !action.getQAction())
+            {
+                menus.append(action);
+            }
             else
             {
-                if (action.isCheckableQAction()) { checkableActions.append(action); }
-                else { actions.append(action); }
+                if (action.isCheckableQAction())
+                {
+                    checkableActions.append(action);
+                }
+                else
+                {
+                    actions.append(action);
+                }
             }
         }
         actions.append(checkableActions); // checkable actions at end
@@ -146,31 +176,46 @@ namespace swift::gui::menus
 
     CMenuActions::CMenuActions(const QList<CMenuAction> &actions)
     {
-        for (const CMenuAction &action : actions) { this->addAction(action); }
+        for (const CMenuAction &action : actions)
+        {
+            this->addAction(action);
+        }
     }
 
     QList<QAction *> CMenuActions::getQActions() const
     {
         QList<QAction *> qActions;
-        for (const CMenuAction &a : m_actions) { qActions.append(a.getQAction()); }
+        for (const CMenuAction &a : m_actions)
+        {
+            qActions.append(a.getQAction());
+        }
         return qActions;
     }
 
     CMenuActions CMenuActions::getMenuActions(const QString &path) const
     {
-        if (m_actions.contains(path)) { return QList<CMenuAction>(); };
+        if (m_actions.contains(path))
+        {
+            return QList<CMenuAction>();
+        };
         const QList<CMenuAction> allActions(m_actions.values(path));
         QList<CMenuAction> menuActions;
         for (const CMenuAction &a : allActions)
         {
-            if (a.isSubMenu() || !a.getQAction()) { menuActions.append(a); }
+            if (a.isSubMenu() || !a.getQAction())
+            {
+                menuActions.append(a);
+            }
         }
         return menuActions;
     }
 
     bool CMenuActions::containsMenu(const QString &path) const
     {
-        if (!m_actions.contains(path)) { return false; }
+        if (!m_actions.contains(path))
+        {
+            return false;
+        }
         return getMenuActions(path).size() > 0;
     }
 
@@ -198,7 +243,10 @@ namespace swift::gui::menus
             const CMenuAction existingAction(exisitingMenu.first());
             Q_ASSERT_X(exisitingMenu.size() > 1, Q_FUNC_INFO, "Redundant menu entries");
             Q_ASSERT_X(existingAction.getTitle() != title, Q_FUNC_INFO, "Title mismatch");
-            if (icon.isNull() || existingAction.hasIcon()) { return existingAction.getQAction(); }
+            if (icon.isNull() || existingAction.hasIcon())
+            {
+                return existingAction.getQAction();
+            }
             return existingAction;
         }
 
@@ -233,7 +281,10 @@ namespace swift::gui::menus
 
     CMenuActions CMenuActions::addActions(const QList<QAction *> &actions, const QString &path)
     {
-        if (actions.isEmpty()) { return {}; }
+        if (actions.isEmpty())
+        {
+            return {};
+        }
         CMenuAction menuAction;
         CMenuActions menuActions;
         for (QAction *a : actions)
@@ -247,28 +298,40 @@ namespace swift::gui::menus
     CMenuAction CMenuActions::addAction(QAction *action, const QString &text, const QString &path,
                                         const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
-        if (action) { return this->addAction(action, path); }
+        if (action)
+        {
+            return this->addAction(action, path);
+        }
         return this->addAction(text, path, slot, shortcut);
     }
 
     CMenuAction CMenuActions::addAction(QAction *action, const QString &text, const QString &path, QObject *actionOwner,
                                         const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
-        if (action) { return this->addAction(action, path); }
+        if (action)
+        {
+            return this->addAction(action, path);
+        }
         return this->addAction(text, path, actionOwner, slot, shortcut);
     }
 
     CMenuAction CMenuActions::addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path,
                                         const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
-        if (action) { return this->addAction(action, path); }
+        if (action)
+        {
+            return this->addAction(action, path);
+        }
         return this->addAction(icon, text, path, slot, shortcut);
     }
 
     CMenuAction CMenuActions::addAction(QAction *action, const QIcon &icon, const QString &text, const QString &path,
                                         QObject *actionOwner, const CSlot<void()> &slot, const QKeySequence &shortcut)
     {
-        if (action) { return this->addAction(action, path); }
+        if (action)
+        {
+            return this->addAction(action, path);
+        }
         Q_ASSERT_X(actionOwner, Q_FUNC_INFO, "Need action owner"); // in this case nullptr as actionOwner is not allowed
         return this->addAction(icon, text, path, actionOwner, slot, shortcut);
     }
@@ -325,7 +388,10 @@ namespace swift::gui::menus
 
     void CMenuActions::toQMenu(QMenu &menu, bool separateGroups) const
     {
-        if (m_actions.isEmpty()) { return; }
+        if (m_actions.isEmpty())
+        {
+            return;
+        }
         const QStringList keys = m_actions.uniqueKeys(); // Sorted ascending keys, we need a menu for all those keys
 
         QMap<QString, QMenu *> subMenus; // all sub menus
@@ -349,7 +415,10 @@ namespace swift::gui::menus
                 // no separator a) if there is already one b) key roots are the same (such entries belong together)
                 const bool noSeparator = (!menu.actions().isEmpty() && menu.actions().last()->isSeparator()) ||
                                          (isSameKeyRoot(key, lastKey));
-                if (!noSeparator) { menu.addSeparator(); }
+                if (!noSeparator)
+                {
+                    menu.addSeparator();
+                }
                 handledSeparator = true;
             }
 
@@ -398,7 +467,10 @@ namespace swift::gui::menus
             } // actions
 
             // clean up empty sub menus
-            if (currentMenu && currentMenu->isEmpty()) { menu.removeAction(currentMenu->menuAction()); }
+            if (currentMenu && currentMenu->isEmpty())
+            {
+                menu.removeAction(currentMenu->menuAction());
+            }
 
             // remember last key
             lastKey = key;
@@ -413,7 +485,10 @@ namespace swift::gui::menus
         QList<QAction *> qActions;
         for (const CMenuAction &a : m_actions)
         {
-            if (!a.getQAction()) { continue; }
+            if (!a.getQAction())
+            {
+                continue;
+            }
             qActions.append(a.getQAction());
         }
         return qActions;
@@ -421,19 +496,28 @@ namespace swift::gui::menus
 
     CMenuAction CMenuActions::addMenuViewOrder()
     {
-        if (this->containsMenu(CMenuAction::pathViewOrder())) { return {}; }
+        if (this->containsMenu(CMenuAction::pathViewOrder()))
+        {
+            return {};
+        }
         return this->addMenu(CIcons::arrowMediumEast16(), "Order", CMenuAction::pathViewOrder());
     }
 
     CMenuAction CMenuActions::addMenuSimulator()
     {
-        if (this->containsMenu(CMenuAction::pathSimulator())) { return {}; }
+        if (this->containsMenu(CMenuAction::pathSimulator()))
+        {
+            return {};
+        }
         return this->addMenu(CIcons::appSimulator16(), "Simulator", CMenuAction::pathSimulator());
     }
 
     CMenuAction CMenuActions::addMenuStash()
     {
-        if (this->containsMenu(CMenuAction::pathModelStash())) { return {}; }
+        if (this->containsMenu(CMenuAction::pathModelStash()))
+        {
+            return {};
+        }
         const bool canConnectDb =
             sGui && sGui->getWebDataServices() && sGui->getWebDataServices()->hasSuccesfullyConnectedSwiftDb();
         const QString text(canConnectDb ? "Stash tools" : "Stash tools (Warning: no DB!)");
@@ -442,49 +526,73 @@ namespace swift::gui::menus
 
     CMenuAction CMenuActions::addMenuStashEditor()
     {
-        if (this->containsMenu(CMenuAction::pathModelStashEditor())) { return {}; }
+        if (this->containsMenu(CMenuAction::pathModelStashEditor()))
+        {
+            return {};
+        }
         return this->addMenu(CIcons::appDbStash16(), "Edit models", CMenuAction::pathModelStashEditor());
     }
 
     CMenuAction CMenuActions::addMenuDatabase()
     {
-        if (this->containsMenu(CMenuAction::pathViewDatabase())) { return {}; }
+        if (this->containsMenu(CMenuAction::pathViewDatabase()))
+        {
+            return {};
+        }
         return this->addMenu(CMenuAction::subMenuDatabase());
     }
 
     CMenuAction CMenuActions::addMenuConsolidateModels()
     {
-        if (this->containsMenu(CMenuAction::pathModelConsolidate())) { return {}; }
+        if (this->containsMenu(CMenuAction::pathModelConsolidate()))
+        {
+            return {};
+        }
         return this->addMenu(CMenuAction::subMenuConsolidateModels());
     }
 
     CMenuAction CMenuActions::addMenuModelSet()
     {
-        if (this->containsMenu(CMenuAction::pathModelSet())) { return {}; }
+        if (this->containsMenu(CMenuAction::pathModelSet()))
+        {
+            return {};
+        }
         return this->addMenu(CIcons::appModels16(), "Model set", CMenuAction::pathModelSet());
     }
 
     CMenuAction CMenuActions::addMenuCom()
     {
-        if (this->containsMenu(CMenuAction::subMenuCom().getPath())) { return {}; }
+        if (this->containsMenu(CMenuAction::subMenuCom().getPath()))
+        {
+            return {};
+        }
         return this->addAction(CMenuAction::subMenuCom());
     }
 
     CMenuAction CMenuActions::addMenuDisplayModels()
     {
-        if (this->containsMenu(CMenuAction::subMenuDisplayModels().getPath())) { return {}; }
+        if (this->containsMenu(CMenuAction::subMenuDisplayModels().getPath()))
+        {
+            return {};
+        }
         return this->addAction(CMenuAction::subMenuDisplayModels());
     }
 
     CMenuAction CMenuActions::addMenuRenderModels()
     {
-        if (this->containsMenu(CMenuAction::subMenuRenderModels().getPath())) { return {}; }
+        if (this->containsMenu(CMenuAction::subMenuRenderModels().getPath()))
+        {
+            return {};
+        }
         return this->addAction(CMenuAction::subMenuRenderModels());
     }
 
     CMenuAction CMenuActions::addMenuDataTransfer()
     {
-        if (this->containsMenu(CMenuAction::subMenuDataTransfer().getPath())) { return {}; }
+        if (this->containsMenu(CMenuAction::subMenuDataTransfer().getPath()))
+        {
+            return {};
+        }
         return this->addAction(CMenuAction::subMenuDataTransfer());
     }
 
@@ -492,19 +600,28 @@ namespace swift::gui::menus
                                               const QList<CMenuAction> &menus, QMap<QString, QMenu *> &subMenus,
                                               const QString &key, int pathDepth)
     {
-        if (pathDepth < 1) { return &menu; }
+        if (pathDepth < 1)
+        {
+            return &menu;
+        }
         QMenu *parentMenu = &menu;
         if (pathDepth > 1)
         {
             // find the corresponding submenu. If this is empty the next higher level will be choosen
             // if not found at all, use top level menu
             parentMenu = findUpwardsInMenus(key, subMenus);
-            if (!parentMenu) { parentMenu = &menu; }
+            if (!parentMenu)
+            {
+                parentMenu = &menu;
+            }
         }
 
         // explicity menu?
         QMenu *subMenu = nullptr;
-        if (menus.isEmpty()) { subMenu = parentMenu->addMenu(menuAction.getLastPathPart()); }
+        if (menus.isEmpty())
+        {
+            subMenu = parentMenu->addMenu(menuAction.getLastPathPart());
+        }
         else
         {
             const CMenuAction menuFound(menus.first());
@@ -512,22 +629,34 @@ namespace swift::gui::menus
         }
         Q_ASSERT_X(subMenu, Q_FUNC_INFO, "Could not create sub menu");
 
-        if (subMenu) { subMenu->setParent(parentMenu); }
+        if (subMenu)
+        {
+            subMenu->setParent(parentMenu);
+        }
 
-        if (pathDepth > 0 && subMenu) { subMenus.insert(key, subMenu); }
+        if (pathDepth > 0 && subMenu)
+        {
+            subMenus.insert(key, subMenu);
+        }
         return subMenu;
     }
 
     int CMenuActions::pathDepth(const QString &path)
     {
-        if (path.isEmpty()) { return 0; }
+        if (path.isEmpty())
+        {
+            return 0;
+        }
         int c = path.count('/');
         return c > 0 ? c : 0;
     }
 
     QString CMenuActions::parentPath(const QString &currentPath)
     {
-        if (!currentPath.contains('/')) { return {}; }
+        if (!currentPath.contains('/'))
+        {
+            return {};
+        }
         const int i = currentPath.lastIndexOf('/');
         return currentPath.left(i);
     }
@@ -535,16 +664,25 @@ namespace swift::gui::menus
     QString CMenuActions::keyRoot(const QString &key)
     {
         const int i = key.lastIndexOf('.');
-        if (i < 0) { return {}; }
+        if (i < 0)
+        {
+            return {};
+        }
         return key.left(i);
     }
 
     bool CMenuActions::isSameKeyRoot(const QString &key1, const QString &key2)
     {
         const int i1 = key1.lastIndexOf('.');
-        if (i1 < 0) { return false; }
+        if (i1 < 0)
+        {
+            return false;
+        }
         const int i2 = key2.lastIndexOf('.');
-        if (i2 < 0 || i1 != i2) { return false; }
+        if (i2 < 0 || i1 != i2)
+        {
+            return false;
+        }
         return key1.left(i1) == key2.left(i2);
     }
 
@@ -553,7 +691,10 @@ namespace swift::gui::menus
         QString k = key;
         while (!k.isEmpty() && !menus.isEmpty())
         {
-            if (menus.contains(k)) { return menus[k]; }
+            if (menus.contains(k))
+            {
+                return menus[k];
+            }
             k = parentPath(k);
         }
         return nullptr;

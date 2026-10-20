@@ -24,7 +24,10 @@ namespace swift::misc::db
 
     CEntityFlags::Entity CDbInfo::getEntity() const
     {
-        if (m_entity != CEntityFlags::NoEntity) { return m_entity; }
+        if (m_entity != CEntityFlags::NoEntity)
+        {
+            return m_entity;
+        }
         const QString tn(this->getTableName());
         return CEntityFlags::singleEntityByName(tn);
     }
@@ -62,7 +65,10 @@ namespace swift::misc::db
 
     QVariant CDbInfo::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -94,14 +100,20 @@ namespace swift::misc::db
             {
                 IDatastoreObjectWithIntegerKey::setPropertyByIndex(index, variant);
             }
-            else { CValueObject::setPropertyByIndex(index, variant); }
+            else
+            {
+                CValueObject::setPropertyByIndex(index, variant);
+            }
             break;
         }
     }
 
     int CDbInfo::comparePropertyByIndex(CPropertyIndexRef index, const CDbInfo &compareValue) const
     {
-        if (index.isMyself()) { return getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive); }
+        if (index.isMyself())
+        {
+            return getTableName().compare(compareValue.getTableName(), Qt::CaseInsensitive);
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);

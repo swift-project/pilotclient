@@ -90,12 +90,18 @@ SwiftGuiStd::~SwiftGuiStd() = default;
 
 void SwiftGuiStd::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); }
+    if (!handleMouseMoveEvent(event))
+    {
+        QMainWindow::mouseMoveEvent(event);
+    }
 }
 
 void SwiftGuiStd::mousePressEvent(QMouseEvent *event)
 {
-    if (!handleMousePressEvent(event)) { QMainWindow::mousePressEvent(event); }
+    if (!handleMousePressEvent(event))
+    {
+        QMainWindow::mousePressEvent(event);
+    }
 }
 
 void SwiftGuiStd::mouseReleaseEvent(QMouseEvent *event)
@@ -106,7 +112,10 @@ void SwiftGuiStd::mouseReleaseEvent(QMouseEvent *event)
 
 void SwiftGuiStd::performGracefulShutdown()
 {
-    if (!m_init) { return; }
+    if (!m_init)
+    {
+        return;
+    }
     m_init = false;
 
     Q_ASSERT_X(CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Should shutdown in main thread");
@@ -133,14 +142,26 @@ void SwiftGuiStd::performGracefulShutdown()
 
     // allow some other parts to react
     const QPointer<SwiftGuiStd> myself(this);
-    if (sGui) { sGui->processEventsToRefreshGui(); }
-    if (!sGui || !myself) { return; } // killed in meantime?
+    if (sGui)
+    {
+        sGui->processEventsToRefreshGui();
+    }
+    if (!sGui || !myself)
+    {
+        return;
+    } // killed in meantime?
 
     // tell context GUI is going down
-    if (sGui->getIContextApplication()) { sGui->getIContextApplication()->unregisterApplication(identifier()); }
+    if (sGui->getIContextApplication())
+    {
+        sGui->getIContextApplication()->unregisterApplication(identifier());
+    }
 
     // allow some other parts to react
-    if (sGui) { sGui->processEventsToRefreshGui(); }
+    if (sGui)
+    {
+        sGui->processEventsToRefreshGui();
+    }
 }
 
 void SwiftGuiStd::closeEvent(QCloseEvent *event)
@@ -153,7 +174,10 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
             event->ignore();
             QPointer<SwiftGuiStd> myself(this);
             QTimer::singleShot(500, this, [=] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 myself->loginRequested();
             });
             return;
@@ -177,7 +201,10 @@ void SwiftGuiStd::closeEvent(QCloseEvent *event)
 
 void SwiftGuiStd::changeEvent(QEvent *event)
 {
-    if (!CEnableForFramelessWindow::handleChangeEvent(event)) { QMainWindow::changeEvent(event); }
+    if (!CEnableForFramelessWindow::handleChangeEvent(event))
+    {
+        QMainWindow::changeEvent(event);
+    }
 }
 
 QAction *SwiftGuiStd::getWindowMinimizeAction(QObject *parent)
@@ -227,7 +254,10 @@ void SwiftGuiStd::setMainPageInfoArea(CMainInfoAreaComponent::InfoArea infoArea)
 void SwiftGuiStd::setSettingsPage(int settingsTabIndex)
 {
     this->setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
-    if (settingsTabIndex < 0) { return; }
+    if (settingsTabIndex < 0)
+    {
+        return;
+    }
     ui->comp_MainInfoArea->getSettingsComponent()->setCurrentIndex(settingsTabIndex);
 }
 
@@ -238,7 +268,10 @@ bool SwiftGuiStd::isMainPageSelected(SwiftGuiStd::MainPageIndex mainPage) const
 
 void SwiftGuiStd::loginRequested()
 {
-    if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
+    if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork())
+    {
+        return;
+    }
 
     const bool changed = MainPageLogin != ui->sw_MainMiddle->currentIndex();
     this->setMainPage(MainPageLogin);
@@ -291,11 +324,26 @@ void SwiftGuiStd::setContextAvailability()
         // ping to check if core is still alive
         m_coreAvailable = this->isMyIdentifier(sGui->getIContextApplication()->registerApplication(identifier()));
     }
-    else { m_coreAvailable = false; }
-    if (isShuttingDown) { return; }
-    if (m_coreAvailable && m_coreFailures > 0) { m_coreFailures--; }
-    else if (!m_coreAvailable && m_coreFailures < MaxCoreFailures) { m_coreFailures++; }
-    else if (!m_coreAvailable && !m_displayingDBusReconnect) { this->displayDBusReconnectDialog(); }
+    else
+    {
+        m_coreAvailable = false;
+    }
+    if (isShuttingDown)
+    {
+        return;
+    }
+    if (m_coreAvailable && m_coreFailures > 0)
+    {
+        m_coreFailures--;
+    }
+    else if (!m_coreAvailable && m_coreFailures < MaxCoreFailures)
+    {
+        m_coreFailures++;
+    }
+    else if (!m_coreAvailable && !m_displayingDBusReconnect)
+    {
+        this->displayDBusReconnectDialog();
+    }
     m_contextNetworkAvailable =
         m_coreAvailable && sGui->getIContextNetwork() && !sGui->getIContextNetwork()->isEmptyObject();
     m_contextAudioAvailable = m_coreAvailable && sGui->getIContextAudio() && !sGui->getIContextAudio()->isEmptyObject();
@@ -343,7 +391,10 @@ void SwiftGuiStd::onChangedWindowOpacity(int opacity)
 
 void SwiftGuiStd::toggleWindowStayOnTop()
 {
-    if (sGui) { sGui->toggleStayOnTop(); }
+    if (sGui)
+    {
+        sGui->toggleStayOnTop();
+    }
 }
 
 void SwiftGuiStd::toggleWindowVisibility()
@@ -382,8 +433,14 @@ void SwiftGuiStd::onChangedMainInfoAreaFloating(bool floating)
 
 void SwiftGuiStd::onAudioClientFailure(const CStatusMessage &msg)
 {
-    if (msg.isEmpty()) { return; }
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (msg.isEmpty())
+    {
+        return;
+    }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
 
     ui->fr_CentralFrameInside->showOverlayHTMLMessage(msg);
 }
@@ -392,13 +449,19 @@ void SwiftGuiStd::focusInMainEntryField() { ui->comp_MainKeypadArea->focusInEntr
 
 void SwiftGuiStd::focusInTextMessageEntryField()
 {
-    if (!ui->comp_MainInfoArea->getTextMessageComponent()) { return; }
+    if (!ui->comp_MainInfoArea->getTextMessageComponent())
+    {
+        return;
+    }
     if (ui->comp_MainInfoArea->getTextMessageComponent()->isParentDockWidgetFloating())
     {
         ui->comp_MainInfoArea->getTextMessageComponent()->activateWindow();
         ui->comp_MainInfoArea->getTextMessageComponent()->focusTextEntry();
     }
-    else { this->focusInMainEntryField(); }
+    else
+    {
+        this->focusInMainEntryField();
+    }
 }
 
 void SwiftGuiStd::showMinimized() { this->showMinimizedModeChecked(); }
@@ -407,20 +470,29 @@ void SwiftGuiStd::showNormal() { this->showNormalModeChecked(); }
 
 void SwiftGuiStd::onNavigatorClosed()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     this->show();
 }
 
 void SwiftGuiStd::verifyPrerequisites()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
 
     CStatusMessageList msgs;
     if (!sGui->supportsContexts() || !sGui->getIContextSimulator())
     {
         msgs.push_back(CStatusMessage(this).error(u"No simulator context"));
     }
-    else { msgs.push_back(sGui->getIContextSimulator()->verifyPrerequisites()); }
+    else
+    {
+        msgs.push_back(sGui->getIContextSimulator()->verifyPrerequisites());
+    }
 
 #ifdef Q_OS_MACOS
     if (!swift::input::CMacOSInputUtils::hasAccess())
@@ -435,8 +507,14 @@ void SwiftGuiStd::verifyPrerequisites()
 
     if (msgs.hasWarningOrErrorMessages())
     {
-        if (msgs.size() > 1) { this->displayInOverlayWindow(msgs); }
-        else { this->displayInOverlayWindow(msgs.front()); }
+        if (msgs.size() > 1)
+        {
+            this->displayInOverlayWindow(msgs);
+        }
+        else
+        {
+            this->displayInOverlayWindow(msgs.front());
+        }
     }
 }
 
@@ -445,11 +523,17 @@ void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAi
 {
     using namespace std::chrono_literals;
     // will NOT be called if no errors and setting is "only on errors"
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     if (QApplication::activeModalWidget())
     {
         // avoid too many "deadlocking" dialogs, display warning instead
-        if (invalid.isEmpty()) { return; }
+        if (invalid.isEmpty())
+        {
+            return;
+        }
         const CStatusMessage m =
             CLogMessage(this).validationWarning(
                 u"Model set validation has found %1 invalid models for '%2', check the model validation")
@@ -464,14 +548,23 @@ void SwiftGuiStd::onValidatedModelSet(const CSimulatorInfo &simulator, const CAi
 
 void SwiftGuiStd::displayValidationDialog()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
-    if (!m_validationDialog) { m_validationDialog.reset(new CAircraftModelSetValidationDialog(this)); }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
+    if (!m_validationDialog)
+    {
+        m_validationDialog.reset(new CAircraftModelSetValidationDialog(this));
+    }
     m_validationDialog->show();
 }
 
 void SwiftGuiStd::checkDbDataLoaded()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     Q_ASSERT_X(sGui->hasWebDataServices(), Q_FUNC_INFO, "Missing web services");
     Q_ASSERT_X(CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Wrong thread, needs to run in main thread");
     const CEntityFlags::Entity loadEntities =
@@ -482,15 +575,27 @@ void SwiftGuiStd::checkDbDataLoaded()
         return;
     }
 
-    if (!m_dbLoadDialog) { m_dbLoadDialog.reset(new CDbLoadDataDialog(this)); }
+    if (!m_dbLoadDialog)
+    {
+        m_dbLoadDialog.reset(new CDbLoadDataDialog(this));
+    }
     m_dbLoadDialog->newerOrEmptyEntitiesDetected(loadEntities);
 }
 
 void SwiftGuiStd::playNotifcationSound(CNotificationSounds::NotificationFlag notification) const
 {
-    if (!m_contextAudioAvailable) { return; }
-    if (!m_audioSettings.get().isNotificationFlagSet(notification)) { return; }
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!m_contextAudioAvailable)
+    {
+        return;
+    }
+    if (!m_audioSettings.get().isNotificationFlagSet(notification))
+    {
+        return;
+    }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     sGui->getCContextAudioBase()->playNotification(notification, true);
 }
 
@@ -498,7 +603,10 @@ void SwiftGuiStd::displayLog() { ui->comp_MainInfoArea->displayLog(); }
 
 void SwiftGuiStd::displayNetworkSettings()
 {
-    if (!sApp || sApp->isShuttingDown()) { return; }
+    if (!sApp || sApp->isShuttingDown())
+    {
+        return;
+    }
     this->setMainPageInfoArea(CMainInfoAreaComponent::InfoAreaSettings);
     ui->comp_MainInfoArea->getSettingsComponent()->setTab(CSettingsComponent::SettingTabServers);
 }
@@ -506,7 +614,10 @@ void SwiftGuiStd::displayNetworkSettings()
 void SwiftGuiStd::onPttChanged(bool enabled)
 {
     Q_UNUSED(enabled)
-    if (!sGui || !sGui->getCContextAudioBase()) { return; }
+    if (!sGui || !sGui->getCContextAudioBase())
+    {
+        return;
+    }
 
     // based on user request still play with AFV
     sGui->getCContextAudioBase()->playNotification(
@@ -515,10 +626,22 @@ void SwiftGuiStd::onPttChanged(bool enabled)
 
 void SwiftGuiStd::displayDBusReconnectDialog()
 {
-    if (m_displayingDBusReconnect) { return; }
-    if (!sGui || sGui->isShuttingDown()) { return; }
-    if (!sGui->getCoreFacade()) { return; }
-    if (!sGui->getCoreFacadeConfig().requiresDBusConnection()) { return; }
+    if (m_displayingDBusReconnect)
+    {
+        return;
+    }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
+    if (!sGui->getCoreFacade())
+    {
+        return;
+    }
+    if (!sGui->getCoreFacadeConfig().requiresDBusConnection())
+    {
+        return;
+    }
     m_displayingDBusReconnect = true;
     const QString dBusAddress = sGui->getCoreFacade()->getDBusAddress();
     static const QString informativeText("Do you want to try to reconnect? 'Abort' will close the GUI.\n\nDBus: '%1'");
@@ -539,37 +662,55 @@ void SwiftGuiStd::displayDBusReconnectDialog()
 
     m_displayingDBusReconnect = false;
     CStatusMessage msg = sGui->getCoreFacade()->tryToReconnectWithDBus();
-    if (msg.isSuccess()) { m_coreFailures = 0; }
+    if (msg.isSuccess())
+    {
+        m_coreFailures = 0;
+    }
     msg.clampSeverity(CStatusMessage::SeverityWarning);
     CLogMessage::preformatted(msg);
 }
 
 void SwiftGuiStd::onShowOverlayVariant(const CVariant &variant, std::chrono::milliseconds duration)
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     ui->fr_CentralFrameInside->showOverlayVariant(variant, duration);
 }
 
 void SwiftGuiStd::onShowOverlayInlineTextMessageTab(components::TextMessageTab tab)
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     ui->fr_CentralFrameInside->showOverlayInlineTextMessage(tab);
 }
 
 void SwiftGuiStd::onShowOverlayInlineTextMessageCallsign(const CCallsign &callsign)
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     ui->fr_CentralFrameInside->showOverlayInlineTextMessage(callsign);
 }
 
 bool SwiftGuiStd::triggerAutoPublishDialog()
 {
-    if (!CAutoPublishData::existAutoPublishFiles()) { return false; }
+    if (!CAutoPublishData::existAutoPublishFiles())
+    {
+        return false;
+    }
 
     constexpr qint64 deltaT = 48 * 60 * 60 * 1000;
     const qint64 lastDialogTs = m_lastAutoPublish.get();
     bool showAutoPublish = lastDialogTs < 0 || (QDateTime::currentMSecsSinceEpoch() - lastDialogTs) > deltaT;
-    if (!showAutoPublish) { return false; }
+    if (!showAutoPublish)
+    {
+        return false;
+    }
 
     const QMessageBox::StandardButton reply =
         QMessageBox::question(this, QStringLiteral("Upload data?"),
@@ -588,14 +729,20 @@ bool SwiftGuiStd::triggerAutoPublishDialog()
 
 bool SwiftGuiStd::startModelBrowser()
 {
-    if (!m_modelBrower) { m_modelBrower.reset(new CModelBrowserDialog(this)); }
+    if (!m_modelBrower)
+    {
+        m_modelBrower.reset(new CModelBrowserDialog(this));
+    }
     m_modelBrower->exec();
     return true;
 }
 
 bool SwiftGuiStd::startAFVMap()
 {
-    if (sGui && !sGui->isShuttingDown()) { sGui->openUrl(sGui->getGlobalSetup().getAfvMapUrl()); }
+    if (sGui && !sGui->isShuttingDown())
+    {
+        sGui->openUrl(sGui->getGlobalSetup().getAfvMapUrl());
+    }
 
     return true;
 }

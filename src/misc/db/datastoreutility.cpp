@@ -38,16 +38,28 @@ namespace swift::misc::db
     int CDatastoreUtility::extractIntegerKey(const QString &stringWithKey)
     {
         QString ks(stringWithKey.trimmed());
-        if (ks.isEmpty()) { return -1; }
+        if (ks.isEmpty())
+        {
+            return -1;
+        }
         bool ok = false;
         int key = ks.toInt(&ok);
-        if (ok) { return key; } // only a number
+        if (ok)
+        {
+            return key;
+        } // only a number
 
         // key in string with ()
         int i1 = ks.lastIndexOf('(');
-        if (i1 < 0) { return -1; }
+        if (i1 < 0)
+        {
+            return -1;
+        }
         int i2 = ks.lastIndexOf(')');
-        if (i2 <= i1 + 1) { return -1; }
+        if (i2 <= i1 + 1)
+        {
+            return -1;
+        }
         const QString n(ks.mid(i1 + 1, i2 - i1 - 1));
         ok = false;
         key = n.toInt(&ok);
@@ -57,14 +69,23 @@ namespace swift::misc::db
     QString CDatastoreUtility::stripKeyInParentheses(const QString &valueWithKey)
     {
         const int i = valueWithKey.indexOf('(');
-        if (i < 0) { return valueWithKey.trimmed(); }
-        if (i < 1) { return {}; }
+        if (i < 0)
+        {
+            return valueWithKey.trimmed();
+        }
+        if (i < 1)
+        {
+            return {};
+        }
         return valueWithKey.left(i - 1).trimmed();
     }
 
     QDateTime CDatastoreUtility::parseTimestamp(const QString &timestamp)
     {
-        if (timestamp.isEmpty()) { return {}; }
+        if (timestamp.isEmpty())
+        {
+            return {};
+        }
         return parseDateTimeStringOptimized(removeDateTimeSeparators(timestamp));
     }
 

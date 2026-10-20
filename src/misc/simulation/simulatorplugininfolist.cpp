@@ -33,7 +33,10 @@ namespace swift::misc::simulation
     {
         for (const CSimulatorPluginInfo &info : *this)
         {
-            if (info.getSimulatorInfo() == simulator) { return info; }
+            if (info.getSimulatorInfo() == simulator)
+            {
+                return info;
+            }
         }
         return {};
     }

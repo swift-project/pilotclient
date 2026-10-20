@@ -37,15 +37,27 @@ namespace swift::misc::simulation
     //! Log flag to string
     QString matchingLogToString(MatchingLog log)
     {
-        if (log == MatchingLogNothing) { return matchingLogFlagToString(MatchingLogNothing); }
+        if (log == MatchingLogNothing)
+        {
+            return matchingLogFlagToString(MatchingLogNothing);
+        }
         QStringList l;
         if (log.testFlag(MatchingLogCombinedDefaultType))
         {
             l << matchingLogFlagToString(MatchingLogCombinedDefaultType);
         }
-        if (log.testFlag(MatchingLogModelstring)) { l << matchingLogFlagToString(MatchingLogModelstring); }
-        if (log.testFlag(MatchingLogStepwiseReduce)) { l << matchingLogFlagToString(MatchingLogStepwiseReduce); }
-        if (log.testFlag(MatchingLogScoring)) { l << matchingLogFlagToString(MatchingLogScoring); }
+        if (log.testFlag(MatchingLogModelstring))
+        {
+            l << matchingLogFlagToString(MatchingLogModelstring);
+        }
+        if (log.testFlag(MatchingLogStepwiseReduce))
+        {
+            l << matchingLogFlagToString(MatchingLogStepwiseReduce);
+        }
+        if (log.testFlag(MatchingLogScoring))
+        {
+            l << matchingLogFlagToString(MatchingLogScoring);
+        }
         return l.join(", ");
     }
 } // namespace swift::misc::simulation

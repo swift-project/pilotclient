@@ -253,7 +253,10 @@ namespace XSwiftBus
                                                  nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
                                                  readData, nullptr, this, nullptr);
             }
-            else { static_assert(dependent_false<typename DataRefTraits::type>, "Unsupported custom dataref type"); }
+            else
+            {
+                static_assert(dependent_false<typename DataRefTraits::type>, "Unsupported custom dataref type");
+            }
             if (!m_ref)
             {
                 XPLMDebugString("Missing dataref:");
@@ -268,7 +271,10 @@ namespace XSwiftBus
         CustomDataRef &operator=(CustomDataRef &&other) = delete;
         ~CustomDataRef()
         {
-            if (m_ref) { XPLMUnregisterDataAccessor(m_ref); }
+            if (m_ref)
+            {
+                XPLMUnregisterDataAccessor(m_ref);
+            }
         }
 
         //! Read integer

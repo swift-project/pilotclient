@@ -60,7 +60,10 @@ namespace swift::misc::simulation
         CCallsignSet csl;
         for (const CSimulatedAircraft &aircraft : (*this))
         {
-            if (!aircraft.isPartsSynchronized()) { continue; }
+            if (!aircraft.isPartsSynchronized())
+            {
+                continue;
+            }
             csl.push_back(aircraft.getCallsign());
         }
         return csl;
@@ -94,7 +97,10 @@ namespace swift::misc::simulation
     {
         for (CSimulatedAircraft &aircraft : (*this))
         {
-            if (!aircraft.isRendered()) { continue; }
+            if (!aircraft.isRendered())
+            {
+                continue;
+            }
             aircraft.setRendered(false);
         }
     }
@@ -104,7 +110,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.getCallsign() != callsign) { continue; }
+            if (aircraft.getCallsign() != callsign)
+            {
+                continue;
+            }
             aircraft.setRendered(rendered);
             c++;
             if (onlyFirst) break;
@@ -117,7 +126,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.getCallsign() != callsign) { continue; }
+            if (aircraft.getCallsign() != callsign)
+            {
+                continue;
+            }
             aircraft.setCG(cg);
             c++;
             if (onlyFirst) break;
@@ -130,7 +142,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.getCallsign() != callsign) { continue; }
+            if (aircraft.getCallsign() != callsign)
+            {
+                continue;
+            }
             aircraft.setFastPositionUpdates(fastPositions);
             c++;
             if (onlyFirst) break;
@@ -143,7 +158,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.getCallsign() != callsign) { continue; }
+            if (aircraft.getCallsign() != callsign)
+            {
+                continue;
+            }
             aircraft.setEnabled(enabled);
             c++;
             if (onlyFirst) break;
@@ -156,7 +174,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.getCallsign() != callsign) { continue; }
+            if (aircraft.getCallsign() != callsign)
+            {
+                continue;
+            }
             aircraft.setModel(model);
             c++;
             if (onlyFirst) break;
@@ -170,7 +191,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.getCallsign() != callsign) { continue; }
+            if (aircraft.getCallsign() != callsign)
+            {
+                continue;
+            }
             aircraft.setParts(parts);
             aircraft.setPartsSynchronized(true);
             c++;
@@ -185,7 +209,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.getCallsign() != callsign) { continue; }
+            if (aircraft.getCallsign() != callsign)
+            {
+                continue;
+            }
             aircraft.setSituation(situation); // also sets setSupportingGndFlag
             if (onlyFirst) break;
         }
@@ -198,7 +225,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.getCallsign() != callsign) { continue; }
+            if (aircraft.getCallsign() != callsign)
+            {
+                continue;
+            }
             aircraft.setGroundElevationChecked(elevation, info);
             c++;
             if (onlyFirst) break;
@@ -210,7 +240,10 @@ namespace swift::misc::simulation
     {
         for (const CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.getCallsign() != callsign) { continue; }
+            if (aircraft.getCallsign() != callsign)
+            {
+                continue;
+            }
             return aircraft.isEnabled();
         }
         return false;
@@ -220,7 +253,10 @@ namespace swift::misc::simulation
     {
         for (const CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.getCallsign() != callsign) { continue; }
+            if (aircraft.getCallsign() != callsign)
+            {
+                continue;
+            }
             return aircraft.isRendered();
         }
         return false;
@@ -229,7 +265,10 @@ namespace swift::misc::simulation
     bool CSimulatedAircraftList::replaceOrAddByCallsign(const CSimulatedAircraft &aircraft)
     {
         const CCallsign cs(aircraft.getCallsign());
-        if (cs.isEmpty()) { return false; }
+        if (cs.isEmpty())
+        {
+            return false;
+        }
 
         if (this->containsCallsign(cs))
         {
@@ -245,7 +284,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (const CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.isEnabled()) { c++; }
+            if (aircraft.isEnabled())
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -255,7 +297,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (const CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.isRendered()) { c++; }
+            if (aircraft.isRendered())
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -265,7 +310,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (const CSimulatedAircraft &aircraft : (*this))
         {
-            if (aircraft.isPartsSynchronized()) { c++; }
+            if (aircraft.isPartsSynchronized())
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -277,7 +325,10 @@ namespace swift::misc::simulation
             {
                 return a.getRelativeDistance() < b.getRelativeDistance();
             }
-            if (a.isRendered() != b.isRendered()) { return a.isRendered(); } // get the rendered first
+            if (a.isRendered() != b.isRendered())
+            {
+                return a.isRendered();
+            } // get the rendered first
             return a.getCallsignAsString() < b.getCallsignAsString();
         });
     }

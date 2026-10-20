@@ -23,23 +23,44 @@ namespace swift::misc::network
 
     QString CRemoteFile::getBaseNameAndSize() const
     {
-        if (!this->hasName()) { return {}; }
+        if (!this->hasName())
+        {
+            return {};
+        }
         return QStringLiteral("%1 (%2)").arg(this->getBaseName(), this->getSizeHumanReadable());
     }
 
     bool CRemoteFile::matchesBaseName(const QString &name) const
     {
-        if (name.isEmpty()) { return false; }
-        if (caseInsensitiveStringCompare(name, this->getBaseName())) { return true; }
-        if (name.startsWith(this->getBaseName(), Qt::CaseInsensitive)) { return true; }
-        if (this->getBaseName().startsWith(name, Qt::CaseInsensitive)) { return true; }
+        if (name.isEmpty())
+        {
+            return false;
+        }
+        if (caseInsensitiveStringCompare(name, this->getBaseName()))
+        {
+            return true;
+        }
+        if (name.startsWith(this->getBaseName(), Qt::CaseInsensitive))
+        {
+            return true;
+        }
+        if (this->getBaseName().startsWith(name, Qt::CaseInsensitive))
+        {
+            return true;
+        }
         return false;
     }
 
     CUrl CRemoteFile::getSmartUrl() const
     {
-        if (!this->hasName()) { return this->getUrl(); }
-        if (!this->hasUrl()) { return this->getUrl(); }
+        if (!this->hasName())
+        {
+            return this->getUrl();
+        }
+        if (!this->hasUrl())
+        {
+            return this->getUrl();
+        }
         return this->getUrl().withAppendedPath(this->getName());
     }
 
@@ -53,7 +74,10 @@ namespace swift::misc::network
 
     QString CRemoteFile::getFormattedCreatedYmdhms() const
     {
-        if (m_created < 1) { return {}; }
+        if (m_created < 1)
+        {
+            return {};
+        }
         const QDateTime dt = QDateTime::fromMSecsSinceEpoch(m_created);
         return dt.toString("yyyy-MM-dd HH:mm:ss");
     }
@@ -68,8 +92,14 @@ namespace swift::misc::network
 
     QVariant CRemoteFile::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

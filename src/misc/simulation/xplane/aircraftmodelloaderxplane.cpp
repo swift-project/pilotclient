@@ -51,7 +51,10 @@ namespace swift::misc::simulation::xplane
     {
         for (auto &e : path)
         {
-            if (e == '/' || e == ':' || e == '\\') { e = '/'; }
+            if (e == '/' || e == ':' || e == '\\')
+            {
+                e = '/';
+            }
         }
     }
 
@@ -65,7 +68,10 @@ namespace swift::misc::simulation::xplane
             {
                 return u"[ACF] " % model.getName() % u" by " % model.getDistributor().getDescription();
             }
-            else { return u"[ACF] " % model.getName(); }
+            else
+            {
+                return u"[ACF] " % model.getName();
+            }
         }
         else if (model.hasAircraftDesignator())
         {
@@ -74,7 +80,10 @@ namespace swift::misc::simulation::xplane
                 return u"[ACF] " % model.getAircraftIcaoCodeDesignator() % u" by " %
                        model.getDistributor().getDescription();
             }
-            else { return u"[ACF] " % model.getAircraftIcaoCodeDesignator(); }
+            else
+            {
+                return u"[ACF] " % model.getAircraftIcaoCodeDesignator();
+            }
         }
         return QStringLiteral("[ACF]");
     }
@@ -86,7 +95,10 @@ namespace swift::misc::simulation::xplane
     CAircraftModelLoaderXPlane::~CAircraftModelLoaderXPlane()
     {
         // that should be safe as long as the worker uses deleteLater (which it does)
-        if (m_parserWorker) { m_parserWorker->waitForFinished(); }
+        if (m_parserWorker)
+        {
+            m_parserWorker->waitForFinished();
+        }
     }
 
     void CAircraftModelLoaderXPlane::startLoadingFromDisk(LoadMode mode,
@@ -110,14 +122,20 @@ namespace swift::misc::simulation::xplane
 
         if (mode.testFlag(LoadInBackground))
         {
-            if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
+            if (m_parserWorker && !m_parserWorker->isFinished())
+            {
+                return;
+            }
             emit this->diskLoadingStarted(simulator, mode);
 
             m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderXPlane::performParsing",
                                                [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]() {
                                                    auto models =
                                                        this->performParsing(modelDirs, excludedDirectoryPatterns);
-                                                   if (modelConsolidation) { modelConsolidation(models, true); }
+                                                   if (modelConsolidation)
+                                                   {
+                                                       modelConsolidation(models, true);
+                                                   }
                                                    return models;
                                                });
             m_parserWorker->thenWithResult<CAircraftModelList>(this, [=, this](const auto &models) {
@@ -150,7 +168,10 @@ namespace swift::misc::simulation::xplane
     QString CAircraftModelLoaderXPlane::CSLPlane::getModelName() const
     {
         QString modelName = dirNames.join(' ') % u' ' % objectName;
-        if (objectVersion == OBJ7) { modelName += u' ' % textureName; }
+        if (objectVersion == OBJ7)
+        {
+            modelName += u' ' % textureName;
+        }
         return std::move(modelName).trimmed();
     }
 
@@ -184,7 +205,10 @@ namespace swift::misc::simulation::xplane
                                                                          const QStringList &excludeDirectories)
     {
         Q_UNUSED(excludeDirectories)
-        if (rootDirectory.isEmpty()) { return {}; }
+        if (rootDirectory.isEmpty())
+        {
+            return {};
+        }
 
         QDir searchPath(rootDirectory, fileFilterFlyable());
         QDirIterator aircraftIt(searchPath, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
@@ -211,7 +235,10 @@ namespace swift::misc::simulation::xplane
             model.setName(QString::fromStdString(acfProperties.modelName));
             model.setDistributor(dist);
             model.setModelString(QString::fromStdString(acfProperties.modelString));
-            if (!model.hasDescription()) { model.setDescription(descriptionForFlyableModel(model)); }
+            if (!model.hasDescription())
+            {
+                model.setDescription(descriptionForFlyableModel(model));
+            }
             model.setModelType(CAircraftModel::TypeOwnSimulatorModel);
             model.setSimulator(CSimulatorInfo::xplane());
             model.setFileDetailsAndTimestamp(aircraftIt.fileInfo());
@@ -239,7 +266,10 @@ namespace swift::misc::simulation::xplane
                                                                     const QStringList &excludeDirectories)
     {
         Q_UNUSED(excludeDirectories);
-        if (rootDirectory.isEmpty()) { return {}; }
+        if (rootDirectory.isEmpty())
+        {
+            return {};
+        }
 
         m_cslPackages.clear();
 
@@ -248,7 +278,10 @@ namespace swift::misc::simulation::xplane
         while (it.hasNext())
         {
             QString packageFile = it.next();
-            if (CFileUtils::isExcludedDirectory(it.filePath(), excludeDirectories)) { continue; }
+            if (CFileUtils::isExcludedDirectory(it.filePath(), excludeDirectories))
+            {
+                continue;
+            }
 
             const QString packageFilePath = it.fileInfo().absolutePath();
             QFile file(packageFile);
@@ -313,8 +346,14 @@ namespace swift::misc::simulation::xplane
 
                 model.setSimulator(CSimulatorInfo::xplane());
                 QString modelDescription("[CSL]");
-                if (plane.objectVersion == CSLPlane::OBJ7) { modelDescription += "[OBJ7]"; }
-                else if (plane.objectVersion == CSLPlane::OBJ8) { modelDescription += "[OBJ8]"; }
+                if (plane.objectVersion == CSLPlane::OBJ7)
+                {
+                    modelDescription += "[OBJ7]";
+                }
+                else if (plane.objectVersion == CSLPlane::OBJ8)
+                {
+                    modelDescription += "[OBJ8]";
+                }
                 model.setDescription(modelDescription);
                 installedModels.push_back(model);
             }
@@ -397,7 +436,8 @@ namespace swift::misc::simulation::xplane
     QString readLineFrom(QTextStream &stream)
     {
         QString line;
-        do {
+        do
+        {
             line = stream.readLine();
         }
         while (line.isEmpty() && !stream.atEnd());
@@ -450,7 +490,10 @@ namespace swift::misc::simulation::xplane
                                          u"%1/xsb_aircraft.txt Line %2 : OBJ8_AIRCARFT command requires 1 argument.")
                                      << path << lineNum;
             m_loadingMessages.push_back(m);
-            if (tokens.size() < 2) { return false; }
+            if (tokens.size() < 2)
+            {
+                return false;
+            }
         }
 
         package.planes.back().objectName = tokens[1];
@@ -489,7 +532,10 @@ namespace swift::misc::simulation::xplane
             return false;
         }
 
-        if (tokens[1] != "SOLID") { return true; }
+        if (tokens[1] != "SOLID")
+        {
+            return true;
+        }
 
         QString relativePath(tokens[3]);
         normalizePath(relativePath);
@@ -735,7 +781,10 @@ namespace swift::misc::simulation::xplane
                     bool result = it.value()(tokens, package, package.path, lineNum);
                     if (!result)
                     {
-                        if (!package.planes.empty()) { package.planes.back().hasErrors = true; }
+                        if (!package.planes.empty())
+                        {
+                            package.planes.back().hasErrors = true;
+                        }
                     }
                 }
                 else

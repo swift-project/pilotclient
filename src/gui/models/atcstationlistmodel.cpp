@@ -91,16 +91,25 @@ namespace swift::gui::models
 
     void CAtcStationListModel::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
     {
-        if (station.getCallsign().isEmpty()) { return; }
+        if (station.getCallsign().isEmpty())
+        {
+            return;
+        }
         if (added)
         {
             const bool c = m_container.contains(&CAtcStation::getCallsign, station.getCallsign());
-            if (!c) { this->insert(station); }
+            if (!c)
+            {
+                this->insert(station);
+            }
         }
         else
         {
             QModelIndex parent;
-            if (rowCount(parent) == 0) { return; }
+            if (rowCount(parent) == 0)
+            {
+                return;
+            }
             beginRemoveRows(parent, 0, 0);
             this->removeIf(&CAtcStation::getCallsign, station.getCallsign());
             endRemoveRows();

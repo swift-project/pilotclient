@@ -37,7 +37,10 @@ namespace swift::gui::components
 
         QPointer<CTransponderModeComponent> myself(this);
         QTimer::singleShot(10 * 1000, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->onChangedAircraftCockpit(sGui->getIContextOwnAircraft()->getOwnAircraft(), CIdentifier::null());
         });
     }
@@ -46,7 +49,10 @@ namespace swift::gui::components
 
     void CTransponderModeComponent::init()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         if (!sGui->supportsContexts() || !sGui->getIContextOwnAircraft())
         {
             this->setVisible(false);
@@ -66,7 +72,10 @@ namespace swift::gui::components
 
     void CTransponderModeComponent::onClicked()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         CTransponder xpdr = m_transponder;
         xpdr.toggleTransponderMode();
         sGui->getIContextOwnAircraft()->setTransponderMode(xpdr.getTransponderMode());
@@ -75,8 +84,14 @@ namespace swift::gui::components
     void CTransponderModeComponent::onChangedAircraftCockpit(const CSimulatedAircraft &aircraft,
                                                              const CIdentifier &originator)
     {
-        if (this->identifier() == originator) { return; }
-        if (m_transponder == aircraft.getTransponder()) { return; }
+        if (this->identifier() == originator)
+        {
+            return;
+        }
+        if (m_transponder == aircraft.getTransponder())
+        {
+            return;
+        }
         m_transponder = aircraft.getTransponder();
         this->init();
         emit this->changed();

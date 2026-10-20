@@ -109,7 +109,10 @@ namespace swift::gui::components
                                            .arg(modelsIncluded)
                                            .arg(modelsDbKey));
         }
-        else { ui->le_ModelsInfo->setText(modelsNo); }
+        else
+        {
+            ui->le_ModelsInfo->setText(modelsNo);
+        }
 
         ui->pb_CreateModelSet->setEnabled(modelsCount > 0);
 
@@ -122,7 +125,10 @@ namespace swift::gui::components
     void CFirstModelSetComponent::onSettingsChanged(const CSimulatorInfo &simulator)
     {
         const CSimulatorInfo currentSimulator = ui->comp_SimulatorSelector->getValue();
-        if (simulator != currentSimulator) { return; } // ignore changes not for my selected simulator
+        if (simulator != currentSimulator)
+        {
+            return;
+        } // ignore changes not for my selected simulator
         this->onSimulatorChanged(simulator);
     }
 
@@ -130,16 +136,25 @@ namespace swift::gui::components
     {
         Q_UNUSED(count);
         const CSimulatorInfo currentSimulator = ui->comp_SimulatorSelector->getValue();
-        if (simulator != currentSimulator) { return; } // ignore changes not for my selected simulator
+        if (simulator != currentSimulator)
+        {
+            return;
+        } // ignore changes not for my selected simulator
         this->onSimulatorChanged(simulator);
     }
 
     void CFirstModelSetComponent::triggerSettingsChanged(const CSimulatorInfo &simulator)
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         QPointer<CFirstModelSetComponent> myself(this);
         QTimer::singleShot(0, this, [=] {
-            if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+            if (!myself || !sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             myself->onSettingsChanged(simulator);
         });
     }
@@ -166,8 +181,14 @@ namespace swift::gui::components
 
     void CFirstModelSetComponent::openOwnModelsDialog()
     {
-        if (!m_modelsDialog) { return; }
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+        if (!m_modelsDialog)
+        {
+            return;
+        }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
         const bool reload = (QObject::sender() == ui->pb_ModelsTriggerReload);
 
         const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
@@ -180,7 +201,10 @@ namespace swift::gui::components
                 const QMessageBox::StandardButton reply = QMessageBox::warning(
                     this->mainWindow(), "DB data", "No DB data, models cannot be consolidated. Load anyway?",
                     QMessageBox::Yes | QMessageBox::No);
-                if (reply != QMessageBox::Yes) { return; }
+                if (reply != QMessageBox::Yes)
+                {
+                    return;
+                }
             }
 
             bool loadOnlyIfNotEmpty = true;
@@ -190,7 +214,10 @@ namespace swift::gui::components
                     QMessageBox::warning(this->mainWindow(), "Model loading",
                                          "Reload the models?\nThe existing cache data will we overridden.",
                                          QMessageBox::Yes | QMessageBox::No);
-                if (reply == QMessageBox::Yes) { loadOnlyIfNotEmpty = false; }
+                if (reply == QMessageBox::Yes)
+                {
+                    loadOnlyIfNotEmpty = false;
+                }
             }
             m_modelsDialog->requestModelsInBackground(simulator, loadOnlyIfNotEmpty);
         }
@@ -215,25 +242,40 @@ namespace swift::gui::components
     {
         using namespace std::chrono_literals;
 
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
         CSpecializedSimulatorSettings settings = m_simulatorSettings.getSpecializedSettings(simulator);
         const bool clear = (QObject::sender() == ui->pb_ClearModelDir);
 
-        if (clear) { settings.clearModelDirectories(); }
+        if (clear)
+        {
+            settings.clearModelDirectories();
+        }
         else
         {
             const QString dirOld = settings.getFirstModelDirectoryOrDefault();
             const QString newDir =
                 QFileDialog::getExistingDirectory(this->mainWindow(), tr("Open model directory"), dirOld,
                                                   QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-            if (newDir.isEmpty() || CDirectoryUtils::isSameExistingDirectory(dirOld, newDir)) { return; }
+            if (newDir.isEmpty() || CDirectoryUtils::isSameExistingDirectory(dirOld, newDir))
+            {
+                return;
+            }
             settings.addModelDirectory(newDir);
         }
 
         const CStatusMessage msg = m_simulatorSettings.setAndSaveSettings(settings, simulator);
-        if (msg.isSuccess()) { this->triggerSettingsChanged(simulator); }
-        else { this->showOverlayMessage(msg, 4s); }
+        if (msg.isSuccess())
+        {
+            this->triggerSettingsChanged(simulator);
+        }
+        else
+        {
+            this->showOverlayMessage(msg, 4s);
+        }
     }
 
     void CFirstModelSetComponent::createModelSet()
@@ -255,7 +297,10 @@ namespace swift::gui::components
             const QMessageBox::StandardButton reply =
                 QMessageBox::question(this->mainWindow(), "Models", "No distributors selected, use all models?",
                                       QMessageBox::Yes | QMessageBox::No);
-            if (reply == QMessageBox::Yes) { useAllModels = true; }
+            if (reply == QMessageBox::Yes)
+            {
+                useAllModels = true;
+            }
             else
             {
                 static const CStatusMessage msg = CStatusMessage(this).validationError(u"No distributors selected");
@@ -270,7 +315,10 @@ namespace swift::gui::components
             modelsForSet = modelsForSet.findByDistributors(distributors);
         }
 
-        if (ui->cb_DbDataOnly->isChecked()) { modelsForSet.removeObjectsWithoutDbKey(); }
+        if (ui->cb_DbDataOnly->isChecked())
+        {
+            modelsForSet.removeObjectsWithoutDbKey();
+        }
         if (modelsForSet.isEmpty())
         {
             this->showOverlayHTMLMessage("Selection yielded no result!");
@@ -289,7 +337,10 @@ namespace swift::gui::components
         {
             QMessageBox::StandardButton override = QMessageBox::question(
                 this, "Override", "Override existing model set?", QMessageBox::Yes | QMessageBox::No);
-            if (override != QMessageBox::Yes) { return; }
+            if (override != QMessageBox::Yes)
+            {
+                return;
+            }
         }
 
         m_modelSetDialog->modelSetComponent()->setModelSet(modelsForSet, simulator);

@@ -21,7 +21,10 @@ namespace swift::misc::shared_state
         doAfter(promise.future(), this,
                 [callback = std::move(callback), weakRef = weakRef()](const QFuture<CVariant> &reply) {
                     const auto lock = weakRef.lock();
-                    if (lock) { callback(reply.result()); }
+                    if (lock)
+                    {
+                        callback(reply.result());
+                    }
                 });
     }
 } // namespace swift::misc::shared_state

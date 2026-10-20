@@ -51,12 +51,21 @@ namespace swift::config
     {
         bool isLocalDeveloperBuildImpl()
         {
-            if constexpr (!CBuildConfig::isDebugBuild()) { return false; }
+            if constexpr (!CBuildConfig::isDebugBuild())
+            {
+                return false;
+            }
             const QString p = QCoreApplication::applicationDirPath().toLower();
 
             // guessing, feel free to add path checks
-            if (p.contains("build")) { return true; }
-            if (p.contains("msvc")) { return true; }
+            if (p.contains("build"))
+            {
+                return true;
+            }
+            if (p.contains("msvc"))
+            {
+                return true;
+            }
             return false;
         }
     } // namespace Private
@@ -71,13 +80,31 @@ namespace swift::config
     {
         static QString infoShort;
         QStringList sl;
-        if constexpr (CBuildConfig::isCompiledWithMSFSSupport()) { sl << "MSFS2020"; }
-        if constexpr (CBuildConfig::isCompiledWithMSFS2024Support()) { sl << "MSFS2024"; }
-        if constexpr (CBuildConfig::isCompiledWithXPlaneSupport()) { sl << "XPlane"; }
-        if constexpr (CBuildConfig::isCompiledWithP3DSupport()) { sl << "P3D"; }
-        if constexpr (CBuildConfig::isCompiledWithFGSupport()) { sl << "FG"; }
+        if constexpr (CBuildConfig::isCompiledWithMSFSSupport())
+        {
+            sl << "MSFS2020";
+        }
+        if constexpr (CBuildConfig::isCompiledWithMSFS2024Support())
+        {
+            sl << "MSFS2024";
+        }
+        if constexpr (CBuildConfig::isCompiledWithXPlaneSupport())
+        {
+            sl << "XPlane";
+        }
+        if constexpr (CBuildConfig::isCompiledWithP3DSupport())
+        {
+            sl << "P3D";
+        }
+        if constexpr (CBuildConfig::isCompiledWithFGSupport())
+        {
+            sl << "FG";
+        }
         infoShort = sl.join(", ");
-        if (infoShort.isEmpty()) { infoShort = "<none>"; }
+        if (infoShort.isEmpty())
+        {
+            infoShort = "<none>";
+        }
         return infoShort;
     }
 
@@ -135,10 +162,19 @@ namespace swift::config
     {
         int buildWordSizeImpl()
         {
-            if (CBuildConfig::getBuildAbiParts().length() < 3) { return -1; }
+            if (CBuildConfig::getBuildAbiParts().length() < 3)
+            {
+                return -1;
+            }
             const QString abiWs = CBuildConfig::getBuildAbiParts()[2];
-            if (abiWs.contains("32")) { return 32; }
-            if (abiWs.contains("64")) { return 64; }
+            if (abiWs.contains("32"))
+            {
+                return 32;
+            }
+            if (abiWs.contains("64"))
+            {
+                return 64;
+            }
             return -1;
         }
     } // namespace Private

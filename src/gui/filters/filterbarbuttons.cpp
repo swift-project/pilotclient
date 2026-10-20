@@ -27,9 +27,18 @@ namespace swift::gui::filters
     void CFilterBarButtons::ps_buttonClicked()
     {
         const QObject *sender = QObject::sender();
-        if (sender == ui->tb_ClearForm) { emit buttonClicked(ClearForm); }
-        else if (sender == ui->tb_Filter) { emit buttonClicked(Filter); }
-        else if (sender == ui->tb_RemoveFilter) { emit buttonClicked(RemoveFilter); }
+        if (sender == ui->tb_ClearForm)
+        {
+            emit buttonClicked(ClearForm);
+        }
+        else if (sender == ui->tb_Filter)
+        {
+            emit buttonClicked(Filter);
+        }
+        else if (sender == ui->tb_RemoveFilter)
+        {
+            emit buttonClicked(RemoveFilter);
+        }
         else if (sender == ui->tb_New)
         {
             emit buttonClicked(RemoveFilter);
@@ -40,7 +49,10 @@ namespace swift::gui::filters
     void CFilterBarButtons::onRowCountChanged(int count, bool withFilter)
     {
         QString v = QString::number(count);
-        if (withFilter) { v += "F"; }
+        if (withFilter)
+        {
+            v += "F";
+        }
         ui->le_Count->setText(v);
     }
 

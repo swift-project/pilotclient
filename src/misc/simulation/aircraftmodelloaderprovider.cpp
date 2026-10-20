@@ -29,8 +29,14 @@ namespace swift::misc::simulation
                                                                                QObject *parent)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Single simulator");
-        if (simulator.isXPlane()) { return new CAircraftModelLoaderXPlane(parent); }
-        if (simulator.isFG()) { return new CAircraftModelLoaderFlightgear(parent); }
+        if (simulator.isXPlane())
+        {
+            return new CAircraftModelLoaderXPlane(parent);
+        }
+        if (simulator.isFG())
+        {
+            return new CAircraftModelLoaderFlightgear(parent);
+        }
         return CAircraftCfgParser::createModelLoader(simulator, parent);
     }
 
@@ -41,27 +47,42 @@ namespace swift::misc::simulation
         {
         case CSimulatorInfo::P3D:
         {
-            if (!m_loaderP3D) { m_loaderP3D = this->initLoader(CSimulatorInfo::p3d()); }
+            if (!m_loaderP3D)
+            {
+                m_loaderP3D = this->initLoader(CSimulatorInfo::p3d());
+            }
             return m_loaderP3D;
         }
         case CSimulatorInfo::XPLANE:
         {
-            if (!m_loaderXP) { m_loaderXP = this->initLoader(CSimulatorInfo::xplane()); }
+            if (!m_loaderXP)
+            {
+                m_loaderXP = this->initLoader(CSimulatorInfo::xplane());
+            }
             return m_loaderXP;
         }
         case CSimulatorInfo::FG:
         {
-            if (!m_loaderFG) { m_loaderFG = this->initLoader(CSimulatorInfo::fg()); }
+            if (!m_loaderFG)
+            {
+                m_loaderFG = this->initLoader(CSimulatorInfo::fg());
+            }
             return m_loaderFG;
         }
         case CSimulatorInfo::MSFS:
         {
-            if (!m_loaderMsfs) { m_loaderMsfs = this->initLoader(CSimulatorInfo::msfs()); }
+            if (!m_loaderMsfs)
+            {
+                m_loaderMsfs = this->initLoader(CSimulatorInfo::msfs());
+            }
             return m_loaderMsfs;
         }
         case CSimulatorInfo::MSFS2024:
         {
-            if (!m_loaderMsfs2024) { m_loaderMsfs2024 = this->initLoader(CSimulatorInfo::msfs2024()); }
+            if (!m_loaderMsfs2024)
+            {
+                m_loaderMsfs2024 = this->initLoader(CSimulatorInfo::msfs2024());
+            }
             return m_loaderMsfs2024;
         }
         default: Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong simulator"); break;

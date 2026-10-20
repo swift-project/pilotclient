@@ -16,7 +16,10 @@ namespace swift::misc::shared_state::dbus
     CDuplex::CDuplex(CHub *hub, const CIdentifier &client, CDBusServer *server, QObject *parent)
         : IDuplex(parent), m_hub(hub)
     {
-        if (server) { server->addObject(client.toDBusObjectPath(SWIFT_MISC_DUPLEX_PATH_ROOT), this); }
+        if (server)
+        {
+            server->addObject(client.toDBusObjectPath(SWIFT_MISC_DUPLEX_PATH_ROOT), this);
+        }
     }
 
     CDuplex::~CDuplex()
@@ -41,12 +44,21 @@ namespace swift::misc::shared_state::dbus
 
     void CDuplex::setSubscription(const QString &channel, const CVariantList &filters)
     {
-        if (filters.isEmpty()) { m_subscriptions.remove(channel); }
-        else { m_subscriptions.insert(channel, filters); }
+        if (filters.isEmpty())
+        {
+            m_subscriptions.remove(channel);
+        }
+        else
+        {
+            m_subscriptions.insert(channel, filters);
+        }
 
         for (auto client : m_hub->clients())
         {
-            if (client != this) { client->requestPeerSubscriptions(channel); }
+            if (client != this)
+            {
+                client->requestPeerSubscriptions(channel);
+            }
         }
     }
 
@@ -62,7 +74,10 @@ namespace swift::misc::shared_state::dbus
                 channels.unite(subscriptions);
             }
         }
-        for (const auto &channel : channels) { requestPeerSubscriptions(channel); }
+        for (const auto &channel : channels)
+        {
+            requestPeerSubscriptions(channel);
+        }
     }
 
     void CDuplex::requestPeerSubscriptions(const QString &channel)
@@ -70,7 +85,10 @@ namespace swift::misc::shared_state::dbus
         CVariantList filters;
         for (auto peer : m_hub->clients())
         {
-            if (peer != this) { filters.push_back(peer->m_subscriptions.value(channel)); }
+            if (peer != this)
+            {
+                filters.push_back(peer->m_subscriptions.value(channel));
+            }
         }
 
         emit peerSubscriptionsReceived(channel, filters);

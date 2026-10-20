@@ -102,7 +102,10 @@ namespace swift::misc
             {
                 return a.compare(b, Qt::CaseInsensitive) == 0;
             }
-            else { return a == b; }
+            else
+            {
+                return a == b;
+            }
         }
 
         /*!
@@ -195,7 +198,10 @@ namespace swift::misc
         template <typename T, typename Flags>
         bool LessThanByMetaClass<Derived>::membersLess(bool &io_greaterThan, const T &a, const T &b, Flags)
         {
-            if (io_greaterThan) { return false; }
+            if (io_greaterThan)
+            {
+                return false;
+            }
             if constexpr (static_cast<bool>(Flags::value & CaseInsensitiveComparison))
             {
                 io_greaterThan = b.compare(a, Qt::CaseInsensitive) < 0;
@@ -270,8 +276,14 @@ namespace swift::misc
             {
                 return a.compare(b, Qt::CaseInsensitive);
             }
-            else if constexpr (THasCompare<T, T>::value) { return compare(a, b); }
-            else { return a < b ? -1 : b < a ? 1 : 0; }
+            else if constexpr (THasCompare<T, T>::value)
+            {
+                return compare(a, b);
+            }
+            else
+            {
+                return a < b ? -1 : b < a ? 1 : 0;
+            }
         }
 
     } // namespace mixin

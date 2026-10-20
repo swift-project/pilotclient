@@ -20,12 +20,18 @@ namespace swift::gui::components
         this->init();
 
         QTimer::singleShot(0, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->loadSwiftLicense();
         });
 
         QTimer::singleShot(0, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->loadThirdPartyLicenses();
         });
     }
@@ -34,7 +40,10 @@ namespace swift::gui::components
 
     void CAboutDialog::init()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         ui->lbl_VersionValue->setText(sGui->getApplicationNameVersionDetailed());
         ui->pte_Info->setPlainText(sGui->getInfoString("\n"));
         ui->pte_Info->appendPlainText("\nSetup follows:\n----");

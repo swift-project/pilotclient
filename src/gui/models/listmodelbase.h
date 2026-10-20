@@ -163,7 +163,10 @@ namespace swift::gui::models
         {
             int c = m_container.removeIf(swift::misc::predicates::MemberEqual(k0, v0, keysValues...));
             this->updateFilteredContainer();
-            if (c > 0) { this->emitModelDataChanged(); }
+            if (c > 0)
+            {
+                this->emitModelDataChanged();
+            }
             return c;
         }
 

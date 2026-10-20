@@ -13,8 +13,14 @@ namespace swift::core
 
     QString CActionBind::registerAction(const QString &action, swift::misc::CIcons::IconIndex icon)
     {
-        if (!sApp || sApp->isShuttingDown()) { return {}; }
-        if (sApp->getApplicationInfo().isUnitTest()) { return {}; }
+        if (!sApp || sApp->isShuttingDown())
+        {
+            return {};
+        }
+        if (sApp->getApplicationInfo().isUnitTest())
+        {
+            return {};
+        }
 
         const QString a = CActionBind::normalizeAction(action);
         Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
@@ -24,8 +30,14 @@ namespace swift::core
 
     void CActionBind::unbind()
     {
-        if (m_index < 0) { return; }
-        if (sApp->getApplicationInfo().isUnitTest()) { return; }
+        if (m_index < 0)
+        {
+            return;
+        }
+        if (sApp->getApplicationInfo().isUnitTest())
+        {
+            return;
+        }
 
         Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
         sApp->getInputManager()->unbind(m_index);
@@ -35,14 +47,23 @@ namespace swift::core
     void CActionBind::shutdown()
     {
         unbind();
-        if (m_deleteCallback) { m_deleteCallback(); }
+        if (m_deleteCallback)
+        {
+            m_deleteCallback();
+        }
     }
 
     QString CActionBind::normalizeAction(const QString &action)
     {
         QString n = action.trimmed();
-        if (!n.startsWith('/')) { n.insert(0, QChar('/')); }
-        if (n.endsWith('/')) { n.remove(n.length() - 1, 1); }
+        if (!n.startsWith('/'))
+        {
+            n.insert(0, QChar('/'));
+        }
+        if (n.endsWith('/'))
+        {
+            n.remove(n.length() - 1, 1);
+        }
         return n;
     }
 } // namespace swift::core

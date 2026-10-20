@@ -56,15 +56,24 @@ namespace swift::misc
 
     QString CCountry::getCombinedStringIsoName() const
     {
-        if (!this->hasIsoCode()) { return {}; }
+        if (!this->hasIsoCode())
+        {
+            return {};
+        }
         QString s(m_dbKey);
-        if (m_name.isEmpty()) { return s; }
+        if (m_name.isEmpty())
+        {
+            return s;
+        }
         return u" (" % m_name % u')';
     }
 
     QString CCountry::getCombinedStringNameIso() const
     {
-        if (!this->isValid()) { return {}; }
+        if (!this->isValid())
+        {
+            return {};
+        }
         return m_name % u" -  " % m_dbKey;
     }
 
@@ -76,9 +85,18 @@ namespace swift::misc
 
     bool CCountry::matchesCountryName(const QString &name) const
     {
-        if (name.isEmpty() || m_name.isEmpty()) { return false; }
-        if (caseInsensitiveStringCompare(name, this->getDbKey())) { return true; } // exact ISO match
-        if (caseInsensitiveStringCompare(name, this->getIso3Code())) { return true; } // exact ISO3 match
+        if (name.isEmpty() || m_name.isEmpty())
+        {
+            return false;
+        }
+        if (caseInsensitiveStringCompare(name, this->getDbKey()))
+        {
+            return true;
+        } // exact ISO match
+        if (caseInsensitiveStringCompare(name, this->getIso3Code()))
+        {
+            return true;
+        } // exact ISO3 match
         if (name.length() < 5)
         {
             // contains would be too fuzzy for short names
@@ -105,7 +123,10 @@ namespace swift::misc
 
     QVariant CCountry::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -149,7 +170,10 @@ namespace swift::misc
 
     int CCountry::comparePropertyByIndex(CPropertyIndexRef index, const CCountry &compareValue) const
     {
-        if (index.isMyself()) { return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive); }
+        if (index.isMyself())
+        {
+            return getIsoCode().compare(compareValue.getIsoCode(), Qt::CaseInsensitive);
+        }
         if (IDatastoreObjectWithStringKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue);

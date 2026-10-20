@@ -167,7 +167,10 @@ namespace swift::core
         //! Register help
         static void registerHelp()
         {
-            if (swift::misc::CSimpleCommandParser::registered("swift::core::fsd::CFSDClient")) { return; }
+            if (swift::misc::CSimpleCommandParser::registered("swift::core::fsd::CFSDClient"))
+            {
+                return;
+            }
             swift::misc::CSimpleCommandParser::registerCommand({ ".fsd range distance", "FSD max. range" });
         }
 
@@ -218,8 +221,14 @@ namespace swift::core
             //! Add flag and set timestamp if required
             Readiness &addFlag(MatchingReadinessFlag flag)
             {
-                if (flag == RecursiveCall) { return *this; }
-                if (ts < 0) { ts = QDateTime::currentMSecsSinceEpoch(); }
+                if (flag == RecursiveCall)
+                {
+                    return *this;
+                }
+                if (ts < 0)
+                {
+                    ts = QDateTime::currentMSecsSinceEpoch();
+                }
                 readyness.setFlag(flag, true);
                 return *this;
             }
@@ -230,7 +239,10 @@ namespace swift::core
             //! Set the flag
             Readiness &setFlag(MatchingReadinessFlag flag)
             {
-                if (flag == RecursiveCall) { return *this; }
+                if (flag == RecursiveCall)
+                {
+                    return *this;
+                }
                 readyness = NotReady;
                 this->addFlag(flag);
                 return *this;
@@ -254,7 +266,10 @@ namespace swift::core
             //! currnt age in ms
             qint64 getAgeMs() const
             {
-                if (ts < 0) { return -1; }
+                if (ts < 0)
+                {
+                    return -1;
+                }
                 return QDateTime::currentMSecsSinceEpoch() - ts;
             }
 

@@ -33,19 +33,31 @@ namespace swift::misc::physical_quantities
         const QString vs = value.trimmed().simplified();
 
         // check
-        if (vs.isEmpty()) { return v; }
+        if (vs.isEmpty())
+        {
+            return v;
+        }
 
         thread_local const QRegularExpression regex(R"(([-+]?[0-9]*[\.,]?[0-9]+)\s*(\D*)$)");
         const auto match = regex.match(value);
-        if (!match.hasMatch()) { return v; } // not a valid number
+        if (!match.hasMatch())
+        {
+            return v;
+        } // not a valid number
         QString unit = match.captured(2).trimmed();
         const QString number = QString(value).replace(unit, "");
         unit = unit.trimmed(); // trim after replace, not before
 
-        if (unit.isEmpty() || number.isEmpty()) { return v; }
+        if (unit.isEmpty() || number.isEmpty())
+        {
+            return v;
+        }
         bool success {};
         const double numberD = parseNumber(number, success, mode);
-        if (!success) { return v; }
+        if (!success)
+        {
+            return v;
+        }
 
         if (CMeasurementUnit::isValidUnitSymbol<CAccelerationUnit>(unit))
         {
@@ -112,7 +124,10 @@ namespace swift::misc::physical_quantities
         case SeparatorQtDefault: numberD = number.toDouble(&success); break;
         case SeparatorBestGuess:
             numberD = number.toDouble(&success);
-            if (!success) { numberD = QLocale::system().toDouble(number, &success); }
+            if (!success)
+            {
+                numberD = QLocale::system().toDouble(number, &success);
+            }
             break;
         default: qFatal("Wrong mode"); break;
         }

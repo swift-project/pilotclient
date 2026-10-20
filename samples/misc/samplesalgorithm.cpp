@@ -29,7 +29,10 @@ namespace swift::sample
     int CSamplesAlgorithm::samples()
     {
         swift::misc::CSequence<int> seq;
-        for (int i = 1; i <= 100; ++i) { seq.push_back(i); }
+        for (int i = 1; i <= 100; ++i)
+        {
+            seq.push_back(i);
+        }
         const int samples = 200;
         swift::misc::CSequence<int> means;
         {
@@ -74,7 +77,10 @@ namespace swift::sample
             count++;
             return a[0] == b[0] && a[1] < b[1];
         };
-        for (const auto &s : src) { swift::misc::topologicallySortedInsert(dst, s, cmp); }
+        for (const auto &s : src)
+        {
+            swift::misc::topologicallySortedInsert(dst, s, cmp);
+        }
         qDebug() << count << "comparisons";
         qDebug() << dst;
         qDebug() << "topologicalSort";

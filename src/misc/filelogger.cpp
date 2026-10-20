@@ -66,9 +66,18 @@ namespace swift::misc
 
     void CFileLogger::writeStatusMessageToFile(const swift::misc::CStatusMessage &statusMessage)
     {
-        if (statusMessage.isEmpty()) { return; }
-        if (!m_logFile.isOpen()) { return; }
-        if (!m_logPattern.match(statusMessage)) { return; }
+        if (statusMessage.isEmpty())
+        {
+            return;
+        }
+        if (!m_logFile.isOpen())
+        {
+            return;
+        }
+        if (!m_logPattern.match(statusMessage))
+        {
+            return;
+        }
         const QString categories = statusMessage.getCategoriesAsString();
         if (categories != m_previousCategories)
         {
@@ -96,7 +105,10 @@ namespace swift::misc
         QDateTime now = QDateTime::currentDateTime();
         for (const auto &logFileInfo : dir.entryInfoList())
         {
-            if (logFileInfo.lastModified().daysTo(now) > 7) { dir.remove(logFileInfo.fileName()); }
+            if (logFileInfo.lastModified().daysTo(now) > 7)
+            {
+                dir.remove(logFileInfo.fileName());
+            }
         }
     }
 

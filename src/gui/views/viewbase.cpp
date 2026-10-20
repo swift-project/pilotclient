@@ -31,7 +31,10 @@ namespace swift::gui::views
     CViewBase<T>::CViewBase(QWidget *parent, ModelClass *model) : CViewBaseNonTemplate(parent), m_model(model)
     {
         this->setSortingEnabled(true);
-        if (model) { this->standardInit(model); }
+        if (model)
+        {
+            this->standardInit(model);
+        }
     }
 
     template <class T>
@@ -116,13 +119,19 @@ namespace swift::gui::views
     template <class T>
     void CViewBase<T>::updateContainerMaybeAsync(const ContainerType &container, bool sort, bool resize)
     {
-        if (container.isEmpty()) { this->clear(); }
+        if (container.isEmpty())
+        {
+            this->clear();
+        }
         else if (container.size() > ASyncRowsCountThreshold && sort)
         {
             // larger container with sorting
             this->updateContainerAsync(container, sort, resize);
         }
-        else { this->updateContainer(container, sort, resize); }
+        else
+        {
+            this->updateContainer(container, sort, resize);
+        }
     }
 
     template <class T>
@@ -137,7 +146,10 @@ namespace swift::gui::views
         else
         {
             m_model->insert(value);
-            if (resize) { this->performModeBasedResizeToContent(); }
+            if (resize)
+            {
+                this->performModeBasedResizeToContent();
+            }
         }
     }
 
@@ -153,7 +165,10 @@ namespace swift::gui::views
         else
         {
             m_model->insert(container);
-            if (resize) { this->performModeBasedResizeToContent(); }
+            if (resize)
+            {
+                this->performModeBasedResizeToContent();
+            }
         }
     }
 
@@ -169,7 +184,10 @@ namespace swift::gui::views
         else
         {
             m_model->push_back(value);
-            if (resize) { this->performModeBasedResizeToContent(); }
+            if (resize)
+            {
+                this->performModeBasedResizeToContent();
+            }
         }
     }
 
@@ -185,7 +203,10 @@ namespace swift::gui::views
         else
         {
             m_model->push_back(container);
-            if (resize) { this->performModeBasedResizeToContent(); }
+            if (resize)
+            {
+                this->performModeBasedResizeToContent();
+            }
         }
     }
 
@@ -210,7 +231,10 @@ namespace swift::gui::views
         for (const ObjectType &o : container)
         {
             const int i = this->rowOf(o);
-            if (i >= 0) { rows.push_back(i); }
+            if (i >= 0)
+            {
+                rows.push_back(i);
+            }
         }
         return rows;
     }
@@ -223,7 +247,10 @@ namespace swift::gui::views
         int i = 0;
         for (const ObjectType &o : objects)
         {
-            if (o == obj) { return i; }
+            if (o == obj)
+            {
+                return i;
+            }
             ++i;
         }
         return -1;
@@ -239,28 +266,46 @@ namespace swift::gui::views
     template <class T>
     typename CViewBase<T>::ContainerType CViewBase<T>::selectedObjects() const
     {
-        if (!this->hasSelection()) { return ContainerType(); }
+        if (!this->hasSelection())
+        {
+            return ContainerType();
+        }
         ContainerType c;
         const QModelIndexList indexes = this->selectedRows();
-        for (const QModelIndex &i : indexes) { c.push_back(this->at(i)); }
+        for (const QModelIndex &i : indexes)
+        {
+            c.push_back(this->at(i));
+        }
         return c;
     }
 
     template <class T>
     typename CViewBase<T>::ContainerType CViewBase<T>::unselectedObjects() const
     {
-        if (!this->hasSelection()) { return this->containerOrFilteredContainer(); }
+        if (!this->hasSelection())
+        {
+            return this->containerOrFilteredContainer();
+        }
         ContainerType c;
         const QModelIndexList indexes = this->unselectedRows();
-        for (const QModelIndex &i : indexes) { c.push_back(this->at(i)); }
+        for (const QModelIndex &i : indexes)
+        {
+            c.push_back(this->at(i));
+        }
         return c;
     }
 
     template <class T>
     typename CViewBase<T>::ObjectType CViewBase<T>::firstSelectedOrDefaultObject() const
     {
-        if (this->hasSelection()) { return this->selectedObjects().front(); }
-        if (this->rowCount() < 2) { return this->containerOrFilteredContainer().frontOrDefault(); }
+        if (this->hasSelection())
+        {
+            return this->selectedObjects().front();
+        }
+        if (this->rowCount() < 2)
+        {
+            return this->containerOrFilteredContainer().frontOrDefault();
+        }
 
         // too many, not selected
         return ObjectType();
@@ -269,8 +314,14 @@ namespace swift::gui::views
     template <class T>
     int CViewBase<T>::updateSelected(const CPropertyIndexVariantMap &vm)
     {
-        if (vm.isEmpty()) { return 0; }
-        if (!hasSelection()) { return 0; }
+        if (vm.isEmpty())
+        {
+            return 0;
+        }
+        if (!hasSelection())
+        {
+            return 0;
+        }
         int c = 0;
 
         int lastUpdatedRow = -1;
@@ -280,19 +331,34 @@ namespace swift::gui::views
 
         for (const QModelIndex &i : indexes)
         {
-            if (i.row() == lastUpdatedRow) { continue; }
+            if (i.row() == lastUpdatedRow)
+            {
+                continue;
+            }
             lastUpdatedRow = i.row();
-            if (firstUpdatedRow < 0 || lastUpdatedRow < firstUpdatedRow) { firstUpdatedRow = lastUpdatedRow; }
+            if (firstUpdatedRow < 0 || lastUpdatedRow < firstUpdatedRow)
+            {
+                firstUpdatedRow = lastUpdatedRow;
+            }
             ObjectType obj(this->at(i));
 
             // update all properties in map
-            for (const CPropertyIndex &pi : propertyIndexes) { obj.setPropertyByIndex(pi, vm.value(pi)); }
+            for (const CPropertyIndex &pi : propertyIndexes)
+            {
+                obj.setPropertyByIndex(pi, vm.value(pi));
+            }
 
             // and update container
-            if (this->derivedModel()->setInContainer(i, obj)) { c++; }
+            if (this->derivedModel()->setInContainer(i, obj))
+            {
+                c++;
+            }
         }
 
-        if (c > 0) { this->derivedModel()->emitDataChanged(firstUpdatedRow, lastUpdatedRow); }
+        if (c > 0)
+        {
+            this->derivedModel()->emitDataChanged(firstUpdatedRow, lastUpdatedRow);
+        }
         return c;
     }
 
@@ -313,8 +379,14 @@ namespace swift::gui::views
     template <class T>
     int CViewBase<T>::removeSelectedRows()
     {
-        if (!this->hasSelection()) { return 0; }
-        if (this->isEmpty()) { return 0; }
+        if (!this->hasSelection())
+        {
+            return 0;
+        }
+        if (this->isEmpty())
+        {
+            return 0;
+        }
 
         const int currentRows = this->rowCount();
         const ContainerType selected(this->selectedObjects());
@@ -353,7 +425,10 @@ namespace swift::gui::views
                 m_model->update(containerBackup, false);
             }
         }
-        else { this->fullResizeToContents(); }
+        else
+        {
+            this->fullResizeToContents();
+        }
     }
 
     template <class T>
@@ -367,8 +442,14 @@ namespace swift::gui::views
     void CViewBase<T>::materializeFilter()
     {
         Q_ASSERT(m_model);
-        if (!m_model->hasFilter()) { return; }
-        if (this->isEmpty()) { return; }
+        if (!m_model->hasFilter())
+        {
+            return;
+        }
+        if (this->isEmpty())
+        {
+            return;
+        }
         ContainerType filtered(m_model->containerFiltered());
         this->removeFilter();
         this->updateContainerMaybeAsync(filtered);
@@ -521,8 +602,14 @@ namespace swift::gui::views
     template <class T>
     void CViewBase<T>::addContainerTypesAsDropTypes(bool objectType, bool containerType)
     {
-        if (objectType) { m_model->addAcceptedMetaTypeId(qMetaTypeId<ObjectType>()); }
-        if (containerType) { m_model->addAcceptedMetaTypeId(qMetaTypeId<ContainerType>()); }
+        if (objectType)
+        {
+            m_model->addAcceptedMetaTypeId(qMetaTypeId<ObjectType>());
+        }
+        if (containerType)
+        {
+            m_model->addAcceptedMetaTypeId(qMetaTypeId<ContainerType>());
+        }
     }
 
     template <class T>
@@ -538,7 +625,10 @@ namespace swift::gui::views
     template <class T>
     void CViewBase<T>::setTabWidgetViewText(QTabWidget *tw, int index)
     {
-        if (!tw) { return; }
+        if (!tw)
+        {
+            return;
+        }
         QString o = tw->tabText(index);
         const QString f = this->hasFilter() ? "F" : "";
         o = CGuiUtility::replaceTabCountValue(o, this->rowCount()) + f;
@@ -550,7 +640,10 @@ namespace swift::gui::views
     {
         const int width = this->width() - 25; // avoid scrollbars etc, reserve a little space
         QList<int> widths = this->getColumns().calculateWidths(width);
-        if (widths.isEmpty()) { return; }
+        if (widths.isEmpty())
+        {
+            return;
+        }
         for (int c = 0; c < this->getColumns().size(); c++)
         {
             const int w = widths.at(c);
@@ -574,8 +667,14 @@ namespace swift::gui::views
         Q_ASSERT_X(model || m_model, Q_FUNC_INFO, "Missing model");
         if (model)
         {
-            if (model == m_model) { return; }
-            if (m_model) { m_model->disconnect(); }
+            if (model == m_model)
+            {
+                return;
+            }
+            if (m_model)
+            {
+                m_model->disconnect();
+            }
 
             m_model = model;
             m_model->setSelectionModel(this); // set myself as selection model
@@ -600,7 +699,10 @@ namespace swift::gui::views
     template <class T>
     bool CViewBase<T>::reachedResizeThreshold(int containerSize) const
     {
-        if (containerSize < 0) { return this->rowCount() > m_skipResizeThreshold; }
+        if (containerSize < 0)
+        {
+            return this->rowCount() > m_skipResizeThreshold;
+        }
         return containerSize > m_skipResizeThreshold;
     }
 
@@ -609,7 +711,10 @@ namespace swift::gui::views
     {
         // small set or large set? This only performs real resizing, no presizing
         // remark, see also presizeOrFullResizeToContents
-        if (this->isResizeConditionMet()) { this->fullResizeToContents(); }
+        if (this->isResizeConditionMet())
+        {
+            this->fullResizeToContents();
+        }
         else
         {
             m_resizeCount++; // skipped resize
@@ -693,7 +798,8 @@ namespace swift::gui::views
     CStatusMessage CViewBase<T>::loadJsonFile(const QString &fileName)
     {
         CStatusMessage m;
-        do {
+        do
+        {
             if (fileName.isEmpty())
             {
                 m = CStatusMessage(this).error(u"Load canceled, no file name");
@@ -744,10 +850,19 @@ namespace swift::gui::views
 
                 const int countBefore = container.size();
                 m = this->modifyLoadedJsonData(container);
-                if (m.isFailure()) { break; } // modification error
-                if (countBefore > 0 && container.isEmpty()) { break; }
+                if (m.isFailure())
+                {
+                    break;
+                } // modification error
+                if (countBefore > 0 && container.isEmpty())
+                {
+                    break;
+                }
                 m = this->validateLoadedJsonData(container);
-                if (m.isFailure()) { break; } // validaton error
+                if (m.isFailure())
+                {
+                    break;
+                } // validaton error
                 this->updateContainerMaybeAsync(container);
                 m = CStatusMessage(this, CStatusMessage::SeverityInfo, "Reading " + fileName + " completed", true);
                 this->jsonLoadedAndModelUpdated(container);
@@ -791,7 +906,10 @@ namespace swift::gui::views
         const QString fileName = QFileDialog::getSaveFileName(
             nullptr, tr("Save data file"), directory.isEmpty() ? this->getFileDialogFileName(false) : directory,
             tr("swift (*.json *.txt)"));
-        if (fileName.isEmpty()) { return CStatusMessage(this, CStatusMessage::SeverityDebug, u"Save canceled", true); }
+        if (fileName.isEmpty())
+        {
+            return CStatusMessage(this, CStatusMessage::SeverityDebug, u"Save canceled", true);
+        }
         const QString json(this->toJsonString(QJsonDocument::Indented, selectedOnly)); // save as CVariant JSON
 
         // save file
@@ -804,10 +922,19 @@ namespace swift::gui::views
     void CViewBase<T>::copy()
     {
         QClipboard *clipboard = QApplication::clipboard();
-        if (!clipboard) { return; }
-        if (!this->hasSelection()) { return; }
+        if (!clipboard)
+        {
+            return;
+        }
+        if (!this->hasSelection())
+        {
+            return;
+        }
         const ContainerType selection = this->selectedObjects();
-        if (selection.isEmpty()) { return; }
+        if (selection.isEmpty())
+        {
+            return;
+        }
         const CVariant copyJson = CVariant::fromValue(selection);
         const QString json = copyJson.toJsonString();
         clipboard->setText(json);
@@ -816,7 +943,10 @@ namespace swift::gui::views
     template <class T>
     void CViewBase<T>::cut()
     {
-        if (!QApplication::clipboard()) { return; }
+        if (!QApplication::clipboard())
+        {
+            return;
+        }
         this->copy();
         this->removeSelectedRows();
     }
@@ -825,15 +955,27 @@ namespace swift::gui::views
     void CViewBase<T>::paste()
     {
         const QClipboard *clipboard = QApplication::clipboard();
-        if (!clipboard) { return; }
+        if (!clipboard)
+        {
+            return;
+        }
         const QString json = clipboard->text();
-        if (json.isEmpty()) { return; }
-        if (!json::looksLikeSwiftJson(json)) { return; } // no JSON
+        if (json.isEmpty())
+        {
+            return;
+        }
+        if (!json::looksLikeSwiftJson(json))
+        {
+            return;
+        } // no JSON
         try
         {
             ContainerType objects;
             objects.convertFromJson(json);
-            if (!objects.isEmpty()) { this->insert(objects); }
+            if (!objects.isEmpty())
+            {
+                this->insert(objects);
+            }
         }
         catch (const CJsonException &ex)
         {
@@ -853,16 +995,28 @@ namespace swift::gui::views
     {
         if (enabled)
         {
-            if (!m_filterWidget) { this->removeFilter(); }
+            if (!m_filterWidget)
+            {
+                this->removeFilter();
+            }
             else
             {
                 // takes the filter and triggers the filtering
                 auto *provider = dynamic_cast<IModelFilterProvider<ContainerType> *>(m_filterWidget);
                 Q_ASSERT_X(provider, Q_FUNC_INFO, "Filter widget does not provide interface");
-                if (!provider) { return false; }
+                if (!provider)
+                {
+                    return false;
+                }
                 std::unique_ptr<IModelFilter<ContainerType>> f(provider->createModelFilter());
-                if (f->isValid()) { this->takeFilterOwnership(f); }
-                else { this->removeFilter(); }
+                if (f->isValid())
+                {
+                    this->takeFilterOwnership(f);
+                }
+                else
+                {
+                    this->removeFilter();
+                }
             }
         }
         else
@@ -876,24 +1030,42 @@ namespace swift::gui::views
     template <class T>
     void CViewBase<T>::onClicked(const QModelIndex &index)
     {
-        if (!m_acceptClickSelection) { return; }
-        if (!index.isValid()) { return; }
+        if (!m_acceptClickSelection)
+        {
+            return;
+        }
+        if (!index.isValid())
+        {
+            return;
+        }
         emit this->objectClicked(CVariant::fromValue(at(index)));
     }
 
     template <class T>
     void CViewBase<T>::onDoubleClicked(const QModelIndex &index)
     {
-        if (!m_acceptDoubleClickSelection) { return; }
-        if (!index.isValid()) { return; }
+        if (!m_acceptDoubleClickSelection)
+        {
+            return;
+        }
+        if (!index.isValid())
+        {
+            return;
+        }
         emit this->objectDoubleClicked(CVariant::fromValue(at(index)));
     }
 
     template <class T>
     void CViewBase<T>::onRowSelected(const QModelIndex &index)
     {
-        if (!m_acceptRowSelection) { return; }
-        if (!index.isValid()) { return; }
+        if (!m_acceptRowSelection)
+        {
+            return;
+        }
+        if (!index.isValid())
+        {
+            return;
+        }
         emit this->objectSelected(CVariant::fromValue(at(index)));
     }
 

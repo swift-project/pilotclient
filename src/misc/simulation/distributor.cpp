@@ -31,21 +31,33 @@ namespace swift::misc::simulation
         {
             return this->getDbKey() % u' ' % this->getDescription();
         }
-        if (!this->getDbKey().isEmpty()) { return this->getDbKey(); }
+        if (!this->getDbKey().isEmpty())
+        {
+            return this->getDbKey();
+        }
         return {};
     }
 
     bool CDistributor::matchesKeyOrAlias(const QString &keyOrAlias) const
     {
         QString s(keyOrAlias.trimmed().toUpper());
-        if (s.isEmpty()) { return false; }
+        if (s.isEmpty())
+        {
+            return false;
+        }
         return (getDbKey() == s || getAlias1() == s || getAlias2() == s);
     }
 
     bool CDistributor::matchesKeyOrAlias(const CDistributor &distributor) const
     {
-        if (distributor.hasValidDbKey() && this->matchesKeyOrAlias(distributor.getDbKey())) { return true; }
-        if (distributor.hasAlias1() && this->matchesKeyOrAlias(distributor.getAlias1())) { return true; }
+        if (distributor.hasValidDbKey() && this->matchesKeyOrAlias(distributor.getDbKey()))
+        {
+            return true;
+        }
+        if (distributor.hasAlias1() && this->matchesKeyOrAlias(distributor.getAlias1()))
+        {
+            return true;
+        }
         return (distributor.hasAlias2() && this->matchesKeyOrAlias(distributor.getAlias2()));
     }
 
@@ -56,12 +68,18 @@ namespace swift::misc::simulation
 
     QVariant CDistributor::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         if (IDatastoreObjectWithStringKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithStringKey::propertyByIndex(index);
         }
-        if (IOrderable::canHandleIndex(index)) { return IOrderable::propertyByIndex(index); }
+        if (IOrderable::canHandleIndex(index))
+        {
+            return IOrderable::propertyByIndex(index);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -109,7 +127,10 @@ namespace swift::misc::simulation
         {
             return IDatastoreObjectWithStringKey::comparePropertyByIndex(index, compareValue);
         }
-        if (IOrderable::canHandleIndex(index)) { return IOrderable::comparePropertyByIndex(index, compareValue); }
+        if (IOrderable::canHandleIndex(index))
+        {
+            return IOrderable::comparePropertyByIndex(index, compareValue);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -129,8 +150,14 @@ namespace swift::misc::simulation
     {
         Q_UNUSED(i18n)
         QString s = QStringLiteral("Id: '%1'").arg(m_dbKey);
-        if (this->hasAlias1()) { s.append(" ").append(m_alias1); }
-        if (this->hasAlias2()) { s.append(" ").append(m_alias2); }
+        if (this->hasAlias1())
+        {
+            s.append(" ").append(m_alias1);
+        }
+        if (this->hasAlias2())
+        {
+            s.append(" ").append(m_alias2);
+        }
         return s;
     }
 
@@ -163,9 +190,18 @@ namespace swift::misc::simulation
             return;
         }
 
-        if (!this->hasAlias1()) { this->setAlias1(otherDistributor.getAlias1()); }
-        if (!this->hasAlias2()) { this->setAlias1(otherDistributor.getAlias2()); }
-        if (!this->hasDescription()) { this->setDescription(otherDistributor.getDescription()); }
+        if (!this->hasAlias1())
+        {
+            this->setAlias1(otherDistributor.getAlias1());
+        }
+        if (!this->hasAlias2())
+        {
+            this->setAlias1(otherDistributor.getAlias2());
+        }
+        if (!this->hasDescription())
+        {
+            this->setDescription(otherDistributor.getDescription());
+        }
     }
 
     CDistributor CDistributor::fromDatabaseJson(const QJsonObject &json, const QString &prefix)

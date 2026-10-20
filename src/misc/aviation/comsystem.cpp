@@ -36,7 +36,10 @@ namespace swift::misc::aviation
 
     void CComSystem::setFrequencyActive(const CFrequency &frequency)
     {
-        if (frequency == this->getFrequencyActive()) { return; } // save all the comparisons / rounding
+        if (frequency == this->getFrequencyActive())
+        {
+            return;
+        } // save all the comparisons / rounding
         CFrequency fRounded(frequency);
         roundToChannelSpacing(fRounded, m_channelSpacing);
         this->CModulator::setFrequencyActive(fRounded);
@@ -44,7 +47,10 @@ namespace swift::misc::aviation
 
     void CComSystem::setFrequencyStandby(const CFrequency &frequency)
     {
-        if (frequency == this->getFrequencyStandby()) { return; } // save all the comparisons / rounding
+        if (frequency == this->getFrequencyStandby())
+        {
+            return;
+        } // save all the comparisons / rounding
         CFrequency fRounded(frequency);
         roundToChannelSpacing(fRounded, m_channelSpacing);
         this->CModulator::setFrequencyStandby(fRounded);
@@ -107,7 +113,10 @@ namespace swift::misc::aviation
 
     bool CComSystem::isValidComFrequency(const CFrequency &f)
     {
-        if (f.isNull()) { return false; }
+        if (f.isNull())
+        {
+            return false;
+        }
         return isValidCivilAviationFrequency(f) || isValidMilitaryFrequency(f);
     }
 
@@ -123,11 +132,17 @@ namespace swift::misc::aviation
         {
             const int diff = static_cast<int>(fKHz) % 5;
             int lower = fKHz - diff;
-            if (!isValid8_33kHzChannel(lower)) { lower -= 5; }
+            if (!isValid8_33kHzChannel(lower))
+            {
+                lower -= 5;
+            }
             Q_ASSERT_X(isValid8_33kHzChannel(lower), Q_FUNC_INFO, "Lower frequency not valid");
 
             int upper = fKHz + (5 - diff);
-            if (!isValid8_33kHzChannel(upper)) { upper += 5; }
+            if (!isValid8_33kHzChannel(upper))
+            {
+                upper += 5;
+            }
             Q_ASSERT_X(isValid8_33kHzChannel(upper), Q_FUNC_INFO, "Upper frequency not valid");
 
             const int lowerDiff = abs(fKHz - lower);
@@ -141,7 +156,10 @@ namespace swift::misc::aviation
 
     void CComSystem::roundToChannelSpacing(CFrequency &frequency, ChannelSpacing channelSpacing)
     {
-        if (frequency.isNull()) { return; }
+        if (frequency.isNull())
+        {
+            return;
+        }
         const double channelSpacingKHz = CComSystem::channelSpacingToFrequencyKHz(channelSpacing);
         const double fKHz = frequency.valueRounded(CFrequencyUnit::kHz(), 0);
 
@@ -166,7 +184,10 @@ namespace swift::misc::aviation
     bool CComSystem::isExclusiveWithin8_33kHzChannel(const physical_quantities::CFrequency &freq)
     {
         const int freqKHz = freq.value(CFrequencyUnit::kHz());
-        if (freqKHz < 118000 || freqKHz >= 137000 || !isValid8_33kHzChannel(freqKHz)) { return false; }
+        if (freqKHz < 118000 || freqKHz >= 137000 || !isValid8_33kHzChannel(freqKHz))
+        {
+            return false;
+        }
         return !isWithin25kHzChannel(freq);
     }
 
@@ -179,19 +200,28 @@ namespace swift::misc::aviation
     bool CComSystem::isSameFrequency(const CFrequency &freq1, const CFrequency &freq2)
     {
         using namespace swift::misc::physical_quantities::Literals;
-        if (freq1.isNull() || freq2.isNull()) { return false; }
+        if (freq1.isNull() || freq2.isNull())
+        {
+            return false;
+        }
 
         // Normalize .x20 => .x25 and .70 => .x75
         auto normalize = [](CFrequency freq) {
             const int freq_end = static_cast<int>(freq.value(CFrequencyUnit::kHz())) % 100;
-            if (freq_end == 20 || freq_end == 70) { freq += 5_kHz; }
+            if (freq_end == 20 || freq_end == 70)
+            {
+                freq += 5_kHz;
+            }
             return freq;
         };
 
         CFrequency normalized_freq1 = normalize(freq1);
         CFrequency normalized_freq2 = normalize(freq2);
 
-        if (normalized_freq1 == normalized_freq2) { return true; } // shortcut for many of such comparisons
+        if (normalized_freq1 == normalized_freq2)
+        {
+            return true;
+        } // shortcut for many of such comparisons
 
         // Avoid precision errors in Hz range
         return normalized_freq1.valueInteger(CFrequencyUnit::kHz()) ==
@@ -200,7 +230,10 @@ namespace swift::misc::aviation
 
     CFrequency CComSystem::parseComFrequency(const QString &input, CPqString::SeparatorMode sep)
     {
-        if (input.isEmpty()) { return CFrequency::null(); }
+        if (input.isEmpty())
+        {
+            return CFrequency::null();
+        }
         CFrequency comFreq;
         if (isDigitsOnlyString(input))
         {
@@ -214,12 +247,21 @@ namespace swift::misc::aviation
             {
                 bool ok {};
                 const double f = CPqString::parseNumber(input, ok, sep);
-                if (ok) { comFreq = CFrequency(f, f > 999 ? CFrequencyUnit::kHz() : CFrequencyUnit::MHz()); }
-                else { comFreq = CFrequency::null(); }
+                if (ok)
+                {
+                    comFreq = CFrequency(f, f > 999 ? CFrequencyUnit::kHz() : CFrequencyUnit::MHz());
+                }
+                else
+                {
+                    comFreq = CFrequency::null();
+                }
             }
         }
 
-        if (comFreq.isNull()) { return CFrequency::null(); }
+        if (comFreq.isNull())
+        {
+            return CFrequency::null();
+        }
         roundToChannelSpacing(comFreq, ChannelSpacing8_33KHz);
         return isValidComFrequency(comFreq) ? comFreq : CFrequency::null();
     }

@@ -22,7 +22,10 @@ namespace swift::misc::simulation::xplane
 
     QVariant CNavDataReference::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         return ICoordinateGeodetic::canHandleIndex(index) ? ICoordinateGeodetic::propertyByIndex(index) :
                                                             CValueObject::propertyByIndex(index);
     }

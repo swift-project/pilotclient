@@ -46,14 +46,20 @@ namespace swift::misc
 
     void CLogMessage::preformatted(const CStatusMessage &statusMessage)
     {
-        if (statusMessage.isEmpty()) { return; } // just skip empty messages
+        if (statusMessage.isEmpty())
+        {
+            return;
+        } // just skip empty messages
         CLogMessage(statusMessage.getCategories()).log(statusMessage.getSeverity(), u"%1")
             << statusMessage.getMessage();
     }
 
     void CLogMessage::preformatted(const CStatusMessageList &statusMessages)
     {
-        for (const auto &msg : statusMessages) { preformatted(msg); }
+        for (const auto &msg : statusMessages)
+        {
+            preformatted(msg);
+        }
     }
 } // namespace swift::misc
 

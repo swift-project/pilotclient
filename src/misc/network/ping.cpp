@@ -13,10 +13,16 @@ namespace swift::misc::network
 {
     bool canPing(const QString &hostAddress)
     {
-        if (hostAddress.isEmpty()) { return false; }
+        if (hostAddress.isEmpty())
+        {
+            return false;
+        }
         QProcess process;
         process.setProgram("ping");
-        if (CBuildConfig::isRunningOnWindowsNtPlatform()) { process.setArguments({ "-n", "1", hostAddress }); }
+        if (CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
+            process.setArguments({ "-n", "1", hostAddress });
+        }
         else
         {
             // all UNIX alike
@@ -25,18 +31,30 @@ namespace swift::misc::network
         process.start();
         process.waitForFinished();
         const int rc = process.exitCode();
-        if (rc != 0) { return false; }
+        if (rc != 0)
+        {
+            return false;
+        }
 
         const QString std = process.readAllStandardOutput();
         const QString err = process.readAllStandardError();
-        if (std.contains("unreachable", Qt::CaseInsensitive)) { return false; }
-        if (err.contains("unreachable", Qt::CaseInsensitive)) { return false; }
+        if (std.contains("unreachable", Qt::CaseInsensitive))
+        {
+            return false;
+        }
+        if (err.contains("unreachable", Qt::CaseInsensitive))
+        {
+            return false;
+        }
         return true;
     }
 
     bool canPing(const QUrl &url)
     {
-        if (url.isEmpty()) { return false; }
+        if (url.isEmpty())
+        {
+            return false;
+        }
         return canPing(url.host());
     }
 } // namespace swift::misc::network

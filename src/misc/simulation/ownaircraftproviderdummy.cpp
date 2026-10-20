@@ -79,7 +79,10 @@ namespace swift::misc::simulation
                                                              CComSystem::ComUnit comUnit,
                                                              const swift::misc::CIdentifier &originator)
     {
-        if (!CComSystem::isValidComFrequency(frequency)) { return false; }
+        if (!CComSystem::isValidComFrequency(frequency))
+        {
+            return false;
+        }
         QWriteLocker l(&m_lock);
         CComSystem com = m_ownAircraft.getComSystem(comUnit);
         com.setFrequencyActive(frequency);

@@ -38,7 +38,10 @@ namespace swift::gui::components
         // start updater if not yet done
         QPointer<CSettingsModelComponent> myself(this);
         QTimer::singleShot(2500, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->consolidationEntered();
         });
     }
@@ -48,7 +51,10 @@ namespace swift::gui::components
     int CSettingsModelComponent::getBackgroundUpdaterIntervallSecs() const
     {
         const QString v = ui->le_ConsolidateSecs->text().trimmed();
-        if (v.isEmpty()) { return -1; }
+        if (v.isEmpty())
+        {
+            return -1;
+        }
         bool ok = false;
         const int secs = v.toInt(&ok);
         return ok ? secs : -1;
@@ -59,7 +65,10 @@ namespace swift::gui::components
     void CSettingsModelComponent::consolidationEntered()
     {
         int v = this->getBackgroundUpdaterIntervallSecs();
-        if (v < TBackgroundConsolidation::minSecs()) { v = -1; }
+        if (v < TBackgroundConsolidation::minSecs())
+        {
+            v = -1;
+        }
 
         const CStatusMessage m = m_consolidationSetting.setAndSave(v);
         CLogMessage::preformatted(m);
@@ -69,7 +78,10 @@ namespace swift::gui::components
     void CSettingsModelComponent::allowExcludedModelsChanged(bool allow)
     {
         CModelSettings ms = m_modelSettings.get();
-        if (ms.getAllowExcludedModels() == allow) { return; }
+        if (ms.getAllowExcludedModels() == allow)
+        {
+            return;
+        }
         ms.setAllowExcludedModels(allow);
         const CStatusMessage msg = m_modelSettings.setAndSave(ms);
         CLogMessage::preformatted(msg);

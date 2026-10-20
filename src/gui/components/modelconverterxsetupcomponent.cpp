@@ -28,7 +28,10 @@ namespace swift::gui::components
     void CModelConverterXSetupComponent::selectBinary()
     {
         QString defaultValue = m_setting.get();
-        if (defaultValue.isEmpty()) { defaultValue = QDir::currentPath(); }
+        if (defaultValue.isEmpty())
+        {
+            defaultValue = QDir::currentPath();
+        }
         const QString fileName =
             QFileDialog::getOpenFileName(nullptr, tr("ModelConverterX binary"), defaultValue, "*.exe");
         ui->le_McxBinary->setText(fileName);

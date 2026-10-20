@@ -47,7 +47,10 @@ namespace swift::gui::components
     void CSettingsXSwiftBusComponent::saveServer()
     {
         const QString dBusAddress = ui->comp_DBusServer->getDBusAddress();
-        if (dBusAddress.isEmpty()) { return; }
+        if (dBusAddress.isEmpty())
+        {
+            return;
+        }
         CXSwiftBusSettings s = m_xSwiftBusSettings.getThreadLocal();
 
         if (dBusAddress != s.getDBusServerAddressQt())

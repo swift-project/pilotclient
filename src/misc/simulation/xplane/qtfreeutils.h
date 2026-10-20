@@ -24,8 +24,14 @@ namespace swift::misc::simulation::xplane::qtfreeutils
     {
         const std::string seperator = "/\\";
         const std::size_t sepPos = filePath.find_last_of(seperator);
-        if (sepPos != std::string::npos) { return filePath.substr(sepPos + 1, filePath.size() - 1); }
-        else { return filePath; }
+        if (sepPos != std::string::npos)
+        {
+            return filePath.substr(sepPos + 1, filePath.size() - 1);
+        }
+        else
+        {
+            return filePath;
+        }
     }
 
     //! Get the name of the parent directory
@@ -38,7 +44,10 @@ namespace swift::misc::simulation::xplane::qtfreeutils
             std::string dirPath = filePath.substr(0, sepPos);
             return getFileName(dirPath);
         }
-        else { return {}; }
+        else
+        {
+            return {};
+        }
     }
 
     //! Get the base name of the file
@@ -47,8 +56,14 @@ namespace swift::misc::simulation::xplane::qtfreeutils
         const std::string seperator = ".";
         const std::string fileName = getFileName(filePath);
         std::size_t sepPos = fileName.find(seperator);
-        if (sepPos != std::string::npos) { return fileName.substr(0, sepPos); }
-        else { return fileName; }
+        if (sepPos != std::string::npos)
+        {
+            return fileName.substr(0, sepPos);
+        }
+        else
+        {
+            return fileName;
+        }
     }
 
     //! Split string by delimiter and maxSplitCount times
@@ -62,7 +77,10 @@ namespace swift::misc::simulation::xplane::qtfreeutils
         {
             tokens.push_back(s.substr(0, pos));
             s.erase(0, pos + delimiter.length());
-            if (maxSplitCount > 0 && tokens.size() == maxSplitCount) { break; }
+            if (maxSplitCount > 0 && tokens.size() == maxSplitCount)
+            {
+                break;
+            }
         }
         tokens.push_back(s);
         return tokens;
@@ -72,7 +90,10 @@ namespace swift::misc::simulation::xplane::qtfreeutils
     inline double normalizeValue(const double value, const double start, const double end)
     {
         // https://stackoverflow.com/questions/1628386/normalise-orientation-between-0-and-360
-        if (value >= start && value <= end) { return value; }
+        if (value >= start && value <= end)
+        {
+            return value;
+        }
         const double width = end - start;
         const double offsetValue = value - start; // value relative to 0
         return (offsetValue - (floor(offsetValue / width) * width)) + start;
@@ -99,7 +120,10 @@ namespace swift::misc::simulation::xplane::qtfreeutils
                 {
                     return acfProperties.modelName;
                 }
-                else { return acfProperties.author + ' ' + acfProperties.modelName; }
+                else
+                {
+                    return acfProperties.author + ' ' + acfProperties.modelName;
+                }
             }
             else if (!acfProperties.aircraftIcaoCode.empty())
             {
@@ -119,7 +143,10 @@ namespace swift::misc::simulation::xplane::qtfreeutils
     //! Compare case insensitive
     inline bool stringCompareCaseInsensitive(const std::string &str1, const std::string &str2)
     {
-        if (str1.size() != str2.size()) { return false; }
+        if (str1.size() != str2.size())
+        {
+            return false;
+        }
         return std::equal(str1.begin(), str1.end(), str2.begin(), [](const char &c1, const char &c2) {
             return (c1 == c2 || std::toupper(c1) == std::toupper(c2));
         });
@@ -158,11 +185,20 @@ namespace swift::misc::simulation::xplane::qtfreeutils
         {
             if (std::isspace(c))
             {
-                if (!result.empty() && result.back() != ' ') { result.push_back(' '); }
+                if (!result.empty() && result.back() != ' ')
+                {
+                    result.push_back(' ');
+                }
             }
-            else { result.push_back(c); }
+            else
+            {
+                result.push_back(c);
+            }
         }
-        while (!result.empty() && result.back() == ' ') { result.pop_back(); }
+        while (!result.empty() && result.back() == ' ')
+        {
+            result.pop_back();
+        }
         return result;
     }
 
@@ -170,7 +206,10 @@ namespace swift::misc::simulation::xplane::qtfreeutils
     inline AcfProperties extractAcfProperties(const std::string &filePath)
     {
         std::ifstream fs(filePath, std::ios::in);
-        if (!fs.is_open()) { return {}; }
+        if (!fs.is_open())
+        {
+            return {};
+        }
 
         std::string i;
         std::string version;
@@ -190,20 +229,41 @@ namespace swift::misc::simulation::xplane::qtfreeutils
             while (std::getline(fs, line))
             {
                 auto tokens = split(line, 2);
-                if (tokens.size() < 3 || tokens.at(0) != "P") { continue; }
+                if (tokens.size() < 3 || tokens.at(0) != "P")
+                {
+                    continue;
+                }
 
-                if (tokens.at(1) == "acf/_ICAO") { acfProperties.aircraftIcaoCode = tokens.at(2); }
-                else if (tokens.at(1) == "acf/_descrip") { acfProperties.modelDescription = "[ACF] " + tokens.at(2); }
-                else if (tokens.at(1) == "acf/_name") { acfProperties.modelName = tokens.at(2); }
-                else if (tokens.at(1) == "acf/_studio") { acfProperties.author = tokens.at(2); }
+                if (tokens.at(1) == "acf/_ICAO")
+                {
+                    acfProperties.aircraftIcaoCode = tokens.at(2);
+                }
+                else if (tokens.at(1) == "acf/_descrip")
+                {
+                    acfProperties.modelDescription = "[ACF] " + tokens.at(2);
+                }
+                else if (tokens.at(1) == "acf/_name")
+                {
+                    acfProperties.modelName = tokens.at(2);
+                }
+                else if (tokens.at(1) == "acf/_studio")
+                {
+                    acfProperties.author = tokens.at(2);
+                }
                 else if (tokens.at(1) == "acf/_author")
                 {
-                    if (!acfProperties.author.empty()) { continue; }
+                    if (!acfProperties.author.empty())
+                    {
+                        continue;
+                    }
                     std::string author = tokens.at(2);
                     size_t pos =
                         author.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_");
                     author = author.substr(0, pos);
-                    if (author.empty()) { continue; }
+                    if (author.empty())
+                    {
+                        continue;
+                    }
                     acfProperties.author = author;
                 }
             }
@@ -255,7 +315,8 @@ namespace swift::misc::simulation::xplane::qtfreeutils
             constexpr auto isContinuation = [](auto c) {
                 return (c & static_cast<value_type>(0b11000000)) == static_cast<value_type>(0b10000000);
             };
-            do {
+            do
+            {
                 ++base;
             }
             while (base != end && isContinuation(*base));

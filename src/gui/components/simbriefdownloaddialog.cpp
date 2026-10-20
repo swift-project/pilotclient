@@ -33,7 +33,10 @@ namespace swift::gui::components
     {
         this->setSimBriefData(m_simBrief.get());
         const int r = QDialog::exec();
-        if (r == Accepted) { m_simBrief.set(this->getSimBriefData()); }
+        if (r == Accepted)
+        {
+            m_simBrief.set(this->getSimBriefData());
+        }
         return r;
     }
 } // namespace swift::gui::components

@@ -33,7 +33,10 @@ namespace swift::gui
     void CDockWidgetInfoBar::onStyleSheetsChanged()
     {
         // overridden from CDockWidget
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         const QString st = sGui->getStyleSheetUtility().style(CStyleSheetUtility::fileNameInfoBar());
         this->setStyleSheet("");
         this->setStyleSheet(st);

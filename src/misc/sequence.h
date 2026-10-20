@@ -290,7 +290,10 @@ namespace swift::misc
         //! Changes the size of the sequence, if it is bigger than the given size.
         void truncate(size_type maxSize)
         {
-            if (size() > maxSize) { erase(begin() + maxSize, end()); }
+            if (size() > maxSize)
+            {
+                erase(begin() + maxSize, end());
+            }
         }
 
         //! Inserts an element into the sequence.
@@ -314,7 +317,10 @@ namespace swift::misc
         void push_frontMaxElements(const T &value, int maxElements)
         {
             Q_ASSERT(maxElements > 1);
-            if (this->size() >= (maxElements - 1)) { this->truncate(maxElements - 1); }
+            if (this->size() >= (maxElements - 1))
+            {
+                this->truncate(maxElements - 1);
+            }
             this->push_front(value);
         }
 
@@ -322,7 +328,10 @@ namespace swift::misc
         void push_backMaxElements(const T &value, int maxElements)
         {
             Q_ASSERT(maxElements > 1);
-            while (this->size() >= (maxElements - 1)) { this->pop_front(); }
+            while (this->size() >= (maxElements - 1))
+            {
+                this->pop_front();
+            }
             this->push_back(value);
         }
 
@@ -413,7 +422,10 @@ namespace swift::misc
             int count = 0;
             for (auto &value : *this)
             {
-                if (p(value) && !value.apply(newValues, skipEqualValues).isEmpty()) { count++; }
+                if (p(value) && !value.apply(newValues, skipEqualValues).isEmpty())
+                {
+                    count++;
+                }
             }
             return count;
         }
@@ -520,8 +532,14 @@ namespace swift::misc
         //! Replace elements matching the given element. If there is no match, push the new element on the end.
         void replaceOrAdd(const T &original, const T &replacement)
         {
-            if (this->contains(original)) { replace(original, replacement); }
-            else { push_back(replacement); }
+            if (this->contains(original))
+            {
+                replace(original, replacement);
+            }
+            else
+            {
+                push_back(replacement);
+            }
         }
 
         //! Replace elements matching the given element. If there is no match, push the new element on the end.
@@ -530,7 +548,10 @@ namespace swift::misc
         //! Replace or add given elements
         void replaceOrAdd(const CSequence<T> &replacements)
         {
-            for (const T &replacement : replacements) { this->replaceOrAdd(replacement, replacement); }
+            for (const T &replacement : replacements)
+            {
+                this->replaceOrAdd(replacement, replacement);
+            }
         }
 
         //! Replace elements matching a particular key/value pair. If there is no match, push the new element on the
@@ -540,8 +561,14 @@ namespace swift::misc
         template <class K1, class V1>
         void replaceOrAdd(K1 key1, V1 value1, const T &replacement)
         {
-            if (this->contains(key1, value1)) { replaceIf(key1, value1, replacement); }
-            else { push_back(replacement); }
+            if (this->contains(key1, value1))
+            {
+                replaceIf(key1, value1, replacement);
+            }
+            else
+            {
+                push_back(replacement);
+            }
         }
 
         //! In-place reverse
@@ -637,8 +664,14 @@ namespace swift::misc
         template <class U, class Key0, class... Keys>
         bool unorderedEqualsByKeys(const U &other, Key0 k0, Keys... keys) const
         {
-            if (equalPointers(this, &other)) { return true; }
-            if (size() != other.size()) { return false; }
+            if (equalPointers(this, &other))
+            {
+                return true;
+            }
+            if (size() != other.size())
+            {
+                return false;
+            }
             return sorted(k0, keys...).equalsByKeys(other.sorted(k0, keys...));
         }
 

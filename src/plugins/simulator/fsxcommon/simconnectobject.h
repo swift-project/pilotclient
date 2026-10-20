@@ -261,7 +261,10 @@ namespace swift::simplugin::fsxcommon
         //! Decrease adding exception
         void decreaseAddingExceptions()
         {
-            if (m_addingExceptions > 0) { m_addingExceptions--; }
+            if (m_addingExceptions > 0)
+            {
+                m_addingExceptions--;
+            }
         }
 
         //! Adding and directly removed

@@ -81,8 +81,14 @@ namespace swift::gui::filters
             ui->le_Description->setText("*" + icao.getModelDescription() + "*");
             filter = true;
         }
-        if (filter) { ui->filter_Buttons->clickButton(CFilterBarButtons::Filter); }
-        else { ui->filter_Buttons->clickButton(CFilterBarButtons::RemoveFilter); }
+        if (filter)
+        {
+            ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
+        }
+        else
+        {
+            ui->filter_Buttons->clickButton(CFilterBarButtons::RemoveFilter);
+        }
     }
 
     void CAircraftIcaoFilterBar::hideDescriptionField(bool hide) { ui->le_Description->setVisible(!hide); }
@@ -103,10 +109,19 @@ namespace swift::gui::filters
 
     void CAircraftIcaoFilterBar::initCompleters()
     {
-        if (m_hasCompleters) { return; }
-        if (!sGui || !sGui->hasWebDataServices()) { return; }
+        if (m_hasCompleters)
+        {
+            return;
+        }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return;
+        }
 
-        if (sGui->getWebDataServices()->getAircraftIcaoCodesCount() < 1) { return; }
+        if (sGui->getWebDataServices()->getAircraftIcaoCodesCount() < 1)
+        {
+            return;
+        }
         m_hasCompleters = true;
         const CAircraftIcaoCodeList codes = sGui->getWebDataServices()->getAircraftIcaoCodes();
         const QStringList designators = codes.allDesignators().values();

@@ -9,13 +9,19 @@ namespace swift::misc::aviation
 {
     CSsrEquipment::CSsrEquipment(SSrEquipment equipment) : m_equipment(equipment)
     {
-        if (m_equipment == SSrEquipment()) { m_equipment = None; }
+        if (m_equipment == SSrEquipment())
+        {
+            m_equipment = None;
+        }
     }
 
     CSsrEquipment::CSsrEquipment(QString equipment)
     {
 
-        if (equipment.isEmpty()) { return; }
+        if (equipment.isEmpty())
+        {
+            return;
+        }
 
         m_equipment = {}; // Clear default flag
 

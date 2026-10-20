@@ -18,6 +18,9 @@ namespace swift::misc::aviation
             return s.append(this->isMagneticTrack() ? QCoreApplication::translate("Aviation", "magnetic") :
                                                       QCoreApplication::translate("Aviation", "true"));
         }
-        else { return s.append(this->isMagneticTrack() ? "magnetic" : "true"); }
+        else
+        {
+            return s.append(this->isMagneticTrack() ? "magnetic" : "true");
+        }
     }
 } // namespace swift::misc::aviation

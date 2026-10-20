@@ -57,7 +57,10 @@ namespace swift::gui::components
 
     void CUserComponent::update()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork())
+        {
+            return;
+        }
         Q_ASSERT(ui->tvp_AllUsers);
         Q_ASSERT(ui->tvp_Clients);
 
@@ -100,7 +103,10 @@ namespace swift::gui::components
             ui->tvp_Clients->clear();
             m_updateTimer.stop();
         }
-        else if (to.isConnected()) { m_updateTimer.start(); }
+        else if (to.isConnected())
+        {
+            m_updateTimer.start();
+        }
     }
 
     void CUserComponent::onSettingsChanged()

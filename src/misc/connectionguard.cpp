@@ -13,7 +13,10 @@ namespace swift::misc
 
     bool CConnectionGuard::append(const QMetaObject::Connection &connection)
     {
-        if (!connection) { return false; }
+        if (!connection)
+        {
+            return false;
+        }
         m_connections.append(connection);
         return true;
     }
@@ -23,8 +26,14 @@ namespace swift::misc
         int c = 0;
         for (const QMetaObject::Connection &connection : connections)
         {
-            if (!connection) { continue; }
-            if (this->append(connection)) { c++; }
+            if (!connection)
+            {
+                continue;
+            }
+            if (this->append(connection))
+            {
+                c++;
+            }
         }
         return c > 0;
     }
@@ -33,11 +42,17 @@ namespace swift::misc
 
     int CConnectionGuard::disconnectAll()
     {
-        if (m_connections.isEmpty()) { return 0; }
+        if (m_connections.isEmpty())
+        {
+            return 0;
+        }
         int c = 0;
         for (const QMetaObject::Connection &con : std::as_const(m_connections))
         {
-            if (QObject::disconnect(con)) { c++; }
+            if (QObject::disconnect(con))
+            {
+                c++;
+            }
         }
         m_connections.clear();
         return c;

@@ -18,7 +18,10 @@ namespace swift::misc
 
     void CCrashInfo::appendInfo(const QString &extraInfo)
     {
-        if (extraInfo.isEmpty()) { return; }
+        if (extraInfo.isEmpty())
+        {
+            return;
+        }
         if (m_info.isEmpty())
         {
             this->setInfo(extraInfo);
@@ -31,7 +34,10 @@ namespace swift::misc
 
     QVariant CCrashInfo::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         switch (index.frontCasted<ColumnIndex>())
         {
         case IndexUserName: return QVariant::fromValue(m_userName);
@@ -62,7 +68,10 @@ namespace swift::misc
 
     int CCrashInfo::comparePropertyByIndex(CPropertyIndexRef index, const CCrashInfo &compareValue) const
     {
-        if (index.isMyself()) { return this->getInfo().compare(compareValue.getInfo()); }
+        if (index.isMyself())
+        {
+            return this->getInfo().compare(compareValue.getInfo());
+        }
         switch (index.frontCasted<ColumnIndex>())
         {
         case IndexUserName: return this->getUserName().compare(compareValue.getUserName());
@@ -76,13 +85,19 @@ namespace swift::misc
 
     void CCrashInfo::triggerWritingFile() const
     {
-        if (m_logFileAndPath.isEmpty()) { return; }
+        if (m_logFileAndPath.isEmpty())
+        {
+            return;
+        }
         CWorker::fromTask(qApp, Q_FUNC_INFO, [this] { writeToFile(); });
     }
 
     bool CCrashInfo::writeToFile() const
     {
-        if (m_logFileAndPath.isEmpty()) { return false; }
+        if (m_logFileAndPath.isEmpty())
+        {
+            return false;
+        }
         return CFileUtils::writeStringToFile(this->summary(), m_logFileAndPath);
     }
 

@@ -40,7 +40,10 @@ namespace swift::gui::components
 
     QStringList CSettingsTextMessageStyle::getFamilySizeStyle() const
     {
-        if (m_fontSettingsDialog) { return m_fontSettingsDialog->getFamilySizeStyle(); }
+        if (m_fontSettingsDialog)
+        {
+            return m_fontSettingsDialog->getFamilySizeStyle();
+        }
 
         static const QStringList empty({ "", "", "" });
         return empty;
@@ -82,7 +85,10 @@ namespace swift::gui::components
 
     bool CSettingsTextMessageStyle::setFontFamilySizeStyle(const QStringList &familySizeStlye)
     {
-        if (familySizeStlye.size() != 3) { return false; }
+        if (familySizeStlye.size() != 3)
+        {
+            return false;
+        }
         static const QString f("font-family: \"%1\"; font-size: %2; font-style: %3");
 
         const QString tableStyle =
@@ -101,12 +107,18 @@ namespace swift::gui::components
 
     void CSettingsTextMessageStyle::fontSizeMinus()
     {
-        if (this->changeFontSize(false)) { emit this->changed(); }
+        if (this->changeFontSize(false))
+        {
+            emit this->changed();
+        }
     }
 
     void CSettingsTextMessageStyle::fontSizePlus()
     {
-        if (this->changeFontSize(true)) { emit this->changed(); }
+        if (this->changeFontSize(true))
+        {
+            emit this->changed();
+        }
     }
 
     bool CSettingsTextMessageStyle::changeFontSize(bool increase)
@@ -115,20 +127,32 @@ namespace swift::gui::components
         thread_local const QRegularExpression re(R"(table\s*\{.*:\s*(\d{1,2}).*\})");
         const QRegularExpressionMatch match = re.match(style);
         const QStringList matches = match.capturedTexts();
-        if (matches.size() != 2) { return false; }
+        if (matches.size() != 2)
+        {
+            return false;
+        }
 
         bool ok {};
         int ptSize = matches.last().toInt(&ok);
-        if (!ok) { return false; }
+        if (!ok)
+        {
+            return false;
+        }
         if (increase)
         {
             ptSize++;
-            if (ptSize > 16) { return false; }
+            if (ptSize > 16)
+            {
+                return false;
+            }
         }
         else
         {
             ptSize--;
-            if (ptSize < 6) { return false; }
+            if (ptSize < 6)
+            {
+                return false;
+            }
         }
 
         const QString pt = QString::number(ptSize) % u"pt";

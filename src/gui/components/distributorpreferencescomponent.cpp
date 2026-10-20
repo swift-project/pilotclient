@@ -131,8 +131,14 @@ namespace swift::gui::components
         preferences.setDistributors(distributors, simulator);
         const CStatusMessage m = m_distributorPreferences.setAndSave(preferences);
         CLogMessage::preformatted(m);
-        if (m.isSuccess()) { this->showOverlayHTMLMessage("Saved settings", 5s); }
-        else { this->showOverlayMessage(m); }
+        if (m.isSuccess())
+        {
+            this->showOverlayHTMLMessage("Saved settings", 5s);
+        }
+        else
+        {
+            this->showOverlayMessage(m);
+        }
     }
 
     void CDistributorPreferencesComponent::onSimulatorChanged(const CSimulatorInfo &simulator)
@@ -146,8 +152,14 @@ namespace swift::gui::components
     {
         QPointer<CDistributorPreferencesComponent> myself(this);
         QTimer::singleShot(1000, this, [=, this] {
-            if (!myself) { return; }
-            if (!sApp || sApp->isShuttingDown()) { return; }
+            if (!myself)
+            {
+                return;
+            }
+            if (!sApp || sApp->isShuttingDown())
+            {
+                return;
+            }
             const CSimulatorInfo sim = ui->comp_SimulatorSelector->getValue();
             this->onSimulatorChanged(sim);
         });
@@ -155,7 +167,10 @@ namespace swift::gui::components
 
     void CDistributorPreferencesComponent::updateContainerMaybeAsync(const CDistributorList &models, bool sortByOrder)
     {
-        if (sortByOrder) { ui->tvp_Distributors->setSorting(CDistributor::IndexOrder, Qt::AscendingOrder); }
+        if (sortByOrder)
+        {
+            ui->tvp_Distributors->setSorting(CDistributor::IndexOrder, Qt::AscendingOrder);
+        }
         ui->tvp_Distributors->updateContainerMaybeAsync(models);
     }
 } // namespace swift::gui::components

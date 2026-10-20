@@ -27,7 +27,10 @@ namespace swift::sample
         QScopedPointer<CFsuipc> fsuipc(new CFsuipc());
         streamOut << "FSUIPC initialized" << Qt::endl;
 
-        if (fsuipc->open()) { streamOut << "FSUIPC connected" << Qt::endl; }
+        if (fsuipc->open())
+        {
+            streamOut << "FSUIPC connected" << Qt::endl;
+        }
         else
         {
             streamOut << "FSUIPC NOT(!) connected" << Qt::endl;

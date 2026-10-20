@@ -47,13 +47,22 @@ namespace swift::misc::shared_state
 
     void CDataLinkDBus::checkConnection()
     {
-        if (m_hub->isConnected()) { onConnected(); }
-        else { onDisconnected(); }
+        if (m_hub->isConnected())
+        {
+            onConnected();
+        }
+        else
+        {
+            onDisconnected();
+        }
     }
 
     void CDataLinkDBus::onConnected()
     {
-        if (m_duplex) { return; }
+        if (m_duplex)
+        {
+            return;
+        }
 
         QFuture<void> ready;
         std::tie(m_duplex, ready) = m_hub->getDuplex(m_identifier);
@@ -77,7 +86,10 @@ namespace swift::misc::shared_state
     {
         handlePeerEvent(channel, param);
 
-        if (!m_duplex) { return; }
+        if (!m_duplex)
+        {
+            return;
+        }
 
         for (const auto &filter : std::as_const(getChannel(channel).peerSubscriptions))
         {
@@ -94,13 +106,19 @@ namespace swift::misc::shared_state
         for (const auto &observerWeak : std::as_const(getChannel(channel).passiveObservers))
         {
             auto observer = observerWeak.lock();
-            if (observer && observer->eventSubscription().matches(param)) { observer->handleEvent(param); }
+            if (observer && observer->eventSubscription().matches(param))
+            {
+                observer->handleEvent(param);
+            }
         }
     }
 
     void CDataLinkDBus::announceLocalSubscriptions()
     {
-        for (const auto &channel : getChannelNames()) { announceLocalSubscriptions(channel); }
+        for (const auto &channel : getChannelNames())
+        {
+            announceLocalSubscriptions(channel);
+        }
     }
 
     void CDataLinkDBus::announceLocalSubscriptions(const QString &channel)
@@ -109,7 +127,10 @@ namespace swift::misc::shared_state
         for (const auto &observerWeak : std::as_const(getChannel(channel).passiveObservers))
         {
             auto observer = observerWeak.lock();
-            if (observer) { filters.push_back(observer->eventSubscription()); }
+            if (observer)
+            {
+                filters.push_back(observer->eventSubscription());
+            }
         }
         m_duplex->setSubscription(channel, filters);
     }
@@ -122,9 +143,15 @@ namespace swift::misc::shared_state
     QFuture<CVariant> CDataLinkDBus::handleLocalRequest(const QString &channel, const CVariant &param)
     {
         auto mutator = getChannel(channel).activeMutator.lock();
-        if (mutator) { return mutator->handleRequest(param); }
+        if (mutator)
+        {
+            return mutator->handleRequest(param);
+        }
 
-        if (!m_duplex) { return {}; }
+        if (!m_duplex)
+        {
+            return {};
+        }
 
         return m_duplex->submitRequest(channel, param);
     }
@@ -135,7 +162,10 @@ namespace swift::misc::shared_state
         if (mutator)
         {
             doAfter(mutator->handleRequest(param), this, [this, token](auto future) {
-                if (m_duplex) { m_duplex->reply(future.result(), token); }
+                if (m_duplex)
+                {
+                    m_duplex->reply(future.result(), token);
+                }
             });
         }
     }
@@ -154,9 +184,15 @@ namespace swift::misc::shared_state
         Q_ASSERT_X(!channel.activeMutator, Q_FUNC_INFO, "Tried to publish two active mutators on one channel");
         channel.activeMutator = mutator->weakRef();
 
-        if (m_duplex) { m_duplex->advertise(getChannelName(mutator)); }
+        if (m_duplex)
+        {
+            m_duplex->advertise(getChannelName(mutator));
+        }
         connect(mutator, &QObject::destroyed, this, [this, channel = getChannelName(mutator)] {
-            if (m_duplex) { m_duplex->withdraw(channel); }
+            if (m_duplex)
+            {
+                m_duplex->withdraw(channel);
+            }
         });
     }
 
@@ -165,7 +201,10 @@ namespace swift::misc::shared_state
         getChannel(observer).passiveObservers.push_back(observer->weakRef());
 
         auto announce = [this, channel = getChannelName(observer)] {
-            if (m_duplex) { announceLocalSubscriptions(channel); }
+            if (m_duplex)
+            {
+                announceLocalSubscriptions(channel);
+            }
         };
         connect(observer, &CPassiveObserver::eventSubscriptionChanged, this, announce);
         connect(observer, &QObject::destroyed, this, announce);

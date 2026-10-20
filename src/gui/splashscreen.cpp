@@ -31,7 +31,10 @@ namespace swift::gui
 
     void CSplashScreen::showStatusMessage(const QString &msg)
     {
-        if (msg.isEmpty()) { return; }
+        if (msg.isEmpty())
+        {
+            return;
+        }
         this->showMessage(msg, Qt::AlignHCenter | Qt::AlignBottom);
     }
 } // namespace swift::gui

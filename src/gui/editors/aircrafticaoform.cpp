@@ -58,7 +58,10 @@ namespace swift::gui::editors
 
     bool CAircraftIcaoForm::setValue(const swift::misc::aviation::CAircraftIcaoCode &icao)
     {
-        if (icao == m_originalCode) { return false; }
+        if (icao == m_originalCode)
+        {
+            return false;
+        }
         m_originalCode = icao;
 
         ui->le_Id->setText(icao.getDbKeyAsString());
@@ -84,14 +87,23 @@ namespace swift::gui::editors
 
     void CAircraftIcaoForm::jsonPasted(const QString &json)
     {
-        if (json.isEmpty()) { return; } // avoid unnecessary conversions
+        if (json.isEmpty())
+        {
+            return;
+        } // avoid unnecessary conversions
         try
         {
             CVariant jsonVariant;
             jsonVariant.convertFromJson(json::jsonObjectFromString(json));
-            if (!jsonVariant.canConvert<CAircraftIcaoCodeList>()) { return; }
+            if (!jsonVariant.canConvert<CAircraftIcaoCodeList>())
+            {
+                return;
+            }
             const auto icaos = jsonVariant.value<CAircraftIcaoCodeList>();
-            if (!icaos.isEmpty()) { this->setValue(icaos.front()); }
+            if (!icaos.isEmpty())
+            {
+                this->setValue(icaos.front());
+            }
         }
         catch (const CJsonException &ex)
         {
@@ -126,7 +138,10 @@ namespace swift::gui::editors
         const QString combined(ui->combined_TypeSelector->getCombinedType());
         bool ok {};
         int rank = ui->cb_Rank->currentText().toInt(&ok);
-        if (!ok) { rank = 10; }
+        if (!ok)
+        {
+            rank = 10;
+        }
         bool legacy = ui->cb_Legacy->isChecked();
         bool military = ui->cb_Military->isChecked();
         bool realWorld = ui->cb_RealWorld->isChecked();
@@ -193,14 +208,23 @@ namespace swift::gui::editors
     void CAircraftIcaoForm::droppedCode(const swift::misc::CVariant &variantDropped)
     {
         CAircraftIcaoCode icao;
-        if (variantDropped.canConvert<CAircraftIcaoCode>()) { icao = variantDropped.value<CAircraftIcaoCode>(); }
+        if (variantDropped.canConvert<CAircraftIcaoCode>())
+        {
+            icao = variantDropped.value<CAircraftIcaoCode>();
+        }
         else if (variantDropped.canConvert<CAircraftIcaoCodeList>())
         {
             const auto icaoList(variantDropped.value<CAircraftIcaoCodeList>());
-            if (icaoList.isEmpty()) { return; }
+            if (icaoList.isEmpty())
+            {
+                return;
+            }
             icao = icaoList.front();
         }
-        else { return; }
+        else
+        {
+            return;
+        }
         this->setValue(icao);
     }
 

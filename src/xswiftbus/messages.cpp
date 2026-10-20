@@ -47,8 +47,14 @@ namespace XSwiftBus
             boxTop = boxBottom + lineSpace * 2 + (lineHeight + lineSpace) * messageCount;
         }
 
-        if (boxTop > screenHeight) { boxTop = screenHeight; }
-        if (boxBottom <= 0) { boxBottom = 0; }
+        if (boxTop > screenHeight)
+        {
+            boxTop = screenHeight;
+        }
+        if (boxBottom <= 0)
+        {
+            boxBottom = 0;
+        }
 
         XPLMDrawTranslucentDarkBox(boxLeft, boxTop, boxRight, boxBottom);
 
@@ -124,30 +130,51 @@ namespace XSwiftBus
 
     void CMessageBoxControl::addMessage(const CMessage &message)
     {
-        if (m_messages.size() >= c_maxTotalLines) { m_messages.erase(m_messages.begin()); }
+        if (m_messages.size() >= c_maxTotalLines)
+        {
+            m_messages.erase(m_messages.begin());
+        }
         m_messages.push_back(message);
-        if (m_position + 1 >= m_messages.size() || !m_visible) { scrollToBottom(); }
+        if (m_position + 1 >= m_messages.size() || !m_visible)
+        {
+            scrollToBottom();
+        }
     }
 
     void CMessageBoxControl::scrollUp()
     {
-        if (!m_visible) { return; }
+        if (!m_visible)
+        {
+            return;
+        }
 
-        if (m_position - 1 >= std::min(m_messages.size(), m_maxVisibleLines)) { m_position--; }
+        if (m_position - 1 >= std::min(m_messages.size(), m_maxVisibleLines))
+        {
+            m_position--;
+        }
         updateVisibleLines();
     }
 
     void CMessageBoxControl::scrollDown()
     {
-        if (!m_visible) { return; }
+        if (!m_visible)
+        {
+            return;
+        }
 
-        if (m_position + 1 <= m_messages.size()) { m_position++; }
+        if (m_position + 1 <= m_messages.size())
+        {
+            m_position++;
+        }
         updateVisibleLines();
     }
 
     void CMessageBoxControl::scrollToTop()
     {
-        if (!m_visible) { return; }
+        if (!m_visible)
+        {
+            return;
+        }
 
         m_position = std::min(m_messages.size(), m_maxVisibleLines);
         updateVisibleLines();

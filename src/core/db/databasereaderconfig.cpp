@@ -60,29 +60,50 @@ namespace swift::core::db
 
     bool CDatabaseReaderConfig::possiblyReadsFromSwiftDb() const
     {
-        if (!this->isValid()) { return false; }
-        if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
+        if (!this->isValid())
+        {
+            return false;
+        }
+        if (!CEntityFlags::anySwiftDbEntity(this->getEntities()))
+        {
+            return false;
+        }
         return (this->getRetrievalMode().testFlag(CDbFlags::DbReading));
     }
 
     bool CDatabaseReaderConfig::needsSharedInfoFile() const
     {
-        if (!this->isValid()) { return false; }
-        if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
+        if (!this->isValid())
+        {
+            return false;
+        }
+        if (!CEntityFlags::anySwiftDbEntity(this->getEntities()))
+        {
+            return false;
+        }
         return (this->getRetrievalMode().testFlag(CDbFlags::Shared) ||
                 this->getRetrievalMode().testFlag(CDbFlags::SharedInfoOnly));
     }
 
     bool CDatabaseReaderConfig::possiblyWritesToSwiftDb() const
     {
-        if (!this->isValid()) { return false; }
-        if (!CEntityFlags::anySwiftDbEntity(this->getEntities())) { return false; }
+        if (!this->isValid())
+        {
+            return false;
+        }
+        if (!CEntityFlags::anySwiftDbEntity(this->getEntities()))
+        {
+            return false;
+        }
         return (this->getRetrievalMode().testFlag(CDbFlags::DbWriting));
     }
 
     bool CDatabaseReaderConfig::possiblyReadsFromCache() const
     {
-        if (!this->isValid()) { return false; }
+        if (!this->isValid())
+        {
+            return false;
+        }
         return (this->getRetrievalMode().testFlag(CDbFlags::Cached) ||
                 this->getRetrievalMode().testFlag(CDbFlags::CacheThenDb) ||
                 this->getRetrievalMode().testFlag(CDbFlags::CacheThenShared));
@@ -103,11 +124,17 @@ namespace swift::core::db
         {
             if (single)
             {
-                if (config.getEntities().testFlag(testFlag)) { return config; }
+                if (config.getEntities().testFlag(testFlag))
+                {
+                    return config;
+                }
             }
             else
             {
-                if (config.getEntities() == entities) { return config; }
+                if (config.getEntities() == entities)
+                {
+                    return config;
+                }
             }
         }
         return {}; // not found
@@ -115,12 +142,18 @@ namespace swift::core::db
 
     void CDatabaseReaderConfigList::markAsDbDown()
     {
-        for (CDatabaseReaderConfig &config : *this) { config.markAsDbDown(); }
+        for (CDatabaseReaderConfig &config : *this)
+        {
+            config.markAsDbDown();
+        }
     }
 
     void CDatabaseReaderConfigList::setCacheLifetimes(const CTime &time)
     {
-        for (CDatabaseReaderConfig &config : *this) { config.setCacheLifetime(time); }
+        for (CDatabaseReaderConfig &config : *this)
+        {
+            config.setCacheLifetime(time);
+        }
     }
 
     bool CDatabaseReaderConfigList::possiblyReadsFromSwiftDb() const

@@ -136,12 +136,18 @@ namespace swift::core
             this->clear();
             m_updateTimer.stopTimer();
         }
-        else if (newStatus.isConnected()) { m_updateTimer.startTimer(updateInterval); }
+        else if (newStatus.isConnected())
+        {
+            m_updateTimer.startTimer(updateInterval);
+        }
     }
 
     void CAirspaceAnalyzer::onTimeout()
     {
-        if (!this->isEnabled()) { return; }
+        if (!this->isEnabled())
+        {
+            return;
+        }
         this->analyzeAirspace();
         this->watchdogCheckTimeouts();
     }
@@ -178,7 +184,10 @@ namespace swift::core
             m_doNotRunAgainBefore = currentTimeMsEpoch + 2 * callThresholdMs;
             return;
         }
-        if (m_doNotRunAgainBefore > currentTimeMsEpoch) { return; }
+        if (m_doNotRunAgainBefore > currentTimeMsEpoch)
+        {
+            return;
+        }
         m_doNotRunAgainBefore = -1;
 
         // checks
@@ -196,7 +205,10 @@ namespace swift::core
                 m_aircraftCallsignTimestamps[callsign] = timeoutAircraftEpochMs + 1000;
             } // fake value so it can be re-enabled
             const qint64 tsv = m_aircraftCallsignTimestamps.value(callsign);
-            if (tsv > timeoutAircraftEpochMs) { continue; }
+            if (tsv > timeoutAircraftEpochMs)
+            {
+                continue;
+            }
             CLogMessage(this).debug() << QStringLiteral("Aircraft '%1' timed out after %2ms")
                                              .arg(callsign.toQString())
                                              .arg(currentTimeMsEpoch - tsv);
@@ -212,7 +224,10 @@ namespace swift::core
                 m_aircraftCallsignTimestamps[callsign] = timeoutAtcEpochMs + 1000;
             } // fake value so it can be re-enabled
             const qint64 tsv = m_atcCallsignTimestamps.value(callsign);
-            if (tsv > timeoutAtcEpochMs) { continue; }
+            if (tsv > timeoutAtcEpochMs)
+            {
+                continue;
+            }
             CLogMessage(this).debug() << QStringLiteral("ATC '%1' timed out after %2ms")
                                              .arg(callsign.toQString())
                                              .arg(currentTimeMsEpoch - tsv);
@@ -248,9 +263,15 @@ namespace swift::core
         {
             QWriteLocker l(&m_lockSnapshot);
             bool wasValid = m_latestAircraftSnapshot.isValidSnapshot();
-            if (wasValid) { snapshot.setRestrictionChanged(m_latestAircraftSnapshot); }
+            if (wasValid)
+            {
+                snapshot.setRestrictionChanged(m_latestAircraftSnapshot);
+            }
             m_latestAircraftSnapshot = snapshot;
-            if (!wasValid) { return; } // ignore the 1st snapshot
+            if (!wasValid)
+            {
+                return;
+            } // ignore the 1st snapshot
         }
 
         emit this->airspaceAircraftSnapshot(snapshot);

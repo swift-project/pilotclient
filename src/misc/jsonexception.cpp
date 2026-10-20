@@ -22,7 +22,10 @@ namespace swift::misc
 
     QString CJsonException::toString(const QString &prefix) const
     {
-        if (prefix.isEmpty()) { return QStringLiteral("%1 in '%2'").arg(what()).arg(getStackTrace()); }
+        if (prefix.isEmpty())
+        {
+            return QStringLiteral("%1 in '%2'").arg(what()).arg(getStackTrace());
+        }
         return QStringLiteral("%1: %2 in '%3'").arg(prefix).arg(what()).arg(getStackTrace());
     }
 
@@ -32,7 +35,10 @@ namespace swift::misc
         for (const auto scope : std::as_const(jsonStack()))
         {
             list.push_back(scope->m_string ? *scope->m_string : scope->m_latin1); // clazy:exclude=reserve-candidates
-            if (scope->m_index >= 0) { list.back() += u'[' % QString::number(scope->m_index) % u']'; }
+            if (scope->m_index >= 0)
+            {
+                list.back() += u'[' % QString::number(scope->m_index) % u']';
+            }
         }
         return list.isEmpty() ? QStringLiteral("<document root>") : list.join('.');
     }

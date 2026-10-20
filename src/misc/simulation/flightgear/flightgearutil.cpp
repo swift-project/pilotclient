@@ -48,9 +48,15 @@ namespace swift::misc::simulation::flightgear
         {
             QString terraSyncFolder =
                 QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/Flightgear/Aircraft";
-            if (QDir(terraSyncFolder).exists()) { dirs.append(terraSyncFolder); }
+            if (QDir(terraSyncFolder).exists())
+            {
+                dirs.append(terraSyncFolder);
+            }
             QString fgdataAIFolder = simulatorDir + "data/AI/Aircraft";
-            if (QDir(fgdataAIFolder).exists()) { dirs.append(fgdataAIFolder); }
+            if (QDir(fgdataAIFolder).exists())
+            {
+                dirs.append(fgdataAIFolder);
+            }
         }
         return dirs;
     }

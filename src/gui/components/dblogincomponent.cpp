@@ -80,10 +80,16 @@ namespace swift::gui::components
 
     void CDbLoginComponent::displayOverlayMessages(const CStatusMessageList &msgs)
     {
-        if (msgs.isEmpty()) { return; }
+        if (msgs.isEmpty())
+        {
+            return;
+        }
         COverlayMessagesFrame *mf = CGuiUtility::nextOverlayMessageFrame(this);
         SWIFT_VERIFY_X(mf, Q_FUNC_INFO, "No overlay widget");
-        if (!mf) { return; }
+        if (!mf)
+        {
+            return;
+        }
         mf->showOverlayMessages(msgs);
     }
 
@@ -100,7 +106,10 @@ namespace swift::gui::components
             displayOverlayMessages(msgs);
             return;
         }
-        else if (!msgs.isEmpty()) { CLogMessage::preformatted(msgs); }
+        else if (!msgs.isEmpty())
+        {
+            CLogMessage::preformatted(msgs);
+        }
         this->showLoading(5s);
     }
 
@@ -127,15 +136,24 @@ namespace swift::gui::components
 
     void CDbLoginComponent::setUserInfo(const CAuthenticatedUser &user)
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         if (user.isAuthenticated())
         {
             CLogMessage(this).info(u"User authenticated: %1") << user.toQString();
             this->setModeLogin(false);
             ui->le_Name->setText(user.getRealNameAndId());
             ui->te_Roles->setPlainText(user.getRolesAsString());
-            if (user.canDirectlyWriteModels()) { ui->le_Info->setText("You can directly update models"); }
-            else { ui->le_Info->setText("You can create model change requests"); }
+            if (user.canDirectlyWriteModels())
+            {
+                ui->le_Info->setText("You can directly update models");
+            }
+            else
+            {
+                ui->le_Info->setText("You can create model change requests");
+            }
 
             // crashpad info
             CCrashHandler::instance()->crashAndLogInfoUserName(user.getRealNameAndId());

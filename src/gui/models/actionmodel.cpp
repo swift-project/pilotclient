@@ -33,21 +33,36 @@ namespace swift::gui::models
 
     QVariant CActionModel::data(const QModelIndex &index, int role) const
     {
-        if (!index.isValid()) { return {}; }
+        if (!index.isValid())
+        {
+            return {};
+        }
 
         const CActionItem *item = static_cast<CActionItem *>(index.internalPointer());
         Q_ASSERT_X(item, Q_FUNC_INFO, "Missing item");
 
-        if (role == ActionRole) { return item->getAction(); }
-        if (role == Qt::DisplayRole) { return item->getActionName(); }
-        if (role == Qt::DecorationRole) { return item->getIcon(); }
+        if (role == ActionRole)
+        {
+            return item->getAction();
+        }
+        if (role == Qt::DisplayRole)
+        {
+            return item->getActionName();
+        }
+        if (role == Qt::DecorationRole)
+        {
+            return item->getIcon();
+        }
 
         return {};
     }
 
     Qt::ItemFlags CActionModel::flags(const QModelIndex &index) const
     {
-        if (!index.isValid()) { return Qt::NoItemFlags; }
+        if (!index.isValid())
+        {
+            return Qt::NoItemFlags;
+        }
         const CActionItem *item = static_cast<CActionItem *>(index.internalPointer());
         const Qt::ItemFlags flags = QAbstractItemModel::flags(index);
         const bool selectable = item && !item->hasChildren(); // only leafs are selectable
@@ -56,7 +71,10 @@ namespace swift::gui::models
 
     QModelIndex CActionModel::index(int row, int column, const QModelIndex &parent) const
     {
-        if (!hasIndex(row, column, parent)) { return {}; }
+        if (!hasIndex(row, column, parent))
+        {
+            return {};
+        }
 
         const CActionItem *parentItem =
             parent.isValid() ? static_cast<CActionItem *>(parent.internalPointer()) : m_rootItem.data();
@@ -67,19 +85,28 @@ namespace swift::gui::models
 
     QModelIndex CActionModel::parent(const QModelIndex &index) const
     {
-        if (!index.isValid()) { return {}; }
+        if (!index.isValid())
+        {
+            return {};
+        }
 
         auto *childItem = static_cast<CActionItem *>(index.internalPointer());
         CActionItem *parentItem = childItem->getParentItem();
 
-        if (parentItem == m_rootItem.data()) { return {}; }
+        if (parentItem == m_rootItem.data())
+        {
+            return {};
+        }
 
         return createIndex(parentItem->getRow(), 0, parentItem);
     }
 
     int CActionModel::rowCount(const QModelIndex &parent) const
     {
-        if (parent.column() > 0) { return 0; }
+        if (parent.column() > 0)
+        {
+            return 0;
+        }
         const CActionItem *parentItem =
             parent.isValid() ? static_cast<CActionItem *>(parent.internalPointer()) : m_rootItem.data();
         return parentItem->getChildCount();

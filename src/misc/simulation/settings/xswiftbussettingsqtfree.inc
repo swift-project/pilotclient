@@ -35,11 +35,17 @@ namespace swift::misc::simulation::settings
 {
     bool CXSwiftBusSettingsQtFree::parseXSwiftBusString(const std::string &json)
     {
-        if (json.empty()) { return false; }
+        if (json.empty())
+        {
+            return false;
+        }
 
         const nlohmann::basic_json parsed = nlohmann::json::parse(json, nullptr, false);
 
-        if (parsed.is_discarded()) { return false; }
+        if (parsed.is_discarded())
+        {
+            return false;
+        }
 
         int c = 0;
         if (parsed.contains(CXSwiftBusSettingsQtFree::JsonDBusServerAddress) &&
@@ -229,7 +235,10 @@ namespace swift::misc::simulation::settings
             changed++;
         }
 
-        if (changed > 0) { this->objectUpdated(); } // post processing
+        if (changed > 0)
+        {
+            this->objectUpdated();
+        } // post processing
         return changed;
     }
 

@@ -27,7 +27,10 @@ namespace swift::core::afv::model
 
     void CAfvMapReader::updateFromMap()
     {
-        if (!sApp || !sApp->getNetworkAccessManager() || sApp->isShuttingDown()) { return; }
+        if (!sApp || !sApp->getNetworkAccessManager() || sApp->isShuttingDown())
+        {
+            return;
+        }
 
         QEventLoop loop(sApp);
         connect(sApp->getNetworkAccessManager(), &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
@@ -35,11 +38,20 @@ namespace swift::core::afv::model
         const QUrl url =
             sApp->getGlobalSetup().getAfvApiServerUrl().withAppendedPath("/api/v1/network/online/callsigns");
         QNetworkReply *reply = sApp->getNetworkAccessManager()->get(QNetworkRequest(url));
-        while (reply && !reply->isFinished() && sApp && !sApp->isShuttingDown()) { loop.exec(); }
+        while (reply && !reply->isFinished() && sApp && !sApp->isShuttingDown())
+        {
+            loop.exec();
+        }
         const QByteArray jsonData = reply ? reply->readAll() : QByteArray {};
-        if (reply) { reply->deleteLater(); }
+        if (reply)
+        {
+            reply->deleteLater();
+        }
 
-        if (jsonData.isEmpty()) { return; }
+        if (jsonData.isEmpty())
+        {
+            return;
+        }
 
         QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
         if (jsonDoc.isArray())
@@ -54,9 +66,15 @@ namespace swift::core::afv::model
                 {
                     const QJsonObject stationObject = it.toObject();
 
-                    if (stationObject.contains("callsign")) { callsign = stationObject.value("callsign").toString(); }
+                    if (stationObject.contains("callsign"))
+                    {
+                        callsign = stationObject.value("callsign").toString();
+                    }
 
-                    if (callsign.isEmpty() || !CCallsign::looksLikeAtcCallsign(callsign)) { continue; }
+                    if (callsign.isEmpty() || !CCallsign::looksLikeAtcCallsign(callsign))
+                    {
+                        continue;
+                    }
 
                     if (stationObject.contains("transceivers"))
                     {
@@ -70,7 +88,10 @@ namespace swift::core::afv::model
                 }
             }
 
-            if (transceivers.isEmpty()) { return; }
+            if (transceivers.isEmpty())
+            {
+                return;
+            }
             transceivers.erase(
                 std::remove_if(transceivers.begin(), transceivers.end(),
                                [this](const CSampleAtcStation &s) { return s.callsign() == m_callsign; }),

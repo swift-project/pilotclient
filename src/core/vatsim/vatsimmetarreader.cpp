@@ -52,10 +52,16 @@ namespace swift::core::vatsim
     void CVatsimMetarReader::read()
     {
         this->threadAssertCheck();
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
 
         const CUrl url(sApp->getVatsimMetarUrl());
-        if (url.isEmpty()) { return; }
+        if (url.isEmpty())
+        {
+            return;
+        }
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "No Application");
         this->getFromNetworkAndLog(url.withAppendedQuery("id=all"), { this, &CVatsimMetarReader::decodeMetars });
     }
@@ -100,13 +106,25 @@ namespace swift::core::vatsim
             QTextStream lineReader(&metarData);
             while (!lineReader.atEnd())
             {
-                if (!this->doWorkCheck()) { return; }
+                if (!this->doWorkCheck())
+                {
+                    return;
+                }
                 const QString line = lineReader.readLine();
                 // some check for obvious errors
-                if (line.contains("<html")) { continue; }
+                if (line.contains("<html"))
+                {
+                    continue;
+                }
                 const CMetar metar = m_metarDecoder.decode(line);
-                if (metar != CMetar()) { metars.push_back(metar); }
-                else { invalidLines++; }
+                if (metar != CMetar())
+                {
+                    metars.push_back(metar);
+                }
+                else
+                {
+                    invalidLines++;
+                }
             }
 
             CLogMessage(this).info(u"METARs: %1 Metars (invalid %2) from '%3'")

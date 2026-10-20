@@ -15,7 +15,10 @@ namespace swift::misc::shared_state
         m_observer->setEventSubscription(CVariant::fromValue(CAnyMatch()));
         connect(dataLink->watcher(), &CDataLinkConnectionWatcher::connected, this,
                 &CGenericScalarObserver::reconstruct);
-        if (dataLink->watcher()->isConnected()) { reconstruct(); }
+        if (dataLink->watcher()->isConnected())
+        {
+            reconstruct();
+        }
     }
 
     void CGenericScalarObserver::reconstruct()
@@ -32,7 +35,10 @@ namespace swift::misc::shared_state
     void CGenericScalarObserver::handleEvent(const CVariant &param)
     {
         QMutexLocker lock(&m_valueMutex);
-        if (m_value == param) { return; }
+        if (m_value == param)
+        {
+            return;
+        }
         m_value = param;
         lock.unlock();
         onGenericValueChanged(param);

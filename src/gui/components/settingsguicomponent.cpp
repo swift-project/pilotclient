@@ -59,9 +59,18 @@ namespace swift::gui::components
     void CSettingsGuiComponent::selectionChanged()
     {
         QAbstractItemView::SelectionMode sm = QAbstractItemView::NoSelection;
-        if (ui->rb_PreferExtendedSelection->isChecked()) { sm = QAbstractItemView::ExtendedSelection; }
-        else if (ui->rb_PreferMultiSelection->isChecked()) { sm = QAbstractItemView::MultiSelection; }
-        if (sm == m_guiSettings.get().getPreferredSelection()) { return; }
+        if (ui->rb_PreferExtendedSelection->isChecked())
+        {
+            sm = QAbstractItemView::ExtendedSelection;
+        }
+        else if (ui->rb_PreferMultiSelection->isChecked())
+        {
+            sm = QAbstractItemView::MultiSelection;
+        }
+        if (sm == m_guiSettings.get().getPreferredSelection())
+        {
+            return;
+        }
         const CStatusMessage m =
             m_guiSettings.setAndSaveProperty(CGeneralGuiSettings::IndexPreferredSelection, CVariant::fromValue(sm));
         CLogMessage::preformatted(m);
@@ -88,7 +97,10 @@ namespace swift::gui::components
     {
         const QString widgetStyle = ui->cb_SettingsGuiWidgetStyle->itemText(index);
         const CGeneralGuiSettings settings = m_guiSettings.getThreadLocal();
-        if (!settings.isDifferentValidWidgetStyle(widgetStyle)) { return; }
+        if (!settings.isDifferentValidWidgetStyle(widgetStyle))
+        {
+            return;
+        }
 
         /** because of crash (chnage style crashes UI) we require restart
         const int ret = QMessageBox::information(this,

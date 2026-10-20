@@ -98,40 +98,61 @@ namespace swift::gui::components
 
     void CDbAutoSimulatorStashingComponent::addStatusMessage(const CStatusMessage &msg)
     {
-        if (msg.isEmpty()) { return; }
+        if (msg.isEmpty())
+        {
+            return;
+        }
         ui->tvp_StatusMessages->insert(msg);
     }
 
     void CDbAutoSimulatorStashingComponent::addStatusMessages(const CStatusMessageList &msgs)
     {
-        if (msgs.isEmpty()) { return; }
-        for (const CStatusMessage &msg : msgs) { this->addStatusMessage(msg); }
+        if (msgs.isEmpty())
+        {
+            return;
+        }
+        for (const CStatusMessage &msg : msgs)
+        {
+            this->addStatusMessage(msg);
+        }
     }
 
     void CDbAutoSimulatorStashingComponent::addStatusMessage(const CStatusMessage &msg, const CAircraftModel &model)
     {
-        if (msg.isEmpty()) { return; }
+        if (msg.isEmpty())
+        {
+            return;
+        }
         if (model.hasModelString())
         {
             CStatusMessage prefixMessage(msg);
             prefixMessage.prependMessage(QString(model.getModelString() + ", " + model.getMembersDbStatus() + ": "));
             ui->tvp_StatusMessages->insert(prefixMessage);
         }
-        else { ui->tvp_StatusMessages->insert(msg); }
+        else
+        {
+            ui->tvp_StatusMessages->insert(msg);
+        }
     }
 
     void CDbAutoSimulatorStashingComponent::tryToStash()
     {
         Q_ASSERT_X(this->getMappingComponent(), Q_FUNC_INFO, "Missing mapping component");
 
-        if (!this->currentModelView()) { return; }
+        if (!this->currentModelView())
+        {
+            return;
+        }
         m_state = Running;
         int maxObjectsStashed = -1;
         if (!ui->le_MaxModelsStashed->text().isEmpty())
         {
             bool ok {};
             ui->le_MaxModelsStashed->text().toInt(&ok);
-            if (!ok) { maxObjectsStashed = 100; }
+            if (!ok)
+            {
+                maxObjectsStashed = 100;
+            }
         }
 
         const bool selected = ui->rb_SelectedOnly->isChecked();

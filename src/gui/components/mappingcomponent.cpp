@@ -172,7 +172,10 @@ namespace swift::gui::components
         // nevertheless, wait some time to allow to init
         QPointer<CMappingComponent> myself(this);
         QTimer::singleShot(10000, this, [=] {
-            if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+            if (!myself || !sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             const CSimulatorInfo simulator(myself->getConnectedOrSelectedSimulator());
             myself->onModelSetSimulatorChanged(simulator);
             myself->onModelSetChanged(simulator);
@@ -212,9 +215,15 @@ namespace swift::gui::components
 
         const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue()); // UI value
         const bool changed = ui->completer_ModelStrings->setSimulator(simulator);
-        if (!changed) { return; }
+        if (!changed)
+        {
+            return;
+        }
 
-        if (ui->tvp_AircraftModels->displayAutomatically()) { this->onModelsUpdateRequested(); }
+        if (ui->tvp_AircraftModels->displayAutomatically())
+        {
+            this->onModelsUpdateRequested();
+        }
         else
         {
             CLogMessage(this).info(u"Model set loaded ('%1'), you can update the model view")
@@ -239,13 +248,22 @@ namespace swift::gui::components
 
     void CMappingComponent::onChangedSimulatedAircraftInView(const CVariant &object, const CPropertyIndex &index)
     {
-        if (!index.contains(CSimulatedAircraft::IndexEnabled)) { return; } // we only deal with enabled/disabled here
+        if (!index.contains(CSimulatedAircraft::IndexEnabled))
+        {
+            return;
+        } // we only deal with enabled/disabled here
         const auto sa = object.value<CSimulatedAircraft>(); // changed in GUI
         const CSimulatedAircraft saFromBackend =
             sGui->getIContextNetwork()->getAircraftInRangeForCallsign(sa.getCallsign());
-        if (!saFromBackend.hasValidCallsign()) { return; } // obviously deleted
+        if (!saFromBackend.hasValidCallsign())
+        {
+            return;
+        } // obviously deleted
         const bool nowEnabled = sa.isEnabled();
-        if (saFromBackend.isEnabled() == nowEnabled) { return; } // already same value
+        if (saFromBackend.isEnabled() == nowEnabled)
+        {
+            return;
+        } // already same value
         CLogMessage(this).info(u"Request to %1 aircraft '%2'")
             << (nowEnabled ? "enable" : "disable") << saFromBackend.getCallsign().toQString();
         sGui->getIContextNetwork()->updateAircraftEnabled(saFromBackend.getCallsign(), nowEnabled);
@@ -289,7 +307,10 @@ namespace swift::gui::components
 
     void CMappingComponent::onModelSetSimulatorChanged(const CSimulatorInfo &simulator)
     {
-        if (!sGui || this->isSimulatorAvailable()) { return; }
+        if (!sGui || this->isSimulatorAvailable())
+        {
+            return;
+        }
         sGui->getIContextSimulator()->setModelSetLoaderSimulator(simulator);
 
         // completer will be changed in onModelSetChanged
@@ -316,8 +337,14 @@ namespace swift::gui::components
     {
         using namespace std::chrono_literals;
 
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
-        if (!sGui->getIContextSimulator()->isSimulatorAvailable()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
+        if (!sGui->getIContextSimulator()->isSimulatorAvailable())
+        {
+            return;
+        }
         const int rematchedNumber = sGui->getIContextSimulator()->doMatchingsAgain();
 
         const QString info = QStringLiteral("Triggered re-matching of %1 aircraft").arg(rematchedNumber);
@@ -332,7 +359,10 @@ namespace swift::gui::components
             return;
         }
         const CCallsign callsign(this->validateRenderedCallsign());
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
         const QString modelString = ui->completer_ModelStrings->getModelString();
         if (modelString.isEmpty())
         {
@@ -353,7 +383,10 @@ namespace swift::gui::components
             this->showOverlayMessage(
                 CStatusMessage(this).validationError(u"Invalid model for mapping, reloading model set"),
                 OverlayMessageMs);
-            if (ui->tvp_AircraftModels->isEmpty()) { this->onModelsUpdateRequested(); }
+            if (ui->tvp_AircraftModels->isEmpty())
+            {
+                this->onModelsUpdateRequested();
+            }
             return;
         }
 
@@ -416,7 +449,10 @@ namespace swift::gui::components
             return;
         }
         const CCallsign callsign(this->validateRenderedCallsign());
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
         const bool reset = sGui->getIContextSimulator()->resetToModelMatchingAircraft(callsign);
         const CStatusMessage msg = reset ? CStatusMessage(this).info(u"Model reset for '%1'") << callsign.toQString() :
                                            CStatusMessage(this).info(u"Reset failed for '%1'") << callsign.toQString();
@@ -431,7 +467,10 @@ namespace swift::gui::components
 
     void CMappingComponent::onModelsUpdateRequested()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
         CAircraftModelList modelSet(sGui->getIContextSimulator()->getModelSet());
 
         const CAircraftModelList disabledModels = sGui->getIContextSimulator()->getDisabledModelsForMatching();
@@ -446,7 +485,10 @@ namespace swift::gui::components
 
     void CMappingComponent::onTempDisableModelsForMatchingRequested(const CAircraftModelList &models)
     {
-        if (models.isEmpty()) { return; }
+        if (models.isEmpty())
+        {
+            return;
+        }
         if (sGui && sGui->getIContextSimulator())
         {
             sGui->getIContextSimulator()->disableModelsForMatching(models, true);
@@ -460,7 +502,10 @@ namespace swift::gui::components
     void CMappingComponent::onRemoteAircraftModelChanged(const CSimulatedAircraft &aircraft,
                                                          const CIdentifier &originator)
     {
-        if (CIdentifiable::isMyIdentifier(originator)) { return; }
+        if (CIdentifiable::isMyIdentifier(originator))
+        {
+            return;
+        }
         this->tokenBucketUpdateAircraft(aircraft);
     }
 
@@ -485,13 +530,19 @@ namespace swift::gui::components
 
     CSimulatorInfo CMappingComponent::getConnectedOrSelectedSimulator() const
     {
-        if (this->isSimulatorAvailable()) { return sGui->getIContextSimulator()->isSimulatorAvailable(); }
+        if (this->isSimulatorAvailable())
+        {
+            return sGui->getIContextSimulator()->isSimulatorAvailable();
+        }
         return ui->comp_SimulatorSelector->getValue();
     }
 
     bool CMappingComponent::isSimulatorAvailable() const
     {
-        if (!sGui || !sGui->getIContextSimulator()) { return false; }
+        if (!sGui || !sGui->getIContextSimulator())
+        {
+            return false;
+        }
         return sGui->getIContextSimulator()->isSimulatorAvailable();
     }
 
@@ -534,7 +585,10 @@ namespace swift::gui::components
 
     void CMappingComponent::updateRenderedAircraftView(bool forceUpdate)
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         m_updateTimer.start(); // restart
         if (!forceUpdate && !this->isVisibleWidget())
         {
@@ -549,7 +603,10 @@ namespace swift::gui::components
             const CSimulatedAircraftList aircraft(sGui->getIContextNetwork()->getAircraftInRange());
             ui->tvp_RenderedAircraft->updateContainerMaybeAsync(aircraft);
         }
-        else { ui->tvp_RenderedAircraft->clear(); }
+        else
+        {
+            ui->tvp_RenderedAircraft->clear();
+        }
     }
 
     void CMappingComponent::timerUpdate()
@@ -566,7 +623,10 @@ namespace swift::gui::components
 
     void CMappingComponent::tokenBucketUpdate()
     {
-        if (!m_bucket.tryConsume()) { return; }
+        if (!m_bucket.tryConsume())
+        {
+            return;
+        }
         this->updateRenderedAircraftView(true); // forced update
     }
 

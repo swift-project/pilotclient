@@ -376,7 +376,10 @@ namespace swift::misc
               m_element(&m_page->createElement(key, name, qMetaTypeId<T>(), wrap(validator),
                                                CVariant::fromValue(defaultValue)))
         {
-            if (isInitialized()) { cache->setHumanReadableName(getKey(), name); }
+            if (isInitialized())
+            {
+                cache->setHumanReadableName(getKey(), name);
+            }
         }
 
         //! Set a callback to be called when the value is changed by another source.

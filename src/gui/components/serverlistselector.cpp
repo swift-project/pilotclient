@@ -21,13 +21,19 @@ namespace swift::gui::components
     CServerListSelector::CServerListSelector(QWidget *parent) : QComboBox(parent)
     {
         const CServer server = m_lastServer.get();
-        if (server.hasName()) { m_pendingPreselect = server.getName(); }
+        if (server.hasName())
+        {
+            m_pendingPreselect = server.getName();
+        }
         connect(this, &QComboBox::currentTextChanged, this, &CServerListSelector::onServerTextChanged);
     }
 
     void CServerListSelector::setServers(const CServerList &servers)
     {
-        if (m_servers == servers) { return; }
+        if (m_servers == servers)
+        {
+            return;
+        }
         this->setServerItems(servers);
         if (!servers.isEmpty() && !m_pendingPreselect.isEmpty())
         {
@@ -39,13 +45,19 @@ namespace swift::gui::components
     CServer CServerListSelector::currentServer() const
     {
         const int i = currentIndex();
-        if (i < 0 || i >= m_servers.size()) { return {}; }
+        if (i < 0 || i >= m_servers.size())
+        {
+            return {};
+        }
         return m_servers[i];
     }
 
     bool CServerListSelector::preSelect(const QString &name)
     {
-        if (name.isEmpty()) { return false; }
+        if (name.isEmpty())
+        {
+            return false;
+        }
         if (m_servers.isEmpty())
         {
             m_pendingPreselect = name; // save for later
@@ -74,15 +86,27 @@ namespace swift::gui::components
         {
             const QString d(server.getName() + ": " + server.getDescription());
             m_items.append(d);
-            if (!currentlySelected.isEmpty() && index < 0 && d == currentlySelected) { index = m_items.size() - 1; }
+            if (!currentlySelected.isEmpty() && index < 0 && d == currentlySelected)
+            {
+                index = m_items.size() - 1;
+            }
 
             this->addItem(d);
         }
 
         // reselect
-        if (m_items.isEmpty()) { return; }
-        if (m_items.size() == 1) { this->setCurrentIndex(0); }
-        else if (index >= 0) { this->setCurrentIndex(index); }
+        if (m_items.isEmpty())
+        {
+            return;
+        }
+        if (m_items.size() == 1)
+        {
+            this->setCurrentIndex(0);
+        }
+        else if (index >= 0)
+        {
+            this->setCurrentIndex(index);
+        }
     }
 
     void CServerListSelector::onServerTextChanged(const QString &text)

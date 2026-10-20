@@ -42,7 +42,10 @@ namespace swift::misc
         {
             QObject::connect(sender, signal, &m_eventLoop,
                              [this, condition = std::forward<F2>(condition)](auto &&...args) {
-                                 if (condition(std::forward<decltype(args)>(args)...)) { m_eventLoop.exit(GotSignal); }
+                                 if (condition(std::forward<decltype(args)>(args)...))
+                                 {
+                                     m_eventLoop.exit(GotSignal);
+                                 }
                              });
         }
 

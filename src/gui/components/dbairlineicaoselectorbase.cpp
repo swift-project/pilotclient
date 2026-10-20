@@ -45,8 +45,14 @@ namespace swift::gui::components
         {
             QPointer<CDbAirlineIcaoSelectorBase> myself(this);
             QTimer::singleShot(500, [=, this]() {
-                if (!sGui || sGui->isShuttingDown()) { return; }
-                if (!myself) { return; }
+                if (!sGui || sGui->isShuttingDown())
+                {
+                    return;
+                }
+                if (!myself)
+                {
+                    return;
+                }
                 this->onCodesRead(CEntityFlags::AirlineIcaoEntity, CEntityFlags::ReadFinished, c, {});
             });
         }
@@ -56,9 +62,18 @@ namespace swift::gui::components
 
     bool CDbAirlineIcaoSelectorBase::setAirlineIcao(const CAirlineIcaoCode &icao)
     {
-        if (icao == m_currentIcao) { return false; }
-        if (icao.isLoadedFromDb()) { m_currentIcao = icao; }
-        else { m_currentIcao = sGui->getWebDataServices()->smartAirlineIcaoSelector(icao); }
+        if (icao == m_currentIcao)
+        {
+            return false;
+        }
+        if (icao.isLoadedFromDb())
+        {
+            m_currentIcao = icao;
+        }
+        else
+        {
+            m_currentIcao = sGui->getWebDataServices()->smartAirlineIcaoSelector(icao);
+        }
         emit changedAirlineIcao(m_currentIcao);
         return true;
     }
@@ -66,7 +81,10 @@ namespace swift::gui::components
     bool CDbAirlineIcaoSelectorBase::setAirlineIcao(int key)
     {
         CAirlineIcaoCode icao(sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(key));
-        if (!icao.hasCompleteData()) { return false; }
+        if (!icao.hasCompleteData())
+        {
+            return false;
+        }
         this->setAirlineIcao(icao);
         return true;
     }
@@ -79,39 +97,57 @@ namespace swift::gui::components
 
     void CDbAirlineIcaoSelectorBase::dragEnterEvent(QDragEnterEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         this->setBackgroundRole(QPalette::Highlight);
         event->acceptProposedAction();
     }
 
     void CDbAirlineIcaoSelectorBase::dragMoveEvent(QDragMoveEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         event->acceptProposedAction();
     }
 
     void CDbAirlineIcaoSelectorBase::dragLeaveEvent(QDragLeaveEvent *event)
     {
-        if (!event) { return; }
+        if (!event)
+        {
+            return;
+        }
         event->accept();
     }
 
     void CDbAirlineIcaoSelectorBase::dropEvent(QDropEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         const CVariant valueVariant(toCVariant(event->mimeData()));
         if (valueVariant.isValid())
         {
             if (valueVariant.canConvert<CAirlineIcaoCode>())
             {
                 const auto icao(valueVariant.value<CAirlineIcaoCode>());
-                if (!icao.hasValidDbKey()) { return; }
+                if (!icao.hasValidDbKey())
+                {
+                    return;
+                }
                 this->setAirlineIcao(icao);
             }
             else if (valueVariant.canConvert<CAirlineIcaoCodeList>())
             {
                 const auto icaos(valueVariant.value<CAirlineIcaoCodeList>());
-                if (icaos.isEmpty()) { return; }
+                if (icaos.isEmpty())
+                {
+                    return;
+                }
                 this->setAirlineIcao(icaos.front());
             }
         }
@@ -122,7 +158,10 @@ namespace swift::gui::components
     {
         Q_UNUSED(url)
 
-        if (!sGui) { return; }
+        if (!sGui)
+        {
+            return;
+        }
         if (entity.testFlag(CEntityFlags::AirlineIcaoEntity) && CEntityFlags::isFinishedReadState(readState))
         {
             if (count > 0)
@@ -133,14 +172,20 @@ namespace swift::gui::components
                         &CDbAirlineIcaoSelectorBase::onCompleterActivated);
                 m_completer.reset(c); // deletes any old completer
             }
-            else { m_completer.reset(nullptr); }
+            else
+            {
+                m_completer.reset(nullptr);
+            }
         }
     }
 
     void CDbAirlineIcaoSelectorBase::onCompleterActivated(const QString &icaoString)
     {
         const int dbKey = CDatastoreUtility::extractIntegerKey(icaoString);
-        if (dbKey < 0) { return; }
+        if (dbKey < 0)
+        {
+            return;
+        }
         this->setAirlineIcao(dbKey);
     }
 } // namespace swift::gui::components

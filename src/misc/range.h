@@ -126,7 +126,10 @@ namespace swift::misc
         template <class T, class Predicate>
         bool equalsBy(const T &other, Predicate c) const
         {
-            if (equalPointers(&derived(), &other)) { return true; }
+            if (equalPointers(&derived(), &other))
+            {
+                return true;
+            }
             return std::equal(derived().begin(), derived().end(), other.begin(), other.end(), c);
         }
 
@@ -165,8 +168,14 @@ namespace swift::misc
         template <typename T, typename U>
         static bool equalPointers(const T *a, const U *b)
         {
-            if constexpr (TIsEqualityComparable<const T *, const U *>::value) { return a == b; }
-            else { return false; }
+            if constexpr (TIsEqualityComparable<const T *, const U *>::value)
+            {
+                return a == b;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     private:
@@ -297,7 +306,10 @@ namespace swift::misc
     template <class I>
     QDebug operator<<(QDebug d, const CRange<I> &range)
     {
-        for (const auto &v : range) { d << v; }
+        for (const auto &v : range)
+        {
+            d << v;
+        }
         return d;
     }
     template <class I>

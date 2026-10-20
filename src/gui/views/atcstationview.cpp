@@ -38,7 +38,10 @@ namespace swift::gui::views
         m_model->changedAtcStationConnectionStatus(station, added);
 
         // resize the first, rest will be resized with normal updates
-        if (this->rowCount() == 1) { this->fullResizeToContents(); }
+        if (this->rowCount() == 1)
+        {
+            this->fullResizeToContents();
+        }
     }
 
     void CAtcStationView::customMenu(CMenuActions &menuActions)
@@ -46,7 +49,10 @@ namespace swift::gui::views
         menuActions.addMenuCom();
         if (CBuildConfig::isDebugBuild())
         {
-            if (m_debugActions.isEmpty()) { m_debugActions = QList<QAction *>({ nullptr, nullptr }); }
+            if (m_debugActions.isEmpty())
+            {
+                m_debugActions = QList<QAction *>({ nullptr, nullptr });
+            }
             m_debugActions[0] = menuActions.addAction(m_debugActions[0], CIcons::tableSheet16(),
                                                       "Test: 1k ATC online stations", CMenuAction::pathClientCom(),
                                                       { this, &CAtcStationView::emitTestRequest1kAtcOnlineDummies });
@@ -57,7 +63,10 @@ namespace swift::gui::views
 
         if (this->hasSelection())
         {
-            if (m_actions.isEmpty()) { m_actions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr }); }
+            if (m_actions.isEmpty())
+            {
+                m_actions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr, nullptr });
+            }
 
             m_actions[0] = menuActions.addAction(m_actions[0], CIcons::appCockpit16(), "Tune in COM1 (active)",
                                                  CMenuAction::pathClientCom(),
@@ -81,14 +90,20 @@ namespace swift::gui::views
     void CAtcStationView::tuneInAtc(const misc::aviation::CComSystem::ComUnit unit, const bool active)
     {
         const CAtcStation s(this->selectedObject());
-        if (s.getCallsign().isEmpty()) { return; }
+        if (s.getCallsign().isEmpty())
+        {
+            return;
+        }
         emit this->requestComFrequency(s.getFrequency(), unit, active);
     }
 
     void CAtcStationView::requestTextMessage()
     {
         const CAtcStation s(this->selectedObject());
-        if (s.getCallsign().isEmpty()) { return; }
+        if (s.getCallsign().isEmpty())
+        {
+            return;
+        }
         emit this->requestTextMessageWidget(s.getCallsign());
     }
 } // namespace swift::gui::views

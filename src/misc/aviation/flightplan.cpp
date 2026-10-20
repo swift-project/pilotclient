@@ -30,18 +30,27 @@ namespace swift::misc::aviation
 {
     CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, bool parse) : m_remarks(cleanRemarks(remarks))
     {
-        if (parse) { this->parseFlightPlanRemarks(); }
+        if (parse)
+        {
+            this->parseFlightPlanRemarks();
+        }
     }
 
     CFlightPlanRemarks::CFlightPlanRemarks(const QString &remarks, CVoiceCapabilities voiceCapabilities, bool parse)
         : m_remarks(cleanRemarks(remarks)), m_voiceCapabilities(voiceCapabilities)
     {
-        if (parse) { this->parseFlightPlanRemarks(); }
+        if (parse)
+        {
+            this->parseFlightPlanRemarks();
+        }
     }
 
     bool CFlightPlanRemarks::setSelcalCode(const QString &selcal)
     {
-        if (m_selcalCode == selcal || selcal.length() != 4) { return false; }
+        if (m_selcalCode == selcal || selcal.length() != 4)
+        {
+            return false;
+        }
         const QString r =
             CFlightPlanRemarks::replaceRemark(m_remarks, QStringLiteral("SEL/"), QStringLiteral("SEL/%1").arg(selcal));
         m_remarks = r;
@@ -58,13 +67,19 @@ namespace swift::misc::aviation
 
     bool CFlightPlanRemarks::hasAnyParsedRemarks() const
     {
-        if (!m_isParsed) { return false; }
+        if (!m_isParsed)
+        {
+            return false;
+        }
         return this->hasParsedAirlineRemarks() || m_selcalCode.isValid() || !m_voiceCapabilities.isUnknown();
     }
 
     bool CFlightPlanRemarks::hasParsedAirlineRemarks() const
     {
-        if (!m_isParsed) { return false; }
+        if (!m_isParsed)
+        {
+            return false;
+        }
         return !m_radioTelephony.isEmpty() || !m_flightOperator.isEmpty() || m_airlineIcao.hasValidDesignator();
     }
 
@@ -87,8 +102,14 @@ namespace swift::misc::aviation
 
     QString CFlightPlanRemarks::replaceVoiceCapabilities(const QString &newCapRemarks, const QString &oldRemarks)
     {
-        if (newCapRemarks.isEmpty()) { return oldRemarks; }
-        if (oldRemarks.isEmpty()) { return newCapRemarks; }
+        if (newCapRemarks.isEmpty())
+        {
+            return oldRemarks;
+        }
+        if (oldRemarks.isEmpty())
+        {
+            return newCapRemarks;
+        }
 
         QString r(oldRemarks);
         if (r.contains("/V/", Qt::CaseInsensitive))
@@ -124,18 +145,30 @@ namespace swift::misc::aviation
         // 2) OPR/UAL CALLSIGN/UNITED
         // 3) /v/FPL-VIR9-IS-A346/DEP/S-EGLL/ARR/KJFK/REG/G-VGAS/TCAS RVR/200 OPR/VIRGIN AIRLINES
 
-        if (!force && m_isParsed) { return; }
+        if (!force && m_isParsed)
+        {
+            return;
+        }
         m_isParsed = true;
-        if (m_remarks.isEmpty()) { return; }
+        if (m_remarks.isEmpty())
+        {
+            return;
+        }
         const QString remarks = m_remarks.toUpper();
         const QString callsign = CCallsign::unifyCallsign(getRemark(remarks, "REG/")); // registration is a callsign
-        if (CCallsign::isValidAircraftCallsign(callsign)) { m_registration = CCallsign(callsign, CCallsign::Aircraft); }
+        if (CCallsign::isValidAircraftCallsign(callsign))
+        {
+            m_registration = CCallsign(callsign, CCallsign::Aircraft);
+        }
         m_voiceCapabilities = m_voiceCapabilities.isUnknown() ? CVoiceCapabilities(m_remarks) : m_voiceCapabilities;
         m_flightOperator =
             getRemark(remarks, "OPR/"); // operator, e.g. British airways, sometimes people use ICAO code here
         m_selcalCode = CSelcal(getRemark(remarks, "SEL/"));
         m_radioTelephony = getRemark(remarks, "CALLSIGN/"); // used similar to radio telephony
-        if (m_radioTelephony.isEmpty()) { m_radioTelephony = getRemark(remarks, "RT/"); }
+        if (m_radioTelephony.isEmpty())
+        {
+            m_radioTelephony = getRemark(remarks, "RT/");
+        }
         if (!m_flightOperator.isEmpty() && CAirlineIcaoCode::isValidAirlineDesignator(m_flightOperator))
         {
             // if people use ICAO code as flight operator swap with airline ICAO
@@ -148,9 +181,15 @@ namespace swift::misc::aviation
     {
         const int maxIndex = remarks.size() - 1;
         int f = remarks.indexOf(marker);
-        if (f < 0) { return {}; }
+        if (f < 0)
+        {
+            return {};
+        }
         f += marker.length();
-        if (maxIndex <= f) { return {}; }
+        if (maxIndex <= f)
+        {
+            return {};
+        }
 
         // the remarks are poorly formatted:
         // 1) sometimes the values are enclosed in "/", like "/REG/D-AMBZ/"
@@ -159,9 +198,15 @@ namespace swift::misc::aviation
 
         thread_local const QRegularExpression nextMarker("\\s+\\w*/|$");
         int to1 = remarks.indexOf(nextMarker, f + 1); // for case 2,3
-        if (to1 < 0) { to1 = maxIndex + 1; }
+        if (to1 < 0)
+        {
+            to1 = maxIndex + 1;
+        }
         int to2 = remarks.indexOf('/', f + 1); // for case 1
-        if (to2 < 0) { to2 = maxIndex + 1; } // no more end markers, ends after last character
+        if (to2 < 0)
+        {
+            to2 = maxIndex + 1;
+        } // no more end markers, ends after last character
         const int to = qMin(to1, to2);
         const QString cut = remarks.mid(f, to - f).simplified();
         return cut;
@@ -175,12 +220,21 @@ namespace swift::misc::aviation
         if (f >= 0)
         {
             f += marker.length();
-            if (maxIndex <= f) { return remarks; }
+            if (maxIndex <= f)
+            {
+                return remarks;
+            }
             thread_local const QRegularExpression nextMarker("\\s+\\w*/|$");
             int to1 = remarks.indexOf(nextMarker, f + 1); // for case 2,3
-            if (to1 < 0) { to1 = maxIndex + 1; }
+            if (to1 < 0)
+            {
+                to1 = maxIndex + 1;
+            }
             int to2 = remarks.indexOf('/', f + 1); // for case 1
-            if (to2 < 0) { to2 = maxIndex + 1; } // no more end markers, ends after last character
+            if (to2 < 0)
+            {
+                to2 = maxIndex + 1;
+            } // no more end markers, ends after last character
             const int to = qMin(to1, to2);
             r.remove(f, to - f);
         }
@@ -257,8 +311,14 @@ namespace swift::misc::aviation
 
     QVariant CFlightPlan::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -321,7 +381,10 @@ namespace swift::misc::aviation
 
     CFlightPlan CFlightPlan::fromVPilotFormat(const QString &vPilotData)
     {
-        if (vPilotData.isEmpty()) { return {}; }
+        if (vPilotData.isEmpty())
+        {
+            return {};
+        }
         QDomDocument doc;
         doc.setContent(vPilotData);
         const QDomElement fpDom = doc.firstChildElement();
@@ -369,7 +432,10 @@ namespace swift::misc::aviation
         if (departureTime.length() == 4)
         {
             CTime depTime;
-            if (depTime.parseFromString_hhmm(departureTime)) { fp.setTakeoffTimePlanned(depTime.toQDateTime()); }
+            if (depTime.parseFromString_hhmm(departureTime))
+            {
+                fp.setTakeoffTimePlanned(depTime.toQDateTime());
+            }
         }
 
         return fp;
@@ -377,7 +443,10 @@ namespace swift::misc::aviation
 
     CFlightPlan CFlightPlan::fromSB4Format(const QString &sbData)
     {
-        if (sbData.isEmpty()) { return {}; }
+        if (sbData.isEmpty())
+        {
+            return {};
+        }
         CFlightPlan fp;
         const QMap<QString, QString> values = parseIniValues(sbData);
         const QString altStr = values.value("Altitude");
@@ -415,7 +484,10 @@ namespace swift::misc::aviation
 
     CFlightPlan CFlightPlan::fromSimBriefFormat(const QString &simBrief)
     {
-        if (simBrief.isEmpty()) { return {}; }
+        if (simBrief.isEmpty())
+        {
+            return {};
+        }
         CFlightPlan fp;
         QDomDocument doc;
         doc.setContent(simBrief);
@@ -455,15 +527,30 @@ namespace swift::misc::aviation
             if (ok)
             {
                 CAltitude ca(cruiseAltFt, CAltitude::MeanSeaLevel, CLengthUnit::ft());
-                if (cruiseAlt.endsWith("00") && cruiseAltFt > 5000) { ca.toFlightLevel(); }
+                if (cruiseAlt.endsWith("00") && cruiseAltFt > 5000)
+                {
+                    ca.toFlightLevel();
+                }
                 fp.setCruiseAltitude(ca);
-                if (cruiseAltFt >= 10000) { fp.setFlightRule(CFlightPlan::IFR); } // good guess
-                else { fp.setFlightRule(CFlightPlan::VFR); }
+                if (cruiseAltFt >= 10000)
+                {
+                    fp.setFlightRule(CFlightPlan::IFR);
+                } // good guess
+                else
+                {
+                    fp.setFlightRule(CFlightPlan::VFR);
+                }
             }
-            else { fp.setCruiseAltitudeString(cruiseAlt); }
+            else
+            {
+                fp.setCruiseAltitudeString(cruiseAlt);
+            }
             const QString tas = general.firstChildElement("cruise_tas").text();
             const int tasKts = tas.toInt(&ok);
-            if (ok) { fp.setCruiseTrueAirspeed(CSpeed(tasKts, CSpeedUnit::kts())); }
+            if (ok)
+            {
+                fp.setCruiseTrueAirspeed(CSpeed(tasKts, CSpeedUnit::kts()));
+            }
         }
 
         const QDomNodeList timeList = doc.elementsByTagName("times");
@@ -473,10 +560,16 @@ namespace swift::misc::aviation
             const QDomNode times = timeList.at(0);
             const QString enroute = times.firstChildElement("est_time_enroute").text();
             const int enrouteSecs = enroute.toInt(&ok);
-            if (ok) { fp.setEnrouteTime(CTime(enrouteSecs, CTimeUnit::s())); }
+            if (ok)
+            {
+                fp.setEnrouteTime(CTime(enrouteSecs, CTimeUnit::s()));
+            }
             const QString endurance = times.firstChildElement("endurance").text();
             const int enduranceSecs = endurance.toInt(&ok);
-            if (ok) { fp.setFuelTime(CTime(enduranceSecs, CTimeUnit::s())); }
+            if (ok)
+            {
+                fp.setFuelTime(CTime(enduranceSecs, CTimeUnit::s()));
+            }
             const QString depTime = times.firstChildElement("sched_out").text();
             const int depTimeUnixTs = depTime.toInt(&ok);
             if (ok)
@@ -523,7 +616,10 @@ namespace swift::misc::aviation
                 remarksChanged = c || remarksChanged;
             }
 
-            if (remarksChanged) { fp.setFlightPlanRemarks(r); }
+            if (remarksChanged)
+            {
+                fp.setFlightPlanRemarks(r);
+            }
         }
 
         return fp;
@@ -531,7 +627,10 @@ namespace swift::misc::aviation
 
     CFlightPlan CFlightPlan::fromMultipleFormats(const QString &data, const QString &fileSuffix)
     {
-        if (data.isEmpty()) { return {}; }
+        if (data.isEmpty())
+        {
+            return {};
+        }
         if (fileSuffix.contains("xml", Qt::CaseInsensitive))
         {
             if (data.contains("<OFP>", Qt::CaseInsensitive) && data.contains("<general>", Qt::CaseInsensitive))
@@ -540,7 +639,10 @@ namespace swift::misc::aviation
             }
         }
 
-        if (data.contains("[SBFlightPlan]", Qt::CaseInsensitive)) { return CFlightPlan::fromSB4Format(data); }
+        if (data.contains("[SBFlightPlan]", Qt::CaseInsensitive))
+        {
+            return CFlightPlan::fromSB4Format(data);
+        }
         if (data.contains("<FlightPlan", Qt::CaseInsensitive) && data.contains("<?xml", Qt::CaseInsensitive))
         {
             return CFlightPlan::fromVPilotFormat(data);
@@ -588,18 +690,28 @@ namespace swift::misc::aviation
                 return {};
             }
 
-            if (fileName.endsWith(".sfp", Qt::CaseInsensitive)) { return CFlightPlan::fromSB4Format(data); }
-            if (fileName.endsWith(".vfp", Qt::CaseInsensitive)) { return CFlightPlan::fromVPilotFormat(data); }
+            if (fileName.endsWith(".sfp", Qt::CaseInsensitive))
+            {
+                return CFlightPlan::fromSB4Format(data);
+            }
+            if (fileName.endsWith(".vfp", Qt::CaseInsensitive))
+            {
+                return CFlightPlan::fromVPilotFormat(data);
+            }
             if (fileName.endsWith(".json", Qt::CaseInsensitive))
             {
-                do {
+                do
+                {
                     CStatusMessage m;
                     if (!json::looksLikeSwiftJson(data))
                     {
                         m = CStatusMessage(static_cast<CFlightPlan *>(nullptr), CStatusMessage::SeverityWarning,
                                            u"Reading '%1' yields no data", true)
                             << fileName;
-                        if (msgs) { msgs->push_back(m); }
+                        if (msgs)
+                        {
+                            msgs->push_back(m);
+                        }
                         break;
                     }
 
@@ -621,7 +733,10 @@ namespace swift::misc::aviation
                                 m = CStatusMessage(static_cast<CFlightPlan *>(nullptr), CStatusMessage::SeverityWarning,
                                                    u"Wrong format for flight plan in '%1'")
                                     << fileName;
-                                if (msgs) { msgs->push_back(m); }
+                                if (msgs)
+                                {
+                                    msgs->push_back(m);
+                                }
                             }
                         }
                         else
@@ -634,7 +749,10 @@ namespace swift::misc::aviation
                     {
                         m = CStatusMessage::fromJsonException(ex, static_cast<CFlightPlan *>(nullptr),
                                                               "Parse error in " + fileName);
-                        if (msgs) { msgs->push_back(m); }
+                        if (msgs)
+                        {
+                            msgs->push_back(m);
+                        }
                         break;
                     }
                 }
@@ -677,12 +795,27 @@ namespace swift::misc::aviation
 
     CFlightPlan::FlightRules CFlightPlan::stringToFlightRules(const QString &flightRules)
     {
-        if (flightRules.length() < 3) { return UNKNOWN; }
+        if (flightRules.length() < 3)
+        {
+            return UNKNOWN;
+        }
         const QString fr(flightRules.toUpper().trimmed());
-        if (fr.startsWith("DVFR")) { return DVFR; }
-        if (fr.startsWith("SVFR")) { return SVFR; }
-        if (fr.startsWith("VFR")) { return VFR; }
-        if (fr.startsWith("IFR")) { return IFR; }
+        if (fr.startsWith("DVFR"))
+        {
+            return DVFR;
+        }
+        if (fr.startsWith("SVFR"))
+        {
+            return SVFR;
+        }
+        if (fr.startsWith("VFR"))
+        {
+            return VFR;
+        }
+        if (fr.startsWith("IFR"))
+        {
+            return IFR;
+        }
         return UNKNOWN;
     }
 

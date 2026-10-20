@@ -76,10 +76,22 @@ namespace swift::misc::simulation
     int CSimulatorInfo::numberSimulators() const
     {
         int c = isXPlane() ? 1 : 0;
-        if (isP3D()) { c++; }
-        if (isFG()) { c++; }
-        if (isMSFS()) { c++; }
-        if (isMSFS2024()) { c++; }
+        if (isP3D())
+        {
+            c++;
+        }
+        if (isFG())
+        {
+            c++;
+        }
+        if (isMSFS())
+        {
+            c++;
+        }
+        if (isMSFS2024())
+        {
+            c++;
+        }
         return c;
     }
 
@@ -95,7 +107,10 @@ namespace swift::misc::simulation
 
     bool CSimulatorInfo::matchesAnyOrNone(const CSimulatorInfo &otherInfo) const
     {
-        if (this->isNoSimulator()) { return true; }
+        if (this->isNoSimulator())
+        {
+            return true;
+        }
         return this->matchesAny(otherInfo);
     }
 
@@ -122,8 +137,14 @@ namespace swift::misc::simulation
     CSimulatorInfo CSimulatorInfo::add(const CSimulatorInfo &other)
     {
         // anything to add?
-        if (other.isUnspecified()) { return None; }
-        if (this->matchesAll(other)) { return None; }
+        if (other.isUnspecified())
+        {
+            return None;
+        }
+        if (this->matchesAll(other))
+        {
+            return None;
+        }
 
         this->setSimulator(this->getSimulator() | other.getSimulator());
         const CSimulatorInfo delta(this->getSimulator() & other.getSimulator());
@@ -133,11 +154,26 @@ namespace swift::misc::simulation
     QSet<CSimulatorInfo> CSimulatorInfo::asSingleSimulatorSet() const
     {
         QSet<CSimulatorInfo> set;
-        if (m_simulator & P3D) { set.insert(CSimulatorInfo(P3D)); }
-        if (m_simulator & FG) { set.insert(CSimulatorInfo(FG)); }
-        if (m_simulator & XPLANE) { set.insert(CSimulatorInfo(XPLANE)); }
-        if (m_simulator & MSFS) { set.insert(CSimulatorInfo(MSFS)); }
-        if (m_simulator & MSFS2024) { set.insert(CSimulatorInfo(MSFS2024)); }
+        if (m_simulator & P3D)
+        {
+            set.insert(CSimulatorInfo(P3D));
+        }
+        if (m_simulator & FG)
+        {
+            set.insert(CSimulatorInfo(FG));
+        }
+        if (m_simulator & XPLANE)
+        {
+            set.insert(CSimulatorInfo(XPLANE));
+        }
+        if (m_simulator & MSFS)
+        {
+            set.insert(CSimulatorInfo(MSFS));
+        }
+        if (m_simulator & MSFS2024)
+        {
+            set.insert(CSimulatorInfo(MSFS2024));
+        }
         return set;
     }
 
@@ -149,7 +185,10 @@ namespace swift::misc::simulation
     CStatusMessage CSimulatorInfo::validateSimulatorsForModel() const
     {
         CStatusMessage m(this);
-        if (!this->isAnySimulator()) { return m.validationError(u"No simulator"); }
+        if (!this->isAnySimulator())
+        {
+            return m.validationError(u"No simulator");
+        }
         if (this->isMicrosoftOrPrepare3DSimulator() && this->isXPlane())
         {
             return m.validationError(u"Cannot combine XPlane and FS simulators");
@@ -158,28 +197,52 @@ namespace swift::misc::simulation
         {
             return m.validationError(u"Cannot combine FG and FS simulators");
         }
-        if (this->isXPlane() && this->isFG()) { return m.validationError(u"Cannot combine FG and XPlane simulators"); }
+        if (this->isXPlane() && this->isFG())
+        {
+            return m.validationError(u"Cannot combine FG and XPlane simulators");
+        }
         return m.info(u"Simulators OK for model");
     }
 
     CSimulatorInfo::Simulator CSimulatorInfo::boolToFlag(bool xp, bool p3d, bool fg, bool msfs, bool msfs2024)
     {
         Simulator s = xp ? XPLANE : None;
-        if (p3d) { s |= P3D; }
-        if (fg) { s |= FG; }
-        if (msfs) { s |= MSFS; }
-        if (msfs2024) { s |= MSFS2024; }
+        if (p3d)
+        {
+            s |= P3D;
+        }
+        if (fg)
+        {
+            s |= FG;
+        }
+        if (msfs)
+        {
+            s |= MSFS;
+        }
+        if (msfs2024)
+        {
+            s |= MSFS2024;
+        }
         return s;
     }
 
     CSimulatorInfo::Simulator CSimulatorInfo::identifierToSimulator(const QString &identifier)
     {
         const QString i(identifier.toLower().trimmed().remove(' ').remove('-'));
-        if (i.isEmpty()) { return None; }
+        if (i.isEmpty())
+        {
+            return None;
+        }
 
         Simulator s = None;
-        if (i.contains("plane") || i.contains("xp")) { s |= XPLANE; }
-        if (i.contains("gear") || stringCompare(QStringLiteral("fg"), identifier, Qt::CaseInsensitive)) { s |= FG; }
+        if (i.contains("plane") || i.contains("xp"))
+        {
+            s |= XPLANE;
+        }
+        if (i.contains("gear") || stringCompare(QStringLiteral("fg"), identifier, Qt::CaseInsensitive))
+        {
+            s |= FG;
+        }
         if (i.contains("3d") || i.contains("prepar") || i.contains("martin") || i.contains("lm") || i.contains("lock"))
         {
             s |= P3D;
@@ -190,7 +253,10 @@ namespace swift::misc::simulation
             return s;
         }
 
-        if (i.contains("msfs")) { s |= MSFS; }
+        if (i.contains("msfs"))
+        {
+            s |= MSFS;
+        }
         return s;
     }
 
@@ -204,7 +270,10 @@ namespace swift::misc::simulation
     {
         static const QStringList sims = [] {
             QStringList s;
-            for (const CSimulatorInfo &i : CSimulatorInfo::allSimulatorsSet()) { s.push_back(i.toQString(false)); }
+            for (const CSimulatorInfo &i : CSimulatorInfo::allSimulatorsSet())
+            {
+                s.push_back(i.toQString(false));
+            }
             s.sort(Qt::CaseInsensitive);
             return s;
         }();
@@ -252,7 +321,10 @@ namespace swift::misc::simulation
         {
             return CSimulatorInfo::xplane();
         }
-        if (locallyInstalled.isP3D()) { return CSimulatorInfo::p3d(); }
+        if (locallyInstalled.isP3D())
+        {
+            return CSimulatorInfo::p3d();
+        }
 
         // fallback
         return CSimulatorInfo::p3d();
@@ -288,7 +360,10 @@ namespace swift::misc::simulation
     CCountPerSimulator::CCountPerSimulator()
     {
         m_counts.reserve(CSimulatorInfo::NumberOfSimulators + 1);
-        for (int i = 0; i < CSimulatorInfo::NumberOfSimulators + 1; i++) { m_counts.push_back(0); }
+        for (int i = 0; i < CSimulatorInfo::NumberOfSimulators + 1; i++)
+        {
+            m_counts.push_back(0);
+        }
     }
 
     int CCountPerSimulator::getCount(const CSimulatorInfo &simulator) const
@@ -322,7 +397,10 @@ namespace swift::misc::simulation
         int c = 0;
         for (int i = 0; i < m_counts.size() - 1; i++)
         {
-            if (m_counts[i] > 0) { c++; }
+            if (m_counts[i] > 0)
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -330,7 +408,10 @@ namespace swift::misc::simulation
     QMultiMap<int, CSimulatorInfo> CCountPerSimulator::countPerSimulator() const
     {
         QMultiMap<int, CSimulatorInfo> counts;
-        for (int i = 0; i < m_counts.size(); i++) { counts.insert(m_counts[i], simulator(i)); }
+        for (int i = 0; i < m_counts.size(); i++)
+        {
+            counts.insert(m_counts[i], simulator(i));
+        }
         return counts;
     }
 
@@ -354,11 +435,26 @@ namespace swift::misc::simulation
             m_counts[6]++;
             return;
         }
-        if (simulator.isP3D()) { m_counts[1]++; }
-        if (simulator.isXPlane()) { m_counts[3]++; }
-        if (simulator.isFG()) { m_counts[4]++; }
-        if (simulator.isMSFS()) { m_counts[5]++; }
-        if (simulator.isMSFS2024()) { m_counts[6]++; }
+        if (simulator.isP3D())
+        {
+            m_counts[1]++;
+        }
+        if (simulator.isXPlane())
+        {
+            m_counts[3]++;
+        }
+        if (simulator.isFG())
+        {
+            m_counts[4]++;
+        }
+        if (simulator.isMSFS())
+        {
+            m_counts[5]++;
+        }
+        if (simulator.isMSFS2024())
+        {
+            m_counts[6]++;
+        }
     }
 
     int CCountPerSimulator::internalIndex(const CSimulatorInfo &simulator)

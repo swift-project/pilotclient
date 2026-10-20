@@ -136,7 +136,10 @@ namespace swift::gui
     bool CStyleSheetUtility::read()
     {
         QDir directory(CSwiftDirectories::stylesheetsDirectory());
-        if (!directory.exists()) { return false; }
+        if (!directory.exists())
+        {
+            return false;
+        }
 
         // qss/css files
         const bool needsWatcher = m_fileWatcher.files().isEmpty();
@@ -157,7 +160,10 @@ namespace swift::gui
             QFile file(absolutePath);
             if (file.open(QFile::QIODevice::ReadOnly | QIODevice::Text))
             {
-                if (needsWatcher) { m_fileWatcher.addPath(absolutePath); }
+                if (needsWatcher)
+                {
+                    m_fileWatcher.addPath(absolutePath);
+                }
                 QTextStream in(&file);
                 const QString c = removeComments(in.readAll(), true, true);
                 const QString f = fileInfo.fileName().toLower();
@@ -186,7 +192,10 @@ namespace swift::gui
 
     QString CStyleSheetUtility::style(const QString &fileName) const
     {
-        if (!this->containsStyle(fileName)) { return {}; }
+        if (!this->containsStyle(fileName))
+        {
+            return {};
+        }
         return m_styleSheets[fileName.toLower()].trimmed();
     }
 
@@ -199,17 +208,29 @@ namespace swift::gui
         for (const QString &fileName : fileNames)
         {
             const QString key = fileName.toLower().trimmed();
-            if (!this->containsStyle(key)) { continue; }
+            if (!this->containsStyle(key))
+            {
+                continue;
+            }
 
             QString s;
             if (fileName == fileNameFonts() || fileName == fileNameFontsModified())
             {
-                if (fontAdded) { continue; }
+                if (fontAdded)
+                {
+                    continue;
+                }
                 fontAdded = true;
                 s = hasModifiedFont ? m_styleSheets[fileNameFontsModified().toLower()] : m_styleSheets[fileNameFonts()];
             }
-            else { s = m_styleSheets[key]; }
-            if (s.isEmpty()) { continue; }
+            else
+            {
+                s = m_styleSheets[key];
+            }
+            if (s.isEmpty())
+            {
+                continue;
+            }
 
             style += (style.isEmpty() ? QString() : "\n\n") % u"/** file: " % fileName % " **/\n" % s;
         }
@@ -225,8 +246,14 @@ namespace swift::gui
     bool CStyleSheetUtility::updateFont(const QFont &font)
     {
         QString fs;
-        if (font.pixelSize() >= 0) { fs.append(QString::number(font.pixelSize())).append("px"); }
-        else { fs.append(QString::number(font.pointSizeF())).append("pt"); }
+        if (font.pixelSize() >= 0)
+        {
+            fs.append(QString::number(font.pixelSize())).append("px");
+        }
+        else
+        {
+            fs.append(QString::number(font.pointSizeF())).append("pt");
+        }
         return updateFont(font.family(), fs, fontStyleAsString(font), fontWeightAsString(font), "white");
     }
 
@@ -270,7 +297,10 @@ namespace swift::gui
         const QString c = combinedStyleAndWeight.toLower();
         for (const QString &s : fontStyles())
         {
-            if (c.contains(s)) { return s; }
+            if (c.contains(s))
+            {
+                return s;
+            }
         }
         return n;
     }
@@ -281,7 +311,10 @@ namespace swift::gui
         const QString c = combinedStyleAndWeight.toLower();
         for (const QString &w : fontWeights())
         {
-            if (c.contains(w)) { return w; }
+            if (c.contains(w))
+            {
+                return w;
+            }
         }
         return n;
     }
@@ -303,9 +336,15 @@ namespace swift::gui
         const QString fn =
             CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(), fileNameFontsModified());
         QFile file(fn);
-        if (!file.exists()) { return false; }
+        if (!file.exists())
+        {
+            return false;
+        }
         bool r = file.remove();
-        if (!r) { return false; }
+        if (!r)
+        {
+            return false;
+        }
         this->read();
         return true;
     }
@@ -405,11 +444,17 @@ namespace swift::gui
     bool CStyleSheetUtility::useStyleSheetInDerivedWidget(QWidget *usedWidget, QStyle::PrimitiveElement element)
     {
         Q_ASSERT(usedWidget);
-        if (!usedWidget) { return false; }
+        if (!usedWidget)
+        {
+            return false;
+        }
 
         Q_ASSERT(usedWidget->style());
         QStyle *style = usedWidget->style();
-        if (!style) { return false; }
+        if (!style)
+        {
+            return false;
+        }
 
         // 1) QStylePainter: modern version of
         //    usedWidget->style()->drawPrimitive(element, &opt, &p, usedWidget);
@@ -417,7 +462,10 @@ namespace swift::gui
         // see http://stackoverflow.com/questions/37952348/enable-own-widget-for-stylesheet
         auto *sa = qobject_cast<QAbstractScrollArea *>(usedWidget);
         QStylePainter p(sa ? sa->viewport() : usedWidget);
-        if (!p.isActive()) { return false; }
+        if (!p.isActive())
+        {
+            return false;
+        }
 
         QStyleOption opt;
         opt.initFrom(usedWidget);
@@ -440,11 +488,23 @@ namespace swift::gui
     {
         QString s1(style1.trimmed());
         QString s2(style2.trimmed());
-        if (s1.isEmpty()) { return s2; }
-        if (s2.isEmpty()) { return s1; }
-        if (!s1.endsWith(";")) { s1 = s1.append("; "); }
+        if (s1.isEmpty())
+        {
+            return s2;
+        }
+        if (s2.isEmpty())
+        {
+            return s1;
+        }
+        if (!s1.endsWith(";"))
+        {
+            s1 = s1.append("; ");
+        }
         s1.append(s2);
-        if (!s1.endsWith(";")) { s1 = s1.append(";"); }
+        if (!s1.endsWith(";"))
+        {
+            s1 = s1.append(";");
+        }
         return s1;
     }
 
@@ -478,18 +538,33 @@ namespace swift::gui
     {
         static const QString qss(".qss");
         QString fn(fileName);
-        if (fn.endsWith(qss)) { fn.chop(qss.length()); }
+        if (fn.endsWith(qss))
+        {
+            fn.chop(qss.length());
+        }
 
         QString specific;
-        if (CBuildConfig::isRunningOnWindowsNtPlatform()) { specific = fn % u".win" % qss; }
-        else if (CBuildConfig::isRunningOnMacOSPlatform()) { specific = fn % u".mac" % qss; }
-        else if (CBuildConfig::isRunningOnLinuxPlatform()) { specific = fn % u".linux" % qss; }
+        if (CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
+            specific = fn % u".win" % qss;
+        }
+        else if (CBuildConfig::isRunningOnMacOSPlatform())
+        {
+            specific = fn % u".mac" % qss;
+        }
+        else if (CBuildConfig::isRunningOnLinuxPlatform())
+        {
+            specific = fn % u".linux" % qss;
+        }
         return qssFileExists(specific) ? specific : fn + qss;
     }
 
     bool CStyleSheetUtility::qssFileExists(const QString &filename)
     {
-        if (filename.isEmpty()) { return false; }
+        if (filename.isEmpty())
+        {
+            return false;
+        }
         const QFileInfo f(CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(), filename));
         return f.exists() && f.isReadable();
     }

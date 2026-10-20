@@ -27,7 +27,10 @@ namespace swift::misc::simulation
     {
         if (json.contains("IID")) // comes from the plugin
         {
-            if (!json.contains("MetaData")) { throw CJsonException("Missing 'MetaData'"); }
+            if (!json.contains("MetaData"))
+            {
+                throw CJsonException("Missing 'MetaData'");
+            }
 
             // json data is already validated by CPluginManagerSimulator
             CJsonScope scope("MetaData");
@@ -35,12 +38,18 @@ namespace swift::misc::simulation
             CValueObject::convertFromJson(json["MetaData"].toObject());
             m_valid = true;
         }
-        else { CValueObject::convertFromJson(json); }
+        else
+        {
+            CValueObject::convertFromJson(json);
+        }
 
         // set info if it wasn't set already
         if (m_info.isNoSimulator() && !m_simulator.isEmpty())
         {
-            if (!this->isEmulatedPlugin()) { m_info = CSimulatorInfo(m_simulator); }
+            if (!this->isEmulatedPlugin())
+            {
+                m_info = CSimulatorInfo(m_simulator);
+            }
         }
     }
 
@@ -57,13 +66,31 @@ namespace swift::misc::simulation
     const QString &CSimulatorPluginInfo::identifierFromSimulatorInfo(const CSimulatorInfo &simInfo)
     {
         static const QString e;
-        if (!simInfo.isSingleSimulator()) { return e; }
+        if (!simInfo.isSingleSimulator())
+        {
+            return e;
+        }
         const CSimulatorInfo::Simulator s = simInfo.getSimulator();
-        if (s.testFlag(CSimulatorInfo::P3D)) { return CSimulatorPluginInfo::p3dPluginIdentifier(); }
-        if (s.testFlag(CSimulatorInfo::XPLANE)) { return CSimulatorPluginInfo::xplanePluginIdentifier(); }
-        if (s.testFlag(CSimulatorInfo::FG)) { return CSimulatorPluginInfo::fgPluginIdentifier(); }
-        if (s.testFlag(CSimulatorInfo::MSFS)) { return CSimulatorPluginInfo::msfsPluginIdentifier(); }
-        if (s.testFlag(CSimulatorInfo::MSFS2024)) { return CSimulatorPluginInfo::msfs2024PluginIdentifier(); }
+        if (s.testFlag(CSimulatorInfo::P3D))
+        {
+            return CSimulatorPluginInfo::p3dPluginIdentifier();
+        }
+        if (s.testFlag(CSimulatorInfo::XPLANE))
+        {
+            return CSimulatorPluginInfo::xplanePluginIdentifier();
+        }
+        if (s.testFlag(CSimulatorInfo::FG))
+        {
+            return CSimulatorPluginInfo::fgPluginIdentifier();
+        }
+        if (s.testFlag(CSimulatorInfo::MSFS))
+        {
+            return CSimulatorPluginInfo::msfsPluginIdentifier();
+        }
+        if (s.testFlag(CSimulatorInfo::MSFS2024))
+        {
+            return CSimulatorPluginInfo::msfs2024PluginIdentifier();
+        }
 
         return e;
     }

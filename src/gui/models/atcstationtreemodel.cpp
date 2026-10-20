@@ -38,7 +38,10 @@ namespace swift::gui::models
     void CAtcStationTreeModel::updateContainer(const CAtcStationList &stations)
     {
         this->clear();
-        if (stations.isEmpty()) { return; }
+        if (stations.isEmpty())
+        {
+            return;
+        }
 
         m_stations = stations.sortedByAtcSuffixSortOrderAndDistance();
         m_stationsBySuffix = m_stations.splitPerSuffix();
@@ -73,14 +76,20 @@ namespace swift::gui::models
                         const CVariant f = column.getFormatter()->displayRole(v);
                         si = new QStandardItem(f.toQString(true));
                     }
-                    if (!si) { continue; }
+                    if (!si)
+                    {
+                        continue;
+                    }
                     colCount++;
                     si->setEditable(false); // make not editable
                     stationRow.push_back(si);
                 }
 
                 // add all items
-                if (stationRow.isEmpty()) { continue; }
+                if (stationRow.isEmpty())
+                {
+                    continue;
+                }
                 typeFolderFirstColumn->appendRow(stationRow);
                 visibleColumns = qMax(visibleColumns, colCount);
             }

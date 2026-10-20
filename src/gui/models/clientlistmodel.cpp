@@ -46,21 +46,30 @@ namespace swift::gui::models
     {
         static const CPropertyIndex ms({ CClient::IndexModelString, CAircraftModel::IndexModelString });
         static const CPropertyIndex qf({ CClient::IndexModelString, CAircraftModel::IndexHasQueriedModelString });
-        if (role != Qt::DisplayRole && role != Qt::DecorationRole) { return CListModelBase::data(index, role); }
+        if (role != Qt::DisplayRole && role != Qt::DecorationRole)
+        {
+            return CListModelBase::data(index, role);
+        }
         const CPropertyIndex pi = modelIndexToPropertyIndex(index);
         if (pi == ms && role == Qt::DisplayRole)
         {
             // no model string for ATC
             const CClient client = this->at(index);
             const bool atc = client.isAtc();
-            if (atc) { return { "ATC" }; }
+            if (atc)
+            {
+                return { "ATC" };
+            }
         }
         else if (pi == qf && role == Qt::DecorationRole)
         {
             // no symbol for ATC
             const CClient client = this->at(index);
             const bool atc = client.isAtc();
-            if (atc) { return {}; }
+            if (atc)
+            {
+                return {};
+            }
         }
         return CListModelBase::data(index, role);
     }

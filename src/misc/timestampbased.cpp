@@ -20,7 +20,10 @@ namespace swift::misc
 
     QDateTime ITimestampBased::getUtcTimestamp() const
     {
-        if (m_timestampMSecsSinceEpoch < 0) { return {}; }
+        if (m_timestampMSecsSinceEpoch < 0)
+        {
+            return {};
+        }
         return QDateTime::fromMSecsSinceEpoch(m_timestampMSecsSinceEpoch);
     }
 
@@ -64,7 +67,10 @@ namespace swift::misc
 
     bool ITimestampBased::isOlderThanNowMinusOffset(int offsetMs) const
     {
-        if (offsetMs <= 0) { return false; }
+        if (offsetMs <= 0)
+        {
+            return false;
+        }
         return m_timestampMSecsSinceEpoch < (QDateTime::currentMSecsSinceEpoch() - offsetMs);
     }
 
@@ -143,7 +149,10 @@ namespace swift::misc
 
     bool ITimestampBased::canHandleIndex(CPropertyIndexRef index)
     {
-        if (index.isEmpty()) { return false; }
+        if (index.isEmpty())
+        {
+            return false;
+        }
         const int i = index.frontCasted<int>();
         return isAnyTimestampIndex(i);
     }
@@ -206,22 +215,37 @@ namespace swift::misc
 
     void ITimestampBased::updateMissingParts(const ITimestampBased &other)
     {
-        if (m_timestampMSecsSinceEpoch < 0) { m_timestampMSecsSinceEpoch = other.m_timestampMSecsSinceEpoch; }
+        if (m_timestampMSecsSinceEpoch < 0)
+        {
+            m_timestampMSecsSinceEpoch = other.m_timestampMSecsSinceEpoch;
+        }
     }
 
     QString ITimestampWithOffsetBased::getTimestampAndOffset(bool formatted) const
     {
         static const QString ts("%1 (%2)");
-        if (!this->hasValidTimestamp()) { return ts.arg("-", this->getTimeOffsetWithUnit()); }
-        if (formatted) { return ts.arg(this->getFormattedUtcTimestampHms(), this->getTimeOffsetWithUnit()); }
+        if (!this->hasValidTimestamp())
+        {
+            return ts.arg("-", this->getTimeOffsetWithUnit());
+        }
+        if (formatted)
+        {
+            return ts.arg(this->getFormattedUtcTimestampHms(), this->getTimeOffsetWithUnit());
+        }
         return ts.arg(m_timeOffsetMs).arg(this->getTimeOffsetWithUnit());
     }
 
     QString ITimestampWithOffsetBased::getFormattedTimestampAndOffset(bool includeRawTimestamp) const
     {
-        if (!includeRawTimestamp) { return this->getTimestampAndOffset(true); }
+        if (!includeRawTimestamp)
+        {
+            return this->getTimestampAndOffset(true);
+        }
         static const QString ts("%1/%2 (%3)");
-        if (!this->hasValidTimestamp()) { return ts.arg("-", "-", this->getTimeOffsetWithUnit()); }
+        if (!this->hasValidTimestamp())
+        {
+            return ts.arg("-", "-", this->getTimeOffsetWithUnit());
+        }
         return ts.arg(this->getFormattedUtcTimestampHmsz())
             .arg(m_timestampMSecsSinceEpoch)
             .arg(this->getTimeOffsetWithUnit());
@@ -249,8 +273,14 @@ namespace swift::misc
 
     bool ITimestampWithOffsetBased::canHandleIndex(CPropertyIndexRef index)
     {
-        if (ITimestampBased::canHandleIndex(index)) { return true; }
-        if (index.isEmpty()) { return false; }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return true;
+        }
+        if (index.isEmpty())
+        {
+            return false;
+        }
         const int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexOffsetMs)) && (i <= static_cast<int>(IndexOffsetWithUnit));
     }
@@ -266,7 +296,10 @@ namespace swift::misc
 
     QVariant ITimestampWithOffsetBased::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
         if (!index.isEmpty())
         {
             const auto i = index.frontCasted<ColumnIndex>();

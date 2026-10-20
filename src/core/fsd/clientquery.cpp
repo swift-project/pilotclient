@@ -32,7 +32,10 @@ namespace swift::core::fsd
         }
 
         QStringList payload;
-        if (tokens.size() > 3) { payload = tokens.mid(3); }
+        if (tokens.size() > 3)
+        {
+            payload = tokens.mid(3);
+        }
         return { tokens[0], tokens[1], fromQString<ClientQueryType>(tokens[2]), payload };
     }
 } // namespace swift::core::fsd

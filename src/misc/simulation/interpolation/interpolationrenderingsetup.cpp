@@ -21,14 +21,20 @@ namespace swift::misc::simulation
 {
     bool CInterpolationAndRenderingSetupBase::setSendingGndFlagToSimulator(bool sendFLag)
     {
-        if (sendFLag == m_sendGndToSim) { return false; }
+        if (sendFLag == m_sendGndToSim)
+        {
+            return false;
+        }
         m_sendGndToSim = sendFLag;
         return true;
     }
 
     bool CInterpolationAndRenderingSetupBase::setPitchOnGround(const CAngle &pitchOnGround)
     {
-        if (pitchOnGround == m_pitchOnGround) { return false; }
+        if (pitchOnGround == m_pitchOnGround)
+        {
+            return false;
+        }
         m_pitchOnGround = pitchOnGround;
         return true;
     }
@@ -42,15 +48,24 @@ namespace swift::misc::simulation
     CInterpolationAndRenderingSetupBase::setInterpolatorMode(CInterpolationAndRenderingSetupBase::InterpolatorMode mode)
     {
         const int m = static_cast<int>(mode);
-        if (m_interpolatorMode == m) { return false; }
+        if (m_interpolatorMode == m)
+        {
+            return false;
+        }
         m_interpolatorMode = m;
         return true;
     }
 
     bool CInterpolationAndRenderingSetupBase::setInterpolatorMode(const QString &mode)
     {
-        if (mode.contains("spline", Qt::CaseInsensitive)) { return this->setInterpolatorMode(Spline); }
-        if (mode.contains("linear", Qt::CaseInsensitive)) { return this->setInterpolatorMode(Linear); }
+        if (mode.contains("spline", Qt::CaseInsensitive))
+        {
+            return this->setInterpolatorMode(Spline);
+        }
+        if (mode.contains("linear", Qt::CaseInsensitive))
+        {
+            return this->setInterpolatorMode(Linear);
+        }
         return false;
     }
 
@@ -69,14 +84,20 @@ namespace swift::misc::simulation
 
     bool CInterpolationAndRenderingSetupBase::setLogInterpolation(bool log)
     {
-        if (m_logInterpolation == log) { return false; }
+        if (m_logInterpolation == log)
+        {
+            return false;
+        }
         m_logInterpolation = log;
         return true;
     }
 
     bool CInterpolationAndRenderingSetupBase::setEnabledAircraftParts(bool enabled)
     {
-        if (m_enabledAircraftParts == enabled) { return false; }
+        if (m_enabledAircraftParts == enabled)
+        {
+            return false;
+        }
         m_enabledAircraftParts = enabled;
         return true;
     }
@@ -149,8 +170,14 @@ namespace swift::misc::simulation
 
     bool CInterpolationAndRenderingSetupGlobal::isRenderingEnabled() const
     {
-        if (m_maxRenderedAircraft < 1) { return false; }
-        if (!isMaxDistanceRestricted()) { return true; }
+        if (m_maxRenderedAircraft < 1)
+        {
+            return false;
+        }
+        if (!isMaxDistanceRestricted())
+        {
+            return true;
+        }
         return m_maxRenderedDistance.isPositiveWithEpsilonConsidered();
     }
 
@@ -166,21 +193,33 @@ namespace swift::misc::simulation
 
     bool CInterpolationAndRenderingSetupGlobal::setMaxRenderedAircraft(int maxRenderedAircraft)
     {
-        if (maxRenderedAircraft == m_maxRenderedAircraft) { return false; }
+        if (maxRenderedAircraft == m_maxRenderedAircraft)
+        {
+            return false;
+        }
         if (maxRenderedAircraft < 1)
         {
             // disable, we set both values to 0
             this->disableRendering();
         }
-        else if (maxRenderedAircraft >= InfiniteAircraft()) { m_maxRenderedAircraft = InfiniteAircraft(); }
-        else { m_maxRenderedAircraft = maxRenderedAircraft; }
+        else if (maxRenderedAircraft >= InfiniteAircraft())
+        {
+            m_maxRenderedAircraft = InfiniteAircraft();
+        }
+        else
+        {
+            m_maxRenderedAircraft = maxRenderedAircraft;
+        }
         return true;
     }
 
     bool CInterpolationAndRenderingSetupGlobal::setMaxRenderedDistance(const CLength &distance)
     {
 
-        if (distance == m_maxRenderedDistance) { return false; }
+        if (distance == m_maxRenderedDistance)
+        {
+            return false;
+        }
         if (distance.isNull() || distance.isNegativeWithEpsilonConsidered())
         {
             m_maxRenderedDistance = CLength(0.0, nullptr);
@@ -227,7 +266,10 @@ namespace swift::misc::simulation
 
     QString CInterpolationAndRenderingSetupGlobal::getRenderRestrictionText() const
     {
-        if (!this->isRenderingRestricted()) { return "none"; }
+        if (!this->isRenderingRestricted())
+        {
+            return "none";
+        }
         QString rt;
         if (this->isMaxAircraftRestricted())
         {
@@ -235,7 +277,10 @@ namespace swift::misc::simulation
         }
         if (this->isMaxDistanceRestricted())
         {
-            if (!rt.isEmpty()) { rt.append(" "); }
+            if (!rt.isEmpty())
+            {
+                rt.append(" ");
+            }
             rt.append(this->getMaxRenderedDistance().valueRoundedWithUnit(CLengthUnit::NM(), 0));
         }
         return rt;
@@ -263,7 +308,10 @@ namespace swift::misc::simulation
 
     QVariant CInterpolationAndRenderingSetupGlobal::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -309,7 +357,10 @@ namespace swift::misc::simulation
         const CInterpolationAndRenderingSetupGlobal &globalSetup) const
     {
         CPropertyIndexList diff;
-        if (this->logInterpolation() != globalSetup.logInterpolation()) { diff.push_back(IndexLogInterpolation); }
+        if (this->logInterpolation() != globalSetup.logInterpolation())
+        {
+            diff.push_back(IndexLogInterpolation);
+        }
         if (this->showSimulatorDebugMessages() != globalSetup.showSimulatorDebugMessages())
         {
             diff.push_back(IndexSimulatorDebugMessages);
@@ -330,7 +381,10 @@ namespace swift::misc::simulation
         {
             diff.push_back(IndexFixSceneryOffset);
         }
-        if (this->getPitchOnGround() != globalSetup.getPitchOnGround()) { diff.push_back(IndexPitchOnGround); }
+        if (this->getPitchOnGround() != globalSetup.getPitchOnGround())
+        {
+            diff.push_back(IndexPitchOnGround);
+        }
         return diff;
     }
 
@@ -344,7 +398,10 @@ namespace swift::misc::simulation
 
     QVariant CInterpolationAndRenderingSetupPerCallsign::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

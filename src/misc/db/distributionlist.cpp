@@ -16,7 +16,10 @@ namespace swift::misc::db
         QStringList channels;
         for (const CDistribution &distribution : *this)
         {
-            if (distribution.getChannel().isEmpty()) { continue; }
+            if (distribution.getChannel().isEmpty())
+            {
+                continue;
+            }
             channels << distribution.getChannel();
         }
         return channels;
@@ -56,7 +59,10 @@ namespace swift::misc::db
 
     CDistribution CDistributionList::getMostStableOrDefault() const
     {
-        if (this->size() < 2) { return this->frontOrDefault(); }
+        if (this->size() < 2)
+        {
+            return this->frontOrDefault();
+        }
         CDistributionList copy(*this);
         copy.sortByStability();
         return copy.back();
@@ -64,7 +70,10 @@ namespace swift::misc::db
 
     CDistribution CDistributionList::getLeastStableOrDefault() const
     {
-        if (this->size() < 2) { return this->frontOrDefault(); }
+        if (this->size() < 2)
+        {
+            return this->frontOrDefault();
+        }
         CDistributionList copy(*this);
         copy.sortByStability();
         return copy.front();
@@ -83,7 +92,10 @@ namespace swift::misc::db
 
     CDistributionList CDistributionList::fromDatabaseJson(const QString &json)
     {
-        if (json.isEmpty()) { return {}; }
+        if (json.isEmpty())
+        {
+            return {};
+        }
         return CDistributionList::fromDatabaseJson(json::jsonArrayFromString(json));
     }
 } // namespace swift::misc::db

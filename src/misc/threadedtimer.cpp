@@ -23,7 +23,10 @@ namespace swift::misc
             // shift in correct thread
             QPointer<CThreadedTimer> myself(this);
             QTimer::singleShot(0, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->startTimer(ms);
             });
             return;
@@ -40,13 +43,19 @@ namespace swift::misc
             // shift in correct thread
             QPointer<CThreadedTimer> myself(this);
             QTimer::singleShot(0, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->stopTimer();
             });
             return;
         }
 
-        if (!m_updateTimer.isActive()) { return; }
+        if (!m_updateTimer.isActive())
+        {
+            return;
+        }
         m_updateTimer.stop();
     }
 } // namespace swift::misc

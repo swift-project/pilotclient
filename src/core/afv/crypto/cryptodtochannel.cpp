@@ -99,7 +99,10 @@ namespace swift::core::afv::crypto
         {
             int minIndex {};
             uint minValue = getMin(minIndex);
-            if (sequenceReceived < minValue) { return false; } // Possible replay attack
+            if (sequenceReceived < minValue)
+            {
+                return false;
+            } // Possible replay attack
             m_receiveSequenceHistory[minIndex] = sequenceReceived;
         }
 
@@ -111,7 +114,10 @@ namespace swift::core::afv::crypto
     {
         for (int i = 0; i < m_receiveSequenceHistoryDepth; i++)
         {
-            if (m_receiveSequenceHistory[i] == sequence) { return true; }
+            if (m_receiveSequenceHistory[i] == sequence)
+            {
+                return true;
+            }
         }
         return false;
     }

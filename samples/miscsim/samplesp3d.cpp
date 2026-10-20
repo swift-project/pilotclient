@@ -18,7 +18,10 @@ namespace swift::sample
     void CSamplesP3D::samplesMisc(QTextStream &streamOut)
     {
         QSet<QString> configFiles = CFsDirectories::findP3dAddOnConfigFiles("v5");
-        if (configFiles.isEmpty()) { configFiles = CFsDirectories::findP3dAddOnConfigFiles("v4"); }
+        if (configFiles.isEmpty())
+        {
+            configFiles = CFsDirectories::findP3dAddOnConfigFiles("v4");
+        }
 
         streamOut << swift::misc::joinStringSet(configFiles, ", ") << Qt::endl;
 

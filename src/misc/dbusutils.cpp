@@ -26,7 +26,10 @@ namespace swift::misc
                 out += indent % type % u"signature " % signature % u'\n';
                 out += CDBusUtils::getQDBusArgumentSignature(qv.value<QDBusArgument>(), level + 1) % u'\n';
             }
-            else { out += indent % u"type: " % type % u"signature " % signature % u" value " % qv.toString() % u'\n'; }
+            else
+            {
+                out += indent % u"type: " % type % u"signature " % signature % u" value " % qv.toString() % u'\n';
+            }
         }
         arg.endArray();
         return out;

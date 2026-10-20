@@ -43,7 +43,10 @@ namespace swift::misc::simulation::fscommon
 
     QString CAircraftCfgEntries::getFileDirectory() const
     {
-        if (m_fileName.isEmpty()) { return {}; }
+        if (m_fileName.isEmpty())
+        {
+            return {};
+        }
         const QFileInfo fileInfo(m_fileName);
         return fileInfo.absolutePath();
     }
@@ -114,7 +117,10 @@ namespace swift::misc::simulation::fscommon
         CAirlineIcaoCode airline;
         airline.setName(this->getAtcAirline()); // descriptive name like "BATAVIA"
         const QString airlineDesignator(this->getAtcParkingCode());
-        if (CAirlineIcaoCode::isValidAirlineDesignator(airlineDesignator)) { airline.setDesignator(airlineDesignator); }
+        if (CAirlineIcaoCode::isValidAirlineDesignator(airlineDesignator))
+        {
+            airline.setDesignator(airlineDesignator);
+        }
         livery.setAirlineIcaoCode(airline);
         model.setLivery(livery);
 
@@ -126,8 +132,14 @@ namespace swift::misc::simulation::fscommon
 
     QVariant CAircraftCfgEntries::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

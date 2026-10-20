@@ -23,14 +23,20 @@ namespace swift::core::afv::connection
 
     bool CClientConnectionData::isVoiceServerAlive() const
     {
-        if (!m_lastVoiceServerHeartbeatAckUtc.isValid()) { return false; }
+        if (!m_lastVoiceServerHeartbeatAckUtc.isValid())
+        {
+            return false;
+        }
         const qint64 d = qAbs(m_lastVoiceServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()));
         return d < ServerTimeoutSecs;
     }
 
     bool CClientConnectionData::isDataServerAlive() const
     {
-        if (!m_lastDataServerHeartbeatAckUtc.isValid()) { return false; }
+        if (!m_lastDataServerHeartbeatAckUtc.isValid())
+        {
+            return false;
+        }
         const qint64 d = qAbs(m_lastDataServerHeartbeatAckUtc.secsTo(QDateTime::currentDateTimeUtc()));
         return d < ServerTimeoutSecs;
     }

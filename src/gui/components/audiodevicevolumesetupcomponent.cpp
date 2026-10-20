@@ -106,7 +106,10 @@ namespace swift::gui::components
         // this is leading to undesired "save settings" messages and played sounds
         QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
         QTimer::singleShot(2000, this, [=, this] {
-            if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+            if (!myself || !sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             this->init();
         });
 
@@ -116,7 +119,10 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::init()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getCContextAudioBase()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getCContextAudioBase())
+        {
+            return;
+        }
 
         // audio is optional
         const bool audio = this->hasAudio();
@@ -171,7 +177,10 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::initWithAfvClient()
     {
-        if (!afvClient()) { return; }
+        if (!afvClient())
+        {
+            return;
+        }
         m_afvConnections.disconnectAll();
 
         //! \todo Workaround to avoid context signals
@@ -200,7 +209,10 @@ namespace swift::gui::components
         c = connect(
             afv, &CAfvClient::connectionStatusChanged, this,
             [=](CAfvClient::ConnectionStatus status) {
-                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                if (!myself || !sGui || sGui->isShuttingDown())
+                {
+                    return;
+                }
                 myself->setTransmitReceiveInUiFromVoiceClient();
                 Q_UNUSED(status)
             },
@@ -243,8 +255,14 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::setInValue(int value, int from, int to)
     {
-        if (value > to) { value = to; }
-        else if (value < from) { value = from; }
+        if (value > to)
+        {
+            value = to;
+        }
+        else if (value < from)
+        {
+            value = from;
+        }
         const double r = ui->hs_VolumeIn->maximum() - ui->hs_VolumeIn->minimum();
         const double tr = to - from;
         ui->hs_VolumeIn->setValue(qRound(value / tr * r));
@@ -252,8 +270,14 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::setOutValue(int value, int from, int to)
     {
-        if (value > to) { value = to; }
-        else if (value < from) { value = from; }
+        if (value > to)
+        {
+            value = to;
+        }
+        else if (value < from)
+        {
+            value = from;
+        }
         const double r = ui->hs_VolumeOut->maximum() - ui->hs_VolumeOut->minimum();
         const double tr = to - from;
         ui->hs_VolumeOut->setValue(qRound(value / tr * r));
@@ -261,8 +285,14 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::setOutValueCom1(int value, int from, int to)
     {
-        if (value > to) { value = to; }
-        else if (value < from) { value = from; }
+        if (value > to)
+        {
+            value = to;
+        }
+        else if (value < from)
+        {
+            value = from;
+        }
         const double r = ui->hs_VolumeOutCom1->maximum() - ui->hs_VolumeOutCom1->minimum();
         const double tr = to - from;
         ui->hs_VolumeOutCom1->setValue(qRound(value / tr * r));
@@ -270,8 +300,14 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::setOutValueCom2(int value, int from, int to)
     {
-        if (value > to) { value = to; }
-        else if (value < from) { value = from; }
+        if (value > to)
+        {
+            value = to;
+        }
+        else if (value < from)
+        {
+            value = from;
+        }
         const double r = ui->hs_VolumeOutCom2->maximum() - ui->hs_VolumeOutCom2->minimum();
         const double tr = to - from;
         ui->hs_VolumeOutCom2->setValue(qRound(value / tr * r));
@@ -279,15 +315,27 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::setInLevel(double value)
     {
-        if (value > 1.0) { value = 1.0; }
-        else if (value < 0.0) { value = 0.0; }
+        if (value > 1.0)
+        {
+            value = 1.0;
+        }
+        else if (value < 0.0)
+        {
+            value = 0.0;
+        }
         ui->wip_InLevelMeter->levelChanged(value);
     }
 
     void CAudioDeviceVolumeSetupComponent::setOutLevel(double value)
     {
-        if (value > 1.0) { value = 1.0; }
-        else if (value < 0.0) { value = 0.0; }
+        if (value > 1.0)
+        {
+            value = 1.0;
+        }
+        else if (value < 0.0)
+        {
+            value = 0.0;
+        }
         ui->wip_OutLevelMeter->levelChanged(value);
     }
 
@@ -361,7 +409,10 @@ namespace swift::gui::components
 
     CAfvClient *CAudioDeviceVolumeSetupComponent::afvClient()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getCContextAudioBase()) { return nullptr; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getCContextAudioBase())
+        {
+            return nullptr;
+        }
         return sGui->getCContextAudioBase()->afvClient();
     }
 
@@ -377,9 +428,15 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::initAudioDeviceLists()
     {
-        if (!this->hasAudio()) { return; }
+        if (!this->hasAudio())
+        {
+            return;
+        }
         const bool changed = this->onAudioDevicesChanged(sGui->getCContextAudioBase()->getAudioDevices());
-        if (!changed) { return; }
+        if (!changed)
+        {
+            return;
+        }
         const CAudioDeviceInfoList currentDevices = sGui->getCContextAudioBase()->getCurrentAudioDevices();
         this->onAudioStarted(currentDevices.getInputDevices().frontOrDefault(),
                              currentDevices.getOutputDevices().frontOrDefault());
@@ -420,7 +477,10 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::onReloadDevices()
     {
-        if (!hasAudio()) { return; }
+        if (!hasAudio())
+        {
+            return;
+        }
         this->initAudioDeviceLists();
         const CAudioDeviceInfo i = this->getSelectedInputDevice();
         const CAudioDeviceInfo o = this->getSelectedOutputDevice();
@@ -449,7 +509,10 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::showAudioRunsWhereDialog()
     {
-        if (!this->hasAudio()) { return; }
+        if (!this->hasAudio())
+        {
+            return;
+        }
         const QString ai = sGui->getCContextAudioBase()->audioRunsWhereInfo();
         QMessageBox::information(this, "Audio information", ai);
     }
@@ -463,7 +526,10 @@ namespace swift::gui::components
 
     bool CAudioDeviceVolumeSetupComponent::isComIntegrated() const
     {
-        if (!this->hasSimulator()) { return false; }
+        if (!this->hasSimulator())
+        {
+            return false;
+        }
         const simulation::settings::CSimulatorSettings settings = sGui->getIContextSimulator()->getSimulatorSettings();
         const bool integrate = settings.isComIntegrated();
         return integrate;
@@ -471,8 +537,14 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::onRxTxChanged(bool checked)
     {
-        if (!this->hasAudio()) { return; }
-        if (this->isComIntegrated()) { return; }
+        if (!this->hasAudio())
+        {
+            return;
+        }
+        if (this->isComIntegrated())
+        {
+            return;
+        }
 
         Q_UNUSED(checked)
         const bool rx1 = ui->cb_1Rec->isChecked();
@@ -487,17 +559,32 @@ namespace swift::gui::components
         QPointer<CAudioDeviceVolumeSetupComponent> myself(this);
         QTimer::singleShot(25, this, [=, this] {
             // in case UI values are not correct
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->setRxTxCheckboxes(rx1, tx1, rx2, tx2);
         });
     }
 
     void CAudioDeviceVolumeSetupComponent::setRxTxCheckboxes(bool rx1, bool tx1, bool rx2, bool tx2)
     {
-        if (ui->cb_1Tx->isChecked() != tx1) { ui->cb_1Tx->setChecked(tx1); }
-        if (ui->cb_2Tx->isChecked() != tx2) { ui->cb_2Tx->setChecked(tx2); }
-        if (ui->cb_1Rec->isChecked() != rx1) { ui->cb_1Rec->setChecked(rx1); }
-        if (ui->cb_2Rec->isChecked() != rx2) { ui->cb_2Rec->setChecked(rx2); }
+        if (ui->cb_1Tx->isChecked() != tx1)
+        {
+            ui->cb_1Tx->setChecked(tx1);
+        }
+        if (ui->cb_2Tx->isChecked() != tx2)
+        {
+            ui->cb_2Tx->setChecked(tx2);
+        }
+        if (ui->cb_1Rec->isChecked() != rx1)
+        {
+            ui->cb_1Rec->setChecked(rx1);
+        }
+        if (ui->cb_2Rec->isChecked() != rx2)
+        {
+            ui->cb_2Rec->setChecked(rx2);
+        }
     }
 
     void CAudioDeviceVolumeSetupComponent::onReceivingCallsignsChanged(const CCallsignSet &com1Callsigns,
@@ -537,22 +624,34 @@ namespace swift::gui::components
 
     CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedInputDevice() const
     {
-        if (!hasAudio()) { return {}; }
+        if (!hasAudio())
+        {
+            return {};
+        }
         const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioInputDevices();
         return devices.findByName(ui->cb_SetupAudioInputDevice->currentText());
     }
 
     CAudioDeviceInfo CAudioDeviceVolumeSetupComponent::getSelectedOutputDevice() const
     {
-        if (!hasAudio()) { return {}; }
+        if (!hasAudio())
+        {
+            return {};
+        }
         const CAudioDeviceInfoList devices = sGui->getCContextAudioBase()->getAudioOutputDevices();
         return devices.findByName(ui->cb_SetupAudioOutputDevice->currentText());
     }
 
     void CAudioDeviceVolumeSetupComponent::onAudioDeviceSelected(int index)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
-        if (index < 0) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio())
+        {
+            return;
+        }
+        if (index < 0)
+        {
+            return;
+        }
 
         const CAudioDeviceInfo in = this->getSelectedInputDevice();
         const CAudioDeviceInfo out = this->getSelectedOutputDevice();
@@ -561,8 +660,14 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::onAudioStarted(const CAudioDeviceInfo &input, const CAudioDeviceInfo &output)
     {
-        if (!afvClient()) { return; }
-        if (m_afvConnections.isEmpty() && m_init) { this->initWithAfvClient(); }
+        if (!afvClient())
+        {
+            return;
+        }
+        if (m_afvConnections.isEmpty() && m_init)
+        {
+            this->initWithAfvClient();
+        }
 
         ui->cb_SetupAudioInputDevice->setCurrentText(input.toQString(true));
         ui->cb_SetupAudioOutputDevice->setCurrentText(output.toQString(true));
@@ -570,12 +675,18 @@ namespace swift::gui::components
 
     void CAudioDeviceVolumeSetupComponent::onAudioStopped()
     {
-        if (!afvClient()) { m_afvConnections.disconnectAll(); }
+        if (!afvClient())
+        {
+            m_afvConnections.disconnectAll();
+        }
     }
 
     bool CAudioDeviceVolumeSetupComponent::onAudioDevicesChanged(const CAudioDeviceInfoList &devices)
     {
-        if (m_cbDevices.hasSameDevices(devices)) { return false; } // avoid numerous follow up actions
+        if (m_cbDevices.hasSameDevices(devices))
+        {
+            return false;
+        } // avoid numerous follow up actions
         m_cbDevices = devices;
 
         ui->cb_SetupAudioOutputDevice->clear();
@@ -596,25 +707,43 @@ namespace swift::gui::components
             }
         }
 
-        if (!i.isEmpty()) { ui->cb_SetupAudioInputDevice->setCurrentText(i); }
-        if (!o.isEmpty()) { ui->cb_SetupAudioOutputDevice->setCurrentText(o); }
+        if (!i.isEmpty())
+        {
+            ui->cb_SetupAudioInputDevice->setCurrentText(i);
+        }
+        if (!o.isEmpty())
+        {
+            ui->cb_SetupAudioOutputDevice->setCurrentText(o);
+        }
 
         return true;
     }
 
     void CAudioDeviceVolumeSetupComponent::onLoopbackToggled(bool loopback)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
-        if (sGui->getCContextAudioBase()->isAudioLoopbackEnabled() == loopback) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio())
+        {
+            return;
+        }
+        if (sGui->getCContextAudioBase()->isAudioLoopbackEnabled() == loopback)
+        {
+            return;
+        }
         sGui->getCContextAudioBase()->enableAudioLoopback(loopback);
     }
 
     void CAudioDeviceVolumeSetupComponent::onDisableAudioEffectsToggled(bool disabled)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextAudio())
+        {
+            return;
+        }
         CSettings as(m_audioSettings.getThreadLocal());
         const bool enabled = !disabled;
-        if (as.isAudioEffectsEnabled() == enabled) { return; }
+        if (as.isAudioEffectsEnabled() == enabled)
+        {
+            return;
+        }
         as.setAudioEffectsEnabled(enabled);
         m_audioSettings.setAndSave(as);
     }

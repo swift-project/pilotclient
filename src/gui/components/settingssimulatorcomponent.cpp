@@ -124,7 +124,10 @@ namespace swift::gui::components
 
     void CSettingsSimulatorComponent::setGuiValues()
     {
-        if (!sGui || !sGui->getIContextSimulator() || sGui->isShuttingDown()) { return; }
+        if (!sGui || !sGui->getIContextSimulator() || sGui->isShuttingDown())
+        {
+            return;
+        }
         const CInterpolationAndRenderingSetupGlobal setup =
             sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
 
@@ -179,12 +182,18 @@ namespace swift::gui::components
                 setup.isMaxDistanceRestricted() ? QString::number(maxDistance.valueInteger(CLengthUnit::NM())) : "");
             ui->led_RenderingEnabled->setOn(setup.isRenderingEnabled());
         }
-        else { ui->led_RenderingEnabled->setOn(false); }
+        else
+        {
+            ui->led_RenderingEnabled->setOn(false);
+        }
     }
 
     CSimulatorPluginInfoList CSettingsSimulatorComponent::getAvailablePlugins()
     {
-        if (!sGui || !sGui->getIContextSimulator()) { return {}; }
+        if (!sGui || !sGui->getIContextSimulator())
+        {
+            return {};
+        }
         return sGui->getIContextSimulator()->getAvailableSimulatorPlugins();
     }
 
@@ -207,9 +216,15 @@ namespace swift::gui::components
             {
                 e << selected.getIdentifier(); // add enabled plugin
             }
-            else { e.removeAll(selected.getIdentifier()); }
+            else
+            {
+                e.removeAll(selected.getIdentifier());
+            }
             const CStatusMessage msg = m_enabledSimulators.set(e); // change setting
-            if (msg.isWarningOrAbove()) { CLogMessage::preformatted(msg); }
+            if (msg.isWarningOrAbove())
+            {
+                CLogMessage::preformatted(msg);
+            }
         }
 
         // changing of GUI state will be done via received signal
@@ -217,7 +232,10 @@ namespace swift::gui::components
 
     void CSettingsSimulatorComponent::onApplyMaxRenderedAircraft()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
 
         // get initial aircraft to render
         CInterpolationAndRenderingSetupGlobal setup =
@@ -226,7 +244,10 @@ namespace swift::gui::components
                                     CInterpolationAndRenderingSetupGlobal::InfiniteAircraft() :
                                     ui->le_MaxAircraft->text().toInt();
         const int oldValue = setup.getMaxRenderedAircraft();
-        if (oldValue == noRequested) { return; }
+        if (oldValue == noRequested)
+        {
+            return;
+        }
 
         // set value
         setup.setMaxRenderedAircraft(noRequested);
@@ -235,7 +256,10 @@ namespace swift::gui::components
         // re-read real value
         setup = sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
         const int noRendered = setup.getMaxRenderedAircraft();
-        if (noRequested == noRendered) { CLogMessage(this).info(u"Max.rendered aircraft: %1") << noRendered; }
+        if (noRequested == noRendered)
+        {
+            CLogMessage(this).info(u"Max.rendered aircraft: %1") << noRendered;
+        }
         else
         {
             CLogMessage(this).info(u"Max.rendered aircraft: %1, requested: %2") << noRendered << noRequested;
@@ -246,7 +270,10 @@ namespace swift::gui::components
 
     void CSettingsSimulatorComponent::onApplyMaxRenderedDistance()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
 
         // get initial aircraft to render
         CInterpolationAndRenderingSetupGlobal setup =
@@ -258,7 +285,10 @@ namespace swift::gui::components
         }
 
         CLength currentDistance(setup.getMaxRenderedDistance());
-        if (currentDistance == newDistance) { return; }
+        if (currentDistance == newDistance)
+        {
+            return;
+        }
 
         CLogMessage(this).info(u"Max.distance requested: %1") << newDistance.valueRoundedWithUnit(2, true);
         setup.setMaxRenderedDistance(newDistance);
@@ -268,7 +298,10 @@ namespace swift::gui::components
 
     void CSettingsSimulatorComponent::onApplyDisableRendering()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
 
         CInterpolationAndRenderingSetupGlobal setup =
             sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
@@ -280,10 +313,16 @@ namespace swift::gui::components
     CSimulatorSettings CSettingsSimulatorComponent::getSimulatorSettings(bool &ok)
     {
         ok = false;
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return {}; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return {};
+        }
         const IContextSimulator *sim = sGui->getIContextSimulator();
         const CSimulatorInfo simulator = sim->getSimulatorPluginInfo().getSimulatorInfo();
-        if (!simulator.isSingleSimulator()) { return {}; }
+        if (!simulator.isSingleSimulator())
+        {
+            return {};
+        }
         ok = true;
         const CSimulatorSettings settings = sim->getSimulatorSettings();
         return settings;
@@ -291,7 +330,10 @@ namespace swift::gui::components
 
     void CSettingsSimulatorComponent::setSimulatorSettings(CSimulatorSettings &settings)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
         IContextSimulator *sim = sGui->getIContextSimulator();
         const CSimulatorInfo simulator = sim->getSimulatorPluginInfo().getSimulatorInfo();
         sim->setSimulatorSettings(settings, simulator);
@@ -301,7 +343,10 @@ namespace swift::gui::components
     {
         bool ok = false;
         CSimulatorSettings settings = CSettingsSimulatorComponent::getSimulatorSettings(ok);
-        if (!ok || !settings.setComIntegrated(ui->cb_ComSync->isChecked())) { return; }
+        if (!ok || !settings.setComIntegrated(ui->cb_ComSync->isChecked()))
+        {
+            return;
+        }
         setSimulatorSettings(settings);
     }
 
@@ -310,7 +355,10 @@ namespace swift::gui::components
         bool ok = false;
         const CSimulatorSettings::CGSource source = ui->comp_CGSourceSelector->getValue();
         CSimulatorSettings settings = CSettingsSimulatorComponent::getSimulatorSettings(ok);
-        if (!ok || !settings.setCGSource(source)) { return; }
+        if (!ok || !settings.setCGSource(source))
+        {
+            return;
+        }
         setSimulatorSettings(settings);
     }
 
@@ -318,21 +366,30 @@ namespace swift::gui::components
     {
         bool ok = false;
         CSimulatorSettings settings = CSettingsSimulatorComponent::getSimulatorSettings(ok);
-        if (!ok) { return; }
+        if (!ok)
+        {
+            return;
+        }
 
         // get value, automatically add default unit if unit is missing
         CLength radius = CLength::null();
         QString radiusString = ui->le_RecordOwnGndPositionsRadius->text().trimmed();
         if (!radiusString.isEmpty())
         {
-            if (!CMeasurementUnit::endWithValidUnitSymbol<CLengthUnit>(radiusString)) { radiusString += "m"; }
+            if (!CMeasurementUnit::endWithValidUnitSymbol<CLengthUnit>(radiusString))
+            {
+                radiusString += "m";
+            }
             radius.parseFromString(radiusString);
         }
         ui->le_RecordOwnGndPositionsRadius->setText(radius.valueRoundedWithUnit(1));
 
         const bool c1 = settings.setRecordOwnAircraftGnd(ui->cb_RecordOwnGndPositions->isChecked());
         const bool c2 = settings.setRecordedGndRadius(radius);
-        if (!c1 && !c2) { return; }
+        if (!c1 && !c2)
+        {
+            return;
+        }
         setSimulatorSettings(settings);
     }
 
@@ -345,7 +402,10 @@ namespace swift::gui::components
 
     void CSettingsSimulatorComponent::clearRestricedRendering()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
 
         CInterpolationAndRenderingSetupGlobal setup;
         setup.clearAllRenderingRestrictions();
@@ -380,11 +440,17 @@ namespace swift::gui::components
         const QString configId = m_plugins->getPluginConfigId(selected.getIdentifier());
         auto *config = m_plugins->getPluginById<IPluginConfig>(configId);
         SWIFT_VERIFY_X(config, Q_FUNC_INFO, "Missing config");
-        if (!config) { return; }
+        if (!config)
+        {
+            return;
+        }
 
         CPluginConfigWindow *window = config->createConfigWindow(qApp->activeWindow());
         SWIFT_VERIFY_X(window, Q_FUNC_INFO, "Missing window");
-        if (!window) { return; }
+        if (!window)
+        {
+            return;
+        }
 
         window->setAttribute(Qt::WA_DeleteOnClose);
         window->show();
@@ -403,8 +469,14 @@ namespace swift::gui::components
 
     void CSettingsSimulatorComponent::checkSimulatorPlugins()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
-        if (sGui->getIContextSimulator()->isSimulatorAvailable()) { return; } // already available
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
+        if (sGui->getIContextSimulator()->isSimulatorAvailable())
+        {
+            return;
+        } // already available
         sGui->getIContextSimulator()->checkListeners();
     }
 } // namespace swift::gui::components

@@ -16,7 +16,10 @@ namespace swift::misc::aviation
     {
         for (const QString &c : callsigns)
         {
-            if (c.isEmpty()) { continue; }
+            if (c.isEmpty())
+            {
+                continue;
+            }
             const CCallsign cs = CCallsign(c, typeHint);
             this->push_back(cs);
         }
@@ -24,7 +27,10 @@ namespace swift::misc::aviation
 
     CCallsignSet::CCallsignSet(const CCallsign &callsign)
     {
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
         this->push_back(callsign);
     }
 
@@ -35,14 +41,23 @@ namespace swift::misc::aviation
     QStringList CCallsignSet::getCallsignStrings(bool sorted) const
     {
         QStringList callsigns;
-        for (const CCallsign &cs : *this) { callsigns.push_back(cs.asString()); }
-        if (sorted) { callsigns.sort(); }
+        for (const CCallsign &cs : *this)
+        {
+            callsigns.push_back(cs.asString());
+        }
+        if (sorted)
+        {
+            callsigns.sort();
+        }
         return callsigns;
     }
 
     QString CCallsignSet::getCallsignsAsString(bool sorted, const QString &separator) const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         return this->getCallsignStrings(sorted).join(separator);
     }
 

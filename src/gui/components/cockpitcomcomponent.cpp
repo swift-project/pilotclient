@@ -82,7 +82,10 @@ namespace swift::gui::components
 
             QPointer<CCockpitComComponent> myself(this);
             QTimer::singleShot(10 * 1000, this, [=, this] {
-                if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+                if (!sGui || sGui->isShuttingDown() || !myself)
+                {
+                    return;
+                }
                 const CSimulatedAircraft aircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
                 this->updateCockpitFromContext(aircraft, CIdentifier::fake());
             });
@@ -102,7 +105,10 @@ namespace swift::gui::components
     void CCockpitComComponent::updateCockpitFromContext(const CSimulatedAircraft &ownAircraft,
                                                         const CIdentifier &originator)
     {
-        if (isMyIdentifier(originator)) { return; } // comes from myself
+        if (isMyIdentifier(originator))
+        {
+            return;
+        } // comes from myself
 
         // update GUI elements
         // avoid unnecessary change events as far as possible
@@ -121,14 +127,26 @@ namespace swift::gui::components
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
         const CSelcal selcal = ui->editor_Com->getSelcal();
-        if (!selcal.isValid()) { CLogMessage().validationWarning(u"Invalid SELCAL code"); }
-        else if (sGui->getCContextAudioBase()) { sGui->getCContextAudioBase()->playSelcalTone(selcal); }
-        else { CLogMessage().validationWarning(u"No audio available"); }
+        if (!selcal.isValid())
+        {
+            CLogMessage().validationWarning(u"Invalid SELCAL code");
+        }
+        else if (sGui->getCContextAudioBase())
+        {
+            sGui->getCContextAudioBase()->playSelcalTone(selcal);
+        }
+        else
+        {
+            CLogMessage().validationWarning(u"No audio available");
+        }
     }
 
     void CCockpitComComponent::updateSelcalFromContext(const CSelcal &selcal, const CIdentifier &originator)
     {
-        if (isMyIdentifier(originator)) { return; } // comes from myself
+        if (isMyIdentifier(originator))
+        {
+            return;
+        } // comes from myself
         ui->editor_Com->setSelcal(selcal);
     }
 
@@ -136,7 +154,10 @@ namespace swift::gui::components
     {
         // unavailable context during shutdown possible
         // mostly when client runs with DBus, but DBus is down
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return {}; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft())
+        {
+            return {};
+        }
         return sGui->getIContextOwnAircraft()->getOwnAircraft();
     }
 
@@ -144,14 +165,20 @@ namespace swift::gui::components
     {
         // unavailable context during shutdown possible
         // mostly when client runs with DBus, but DBus is down
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return false; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft())
+        {
+            return false;
+        }
         return sGui->getIContextOwnAircraft()->updateCockpit(ownAircraft.getCom1System(), ownAircraft.getCom2System(),
                                                              ownAircraft.getTransponder(), identifier());
     }
 
     void CCockpitComComponent::forceCockpitUpdateFromOwnAircraftContext()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         const CSimulatedAircraft ownAircraft = this->getOwnAircraft();
         this->updateCockpitFromContext(ownAircraft,
                                        CIdentifier("dummyInitialValues")); // intentionally different name here
@@ -159,7 +186,10 @@ namespace swift::gui::components
 
     void CCockpitComComponent::updateSelcalInContext(const CSelcal &selcal)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft())
+        {
+            return;
+        }
         sGui->getIContextOwnAircraft()->updateSelcal(selcal, identifier());
     }
 } // namespace swift::gui::components

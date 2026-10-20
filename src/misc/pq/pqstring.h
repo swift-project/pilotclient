@@ -57,10 +57,19 @@ namespace swift::misc::physical_quantities
         template <class PQ>
         static PQ parse(const QString &value, SeparatorMode mode = SeparatorQtDefault)
         {
-            if (value.isEmpty()) { return PQ::null(); }
-            if (value.contains("null", Qt::CaseInsensitive)) { return PQ::null(); }
+            if (value.isEmpty())
+            {
+                return PQ::null();
+            }
+            if (value.contains("null", Qt::CaseInsensitive))
+            {
+                return PQ::null();
+            }
             const CVariant qv = parseToVariant(value, mode);
-            if (!qv.isNull() && qv.canConvert<PQ>()) { return qv.value<PQ>(); }
+            if (!qv.isNull() && qv.canConvert<PQ>())
+            {
+                return qv.value<PQ>();
+            }
             return PQ::null();
         }
 

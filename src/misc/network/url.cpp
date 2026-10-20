@@ -16,7 +16,10 @@ namespace swift::misc::network
 {
     CUrl::CUrl(const QString &fullUrl)
     {
-        if (!fullUrl.isEmpty()) { setFullUrl(fullUrl); }
+        if (!fullUrl.isEmpty())
+        {
+            setFullUrl(fullUrl);
+        }
     }
 
     CUrl::CUrl(const char *url) : CUrl(QString(url)) {}
@@ -37,7 +40,10 @@ namespace swift::misc::network
 
     QString CUrl::appendPath(const QString &pathToAppend)
     {
-        if (pathToAppend.isEmpty()) { return m_path; }
+        if (pathToAppend.isEmpty())
+        {
+            return m_path;
+        }
         const QString p = CFileUtils::appendFilePaths(this->getPath(), pathToAppend);
         this->setPath(p);
         return m_path;
@@ -45,7 +51,10 @@ namespace swift::misc::network
 
     int CUrl::getPort() const
     {
-        if (m_port > 0) { return m_port; }
+        if (m_port > 0)
+        {
+            return m_port;
+        }
         return protocolToDefaultPort(this->getScheme());
     }
 
@@ -65,15 +74,24 @@ namespace swift::misc::network
 
     void CUrl::appendQuery(const QString &queryToAppend)
     {
-        if (queryToAppend.isEmpty()) { return; }
+        if (queryToAppend.isEmpty())
+        {
+            return;
+        }
         const QString q(stripQueryString(queryToAppend));
-        if (q.isEmpty()) { return; }
+        if (q.isEmpty())
+        {
+            return;
+        }
         m_query += hasQuery() ? "&" + q : q;
     }
 
     void CUrl::appendQuery(const QString &key, const QString &value)
     {
-        if (key.isEmpty()) { return; }
+        if (key.isEmpty())
+        {
+            return;
+        }
         this->appendQuery(key + "=" + value);
     }
 
@@ -83,14 +101,32 @@ namespace swift::misc::network
 
     QString CUrl::getFullUrl(bool withQuery) const
     {
-        if (m_host.isEmpty()) { return {}; }
+        if (m_host.isEmpty())
+        {
+            return {};
+        }
 
         QString qn(m_host);
-        if (!hasDefaultPort() && hasPort()) { qn = qn.append(":").append(QString::number(m_port)); }
-        if (hasPath()) { qn = qn.append("/").append(m_path).replace("//", "/"); }
-        if (hasFragment()) { qn = qn.append("#").append(m_fragment).replace("//", "/"); }
-        if (hasQuery() && withQuery) { qn = qn.append("?").append(m_query); }
-        if (hasScheme()) { qn = QString(this->getScheme()).append("://").append(qn); }
+        if (!hasDefaultPort() && hasPort())
+        {
+            qn = qn.append(":").append(QString::number(m_port));
+        }
+        if (hasPath())
+        {
+            qn = qn.append("/").append(m_path).replace("//", "/");
+        }
+        if (hasFragment())
+        {
+            qn = qn.append("#").append(m_fragment).replace("//", "/");
+        }
+        if (hasQuery() && withQuery)
+        {
+            qn = qn.append("?").append(m_query);
+        }
+        if (hasScheme())
+        {
+            qn = QString(this->getScheme()).append("://").append(qn);
+        }
         return qn;
     }
 
@@ -114,7 +150,10 @@ namespace swift::misc::network
 
     CUrl CUrl::withAppendedPath(const QString &path) const
     {
-        if (path.isEmpty()) { return *this; }
+        if (path.isEmpty())
+        {
+            return *this;
+        }
         CUrl url(*this);
         url.appendPath(path);
         return url;
@@ -122,7 +161,10 @@ namespace swift::misc::network
 
     CUrl CUrl::withSwitchedScheme(const QString &scheme, int port) const
     {
-        if (getPort() == port && getScheme() == scheme) { return *this; }
+        if (getPort() == port && getScheme() == scheme)
+        {
+            return *this;
+        }
         QUrl qurl(this->toQUrl());
         qurl.setPort(port);
         qurl.setScheme(scheme);
@@ -141,7 +183,10 @@ namespace swift::misc::network
     bool CUrl::isFileWithSuffix(const QString &suffix) const
     {
         const QString f(this->getFileName());
-        if (suffix.isEmpty()) { return f.contains('.'); }
+        if (suffix.isEmpty())
+        {
+            return f.contains('.');
+        }
         return f.endsWith(suffix, Qt::CaseInsensitive);
     }
 
@@ -176,7 +221,10 @@ namespace swift::misc::network
 
     CUrl CUrl::withAppendedQuery(const QString &query) const
     {
-        if (query.isEmpty()) { return *this; }
+        if (query.isEmpty())
+        {
+            return *this;
+        }
         CUrl url(*this);
         url.appendQuery(query);
         return url;
@@ -198,7 +246,10 @@ namespace swift::misc::network
     void CUrl::convertFromJson(const QJsonObject &json)
     {
         const QJsonValue value = json.value("url");
-        if (value.isUndefined()) { throw CJsonException("Missing 'url'"); }
+        if (value.isUndefined())
+        {
+            throw CJsonException("Missing 'url'");
+        }
         this->setFullUrl(value.toString());
     }
 
@@ -214,7 +265,10 @@ namespace swift::misc::network
     bool CUrl::isDefaultPort(const QString &protocol, int port)
     {
         const int p = protocolToDefaultPort(protocol);
-        if (p < 0) { return false; }
+        if (p < 0)
+        {
+            return false;
+        }
         return port == p;
     }
 
@@ -223,14 +277,23 @@ namespace swift::misc::network
     QString CUrl::stripQueryString(const QString &query)
     {
         QString q(query.trimmed());
-        if (q.startsWith("?") || q.startsWith("&")) { q = q.mid(1); }
-        if (q.endsWith("?") || q.endsWith("&")) { q = q.left(q.size() - 1); }
+        if (q.startsWith("?") || q.startsWith("&"))
+        {
+            q = q.mid(1);
+        }
+        if (q.endsWith("?") || q.endsWith("&"))
+        {
+            q = q.left(q.size() - 1);
+        }
         return q;
     }
 
     QVariant CUrl::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

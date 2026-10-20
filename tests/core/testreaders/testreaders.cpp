@@ -117,8 +117,14 @@ namespace swiftcoretest
         const int airlineValidSize = airlineIcaosValid.size();
         const int airlineSize = airlineIcaos.size();
 
-        if (!aircraftIcaosInvalid.isEmpty()) { qDebug() << aircraftIcaosInvalid.toQString(); }
-        if (!airlineIcaosInvalid.isEmpty()) { qDebug() << airlineIcaosInvalid.toQString(); }
+        if (!aircraftIcaosInvalid.isEmpty())
+        {
+            qDebug() << aircraftIcaosInvalid.toQString();
+        }
+        if (!airlineIcaosInvalid.isEmpty())
+        {
+            qDebug() << airlineIcaosInvalid.toQString();
+        }
 
         QVERIFY2(aircraftValidSize == aircraftSize, "All aircraft ICAOs must be valid");
         QVERIFY2(airlineValidSize == airlineSize, "Some airline ICAOs must be valid");
@@ -141,7 +147,10 @@ namespace swiftcoretest
         for (int i = 0; i < 120; i++)
         {
             CApplication::processEventsFor(500);
-            if (this->m_modelReader->getModelsCount() > 0) { break; }
+            if (this->m_modelReader->getModelsCount() > 0)
+            {
+                break;
+            }
         }
 
         const QString m1("No models " + url.getFullUrl());
@@ -171,7 +180,10 @@ namespace swiftcoretest
         for (int i = 0; i < 120; ++i)
         {
             CApplication::processEventsFor(500);
-            if (this->m_airportReader->getAirports().size() > 0) { break; }
+            if (this->m_airportReader->getAirports().size() > 0)
+            {
+                break;
+            }
         }
 
         QVERIFY2(this->m_airportReader->getAirports().size() > 0, "No airports");

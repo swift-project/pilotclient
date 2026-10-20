@@ -330,9 +330,18 @@ namespace swift::misc
             {
                 CDataCache::instance()->setTimeToLive(this->getKey(), Trait::timeToLive());
             }
-            if (Trait::isPinned()) { CDataCache::instance()->pinValue(this->getKey()); }
-            if (Trait::isDeferred()) { CDataCache::instance()->deferValue(this->getKey()); }
-            if (Trait::isSession()) { CDataCache::instance()->sessionValue(this->getKey()); }
+            if (Trait::isPinned())
+            {
+                CDataCache::instance()->pinValue(this->getKey());
+            }
+            if (Trait::isDeferred())
+            {
+                CDataCache::instance()->deferValue(this->getKey());
+            }
+            if (Trait::isSession())
+            {
+                CDataCache::instance()->sessionValue(this->getKey());
+            }
             static_assert(!(Trait::isPinned() && Trait::isDeferred()), "trait can not be both pinned and deferred");
         }
 
@@ -392,7 +401,10 @@ namespace swift::misc
         //! If the value is load-deferred, trigger the deferred load (async).
         void admit()
         {
-            if (Trait::isDeferred()) { CDataCache::instance()->admitValue(this->getKey(), true); }
+            if (Trait::isDeferred())
+            {
+                CDataCache::instance()->admitValue(this->getKey(), true);
+            }
         }
 
         //! If the value is currently being loaded, wait for it to finish loading, and call the notification slot, if
@@ -409,12 +421,18 @@ namespace swift::misc
 
             // run in page thread
             //! \todo KB 2018-01 is this OK or should it go to CValuePage::setValuesFromCache?
-            if (CThreadUtils::isInThisThread(this->m_page)) { queue->setQueuedValueFromCache(key); }
+            if (CThreadUtils::isInThisThread(this->m_page))
+            {
+                queue->setQueuedValueFromCache(key);
+            }
             else
             {
                 QPointer<QObject> myself(queue);
                 QTimer::singleShot(0, queue, [=] {
-                    if (!myself) { return; }
+                    if (!myself)
+                    {
+                        return;
+                    }
                     queue->setQueuedValueFromCache(key);
                 });
             }

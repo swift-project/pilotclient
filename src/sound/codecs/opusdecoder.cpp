@@ -37,7 +37,10 @@ namespace swift::sound::codecs
 
     void COpusDecoder::resetState()
     {
-        if (!m_opusDecoder) { return; }
+        if (!m_opusDecoder)
+        {
+            return;
+        }
         opus_decoder_ctl(m_opusDecoder, OPUS_RESET_STATE);
     }
 } // namespace swift::sound::codecs

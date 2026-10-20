@@ -27,14 +27,38 @@ namespace swift::core::fsd
     {
         static constexpr auto toFlags = [](const CAircraftLights &lights) {
             int n = 0;
-            if (lights.isBeaconOn()) { n |= 0x002; }
-            if (lights.isCabinOn()) { n |= 0x400; }
-            if (lights.isLandingOn()) { n |= 0x020; }
-            if (lights.isLogoOn()) { n |= 0x200; }
-            if (lights.isNavOn()) { n |= 0x008; }
-            if (lights.isRecognitionOn()) { n |= 0x080; }
-            if (lights.isStrobeOn()) { n |= 0x004; }
-            if (lights.isTaxiOn()) { n |= 0x040; }
+            if (lights.isBeaconOn())
+            {
+                n |= 0x002;
+            }
+            if (lights.isCabinOn())
+            {
+                n |= 0x400;
+            }
+            if (lights.isLandingOn())
+            {
+                n |= 0x020;
+            }
+            if (lights.isLogoOn())
+            {
+                n |= 0x200;
+            }
+            if (lights.isNavOn())
+            {
+                n |= 0x008;
+            }
+            if (lights.isRecognitionOn())
+            {
+                n |= 0x080;
+            }
+            if (lights.isStrobeOn())
+            {
+                n |= 0x004;
+            }
+            if (lights.isTaxiOn())
+            {
+                n |= 0x040;
+            }
             return n;
         };
 

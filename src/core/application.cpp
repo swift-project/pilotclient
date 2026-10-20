@@ -99,7 +99,10 @@ namespace swift::core
             m_applicationName); // normally no effect as thread already runs, but does not harm either
 
         // init skipped when called from CGuiApplication
-        if (init) { this->init(true); }
+        if (init)
+        {
+            this->init(true);
+        }
     }
 
     void CApplication::init(bool withMetadata)
@@ -111,7 +114,10 @@ namespace swift::core
                     &CApplication::gracefulShutdown);
 
             // metadata
-            if (withMetadata) { CApplication::registerMetadata(); }
+            if (withMetadata)
+            {
+                CApplication::registerMetadata();
+            }
 
             // unit test
             if (this->getApplicationInfo().getApplication() == CApplicationInfo::UnitTest)
@@ -170,7 +176,10 @@ namespace swift::core
         //! \fixme KB 2017-11 maybe this code can be encapsulated somewhere
         CApplicationInfoList apps = CApplication::getRunningApplications();
         const CApplicationInfo myself = CApplication::instance()->getApplicationInfo();
-        if (!apps.contains(myself)) { apps.push_back(myself); }
+        if (!apps.contains(myself))
+        {
+            apps.push_back(myself);
+        }
         const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(),
                                                             CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
         if (!ok)
@@ -185,7 +194,10 @@ namespace swift::core
         //! \fixme KB 2017-11 maybe this code can be encapsulated somewhere
         CApplicationInfoList apps = CApplication::getRunningApplications();
         const CApplicationInfo myself = CApplication::instance()->getApplicationInfo();
-        if (!apps.contains(myself)) { return true; }
+        if (!apps.contains(myself))
+        {
+            return true;
+        }
         apps.remove(myself);
         const bool ok = CFileUtils::writeStringToLockedFile(apps.toJsonString(),
                                                             CFileUtils::appendFilePaths(swiftDataRoot(), "apps.json"));
@@ -259,29 +271,50 @@ namespace swift::core
 
     CGlobalSetup CApplication::getGlobalSetup() const
     {
-        if (m_shutdown) { return {}; }
+        if (m_shutdown)
+        {
+            return {};
+        }
         const CSetupReader *r = m_setupReader.data();
-        if (!r) { return {}; }
+        if (!r)
+        {
+            return {};
+        }
         return r->getSetup();
     }
 
     CUpdateInfo CApplication::getUpdateInfo() const
     {
-        if (m_shutdown) { return {}; }
-        if (!m_gitHubPackagesReader) { return {}; }
+        if (m_shutdown)
+        {
+            return {};
+        }
+        if (!m_gitHubPackagesReader)
+        {
+            return {};
+        }
         return m_gitHubPackagesReader->getUpdateInfo();
     }
 
     void CApplication::reloadUpdateInfo()
     {
-        if (m_shutdown) { return; }
-        if (!m_gitHubPackagesReader) { return; }
+        if (m_shutdown)
+        {
+            return;
+        }
+        if (!m_gitHubPackagesReader)
+        {
+            return;
+        }
         m_gitHubPackagesReader->readUpdateInfo();
     }
 
     CDistribution CApplication::getOwnDistribution() const
     {
-        if (CBuildConfig::isLocalDeveloperDebugBuild()) { return CDistribution::localDeveloperBuild(); }
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            return CDistribution::localDeveloperBuild();
+        }
         const CUpdateInfo u = this->getUpdateInfo();
         return u.anticipateOwnDistribution();
     }
@@ -294,7 +327,8 @@ namespace swift::core
 
         // parsing itself is done
         CStatusMessageList msgs;
-        do {
+        do
+        {
             // clear cache?
             if (this->isSet(m_cmdClearCache))
             {
@@ -307,7 +341,10 @@ namespace swift::core
             {
                 msgs.push_back(CLogMessage(this).info(u"About to simulate crash"));
                 QTimer::singleShot(10 * 1000, [=, this] {
-                    if (!sApp || sApp->isShuttingDown()) { return; }
+                    if (!sApp || sApp->isShuttingDown())
+                    {
+                        return;
+                    }
                     this->simulateCrash();
                 });
             }
@@ -316,11 +353,17 @@ namespace swift::core
 
             // start hookin
             msgs.push_back(this->startHookIn());
-            if (msgs.isFailure()) { break; }
+            if (msgs.isFailure())
+            {
+                break;
+            }
 
             // Settings if not already initialized
             msgs.push_back(this->initLocalSettings());
-            if (msgs.isFailure()) { break; }
+            if (msgs.isFailure())
+            {
+                break;
+            }
         }
         while (false);
 
@@ -330,7 +373,10 @@ namespace swift::core
             this->cmdLineErrorMessage(msgs);
             return false;
         }
-        else if (!msgs.isEmpty()) { CLogMessage::preformatted(msgs); }
+        else if (!msgs.isEmpty())
+        {
+            CLogMessage::preformatted(msgs);
+        }
 
         m_started = true;
         return m_started;
@@ -338,7 +384,10 @@ namespace swift::core
 
     bool CApplication::isSetupAvailable() const
     {
-        if (m_shutdown || !m_setupReader) { return false; }
+        if (m_shutdown || !m_setupReader)
+        {
+            return false;
+        }
         return m_setupReader->isSetupAvailable();
     }
 
@@ -349,7 +398,10 @@ namespace swift::core
 
     bool CApplication::hasWebDataServices() const
     {
-        if (this->isShuttingDown()) { return false; } // service will not survive for long
+        if (this->isShuttingDown())
+        {
+            return false;
+        } // service will not survive for long
         return !m_webDataServices.isNull();
     }
 
@@ -401,8 +453,14 @@ namespace swift::core
         // assumption: restricted distributions are development versions
         //
 
-        if (this->getApplicationInfo().isSampleOrUnitTest()) { return true; }
-        if (CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
+        if (this->getApplicationInfo().isSampleOrUnitTest())
+        {
+            return true;
+        }
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            return true;
+        }
 
         const CDistribution d(this->getOwnDistribution());
         return d.isRestricted() && this->isSet(m_cmdDevelopment);
@@ -410,7 +468,10 @@ namespace swift::core
 
     CStatusMessage CApplication::initLocalSettings()
     {
-        if (m_localSettingsLoaded) { return {}; }
+        if (m_localSettingsLoaded)
+        {
+            return {};
+        }
         m_localSettingsLoaded = true;
 
         // trigger loading and saving of settings in appropriate scenarios
@@ -418,7 +479,10 @@ namespace swift::core
         {
             // facade running here locally
             const CStatusMessage msg = CSettingsCache::instance()->loadFromStore();
-            if (msg.isFailure()) { return msg; }
+            if (msg.isFailure())
+            {
+                return msg;
+            }
 
             // Settings are distributed via DBus. So only one application is responsible for saving. `enableLocalSave()`
             // means "this is the application responsible for saving". If swiftgui requests a setting to be saved, it is
@@ -440,7 +504,10 @@ namespace swift::core
 
     CStatusMessage CApplication::saveSettingsByKey(const QStringList &keys)
     {
-        if (keys.isEmpty()) { return {}; }
+        if (keys.isEmpty())
+        {
+            return {};
+        }
         return this->supportsContexts() ? this->getIContextApplication()->saveSettingsByKey(keys) :
                                           CSettingsCache::instance()->saveToStore(keys);
     }
@@ -448,7 +515,10 @@ namespace swift::core
     QString CApplication::getTemporaryDirectory()
     {
         static const QTemporaryDir tempDir;
-        if (tempDir.isValid()) { return tempDir.path(); }
+        if (tempDir.isValid())
+        {
+            return tempDir.path();
+        }
         return QDir::tempPath();
     }
 
@@ -466,7 +536,10 @@ namespace swift::core
                       QSysInfo::buildAbi() % separator % u"Build CPU: " % QSysInfo::buildCpuArchitecture() % separator %
                       CBuildConfig::compiledWithInfo();
 
-        if (this->supportsContexts()) { str += (separator % u"Supporting contexts"); }
+        if (this->supportsContexts())
+        {
+            str += (separator % u"Supporting contexts");
+        }
 
         return str;
     }
@@ -539,14 +612,23 @@ namespace swift::core
     QNetworkReply *CApplication::postToNetwork(const QNetworkRequest &request, int logId, QHttpMultiPart *multiPart,
                                                const CSlot<void(QNetworkReply *)> &callback)
     {
-        if (multiPart->thread() != m_accessManager->thread()) { multiPart->moveToThread(m_accessManager->thread()); }
+        if (multiPart->thread() != m_accessManager->thread())
+        {
+            multiPart->moveToThread(m_accessManager->thread());
+        }
 
         QPointer<CApplication> myself(this);
         return httpRequestImpl(request, logId, callback, NoRedirects,
                                [=](QNetworkAccessManager &qam, const QNetworkRequest &request) {
                                    QNetworkReply *nr = nullptr;
-                                   if (!myself) { return nr; }
-                                   if (!multiPart) { return nr; }
+                                   if (!myself)
+                                   {
+                                       return nr;
+                                   }
+                                   if (!multiPart)
+                                   {
+                                       return nr;
+                                   }
                                    nr = qam.post(request, multiPart);
                                    multiPart->setParent(nr);
                                    return nr;
@@ -571,10 +653,19 @@ namespace swift::core
                                                      int maxRedirects)
     {
         // upfront checks
-        if (url.isEmpty()) { return nullptr; }
-        if (saveAsFileName.isEmpty()) { return nullptr; }
+        if (url.isEmpty())
+        {
+            return nullptr;
+        }
+        if (saveAsFileName.isEmpty())
+        {
+            return nullptr;
+        }
         const QFileInfo fi(saveAsFileName);
-        if (!fi.dir().exists()) { return nullptr; }
+        if (!fi.dir().exists())
+        {
+            return nullptr;
+        }
 
         // function called with reply when done
         CallbackSlot callbackSlot(this, [=, this](QNetworkReply *reply) {
@@ -596,7 +687,10 @@ namespace swift::core
             }
             nwReply->close();
             QTimer::singleShot(0, callback.object(), [=] {
-                if (!sApp || sApp->isShuttingDown()) { return; }
+                if (!sApp || sApp->isShuttingDown())
+                {
+                    return;
+                }
                 callback(msg);
             });
         });
@@ -613,7 +707,10 @@ namespace swift::core
 
     void CApplication::exit(int retcode)
     {
-        if (sApp) { instance()->gracefulShutdown(); }
+        if (sApp)
+        {
+            instance()->gracefulShutdown();
+        }
 
         // when the event loop is not running, this does nothing
         QCoreApplication::exit(retcode);
@@ -624,17 +721,32 @@ namespace swift::core
     int CApplication::indexOfCommandLineOption(const QCommandLineOption &option, const QStringList &args)
     {
         const QStringList names = option.names();
-        if (names.isEmpty() || args.isEmpty()) { return -1; }
+        if (names.isEmpty() || args.isEmpty())
+        {
+            return -1;
+        }
         int i = -1;
         for (const QString &arg : args)
         {
             i++;
             QString a;
-            if (arg.startsWith("--")) { a = arg.mid(2); }
-            else if (arg.startsWith("-")) { a = arg.mid(1); }
-            else { continue; }
+            if (arg.startsWith("--"))
+            {
+                a = arg.mid(2);
+            }
+            else if (arg.startsWith("-"))
+            {
+                a = arg.mid(1);
+            }
+            else
+            {
+                continue;
+            }
 
-            if (names.contains(a, Qt::CaseInsensitive)) { return i; }
+            if (names.contains(a, Qt::CaseInsensitive))
+            {
+                return i;
+            }
         }
         return -1;
     }
@@ -642,17 +754,26 @@ namespace swift::core
     void CApplication::argumentsWithoutOption(const QCommandLineOption &option, QStringList &args)
     {
         const int index = indexOfCommandLineOption(option, args);
-        if (index < 0) { return; }
+        if (index < 0)
+        {
+            return;
+        }
 
         // remove argument and its value
         args.removeAt(index);
-        if (!option.valueName().isEmpty() && args.size() > index) { args.removeAt(index); }
+        if (!option.valueName().isEmpty() && args.size() > index)
+        {
+            args.removeAt(index);
+        }
     }
 
     void CApplication::processEventsFor(int milliseconds)
     {
         // sApp check allows to use it in test cases without sApp
-        if (sApp && sApp->isShuttingDown()) { return; }
+        if (sApp && sApp->isShuttingDown())
+        {
+            return;
+        }
         QEventLoop eventLoop;
         QTimer::singleShot(milliseconds, &eventLoop, &QEventLoop::quit);
         connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, &eventLoop, &QEventLoop::quit);
@@ -665,7 +786,10 @@ namespace swift::core
 
         m_coreFacadeConfig = coreConfig;
         const CStatusMessage msg = this->initLocalSettings();
-        if (msg.isFailure()) { return msg; }
+        if (msg.isFailure())
+        {
+            return msg;
+        }
 
         // now we can use settings
         // if not yet initialized, init web data services
@@ -673,7 +797,10 @@ namespace swift::core
         {
             const CStatusMessageList msgs = this->initAndStartWebDataServices(
                 CWebReaderFlags::AllReaders, CDatabaseReaderConfigList::forPilotClient());
-            if (msgs.hasErrorMessages()) { return msgs; }
+            if (msgs.hasErrorMessages())
+            {
+                return msgs;
+            }
         }
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
@@ -684,7 +811,10 @@ namespace swift::core
 
         m_coreFacadeConfig = CCoreFacadeConfig(CCoreFacadeConfig::NotUsed);
         const CStatusMessage msg = this->initLocalSettings();
-        if (msg.isFailure()) { return msg; }
+        if (msg.isFailure())
+        {
+            return msg;
+        }
 
         return this->startCoreFacade(); // will do nothing if setup is not yet loaded
     }
@@ -694,7 +824,10 @@ namespace swift::core
     {
         Q_ASSERT_X(m_webDataServices.isNull(), Q_FUNC_INFO, "Services already started");
         SWIFT_VERIFY_X(QSslSocket::supportsSsl(), Q_FUNC_INFO, "No SSL");
-        if (!QSslSocket::supportsSsl()) { return CStatusMessage(this).error(u"No SSL supported, can`t be used"); }
+        if (!QSslSocket::supportsSsl())
+        {
+            return CStatusMessage(this).error(u"No SSL supported, can`t be used");
+        }
 
         return this->startWebDataServices(webReader, dbReaderConfig);
     }
@@ -749,7 +882,10 @@ namespace swift::core
 
             emit this->webDataServicesStarted(true);
         }
-        else { msgs.push_back(CStatusMessage(this).info(u"Web data services already running")); }
+        else
+        {
+            msgs.push_back(CStatusMessage(this).info(u"Web data services already running"));
+        }
 
         return msgs;
     }
@@ -814,8 +950,14 @@ namespace swift::core
 
     void CApplication::gracefulShutdown()
     {
-        if (m_shutdown) { return; }
-        if (m_shutdownInProgress) { return; }
+        if (m_shutdown)
+        {
+            return;
+        }
+        if (m_shutdownInProgress)
+        {
+            return;
+        }
         m_shutdownInProgress = true;
 
         CLogMessage(this).info(u"Graceful shutdown of CApplication started");
@@ -859,9 +1001,15 @@ namespace swift::core
             m_webDataServices.reset();
         }
 
-        if (m_gitHubPackagesReader) { m_gitHubPackagesReader.reset(); }
+        if (m_gitHubPackagesReader)
+        {
+            m_gitHubPackagesReader.reset();
+        }
 
-        if (m_setupReader) { m_setupReader.reset(); }
+        if (m_setupReader)
+        {
+            m_setupReader.reset();
+        }
 
         CLogMessage(this).info(u"Graceful shutdown of CApplication, shutdown of logger");
         m_fileLogger->close();
@@ -884,7 +1032,10 @@ namespace swift::core
 
     void CApplication::initNetwork()
     {
-        if (!m_accessManager) { m_accessManager = new QNetworkAccessManager(this); }
+        if (!m_accessManager)
+        {
+            m_accessManager = new QNetworkAccessManager(this);
+        }
 
         m_cookieManager = new CCookieManager(this);
         m_cookieManager->setParent(m_accessManager);
@@ -937,7 +1088,10 @@ namespace swift::core
 
     QString CApplication::getCmdDBusAddressValue() const
     {
-        if (!this->isParserOptionSet(m_cmdDBusAddress)) { return {}; }
+        if (!this->isParserOptionSet(m_cmdDBusAddress))
+        {
+            return {};
+        }
         const QString v(this->getParserValue(m_cmdDBusAddress));
         const QString dBusAddress(CDBusServer::normalizeAddress(v));
         return dBusAddress;
@@ -966,7 +1120,10 @@ namespace swift::core
 
     bool CApplication::parseCommandLineArguments()
     {
-        if (m_parsed) { return m_parsed; } // already done
+        if (m_parsed)
+        {
+            return m_parsed;
+        } // already done
 
         // we call parse because we also want to display a GUI error message when applicable
         const QStringList args(QCoreApplication::arguments());
@@ -1001,7 +1158,10 @@ namespace swift::core
         m_devFlag = this->initIsRunningInDeveloperEnvironment();
 
         // Hookin, other parsing
-        if (!this->parsingHookIn()) { return false; }
+        if (!this->parsingHookIn())
+        {
+            return false;
+        }
 
         // setup reader
         m_parsed = true;
@@ -1023,7 +1183,10 @@ namespace swift::core
     {
         const CStatusMessageList msgs = loadSetup();
 
-        if (msgs.isFailure()) { displaySetupLoadFailure(msgs); }
+        if (msgs.isFailure())
+        {
+            displaySetupLoadFailure(msgs);
+        }
         return msgs.isSuccess();
     }
 
@@ -1040,21 +1203,36 @@ namespace swift::core
 
     void CApplication::cmdLineErrorMessage(const CStatusMessageList &msgs) const
     {
-        if (msgs.isEmpty()) { return; }
-        if (!msgs.hasErrorMessages()) { return; }
+        if (msgs.isEmpty())
+        {
+            return;
+        }
+        if (!msgs.hasErrorMessages())
+        {
+            return;
+        }
         CApplication::cmdLineErrorMessage(msgs.toQString(true), "");
     }
 
     QPointer<ISimulator> CApplication::getISimulator() const
     {
-        if (!this->hasSimulator()) { return nullptr; }
+        if (!this->hasSimulator())
+        {
+            return nullptr;
+        }
         return this->getCoreFacade()->getCContextSimulator()->simulator();
     }
 
     bool CApplication::hasSimulator() const
     {
-        if (!this->getCoreFacade()) { return false; }
-        if (!this->getCoreFacade()->getIContextSimulator()->isUsingImplementingObject()) { return false; }
+        if (!this->getCoreFacade())
+        {
+            return false;
+        }
+        if (!this->getCoreFacade()->getIContextSimulator()->isUsingImplementingObject())
+        {
+            return false;
+        }
         return (this->getCoreFacade()->getCContextSimulator()); // should always be true
     }
 
@@ -1099,7 +1277,10 @@ namespace swift::core
             for (const QCommandLineOption &option : m_allOptions)
             {
                 const int n = indexOfCommandLineOption(option, toBeRemoved);
-                if (n >= 0) { argumentsWithoutOption(option, joinedArguments); }
+                if (n >= 0)
+                {
+                    argumentsWithoutOption(option, joinedArguments);
+                }
             }
         }
 
@@ -1115,81 +1296,126 @@ namespace swift::core
 
     bool CApplication::supportsContexts(bool ignoreShutdownTest) const
     {
-        if (!ignoreShutdownTest && m_shutdown) { return false; }
-        if (m_coreFacade.isNull()) { return false; }
-        if (!m_coreFacade->getIContextApplication()) { return false; }
+        if (!ignoreShutdownTest && m_shutdown)
+        {
+            return false;
+        }
+        if (m_coreFacade.isNull())
+        {
+            return false;
+        }
+        if (!m_coreFacade->getIContextApplication())
+        {
+            return false;
+        }
         return (!m_coreFacade->getIContextApplication()->isEmptyObject());
     }
 
     const IContextNetwork *CApplication::getIContextNetwork() const
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getIContextNetwork();
     }
 
     const IContextAudio *CApplication::getIContextAudio() const
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getIContextAudio();
     }
 
     const CContextAudioBase *CApplication::getCContextAudioBase() const
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getCContextAudioBase();
     }
 
     const IContextApplication *CApplication::getIContextApplication() const
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getIContextApplication();
     }
 
     const IContextOwnAircraft *CApplication::getIContextOwnAircraft() const
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getIContextOwnAircraft();
     }
 
     const IContextSimulator *CApplication::getIContextSimulator() const
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getIContextSimulator();
     }
 
     IContextNetwork *CApplication::getIContextNetwork()
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getIContextNetwork();
     }
 
     IContextAudio *CApplication::getIContextAudio()
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getIContextAudio();
     }
 
     CContextAudioBase *CApplication::getCContextAudioBase()
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getCContextAudioBase();
     }
 
     IContextApplication *CApplication::getIContextApplication()
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getIContextApplication();
     }
 
     IContextOwnAircraft *CApplication::getIContextOwnAircraft()
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getIContextOwnAircraft();
     }
 
     IContextSimulator *CApplication::getIContextSimulator()
     {
-        if (!supportsContexts()) { return nullptr; }
+        if (!supportsContexts())
+        {
+            return nullptr;
+        }
         return m_coreFacade->getIContextSimulator();
     }
 
@@ -1208,8 +1434,14 @@ namespace swift::core
 
     CStatusMessageList CApplication::loadSetup()
     {
-        if (m_shutdown) { return CStatusMessage(this).warning(u"Shutting down, not reading"); }
-        if (!m_setupReader) { return CStatusMessage(this).error(u"No reader for setup/version"); }
+        if (m_shutdown)
+        {
+            return CStatusMessage(this).warning(u"Shutting down, not reading");
+        }
+        if (!m_setupReader)
+        {
+            return CStatusMessage(this).error(u"No reader for setup/version");
+        }
         Q_ASSERT_X(m_parsed, Q_FUNC_INFO, "Not yet parsed");
         const CStatusMessageList requestMsgs = m_setupReader->loadSetup();
         return requestMsgs;
@@ -1217,38 +1449,62 @@ namespace swift::core
 
     CUrl CApplication::getVatsimMetarUrl() const
     {
-        if (m_shutdown) { return {}; }
+        if (m_shutdown)
+        {
+            return {};
+        }
         if (m_webDataServices)
         {
             const CUrl url(m_webDataServices->getVatsimMetarUrl());
-            if (!url.isEmpty()) { return url; }
+            if (!url.isEmpty())
+            {
+                return url;
+            }
         }
-        if (m_setupReader) { return m_setupReader->getSetup().getVatsimMetarsUrl(); }
+        if (m_setupReader)
+        {
+            return m_setupReader->getSetup().getVatsimMetarsUrl();
+        }
         return {};
     }
 
     CUrl CApplication::getVatsimDataFileUrl() const
     {
-        if (m_shutdown) { return {}; }
+        if (m_shutdown)
+        {
+            return {};
+        }
         if (m_webDataServices)
         {
             const CUrl url(m_webDataServices->getVatsimDataFileUrl());
-            if (!url.isEmpty()) { return url; }
+            if (!url.isEmpty())
+            {
+                return url;
+            }
         }
-        if (m_setupReader) { return m_setupReader->getSetup().getVatsimDataFileUrl(); }
+        if (m_setupReader)
+        {
+            return m_setupReader->getSetup().getVatsimDataFileUrl();
+        }
         return {};
     }
 
     CUrl CApplication::getVatsimServerFileUrl() const
     {
-        if (m_shutdown || !m_setupReader) { return {}; }
+        if (m_shutdown || !m_setupReader)
+        {
+            return {};
+        }
 
         return m_setupReader->getSetup().getVatsimServerFileUrl();
     }
 
     CUrl CApplication::getVatsimFsdHttpUrl() const
     {
-        if (m_shutdown || !m_setupReader) { return {}; }
+        if (m_shutdown || !m_setupReader)
+        {
+            return {};
+        }
 
         return m_setupReader->getSetup().getVatsimFsdHttpUrl();
     }
@@ -1279,10 +1535,16 @@ namespace swift::core
                                                   int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest)
     {
         // run in QAM thread
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
         QTimer::singleShot(0, m_accessManager, [=, this] {
             // should be now in QAM thread
-            if (!sApp || sApp->isShuttingDown()) { return; }
+            if (!sApp || sApp->isShuttingDown())
+            {
+                return;
+            }
             Q_ASSERT_X(CThreadUtils::isInThisThread(sApp->m_accessManager), Q_FUNC_INFO,
                        "Wrong thread, must be QAM thread");
             this->httpRequestImpl(request, logId, callback, progress, maxRedirects, getPostOrDeleteRequest);
@@ -1301,7 +1563,10 @@ namespace swift::core
                                                  const CallbackSlot &callback, const ProgressSlot &progress,
                                                  int maxRedirects, NetworkRequestOrPostFunction getPostOrDeleteRequest)
     {
-        if (this->isShuttingDown()) { return nullptr; }
+        if (this->isShuttingDown())
+        {
+            return nullptr;
+        }
 
         QWriteLocker locker(&m_accessManagerLock);
         Q_ASSERT_X(m_accessManager->thread() == qApp->thread(), Q_FUNC_INFO,
@@ -1365,7 +1630,10 @@ namespace swift::core
     {
         const QString d = CSwiftDirectories::normalizedApplicationDataDirectory();
         const QDir dir(d);
-        if (!dir.exists() || !dir.isReadable()) { return; }
+        if (!dir.exists() || !dir.isReadable())
+        {
+            return;
+        }
         const QString aiStr(this->getApplicationInfo().toJsonString());
         const QString filePath(CFileUtils::appendFilePaths(
             dir.path(), CApplicationInfo::fileName())); // will be overridden by next swift app

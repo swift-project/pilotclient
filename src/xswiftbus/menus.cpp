@@ -36,7 +36,10 @@ namespace XSwiftBus
 
     CMenu::Data::~Data()
     {
-        if (!isMainMenu) { XPLMDestroyMenu(id); }
+        if (!isMainMenu)
+        {
+            XPLMDestroyMenu(id);
+        }
     }
 
     CMenu CMenu::mainMenu() { return { XPLMFindPluginsMenu(), true, nullptr }; }

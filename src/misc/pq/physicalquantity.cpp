@@ -139,24 +139,42 @@ namespace swift::misc::physical_quantities
     template <class MU, class PQ>
     const PQ &CPhysicalQuantity<MU, PQ>::makePositive()
     {
-        if (this->isNull() || qFuzzyIsNull(m_value)) { return *this->derived(); }
-        if (m_value < 0) { m_value *= -1.0; }
+        if (this->isNull() || qFuzzyIsNull(m_value))
+        {
+            return *this->derived();
+        }
+        if (m_value < 0)
+        {
+            m_value *= -1.0;
+        }
         return *this->derived();
     }
 
     template <class MU, class PQ>
     const PQ &CPhysicalQuantity<MU, PQ>::makeNegative()
     {
-        if (this->isNull() || qFuzzyIsNull(m_value)) { return *this->derived(); }
-        if (m_value > 0) { m_value *= -1.0; }
+        if (this->isNull() || qFuzzyIsNull(m_value))
+        {
+            return *this->derived();
+        }
+        if (m_value > 0)
+        {
+            m_value *= -1.0;
+        }
         return *this->derived();
     }
 
     template <class MU, class PQ>
     PQ CPhysicalQuantity<MU, PQ>::abs() const
     {
-        if (this->isNull() || qFuzzyIsNull(m_value)) { return *this->derived(); }
-        if (m_value >= 0) { return *this->derived(); }
+        if (this->isNull() || qFuzzyIsNull(m_value))
+        {
+            return *this->derived();
+        }
+        if (m_value >= 0)
+        {
+            return *this->derived();
+        }
         PQ copy(*this->derived());
         return copy.makePositive();
     }
@@ -173,7 +191,10 @@ namespace swift::misc::physical_quantities
     {
         argument >> m_value;
         m_unit = UnitClass::defaultUnit();
-        if (std::isnan(m_value)) { this->setNull(); }
+        if (std::isnan(m_value))
+        {
+            this->setNull();
+        }
     }
 
     template <class MU, class PQ>
@@ -202,7 +223,10 @@ namespace swift::misc::physical_quantities
     {
         stream >> m_value;
         m_unit = UnitClass::defaultUnit();
-        if (std::isnan(m_value)) { this->setNull(); }
+        if (std::isnan(m_value))
+        {
+            this->setNull();
+        }
     }
 
     template <class MU, class PQ>
@@ -248,9 +272,18 @@ namespace swift::misc::physical_quantities
     {
         if (*this == other) return false;
 
-        if (isNull() < other.isNull()) { return true; }
-        if (isNull() > other.isNull()) { return false; }
-        if (isNull() && other.isNull()) { return false; }
+        if (isNull() < other.isNull())
+        {
+            return true;
+        }
+        if (isNull() > other.isNull())
+        {
+            return false;
+        }
+        if (isNull() && other.isNull())
+        {
+            return false;
+        }
 
         return (m_value < other.value(m_unit));
     }
@@ -259,8 +292,14 @@ namespace swift::misc::physical_quantities
     PQ &CPhysicalQuantity<MU, PQ>::switchUnit(const MU &newUnit)
     {
         // NULL check: https://discordapp.com/channels/539048679160676382/539925070550794240/593151683698229258
-        if (m_unit == newUnit || this->isNull()) { return *derived(); }
-        if (newUnit.isNull()) { this->setNull(); }
+        if (m_unit == newUnit || this->isNull())
+        {
+            return *derived();
+        }
+        if (newUnit.isNull())
+        {
+            this->setNull();
+        }
         else
         {
             m_value = newUnit.convertFrom(m_value, m_unit);
@@ -272,7 +311,10 @@ namespace swift::misc::physical_quantities
     template <class MU, class PQ>
     PQ CPhysicalQuantity<MU, PQ>::switchedUnit(const MU &newUnit) const
     {
-        if (m_unit == newUnit || this->isNull()) { return *derived(); }
+        if (m_unit == newUnit || this->isNull())
+        {
+            return *derived();
+        }
         PQ copy(*derived());
         copy.switchUnit(newUnit);
         return copy;
@@ -294,14 +336,20 @@ namespace swift::misc::physical_quantities
     template <class MU, class PQ>
     double CPhysicalQuantity<MU, PQ>::value() const
     {
-        if (this->isNull()) { return 0.0; }
+        if (this->isNull())
+        {
+            return 0.0;
+        }
         return m_value;
     }
 
     template <class MU, class PQ>
     void CPhysicalQuantity<MU, PQ>::setCurrentUnitValue(double value)
     {
-        if (!this->isNull()) { m_value = value; }
+        if (!this->isNull())
+        {
+            m_value = value;
+        }
     }
 
     template <class MU, class PQ>
@@ -315,21 +363,30 @@ namespace swift::misc::physical_quantities
                                                             bool i18n) const
     {
         Q_ASSERT_X(!unit.isNull(), Q_FUNC_INFO, "Cannot convert to null");
-        if (this->isNull()) { return this->convertToQString(i18n); }
+        if (this->isNull())
+        {
+            return this->convertToQString(i18n);
+        }
         return unit.makeRoundedQStringWithUnit(this->value(unit), digits, withGroupSeparator, i18n);
     }
 
     template <class MU, class PQ>
     QString CPhysicalQuantity<MU, PQ>::valueRoundedWithUnit(int digits, bool withGroupSeparator, bool i18n) const
     {
-        if (this->isNull()) { return QStringLiteral("null"); }
+        if (this->isNull())
+        {
+            return QStringLiteral("null");
+        }
         return this->valueRoundedWithUnit(m_unit, digits, withGroupSeparator, i18n);
     }
 
     template <class MU, class PQ>
     void CPhysicalQuantity<MU, PQ>::roundToEpsilon()
     {
-        if (this->isNull()) { return; }
+        if (this->isNull())
+        {
+            return;
+        }
         m_value = m_unit.roundToEpsilon(m_value);
     }
 
@@ -357,7 +414,10 @@ namespace swift::misc::physical_quantities
     template <class MU, class PQ>
     bool CPhysicalQuantity<MU, PQ>::isInteger() const
     {
-        if (this->isNull()) { return false; }
+        if (this->isNull())
+        {
+            return false;
+        }
 
         const double diff = std::abs(this->value() - this->valueInteger());
         return diff <= m_unit.getEpsilon();
@@ -372,7 +432,10 @@ namespace swift::misc::physical_quantities
     template <class MU, class PQ>
     QString CPhysicalQuantity<MU, PQ>::valueRoundedAsString(MU unit, int digits) const
     {
-        if (this->isNull()) { return QStringLiteral("null"); }
+        if (this->isNull())
+        {
+            return QStringLiteral("null");
+        }
         const double v = this->valueRounded(unit, digits);
         return QString::number(v, 'f', digits);
     }
@@ -387,23 +450,38 @@ namespace swift::misc::physical_quantities
     template <class MU, class PQ>
     QString CPhysicalQuantity<MU, PQ>::convertToQString(bool i18n) const
     {
-        if (this->isNull()) { return QStringLiteral("null"); }
+        if (this->isNull())
+        {
+            return QStringLiteral("null");
+        }
         return this->valueRoundedWithUnit(this->getUnit(), -1, i18n);
     }
 
     template <class MU, class PQ>
     const PQ &CPhysicalQuantity<MU, PQ>::maxValue(const PQ &pq1, const PQ &pq2)
     {
-        if (pq1.isNull()) { return pq2; }
-        if (pq2.isNull()) { return pq1; }
+        if (pq1.isNull())
+        {
+            return pq2;
+        }
+        if (pq2.isNull())
+        {
+            return pq1;
+        }
         return pq1 > pq2 ? pq1 : pq2;
     }
 
     template <class MU, class PQ>
     const PQ &CPhysicalQuantity<MU, PQ>::minValue(const PQ &pq1, const PQ &pq2)
     {
-        if (pq1.isNull()) { return pq2; }
-        if (pq2.isNull()) { return pq1; }
+        if (pq1.isNull())
+        {
+            return pq2;
+        }
+        if (pq2.isNull())
+        {
+            return pq1;
+        }
         return pq1 < pq2 ? pq1 : pq2;
     }
 
@@ -436,8 +514,14 @@ namespace swift::misc::physical_quantities
     {
         const QJsonValue unit = json.value("unit");
         const QJsonValue value = json.value("value");
-        if (unit.isUndefined()) { throw CJsonException("Missing 'unit'"); }
-        if (value.isUndefined()) { throw CJsonException("Missing 'value'"); }
+        if (unit.isUndefined())
+        {
+            throw CJsonException("Missing 'unit'");
+        }
+        if (value.isUndefined())
+        {
+            throw CJsonException("Missing 'value'");
+        }
 
         this->setUnitBySymbol(unit.toString());
         m_value = value.toDouble();
@@ -458,7 +542,10 @@ namespace swift::misc::physical_quantities
             const QString v = value + defaultUnitIfMissing.getSymbol();
             this->parseFromString(v, mode);
         }
-        else { this->parseFromString(value, mode); }
+        else
+        {
+            this->parseFromString(value, mode);
+        }
     }
 
     template <class MU, class PQ>
@@ -472,7 +559,10 @@ namespace swift::misc::physical_quantities
                                                    const MU &defaultUnitIfMissing)
     {
         QString v = value;
-        if (is09OrSeparatorOnlyString(value)) { v = value + defaultUnitIfMissing.getSymbol(); }
+        if (is09OrSeparatorOnlyString(value))
+        {
+            v = value + defaultUnitIfMissing.getSymbol();
+        }
 
         // no idea why I cannot call pq.parseFromString(v, mode, defaultUnitIfMissing);
         PQ pq;
@@ -491,7 +581,10 @@ namespace swift::misc::physical_quantities
     template <class MU, class PQ>
     QVariant CPhysicalQuantity<MU, PQ>::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*derived()); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*derived());
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -531,7 +624,10 @@ namespace swift::misc::physical_quantities
     template <class MU, class PQ>
     int CPhysicalQuantity<MU, PQ>::comparePropertyByIndex(CPropertyIndexRef index, const PQ &pq) const
     {
-        if (index.isMyself()) { return compareImpl(*derived(), pq); }
+        if (index.isMyself())
+        {
+            return compareImpl(*derived(), pq);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -545,9 +641,18 @@ namespace swift::misc::physical_quantities
     template <class MU, class PQ>
     int CPhysicalQuantity<MU, PQ>::compareImpl(const PQ &a, const PQ &b)
     {
-        if (a < b) { return -1; }
-        else if (a > b) { return 1; }
-        else { return 0; }
+        if (a < b)
+        {
+            return -1;
+        }
+        else if (a > b)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     template <class MU, class PQ>

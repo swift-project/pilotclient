@@ -82,7 +82,10 @@ namespace swift::simplugin::fsxcommon
 
     void CSimConnectSettingsComponent::onP3DVersionChanged(const QString &version)
     {
-        if (m_p3dVersion.get() == version) { return; }
+        if (m_p3dVersion.get() == version)
+        {
+            return;
+        }
         const CStatusMessage saveMsg = m_p3dVersion.setAndSave(version);
         if (saveMsg.isSuccess())
         {

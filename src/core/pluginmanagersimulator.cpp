@@ -26,7 +26,10 @@ namespace swift::core
 
     ISimulatorListener *CPluginManagerSimulator::createListener(const QString &pluginId)
     {
-        if (!m_plugins.contains(pluginId)) { return nullptr; }
+        if (!m_plugins.contains(pluginId))
+        {
+            return nullptr;
+        }
         PluginExtended &plugin = m_plugins[pluginId];
         if (!plugin.listener)
         {
@@ -48,7 +51,10 @@ namespace swift::core
 
     ISimulatorListener *CPluginManagerSimulator::getListener(const QString &pluginId)
     {
-        if (!m_plugins.contains(pluginId)) { return nullptr; }
+        if (!m_plugins.contains(pluginId))
+        {
+            return nullptr;
+        }
         PluginExtended &plugin = m_plugins[pluginId];
         return plugin.listener;
     }
@@ -56,19 +62,31 @@ namespace swift::core
     CSimulatorPluginInfoList CPluginManagerSimulator::getAvailableSimulatorPlugins() const
     {
         CSimulatorPluginInfoList list;
-        for (const auto &i : m_plugins) { list.push_back(i.info); }
+        for (const auto &i : m_plugins)
+        {
+            list.push_back(i.info);
+        }
         return list;
     }
 
     int CPluginManagerSimulator::checkAvailableListeners()
     {
-        if (m_plugins.isEmpty()) { return 0; }
+        if (m_plugins.isEmpty())
+        {
+            return 0;
+        }
 
         int c = 0;
         for (PluginExtended &pi : m_plugins)
         {
-            if (!pi.listener) { continue; }
-            if (!pi.listener->isRunning()) { continue; }
+            if (!pi.listener)
+            {
+                continue;
+            }
+            if (!pi.listener->isRunning())
+            {
+                continue;
+            }
             pi.listener->check();
             c++;
         }

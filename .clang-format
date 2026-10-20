@@ -6,9 +6,8 @@ Language:        Cpp
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
 AlignTrailingComments: false
-AllowShortBlocksOnASingleLine: Always
 AllowShortCaseLabelsOnASingleLine: true
-AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortIfStatementsOnASingleLine: WithoutElse # Google Styleguide
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: Yes
 BraceWrapping:

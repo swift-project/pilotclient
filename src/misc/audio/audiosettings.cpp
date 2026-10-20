@@ -17,15 +17,27 @@ namespace swift::misc::audio
 {
     int CSettings::fixOutVolume(int v)
     {
-        if (v > OutMax) { return OutMax; }
-        if (v < OutMin) { return OutMin; }
+        if (v > OutMax)
+        {
+            return OutMax;
+        }
+        if (v < OutMin)
+        {
+            return OutMin;
+        }
         return v;
     }
 
     int CSettings::fixInVolume(int v)
     {
-        if (v > InMax) { return InMax; }
-        if (v < InMin) { return InMin; }
+        if (v > InMax)
+        {
+            return InMax;
+        }
+        if (v < InMin)
+        {
+            return InMin;
+        }
         return v;
     }
 
@@ -36,8 +48,14 @@ namespace swift::misc::audio
 
     void CSettings::setNotificationFlag(CNotificationSounds::NotificationFlag notification, bool value)
     {
-        if (value) { m_notification |= notification; }
-        else { m_notification &= ~notification; }
+        if (value)
+        {
+            m_notification |= notification;
+        }
+        else
+        {
+            m_notification &= ~notification;
+        }
     }
 
     void CSettings::setNotificationSoundDirectory(const QString &dir)
@@ -58,14 +76,20 @@ namespace swift::misc::audio
         if (!m_notificationSoundDir.isEmpty())
         {
             const QDir d(m_notificationSoundDir);
-            if (d.exists()) { return m_notificationSoundDir; }
+            if (d.exists())
+            {
+                return m_notificationSoundDir;
+            }
         }
         return CSwiftDirectories::soundFilesDirectory();
     }
 
     QString CSettings::getNotificationFilePath(const QString &fileName) const
     {
-        if (fileName.isEmpty()) { return {}; }
+        if (fileName.isEmpty())
+        {
+            return {};
+        }
         return CSwiftDirectories::soundFilePathOrDefaultPath(m_notificationSoundDir, fileName);
     }
 

@@ -67,7 +67,10 @@ namespace swift::gui::filters
             filter = true;
         }
 
-        if (filter) { ui->filter_Buttons->clickButton(CFilterBarButtons::Filter); }
+        if (filter)
+        {
+            ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
+        }
     }
 
     void CAirlineIcaoFilterBar::onRowCountChanged(int count, bool withFilter)
@@ -77,7 +80,10 @@ namespace swift::gui::filters
 
     void CAirlineIcaoFilterBar::ps_CountryChanged(const CCountry &country)
     {
-        if (country.hasIsoCode()) { ui->filter_Buttons->clickButton(CFilterBarButtons::Filter); }
+        if (country.hasIsoCode())
+        {
+            ui->filter_Buttons->clickButton(CFilterBarButtons::Filter);
+        }
     }
 
     void CAirlineIcaoFilterBar::clearForm()

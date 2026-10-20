@@ -142,7 +142,10 @@ namespace swift::gui::components
         using namespace std::chrono_literals;
 
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-        if (models.isEmpty()) { return 0; }
+        if (models.isEmpty())
+        {
+            return 0;
+        }
         CAircraftModelList cleanModelList(
             models.matchesSimulator(simulator)); // remove those not matching the simulator
         const int diff = models.size() - cleanModelList.size();
@@ -153,7 +156,10 @@ namespace swift::gui::components
                 << diff << simulator.toQString(true);
             this->showMappingComponentOverlayHtmlMessage(m, 5s);
         }
-        if (cleanModelList.isEmpty()) { return 0; }
+        if (cleanModelList.isEmpty())
+        {
+            return 0;
+        }
         CAircraftModelList updatedModels(ui->tvp_OwnModelSet->container());
         updatedModels.replaceOrAddModelsWithString(cleanModelList, Qt::CaseInsensitive);
         updatedModels.resetOrder();
@@ -177,7 +183,10 @@ namespace swift::gui::components
                                                           const CSimulatorInfo &simulator)
     {
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
-        if (models.isEmpty()) { return { this, CStatusMessage::SeverityInfo, u"No data", true }; }
+        if (models.isEmpty())
+        {
+            return { this, CStatusMessage::SeverityInfo, u"No data", true };
+        }
         if (!this->getModelSetSimulator().isSingleSimulator())
         {
             // no sim yet, we set it
@@ -197,7 +206,10 @@ namespace swift::gui::components
         int d = updateModels.replaceOrAddModelsWithString(models, Qt::CaseInsensitive);
         if (d > 0)
         {
-            if (!allowExcludedModels) { updateModels.removeIfExcluded(); }
+            if (!allowExcludedModels)
+            {
+                updateModels.removeIfExcluded();
+            }
             updateModels.resetOrder();
             ui->tvp_OwnModelSet->updateContainerMaybeAsync(updateModels);
             return { this, CStatusMessage::SeverityInfo,
@@ -205,7 +217,10 @@ namespace swift::gui::components
                          this->getModelSetSimulator().toQString(true),
                      true };
         }
-        else { return { this, CStatusMessage::SeverityInfo, u"No data modified in model set", true }; }
+        else
+        {
+            return { this, CStatusMessage::SeverityInfo, u"No data modified in model set", true };
+        }
     }
 
     void CDbOwnModelSetComponent::setMappingComponent(CDbMappingComponent *component)
@@ -231,7 +246,10 @@ namespace swift::gui::components
         using namespace std::chrono_literals;
 
         const QObject *sender = QObject::sender();
-        if (!sender) { return; }
+        if (!sender)
+        {
+            return;
+        }
 
         if (sender == ui->pb_CreateNewSet)
         {
@@ -265,7 +283,10 @@ namespace swift::gui::components
                 }
                 else
                 {
-                    if (!this->showMappingComponentOverlayMessage(m)) { ui->tvp_OwnModelSet->showOverlayMessage(m); }
+                    if (!this->showMappingComponentOverlayMessage(m))
+                    {
+                        ui->tvp_OwnModelSet->showOverlayMessage(m);
+                    }
                 }
             }
             return;
@@ -310,33 +331,51 @@ namespace swift::gui::components
             ui->pb_SaveAsSetForSimulator->setText(
                 QStringLiteral("save '%1'").arg(this->getModelSetSimulator().toQString(true)));
         }
-        else { ui->pb_SaveAsSetForSimulator->setText("save"); }
+        else
+        {
+            ui->pb_SaveAsSetForSimulator->setText("save");
+        }
     }
 
     void CDbOwnModelSetComponent::onJsonDataLoaded(const CSimulatorInfo &simulator)
     {
-        if (simulator.isSingleSimulator()) { this->setSimulator(simulator); }
+        if (simulator.isSingleSimulator())
+        {
+            this->setSimulator(simulator);
+        }
     }
 
     void CDbOwnModelSetComponent::distributorPreferencesChanged()
     {
         const CDistributorListPreferences preferences = m_distributorPreferences.getThreadLocal();
         const CSimulatorInfo simuulator = preferences.getLastUpdatedSimulator();
-        if (simuulator.isSingleSimulator()) { this->updateDistributorOrder(simuulator); }
+        if (simuulator.isSingleSimulator())
+        {
+            this->updateDistributorOrder(simuulator);
+        }
     }
 
     void CDbOwnModelSetComponent::reduceModels()
     {
-        if (!m_reduceModelsDialog) { m_reduceModelsDialog.reset(new CDbReduceModelDuplicates(this)); }
+        if (!m_reduceModelsDialog)
+        {
+            m_reduceModelsDialog.reset(new CDbReduceModelDuplicates(this));
+        }
 
         CAircraftModelList models = ui->tvp_OwnModelSet->containerOrFilteredContainer();
         const CSimulatorInfo simulator = this->getModelSetSimulator();
         m_reduceModelsDialog->setModels(models, simulator);
         const auto ret = static_cast<QDialog::DialogCode>(m_reduceModelsDialog->exec());
-        if (ret != QDialog::Accepted) { return; }
+        if (ret != QDialog::Accepted)
+        {
+            return;
+        }
         const CAircraftModelList removeModels = m_reduceModelsDialog->getRemoveCandidates();
         const CSimulatorInfo removeSimulator = m_reduceModelsDialog->getSimulator();
-        if (removeModels.isEmpty()) { return; }
+        if (removeModels.isEmpty())
+        {
+            return;
+        }
         const QStringList modelStrings = removeModels.getModelStringList(false);
         models.removeModelsWithString(modelStrings, Qt::CaseInsensitive); // by strings also removes if id is missing
         this->setModelSet(models, removeSimulator);
@@ -347,7 +386,10 @@ namespace swift::gui::components
         const CSimulatorInfo simulator = this->getModelSetSimulator();
         CAircraftModelList models = ui->tvp_OwnModelSet->containerOrFilteredContainer();
         const int r = models.removeIfExcluded();
-        if (r < 1) { return; }
+        if (r < 1)
+        {
+            return;
+        }
         this->setModelSet(models, simulator);
     }
 
@@ -356,7 +398,10 @@ namespace swift::gui::components
         const CSimulatorInfo simulator = this->getModelSetSimulator();
         CAircraftModelList models = ui->tvp_OwnModelSet->containerOrFilteredContainer();
         const int r = models.removeObjectsWithoutDbKey();
-        if (r < 1) { return; }
+        if (r < 1)
+        {
+            return;
+        }
         this->setModelSet(models, simulator);
     }
 
@@ -424,7 +469,10 @@ namespace swift::gui::components
 
     void CDbOwnModelSetComponent::firstSet()
     {
-        if (!m_firstModelSetDialog) { m_firstModelSetDialog.reset(new CFirstModelSetDialog(this)); }
+        if (!m_firstModelSetDialog)
+        {
+            m_firstModelSetDialog.reset(new CFirstModelSetDialog(this));
+        }
         m_firstModelSetDialog->show();
     }
 
@@ -439,8 +487,14 @@ namespace swift::gui::components
 
     void CDbOwnModelSetComponent::setSimulator(const CSimulatorInfo &simulator)
     {
-        if (m_simulator == simulator) { return; } // avoid unnecessary signals
-        if (simulator.isNoSimulator()) { return; }
+        if (m_simulator == simulator)
+        {
+            return;
+        } // avoid unnecessary signals
+        if (simulator.isNoSimulator())
+        {
+            return;
+        }
         Q_ASSERT_X(simulator.isSingleSimulator(), Q_FUNC_INFO, "Need single simulator");
 
         m_simulator = simulator;
@@ -463,8 +517,14 @@ namespace swift::gui::components
 
         QPointer<CDbOwnModelSetComponent> myself(this);
         QTimer::singleShot(1000, this, [=, this] {
-            if (!sApp || sApp->isShuttingDown()) { return; }
-            if (!myself) { return; }
+            if (!sApp || sApp->isShuttingDown())
+            {
+                return;
+            }
+            if (!myself)
+            {
+                return;
+            }
             this->setSimulator(simulator);
         });
     }
@@ -472,7 +532,10 @@ namespace swift::gui::components
     void CDbOwnModelSetComponent::showModelStatistics()
     {
         const CAircraftModelList set(this->getModelSetFromView());
-        if (!m_modelStatisticsDialog) { m_modelStatisticsDialog.reset(new CAircraftModelStatisticsDialog(this)); }
+        if (!m_modelStatisticsDialog)
+        {
+            m_modelStatisticsDialog.reset(new CAircraftModelStatisticsDialog(this));
+        }
         m_modelStatisticsDialog->analyzeModels(set);
         m_modelStatisticsDialog->show();
     }
@@ -480,16 +543,25 @@ namespace swift::gui::components
     void CDbOwnModelSetComponent::updateDistributorOrder(const CSimulatorInfo &simulator)
     {
         CAircraftModelList modelSet = this->getCachedModels(simulator);
-        if (modelSet.isEmpty()) { return; }
+        if (modelSet.isEmpty())
+        {
+            return;
+        }
         const CDistributorListPreferences preferences = m_distributorPreferences.getThreadLocal();
         const CDistributorList distributors = preferences.getDistributors(simulator);
-        if (distributors.isEmpty()) { return; }
+        if (distributors.isEmpty())
+        {
+            return;
+        }
         modelSet.updateDistributorOrder(distributors);
         this->setCachedModels(modelSet, simulator);
 
         // display?
         const CSimulatorInfo currentSimulator(this->getModelSetSimulator());
-        if (simulator == currentSimulator) { ui->tvp_OwnModelSet->updateContainerAsync(modelSet); }
+        if (simulator == currentSimulator)
+        {
+            ui->tvp_OwnModelSet->updateContainerAsync(modelSet);
+        }
     }
 
     bool CDbOwnModelSetComponent::runsInDialog() { return CGuiUtility::findParentDialog(this, 5); }

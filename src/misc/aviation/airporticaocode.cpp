@@ -32,7 +32,10 @@ namespace swift::misc::aviation
     {
         const QString code = icaoCode.trimmed().toUpper();
         if (!validCodeLength(icaoCode.length(), false)) return {};
-        if (containsChar(code, [](QChar c) { return !c.isLetterOrNumber(); })) { return {}; }
+        if (containsChar(code, [](QChar c) { return !c.isLetterOrNumber(); }))
+        {
+            return {};
+        }
         return code;
     }
 
@@ -49,7 +52,10 @@ namespace swift::misc::aviation
 
     QVariant CAirportIcaoCode::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         return CValueObject::propertyByIndex(index);
     }
 
@@ -73,7 +79,10 @@ namespace swift::misc::aviation
     {
         // FAA code 3
         // ICAO code 4
-        if (strict) { return l == 4; }
+        if (strict)
+        {
+            return l == 4;
+        }
         return l >= 3 && l <= 6;
 
         // https://en.wikipedia.org/wiki/Location_identifier#FAA_identifier says can be up to 5 characters

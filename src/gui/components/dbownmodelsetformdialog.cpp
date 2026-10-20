@@ -64,7 +64,10 @@ namespace swift::gui::components
     void CDbOwnModelSetFormDialog::buttonClicked()
     {
         const QObject *sender = QObject::sender();
-        if (sender == ui->pb_Cancel) { this->reject(); }
+        if (sender == ui->pb_Cancel)
+        {
+            this->reject();
+        }
         else if (sender == ui->pb_Ok)
         {
             m_modelSet = this->buildSet(m_simulatorInfo, m_modelSet);
@@ -104,7 +107,10 @@ namespace swift::gui::components
     void CDbOwnModelSetFormDialog::setSimulator(const CSimulatorInfo &simulator)
     {
         // Ref T663, avoid ASSERT in some weird cases
-        if (simulator.isSingleSimulator()) { m_simulatorInfo = simulator; }
+        if (simulator.isSingleSimulator())
+        {
+            m_simulatorInfo = simulator;
+        }
         else
         {
             const CSimulatorInfo resetSim =
@@ -142,11 +148,26 @@ namespace swift::gui::components
         const CModelSetBuilder builder(this);
         CModelSetBuilder::Builder options =
             givenDistributorsOnly ? CModelSetBuilder::GivenDistributorsOnly : CModelSetBuilder::NoOptions;
-        if (dbDataOnly) { options |= CModelSetBuilder::OnlyDbData; }
-        if (dbIcaoOnly) { options |= CModelSetBuilder::OnlyDbIcaoCodes; }
-        if (incremnental) { options |= CModelSetBuilder::Incremental; }
-        if (sortByDistributor) { options |= CModelSetBuilder::SortByDistributors; }
-        if (consolidateWithDb) { options |= CModelSetBuilder::ConsolidateWithDb; }
+        if (dbDataOnly)
+        {
+            options |= CModelSetBuilder::OnlyDbData;
+        }
+        if (dbIcaoOnly)
+        {
+            options |= CModelSetBuilder::OnlyDbIcaoCodes;
+        }
+        if (incremnental)
+        {
+            options |= CModelSetBuilder::Incremental;
+        }
+        if (sortByDistributor)
+        {
+            options |= CModelSetBuilder::SortByDistributors;
+        }
+        if (consolidateWithDb)
+        {
+            options |= CModelSetBuilder::ConsolidateWithDb;
+        }
         return builder.buildModelSet(simulator, models, currentSet, options, distributors);
     }
 } // namespace swift::gui::components

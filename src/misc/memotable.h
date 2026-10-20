@@ -52,8 +52,14 @@ namespace swift::misc
             template <typename T>
             decltype(auto) maybeMemoize(const T &member)
             {
-                if constexpr ((std::is_same_v<T, Ts> || ...)) { return this->CMemoTable<T>::getIndex(member); }
-                else { return std::as_const(member); }
+                if constexpr ((std::is_same_v<T, Ts> || ...))
+                {
+                    return this->CMemoTable<T>::getIndex(member);
+                }
+                else
+                {
+                    return std::as_const(member);
+                }
             }
 
             //! Return the values in the T table as a flat list.
@@ -90,12 +96,18 @@ namespace swift::misc
                         int &get() { return index; }
                         ~Memo()
                         {
-                            if (index >= 0) { member = list[index]; }
+                            if (index >= 0)
+                            {
+                                member = list[index];
+                            }
                         }
                     };
                     return Memo { -1, member, static_cast<const CSequence<T> &>(*this) };
                 }
-                else { return std::ref(member); }
+                else
+                {
+                    return std::ref(member);
+                }
             }
         };
     };

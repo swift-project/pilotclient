@@ -27,7 +27,10 @@ namespace swift::gui::models
 
     void CMatchingStatisticsModel::setMode(CMatchingStatisticsModel::MatchingStatisticsMode mode)
     {
-        if (m_mode == mode) { return; }
+        if (m_mode == mode)
+        {
+            return;
+        }
         m_mode = mode;
         m_columns.clear();
         switch (mode)

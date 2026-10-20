@@ -137,7 +137,10 @@ namespace swift::gui::editors
         // Transponder
         //
         const QString transponderCode = QString::number(ui->sbp_ComPanelTransponder->value());
-        if (CTransponder::isValidTransponderCode(transponderCode)) { transponder.setTransponderCode(transponderCode); }
+        if (CTransponder::isValidTransponderCode(transponderCode))
+        {
+            transponder.setTransponderCode(transponderCode);
+        }
         else
         {
             CLogMessage(this).validationWarning(u"Wrong transponder code, reset");
@@ -163,10 +166,16 @@ namespace swift::gui::editors
     void CCockpitComForm::setFrequencies(const CComSystem &com1, const CComSystem &com2)
     {
         double freq = com1.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
-        if (!isFrequenceEqual(freq, ui->ds_ComPanelCom1Active->value())) { ui->ds_ComPanelCom1Active->setValue(freq); }
+        if (!isFrequenceEqual(freq, ui->ds_ComPanelCom1Active->value()))
+        {
+            ui->ds_ComPanelCom1Active->setValue(freq);
+        }
 
         freq = com2.getFrequencyActive().valueRounded(CFrequencyUnit::MHz(), 3);
-        if (!isFrequenceEqual(freq, ui->ds_ComPanelCom2Active->value())) { ui->ds_ComPanelCom2Active->setValue(freq); }
+        if (!isFrequenceEqual(freq, ui->ds_ComPanelCom2Active->value()))
+        {
+            ui->ds_ComPanelCom2Active->setValue(freq);
+        }
 
         freq = com1.getFrequencyStandby().valueRounded(CFrequencyUnit::MHz(), 3);
         if (!isFrequenceEqual(freq, ui->ds_ComPanelCom1Standby->value()))
@@ -188,7 +197,10 @@ namespace swift::gui::editors
     void CCockpitComForm::setTransponder(const CTransponder &transponder)
     {
         const int tc = transponder.getTransponderCode();
-        if (tc != ui->sbp_ComPanelTransponder->value()) { ui->sbp_ComPanelTransponder->setValue(tc); }
+        if (tc != ui->sbp_ComPanelTransponder->value())
+        {
+            ui->sbp_ComPanelTransponder->setValue(tc);
+        }
 
         if (transponder.getTransponderMode() != ui->cbp_ComPanelTransponderMode->getSelectedTransponderMode())
         {
@@ -202,14 +214,20 @@ namespace swift::gui::editors
         const QObject *sender = QObject::sender();
         if (sender == ui->tb_ComPanelCom1Toggle)
         {
-            if (isFrequenceEqual(ui->ds_ComPanelCom1Standby->value(), ui->ds_ComPanelCom1Active->value())) { return; }
+            if (isFrequenceEqual(ui->ds_ComPanelCom1Standby->value(), ui->ds_ComPanelCom1Active->value()))
+            {
+                return;
+            }
             const double f = ui->ds_ComPanelCom1Active->value();
             ui->ds_ComPanelCom1Active->setValue(ui->ds_ComPanelCom1Standby->value());
             ui->ds_ComPanelCom1Standby->setValue(f);
         }
         else if (sender == ui->tb_ComPanelCom2Toggle)
         {
-            if (isFrequenceEqual(ui->ds_ComPanelCom2Standby->value(), ui->ds_ComPanelCom2Active->value())) { return; }
+            if (isFrequenceEqual(ui->ds_ComPanelCom2Standby->value(), ui->ds_ComPanelCom2Active->value()))
+            {
+                return;
+            }
             const double f = ui->ds_ComPanelCom2Active->value();
             ui->ds_ComPanelCom2Active->setValue(ui->ds_ComPanelCom2Standby->value());
             ui->ds_ComPanelCom2Standby->setValue(f);

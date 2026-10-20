@@ -33,7 +33,10 @@ namespace XSwiftBus
     //! Init global xplane path
     void initXPlanePath()
     {
-        if (!g_xplanePath.empty() && !g_sep.empty()) { return; }
+        if (!g_xplanePath.empty() && !g_sep.empty())
+        {
+            return;
+        }
 
         char xplanePath[512];
         XPLMGetSystemPath(xplanePath);
@@ -71,8 +74,14 @@ namespace XSwiftBus
 
         std::string seperator = "/\\";
         std::size_t sepPos = filePath.find_last_of(seperator);
-        if (sepPos != std::string::npos) { ss << filePath.substr(sepPos + 1, filePath.size() - 1); }
-        else { ss << filePath; }
+        if (sepPos != std::string::npos)
+        {
+            ss << filePath.substr(sepPos + 1, filePath.size() - 1);
+        }
+        else
+        {
+            ss << filePath;
+        }
         ss << ' ';
 
         ss << line;

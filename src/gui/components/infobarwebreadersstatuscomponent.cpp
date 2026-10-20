@@ -46,7 +46,10 @@ namespace swift::gui::components
 
     void CInfoBarWebReadersStatusBase::consolidationRunning(bool running)
     {
-        if (!m_ledConsolidation) { return; }
+        if (!m_ledConsolidation)
+        {
+            return;
+        }
         m_ledConsolidation->setOn(running);
     }
 
@@ -79,7 +82,10 @@ namespace swift::gui::components
     {
         Q_UNUSED(count);
         QList<CLedWidget *> leds = this->entitiesToLeds(entities);
-        if (!leds.isEmpty()) { this->setLedReadStates(leds, readState); }
+        if (!leds.isEmpty())
+        {
+            this->setLedReadStates(leds, readState);
+        }
     }
 
     void CInfoBarWebReadersStatusBase::checkData()
@@ -90,13 +96,19 @@ namespace swift::gui::components
 
     void CInfoBarWebReadersStatusBase::showConsolidationStatus(bool show)
     {
-        if (m_ledConsolidation) { m_ledConsolidation->setVisible(show); }
+        if (m_ledConsolidation)
+        {
+            m_ledConsolidation->setVisible(show);
+        }
     }
 
     void CInfoBarWebReadersStatusBase::setLedReadStates(const QList<CLedWidget *> &leds,
                                                         CEntityFlags::ReadState readState)
     {
-        for (CLedWidget *led : leds) { this->setLedReadState(led, readState); }
+        for (CLedWidget *led : leds)
+        {
+            this->setLedReadState(led, readState);
+        }
     }
 
     void CInfoBarWebReadersStatusBase::setLedReadState(CLedWidget *led, CEntityFlags::ReadState readState)
@@ -121,19 +133,43 @@ namespace swift::gui::components
     QList<CLedWidget *> CInfoBarWebReadersStatusBase::entitiesToLeds(CEntityFlags::Entity entities) const
     {
         QList<CLedWidget *> leds;
-        if (entities.testFlag(CEntityFlags::CountryEntity)) { leds << m_ledCountries; }
-        if (entities.testFlag(CEntityFlags::DistributorEntity)) { leds << m_ledDistributors; }
-        if (entities.testFlag(CEntityFlags::AircraftIcaoEntity)) { leds << m_ledIcaoAircraft; }
-        if (entities.testFlag(CEntityFlags::AirlineIcaoEntity)) { leds << m_ledIcaoAirline; }
-        if (entities.testFlag(CEntityFlags::LiveryEntity)) { leds << m_ledLiveries; }
-        if (entities.testFlag(CEntityFlags::ModelEntity)) { leds << m_ledModels; }
+        if (entities.testFlag(CEntityFlags::CountryEntity))
+        {
+            leds << m_ledCountries;
+        }
+        if (entities.testFlag(CEntityFlags::DistributorEntity))
+        {
+            leds << m_ledDistributors;
+        }
+        if (entities.testFlag(CEntityFlags::AircraftIcaoEntity))
+        {
+            leds << m_ledIcaoAircraft;
+        }
+        if (entities.testFlag(CEntityFlags::AirlineIcaoEntity))
+        {
+            leds << m_ledIcaoAirline;
+        }
+        if (entities.testFlag(CEntityFlags::LiveryEntity))
+        {
+            leds << m_ledLiveries;
+        }
+        if (entities.testFlag(CEntityFlags::ModelEntity))
+        {
+            leds << m_ledModels;
+        }
         return leds;
     }
 
     bool CInfoBarWebReadersStatusBase::hasAllData() const
     {
-        if (!sGui) { return false; }
-        if (!sGui->hasWebDataServices()) { return false; }
+        if (!sGui)
+        {
+            return false;
+        }
+        if (!sGui->hasWebDataServices())
+        {
+            return false;
+        }
         return sGui->getWebDataServices()->getAirlineIcaoCodesCount() > 0 &&
                sGui->getWebDataServices()->getAircraftIcaoCodesCount() > 0 &&
                sGui->getWebDataServices()->getDistributorsCount() > 0 &&

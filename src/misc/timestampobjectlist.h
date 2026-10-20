@@ -74,7 +74,10 @@ namespace swift::misc
         OBJ findObjectBeforeOrDefault(qint64 msSinceEpoch) const
         {
             const CONTAINER before = this->findBefore(msSinceEpoch);
-            if (before.isEmpty()) { return OBJ(); }
+            if (before.isEmpty())
+            {
+                return OBJ();
+            }
             return before.latestObject();
         }
 
@@ -111,7 +114,10 @@ namespace swift::misc
         OBJ findObjectAfterOrDefault(qint64 msSinceEpoch) const
         {
             const CONTAINER after = this->findAfter(msSinceEpoch);
-            if (after.isEmpty()) { return OBJ(); }
+            if (after.isEmpty())
+            {
+                return OBJ();
+            }
             return after.oldestObject();
         }
 
@@ -124,7 +130,10 @@ namespace swift::misc
         //! Find closest (or default)
         OBJ findClosestTimeDistance(qint64 msSinceEpoch) const
         {
-            if (this->container().isEmpty()) { return OBJ(); }
+            if (this->container().isEmpty())
+            {
+                return OBJ();
+            }
             const auto closest = std::min_element(this->container().cbegin(), this->container().cend(),
                                                   [=](const ITimestampBased &a, const ITimestampBased &b) {
                                                       return qAbs(a.getTimeDifferenceMs(msSinceEpoch)) <
@@ -139,13 +148,19 @@ namespace swift::misc
         //! Set all timestamps to now
         void setCurrentUtcTime()
         {
-            for (ITimestampBased &tsObj : this->container()) { tsObj.setCurrentUtcTime(); }
+            for (ITimestampBased &tsObj : this->container())
+            {
+                tsObj.setCurrentUtcTime();
+            }
         }
 
         //! Set all timestamps to given time
         void setUtcTime(qint64 msSinceEpoch)
         {
-            for (ITimestampBased &tsObj : this->container()) { tsObj.setMSecsSinceEpoch(msSinceEpoch); }
+            for (ITimestampBased &tsObj : this->container())
+            {
+                tsObj.setMSecsSinceEpoch(msSinceEpoch);
+            }
         }
 
         //! Set invalid timestamps to now
@@ -153,7 +168,10 @@ namespace swift::misc
         {
             for (ITimestampBased &tsObj : this->container())
             {
-                if (tsObj.hasValidTimestamp()) { continue; }
+                if (tsObj.hasValidTimestamp())
+                {
+                    continue;
+                }
                 tsObj.setCurrentUtcTime();
             }
         }
@@ -161,7 +179,10 @@ namespace swift::misc
         //! Latest timestamp
         QDateTime latestTimestamp() const
         {
-            if (this->container().isEmpty()) { return {}; }
+            if (this->container().isEmpty())
+            {
+                return {};
+            }
             return this->latestObject().getUtcTimestamp();
         }
 
@@ -175,7 +196,10 @@ namespace swift::misc
         //! Oldest timestamp
         QDateTime oldestTimestamp() const
         {
-            if (this->container().isEmpty()) { return {}; }
+            if (this->container().isEmpty())
+            {
+                return {};
+            }
             return this->oldestObject().getUtcTimestamp();
         }
 
@@ -189,7 +213,10 @@ namespace swift::misc
         //! Latest object
         OBJ latestObject() const
         {
-            if (this->container().isEmpty()) { return OBJ(); }
+            if (this->container().isEmpty())
+            {
+                return OBJ();
+            }
             const auto latest =
                 std::max_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) {
                     return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch();
@@ -200,7 +227,10 @@ namespace swift::misc
         //! Latest object
         OBJ oldestObject() const
         {
-            if (this->container().isEmpty()) { return OBJ(); }
+            if (this->container().isEmpty())
+            {
+                return OBJ();
+            }
             const auto oldest =
                 std::min_element(this->container().begin(), this->container().end(), [](const OBJ &a, const OBJ &b) {
                     return a.getMSecsSinceEpoch() < b.getMSecsSinceEpoch();
@@ -242,14 +272,23 @@ namespace swift::misc
             if (replaceSameTimestamp && !c.isEmpty() && c[0].getMSecsSinceEpoch() == value.getMSecsSinceEpoch())
             {
                 c[0] = value;
-                if (maxElements > 0) { c.truncate(maxElements); }
+                if (maxElements > 0)
+                {
+                    c.truncate(maxElements);
+                }
             }
             else
             {
-                if (maxElements > 0) { c.truncate(maxElements - 1); }
+                if (maxElements > 0)
+                {
+                    c.truncate(maxElements - 1);
+                }
                 const bool needSort = !c.isEmpty() && value.isOlderThan(c.front());
                 c.push_front(value);
-                if (needSort) { ITimestampObjectList::sortLatestFirst(); }
+                if (needSort)
+                {
+                    ITimestampObjectList::sortLatestFirst();
+                }
             }
 
             // crosscheck
@@ -289,7 +328,10 @@ namespace swift::misc
         //! Set new timestamps starting with the last element
         void setNewTimestampStartingLast(qint64 startTimeStampMs, qint64 deltaTimeMs)
         {
-            if (this->container().isEmpty()) { return; }
+            if (this->container().isEmpty())
+            {
+                return;
+            }
             qint64 currentMs = startTimeStampMs;
             for (auto it = this->container().rbegin(); it != this->container().rend(); ++it)
             {
@@ -317,12 +359,21 @@ namespace swift::misc
         //! \remark all object must have a valid timestamp
         bool isSortedLatestLast() const
         {
-            if (this->container().size() < 2) { return true; }
+            if (this->container().size() < 2)
+            {
+                return true;
+            }
             qint64 max = -1;
             for (const ITimestampBased &obj : this->container())
             {
-                if (!obj.hasValidTimestamp()) { return false; }
-                if (obj.getMSecsSinceEpoch() < max) { return false; }
+                if (!obj.hasValidTimestamp())
+                {
+                    return false;
+                }
+                if (obj.getMSecsSinceEpoch() < max)
+                {
+                    return false;
+                }
                 max = obj.getMSecsSinceEpoch();
             }
             return true;
@@ -332,12 +383,21 @@ namespace swift::misc
         //! \remark all object must have a valid timestamp
         bool isSortedLatestFirst() const
         {
-            if (this->container().size() < 2) { return true; }
+            if (this->container().size() < 2)
+            {
+                return true;
+            }
             qint64 min = std::numeric_limits<qint64>::max();
             for (const ITimestampBased &obj : this->container())
             {
-                if (!obj.hasValidTimestamp()) { return false; }
-                if (obj.getMSecsSinceEpoch() > min) { return false; }
+                if (!obj.hasValidTimestamp())
+                {
+                    return false;
+                }
+                if (obj.getMSecsSinceEpoch() > min)
+                {
+                    return false;
+                }
                 min = obj.getMSecsSinceEpoch();
             }
             return true;
@@ -346,8 +406,14 @@ namespace swift::misc
         //! Adds a time to all values
         void addMsecs(qint64 msToAdd)
         {
-            if (msToAdd == 0) { return; }
-            for (ITimestampBased &obj : this->container()) { obj.addMsecs(msToAdd); }
+            if (msToAdd == 0)
+            {
+                return;
+            }
+            for (ITimestampBased &obj : this->container())
+            {
+                obj.addMsecs(msToAdd);
+            }
         }
 
         //! Set the hint
@@ -360,7 +426,10 @@ namespace swift::misc
             MillisecondsMinMaxMean mmm;
             mmm.reset();
             const CONTAINER &container = this->container();
-            if (container.size() < 2) { return mmm; }
+            if (container.size() < 2)
+            {
+                return mmm;
+            }
 
             // Do not confuse with adjusted sort hint!
             if (container.m_tsSortHint == NoTimestampSortHint)
@@ -442,7 +511,10 @@ namespace swift::misc
         //! Get the latest 2 values
         CONTAINER getLatestAdjustedTwoObjects(bool alreadySortedLatestFirst = false) const
         {
-            if (this->container().size() < 2) { return CONTAINER(); }
+            if (this->container().size() < 2)
+            {
+                return CONTAINER();
+            }
             CONTAINER copy(alreadySortedLatestFirst ? this->container() :
                                                       this->container().getSortedAdjustedLatestFirst());
             copy.truncate(2);
@@ -472,7 +544,10 @@ namespace swift::misc
         //! Adds a time to all offset values
         void addMsecsToOffset(qint64 msToAdd)
         {
-            for (ITimestampWithOffsetBased &obj : this->container()) { obj.addMsecsToOffsetTime(msToAdd); }
+            for (ITimestampWithOffsetBased &obj : this->container())
+            {
+                obj.addMsecsToOffsetTime(msToAdd);
+            }
         }
 
         //! Insert as first element by keeping maxElements and the latest first
@@ -483,14 +558,23 @@ namespace swift::misc
             if (replaceSameTimestamp && !c.isEmpty() && c[0].getMSecsSinceEpoch() == value.getMSecsSinceEpoch())
             {
                 c[0] = value;
-                if (maxElements > 0) { c.truncate(maxElements); }
+                if (maxElements > 0)
+                {
+                    c.truncate(maxElements);
+                }
                 return;
             }
 
-            if (maxElements > 0) { c.truncate(maxElements - 1); }
+            if (maxElements > 0)
+            {
+                c.truncate(maxElements - 1);
+            }
             const bool needSort = !c.isEmpty() && value.isOlderThanAdjusted(c.front());
             c.push_front(value);
-            if (needSort) { ITimestampWithOffsetObjectList::sortAdjustedLatestFirst(); }
+            if (needSort)
+            {
+                ITimestampWithOffsetObjectList::sortAdjustedLatestFirst();
+            }
         }
 
         //! Insert as first element by keeping maxElements and the latest first
@@ -509,7 +593,10 @@ namespace swift::misc
             //  5: os 5 adj 10
             //  0: os 5 adj  5
             CONTAINER &c = this->container();
-            if (c.size() < 2) { return; }
+            if (c.size() < 2)
+            {
+                return;
+            }
             ITimestampWithOffsetBased &front = c.front();
             const ITimestampWithOffsetBased &second = c[1];
             if (!front.isNewerThanAdjusted(second))
@@ -537,7 +624,10 @@ namespace swift::misc
             if (c.size() > 1)
             {
                 const ITimestampWithOffsetBased front = c.front();
-                if (value.getAdjustedMSecsSinceEpoch() <= front.getAdjustedMSecsSinceEpoch()) { return; }
+                if (value.getAdjustedMSecsSinceEpoch() <= front.getAdjustedMSecsSinceEpoch())
+                {
+                    return;
+                }
             }
             ITimestampWithOffsetObjectList<OBJ, CONTAINER>::push_frontKeepLatestFirst(value, replaceSameTimestamp,
                                                                                       maxElements);
@@ -567,13 +657,25 @@ namespace swift::misc
         //! \remark all object must have a valid timestamp
         bool isSortedAdjustedLatestLast() const
         {
-            if (this->container().isEmpty()) { return false; }
-            if (this->container().size() < 2) { return true; }
+            if (this->container().isEmpty())
+            {
+                return false;
+            }
+            if (this->container().size() < 2)
+            {
+                return true;
+            }
             qint64 max = -1;
             for (const ITimestampWithOffsetBased &obj : this->container())
             {
-                if (!obj.hasValidTimestamp()) { return false; }
-                if (obj.getAdjustedMSecsSinceEpoch() < max) { return false; }
+                if (!obj.hasValidTimestamp())
+                {
+                    return false;
+                }
+                if (obj.getAdjustedMSecsSinceEpoch() < max)
+                {
+                    return false;
+                }
                 max = obj.getAdjustedMSecsSinceEpoch();
             }
             return true;
@@ -583,12 +685,21 @@ namespace swift::misc
         //! \remark all object must have a valid timestamp
         bool isSortedAdjustedLatestFirst() const
         {
-            if (this->container().size() < 2) { return true; }
+            if (this->container().size() < 2)
+            {
+                return true;
+            }
             qint64 min = std::numeric_limits<qint64>::max();
             for (const ITimestampWithOffsetBased &obj : this->container())
             {
-                if (!obj.hasValidTimestamp()) { return false; }
-                if (obj.getAdjustedMSecsSinceEpoch() > min) { return false; }
+                if (!obj.hasValidTimestamp())
+                {
+                    return false;
+                }
+                if (obj.getAdjustedMSecsSinceEpoch() > min)
+                {
+                    return false;
+                }
                 min = obj.getAdjustedMSecsSinceEpoch();
             }
             return true;
@@ -605,7 +716,10 @@ namespace swift::misc
         OBJ findObjectAfterAdjustedOrDefault(qint64 msSinceEpoch) const
         {
             const CONTAINER after = this->findAfterAdjusted(msSinceEpoch);
-            if (after.isEmpty()) { return OBJ(); }
+            if (after.isEmpty())
+            {
+                return OBJ();
+            }
             return after.oldestAdjustedObject();
         }
 
@@ -620,14 +734,20 @@ namespace swift::misc
         OBJ findObjectBeforeAdjustedOrDefault(qint64 msSinceEpoch) const
         {
             const CONTAINER before = this->findBeforeAdjusted(msSinceEpoch);
-            if (before.isEmpty()) { return OBJ(); }
+            if (before.isEmpty())
+            {
+                return OBJ();
+            }
             return before.latestAdjustedObject();
         }
 
         //! Closest adjusted time difference
         OBJ findClosestTimeDistanceAdjusted(qint64 msSinceEpoch) const
         {
-            if (this->container().isEmpty()) { return OBJ(); }
+            if (this->container().isEmpty())
+            {
+                return OBJ();
+            }
             const auto closest =
                 std::min_element(this->container().cbegin(), this->container().cend(),
                                  [=](const ITimestampWithOffsetBased &a, const ITimestampWithOffsetBased &b) {
@@ -640,7 +760,10 @@ namespace swift::misc
         //! Latest adjusted object
         OBJ latestAdjustedObject() const
         {
-            if (this->container().isEmpty()) { return OBJ(); }
+            if (this->container().isEmpty())
+            {
+                return OBJ();
+            }
             if (this->container().m_tsAdjustedSortHint == AdjustedTimestampLatestFirst)
             {
                 return this->container().front();
@@ -655,7 +778,10 @@ namespace swift::misc
         //! Oldest adjusted object
         OBJ oldestAdjustedObject() const
         {
-            if (this->container().isEmpty()) { return OBJ(); }
+            if (this->container().isEmpty())
+            {
+                return OBJ();
+            }
             if (this->container().m_tsAdjustedSortHint == AdjustedTimestampLatestFirst)
             {
                 return this->container().back();
@@ -670,21 +796,30 @@ namespace swift::misc
         //! Latest adjusted timestamp
         QDateTime latestAdjustedTimestamp() const
         {
-            if (this->container().isEmpty()) { return {}; }
+            if (this->container().isEmpty())
+            {
+                return {};
+            }
             return this->latestAdjustedObject().getUtcTimestamp();
         }
 
         //! Oldest adjusted timestamp
         QDateTime oldestAdjustedTimestamp() const
         {
-            if (this->container().isEmpty()) { return {}; }
+            if (this->container().isEmpty())
+            {
+                return {};
+            }
             return this->oldestAdjustedObject().getUtcTimestamp();
         }
 
         //! Latest adjusted timestamp
         qint64 latestAdjustedTimestampMsecsSinceEpoch() const
         {
-            if (this->container().isEmpty()) { return -1; }
+            if (this->container().isEmpty())
+            {
+                return -1;
+            }
             const QDateTime dt(this->latestAdjustedTimestamp());
             return dt.isValid() ? dt.toMSecsSinceEpoch() : -1;
         }
@@ -692,7 +827,10 @@ namespace swift::misc
         //! Oldest adjusted timestamp
         qint64 oldestAdjustedTimestampMsecsSinceEpoch() const
         {
-            if (this->container().isEmpty()) { return -1; }
+            if (this->container().isEmpty())
+            {
+                return -1;
+            }
             const QDateTime dt(oldestAdjustedTimestamp());
             return dt.isValid() ? dt.toMSecsSinceEpoch() : -1;
         }
@@ -707,7 +845,10 @@ namespace swift::misc
             MillisecondsMinMaxMean mmm;
             mmm.reset();
             const CONTAINER &container = this->container();
-            if (container.size() < 1) { return mmm; }
+            if (container.size() < 1)
+            {
+                return mmm;
+            }
 
             mmm.max = std::numeric_limits<qint64>::min();
             mmm.min = std::numeric_limits<qint64>::max();
@@ -716,7 +857,10 @@ namespace swift::misc
 
             for (const ITimestampWithOffsetBased &object : container)
             {
-                if (!object.hasNonZeroOffsetTime()) { continue; }
+                if (!object.hasNonZeroOffsetTime())
+                {
+                    continue;
+                }
                 const qint64 os = object.getTimeOffsetMs();
                 mmm.max = std::max(os, mmm.max);
                 mmm.min = std::min(os, mmm.min);
@@ -724,7 +868,10 @@ namespace swift::misc
                 c++;
             }
 
-            if (c > 0) { mmm.mean = mean / c; }
+            if (c > 0)
+            {
+                mmm.mean = mean / c;
+            }
             return mmm;
         }
 

@@ -32,7 +32,10 @@ namespace swift::misc::simulation::fscommon
 {
     CVPilotRulesReader::CVPilotRulesReader(bool standardDirectory, QObject *parent) : QObject(parent)
     {
-        if (standardDirectory) { this->addDirectory(CVPilotRulesReader::standardMappingsDirectory()); }
+        if (standardDirectory)
+        {
+            this->addDirectory(CVPilotRulesReader::standardMappingsDirectory());
+        }
     }
 
     CVPilotRulesReader::~CVPilotRulesReader() { gracefulShutdown(); }
@@ -52,17 +55,26 @@ namespace swift::misc::simulation::fscommon
     void CVPilotRulesReader::addFilename(const QString &fileName)
     {
         QWriteLocker l(&m_lockData);
-        if (this->m_fileList.contains(fileName)) { return; }
+        if (this->m_fileList.contains(fileName))
+        {
+            return;
+        }
         this->m_fileList.append(fileName);
     }
 
     void CVPilotRulesReader::addDirectory(const QString &directory)
     {
         QDir dir(directory);
-        if (!dir.exists()) { return; }
+        if (!dir.exists())
+        {
+            return;
+        }
         QStringList nameFilters({ "*.vmr" });
         QFileInfoList entries = dir.entryInfoList(nameFilters, QDir::Files | QDir::Readable);
-        for (const QFileInfo &file : entries) { this->addFilename(file.absoluteFilePath()); }
+        for (const QFileInfo &file : entries)
+        {
+            this->addFilename(file.absoluteFilePath());
+        }
     }
 
     int CVPilotRulesReader::countFilesLoaded() const
@@ -83,7 +95,10 @@ namespace swift::misc::simulation::fscommon
     {
         // already cached?
         CAircraftModelList vPilotModels(this->m_cachedVPilotModels.get());
-        if (!vPilotModels.isEmpty() || m_rules.isEmpty()) { return vPilotModels; }
+        if (!vPilotModels.isEmpty() || m_rules.isEmpty())
+        {
+            return vPilotModels;
+        }
 
         // important: that can take a while and should normally
         // run in background
@@ -114,7 +129,10 @@ namespace swift::misc::simulation::fscommon
         if (directory.isEmpty())
         {
             directory = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).constFirst();
-            if (!directory.endsWith('/')) { directory.append('/'); }
+            if (!directory.endsWith('/'))
+            {
+                directory.append('/');
+            }
             directory.append("vPilot Files/Model Matching Rule Sets");
         }
         return directory;
@@ -128,10 +146,16 @@ namespace swift::misc::simulation::fscommon
         const QStringList fileList(getFiles());
         for (const QString &fn : fileList)
         {
-            if (m_shutdown) { return false; }
+            if (m_shutdown)
+            {
+                return false;
+            }
             loadedFiles++;
             bool s = this->loadFile(fn, rules);
-            if (!s) { filesWithProblems.append(fn); }
+            if (!s)
+            {
+                filesWithProblems.append(fn);
+            }
         }
 
         {
@@ -139,7 +163,10 @@ namespace swift::misc::simulation::fscommon
             this->m_loadedFiles = loadedFiles;
             this->m_fileListWithProblems = filesWithProblems;
             this->m_rules = rules;
-            if (m_shutdown) { return false; }
+            if (m_shutdown)
+            {
+                return false;
+            }
         }
 
         const bool success = loadedFiles > 0;
@@ -158,7 +185,10 @@ namespace swift::misc::simulation::fscommon
         // set a thread safe flag
         {
             QWriteLocker l(&m_lockData);
-            if (m_asyncLoadInProgress || m_shutdown) { return nullptr; }
+            if (m_asyncLoadInProgress || m_shutdown)
+            {
+                return nullptr;
+            }
             m_asyncLoadInProgress = true;
         }
         swift::misc::CWorker *worker = swift::misc::CWorker::fromTask(
@@ -187,7 +217,10 @@ namespace swift::misc::simulation::fscommon
                 QWriteLocker l(&m_lockData);
                 m = this->m_cachedVPilotModels.set(models);
             }
-            if (m.isFailure()) { CLogMessage::preformatted(m); }
+            if (m.isFailure())
+            {
+                CLogMessage::preformatted(m);
+            }
         }
         else
         {
@@ -198,21 +231,42 @@ namespace swift::misc::simulation::fscommon
     bool CVPilotRulesReader::loadFile(const QString &fileName, CVPilotModelRuleSet &ruleSet)
     {
         QFile f(fileName);
-        if (!f.exists()) { return false; }
-        if (!f.open(QFile::ReadOnly | QFile::Text)) { return false; }
+        if (!f.exists())
+        {
+            return false;
+        }
+        if (!f.open(QFile::ReadOnly | QFile::Text))
+        {
+            return false;
+        }
         QByteArray fc = f.readAll();
-        if (fc.isEmpty()) { return false; }
+        if (fc.isEmpty())
+        {
+            return false;
+        }
         QDomDocument doc;
-        if (!doc.setContent(fc)) { return false; }
+        if (!doc.setContent(fc))
+        {
+            return false;
+        }
         QDomNodeList rules = doc.elementsByTagName("ModelMatchRule");
-        if (rules.isEmpty()) { return false; }
+        if (rules.isEmpty())
+        {
+            return false;
+        }
 
         QDomNodeList mmRuleSet = doc.elementsByTagName("ModelMatchRuleSet");
-        if (mmRuleSet.size() < 1) { return true; }
+        if (mmRuleSet.size() < 1)
+        {
+            return true;
+        }
 
         const QDomNamedNodeMap attributes = mmRuleSet.at(0).attributes();
         QString folder = attributes.namedItem("Folder").nodeValue().trimmed();
-        if (folder.isEmpty()) { folder = QFileInfo(fileName).fileName().replace(".vmr", ""); }
+        if (folder.isEmpty())
+        {
+            folder = QFileInfo(fileName).fileName().replace(".vmr", "");
+        }
 
         // "2/1/2014 12:00:00 AM", "5/26/2014 2:00:00 PM"
         const QString updated = attributes.namedItem("UpdatedOn").nodeValue();
@@ -227,7 +281,10 @@ namespace swift::misc::simulation::fscommon
             const QString modelName = ruleAttributes.namedItem("ModelName").nodeValue();
             // remark, callsign prefix is airline ICAO code
             const QString callsignPrefix = ruleAttributes.namedItem("CallsignPrefix").nodeValue();
-            if (modelName.isEmpty()) { continue; }
+            if (modelName.isEmpty())
+            {
+                continue;
+            }
 
             // split if we have multiple models
             if (modelName.contains("//"))
@@ -236,7 +293,10 @@ namespace swift::misc::simulation::fscommon
                 const QStringList models = modelName.split("//");
                 for (const QString &model : models)
                 {
-                    if (model.isEmpty()) { continue; }
+                    if (model.isEmpty())
+                    {
+                        continue;
+                    }
                     CVPilotModelRule rule(model, folder, typeCode, callsignPrefix, updatedTimestamp);
                     ruleSet.push_back(rule);
                 }

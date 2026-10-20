@@ -43,7 +43,10 @@ namespace swift::gui::editors
 
     void CPilotForm::setVatsimValidation(bool vatsim)
     {
-        if (vatsim == m_vatsim) { return; }
+        if (vatsim == m_vatsim)
+        {
+            return;
+        }
         m_vatsim = vatsim;
         ui->le_Id->setValidator(vatsim ? m_vatsimIntValidator.data() : nullptr);
     }
@@ -61,7 +64,10 @@ namespace swift::gui::editors
         ui->le_Id->setText(user.getId());
         ui->le_Password->setText(user.getPassword());
         ui->le_RealName->setText(user.getRealName());
-        if (user.hasHomeBase()) { ui->comp_HomeAirport->setAirportIcaoCode(user.getHomeBase()); }
+        if (user.hasHomeBase())
+        {
+            ui->comp_HomeAirport->setAirportIcaoCode(user.getHomeBase());
+        }
         this->validate();
     }
 
@@ -99,22 +105,34 @@ namespace swift::gui::editors
         const CUser user(this->getUser());
         const bool validId = m_vatsim ? user.hasValidVatsimId() : user.hasId();
         ui->lblp_Id->setTicked(validId);
-        if (!validId) { msgs.push_back(CStatusMessage(this).validationError(u"Invalid id")); }
+        if (!validId)
+        {
+            msgs.push_back(CStatusMessage(this).validationError(u"Invalid id"));
+        }
 
         // check against user and if the data entry contains a valid code (or is empty)
         const bool validHomeAirport =
             user.hasValidOrEmptyHomeBase() &&
             (ui->comp_HomeAirport->isEmpty() || ui->comp_HomeAirport->getAirportIcaoCode().hasValidIcaoCode(false));
         ui->lblp_HomeAirport->setTicked(validHomeAirport);
-        if (!validHomeAirport) { msgs.push_back(CStatusMessage(this).validationError(u"Wromg home airport")); }
+        if (!validHomeAirport)
+        {
+            msgs.push_back(CStatusMessage(this).validationError(u"Wromg home airport"));
+        }
 
         const bool validCredentials = user.hasCredentials();
         ui->lblp_Password->setTicked(validCredentials);
-        if (!validCredentials) { msgs.push_back(CStatusMessage(this).validationError(u"Invalid credentials")); }
+        if (!validCredentials)
+        {
+            msgs.push_back(CStatusMessage(this).validationError(u"Invalid credentials"));
+        }
 
         const bool validRealName = user.hasRealName();
         ui->lblp_RealName->setTicked(validRealName);
-        if (!validRealName) { msgs.push_back(CStatusMessage(this).validationError(u"Invalid real name")); }
+        if (!validRealName)
+        {
+            msgs.push_back(CStatusMessage(this).validationError(u"Invalid real name"));
+        }
 
         return msgs;
     }

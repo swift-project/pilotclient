@@ -37,14 +37,20 @@ namespace swift::gui::components
 
     void CStatusMessagesDetail::appendStatusMessageToList(const CStatusMessage &message)
     {
-        if (message.isEmpty()) { return; }
+        if (message.isEmpty())
+        {
+            return;
+        }
         m_pending.push_front(message); // in many cases we want to have the latest "on top"
         m_dsDeferredUpdate.inputSignal();
     }
 
     void CStatusMessagesDetail::appendStatusMessagesToList(const CStatusMessageList &messages)
     {
-        if (messages.isEmpty()) { return; }
+        if (messages.isEmpty())
+        {
+            return;
+        }
         m_pending.push_front(messages);
         m_dsDeferredUpdate.inputSignal();
     }
@@ -96,7 +102,10 @@ namespace swift::gui::components
 
     void CStatusMessagesDetail::deferredUpdate()
     {
-        if (m_pending.isEmpty()) { return; }
+        if (m_pending.isEmpty())
+        {
+            return;
+        }
         CStatusMessageList newMsgs(ui->tvp_StatusMessages->container());
         newMsgs.push_front(m_pending); // default in many cases, latest first
         m_pending.clear();

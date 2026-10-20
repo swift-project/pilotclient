@@ -29,7 +29,10 @@ namespace swift::core::afv::audio
     {
         m_format = format;
         m_buffer.clear();
-        if (!this->isOpen()) { open(QIODevice::WriteOnly | QIODevice::Unbuffered); }
+        if (!this->isOpen())
+        {
+            open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+        }
     }
 
     void CAudioInputBuffer::stop() { this->close(); }
@@ -62,7 +65,10 @@ namespace swift::core::afv::audio
 
     bool CInput::setGainRatio(double gainRatio)
     {
-        if (qFuzzyCompare(m_gainRatio, gainRatio)) { return false; }
+        if (qFuzzyCompare(m_gainRatio, gainRatio))
+        {
+            return false;
+        }
         m_gainRatio = gainRatio;
         return true;
     }
@@ -85,7 +91,10 @@ namespace swift::core::afv::audio
 
     void CInput::start(const CAudioDeviceInfo &inputDevice)
     {
-        if (m_started) { return; }
+        if (m_started)
+        {
+            return;
+        }
 
         SWIFT_VERIFY_X(inputDevice.isValid() && inputDevice.isInputDevice(), Q_FUNC_INFO, "Wrong input device");
         m_device = inputDevice;
@@ -113,8 +122,14 @@ namespace swift::core::afv::audio
 
         m_inputFormat = inputFormat;
         m_audioInput.reset(new QAudioSource(selectedDevice, m_inputFormat));
-        if (!m_audioInputBuffer) { m_audioInputBuffer = new CAudioInputBuffer(this); }
-        else { m_audioInputBuffer->disconnect(); } // make sure disconnected in any case
+        if (!m_audioInputBuffer)
+        {
+            m_audioInputBuffer = new CAudioInputBuffer(this);
+        }
+        else
+        {
+            m_audioInputBuffer->disconnect();
+        } // make sure disconnected in any case
         m_audioInputBuffer->start(m_inputFormat);
         const QString format = toQString(m_inputFormat);
         CLogMessage(this).info(u"Starting: '%1' with: %2") << selectedDevice.description() << format;
@@ -130,22 +145,34 @@ namespace swift::core::afv::audio
     void CInput::initMicrophoneMacOS()
     {
         CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
-        if (status == CMacOSMicrophoneAccess::Authorized) { this->initMicrophone(); }
+        if (status == CMacOSMicrophoneAccess::Authorized)
+        {
+            this->initMicrophone();
+        }
         else if (status == CMacOSMicrophoneAccess::NotDetermined)
         {
             connect(&m_micAccess, &CMacOSMicrophoneAccess::permissionRequestAnswered, this, &CInput::initMicrophone);
             m_micAccess.requestAccess();
             CLogMessage(this).info(u"Request macOS permission for microphone");
         }
-        else { CLogMessage(this).error(u"Microphone access not granted. Voice input will not work."); }
+        else
+        {
+            CLogMessage(this).error(u"Microphone access not granted. Voice input will not work.");
+        }
     }
 #endif
 
     void CInput::stop()
     {
-        if (!m_started) { return; }
+        if (!m_started)
+        {
+            return;
+        }
         m_started = false;
-        if (m_audioInput) { m_audioInput->stop(); }
+        if (m_audioInput)
+        {
+            m_audioInput->stop();
+        }
         m_audioInput.reset();
         if (m_audioInputBuffer)
         {
@@ -160,7 +187,10 @@ namespace swift::core::afv::audio
         static_assert(Q_BYTE_ORDER == Q_LITTLE_ENDIAN);
         QVector<qint16> samples = convertBytesTo16BitPCM(frame);
 
-        if (m_inputFormat.channelCount() == 2) { samples = convertFromStereoToMono(samples); }
+        if (m_inputFormat.channelCount() == 2)
+        {
+            samples = convertFromStereoToMono(samples);
+        }
 
         const double volume = m_gainRatio;
         for (qint16 &sample : samples)
@@ -190,7 +220,10 @@ namespace swift::core::afv::audio
             inputVolumeStreamArgs.PeakDB = static_cast<float>(20 * std::log10(inputVolumeStreamArgs.PeakRaw));
             double db = qBound(minDb, inputVolumeStreamArgs.PeakDB, maxDb);
             double ratio = (db - minDb) / (maxDb - minDb);
-            if (ratio < 0.30) { ratio = 0.0; }
+            if (ratio < 0.30)
+            {
+                ratio = 0.0;
+            }
             ratio = std::min(ratio, 1.0);
             inputVolumeStreamArgs.PeakVU = ratio;
             emit inputVolumeStream(inputVolumeStreamArgs);

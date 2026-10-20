@@ -52,14 +52,26 @@ namespace swift::gui::components
 
         QPointer<CInterpolationSetupComponent> myself(this);
         QTimer::singleShot(1000, this, [=, this] {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            if (!myself) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
+            if (!myself)
+            {
+                return;
+            }
             this->onModeChanged();
         });
 
         QTimer::singleShot(30 * 1000, this, [=, this] {
-            if (!sGui || sGui->isShuttingDown()) { return; }
-            if (!myself) { return; }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
+            if (!myself)
+            {
+                return;
+            }
             this->onSetupChanged();
         });
     }
@@ -74,7 +86,10 @@ namespace swift::gui::components
 
     void CInterpolationSetupComponent::onRowDoubleClicked(const QModelIndex &index)
     {
-        if (!index.isValid()) { return; }
+        if (!index.isValid())
+        {
+            return;
+        }
         const CInterpolationAndRenderingSetupPerCallsign setup = ui->tvp_InterpolationSetup->at(index);
         ui->form_InterpolationSetup->setValue(setup);
         ui->comp_CallsignCompleter->setCallsign(setup.getCallsign());
@@ -84,10 +99,19 @@ namespace swift::gui::components
 
     void CInterpolationSetupComponent::onModeChanged()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         bool enableCallsign = false;
-        if (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal) { this->setUiValuesFromGlobal(); }
-        else { enableCallsign = true; }
+        if (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal)
+        {
+            this->setUiValuesFromGlobal();
+        }
+        else
+        {
+            enableCallsign = true;
+        }
         this->displaySetupsPerCallsign();
         ui->comp_CallsignCompleter->setReadOnly(!enableCallsign);
         ui->pb_DeleteOrReset->setText(enableCallsign ? "delete" : "reset");
@@ -108,7 +132,10 @@ namespace swift::gui::components
     {
         const bool global = (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal);
         const bool overlay = QObject::sender() == ui->pb_Reload;
-        if (!this->checkPrerequisites(!global, overlay)) { return; }
+        if (!this->checkPrerequisites(!global, overlay))
+        {
+            return;
+        }
         if (global)
         {
             CInterpolationAndRenderingSetupGlobal gs =
@@ -118,7 +145,10 @@ namespace swift::gui::components
         else
         {
             const CCallsign cs = ui->comp_CallsignCompleter->getCallsign(false);
-            if (!cs.isValid()) { return; }
+            if (!cs.isValid())
+            {
+                return;
+            }
             const CInterpolationAndRenderingSetupPerCallsign setup =
                 sGui->getIContextSimulator()->getInterpolationAndRenderingSetupPerCallsignOrDefault(cs);
             ui->form_InterpolationSetup->setValue(setup);
@@ -128,7 +158,10 @@ namespace swift::gui::components
     void CInterpolationSetupComponent::saveSetup()
     {
         const bool global = (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal);
-        if (!this->checkPrerequisites(!global, true)) { return; }
+        if (!this->checkPrerequisites(!global, true))
+        {
+            return;
+        }
         CInterpolationAndRenderingSetupPerCallsign setup = ui->form_InterpolationSetup->getValue();
         CInterpolationAndRenderingSetupGlobal gs =
             sGui->getIContextSimulator()->getInterpolationAndRenderingSetupGlobal();
@@ -141,14 +174,20 @@ namespace swift::gui::components
 
             const QPointer<CInterpolationSetupComponent> myself(this);
             QTimer::singleShot(250, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->reloadSetup();
             });
         }
         else
         {
             const CCallsign cs = ui->comp_CallsignCompleter->getCallsign(false);
-            if (!cs.isValid()) { return; }
+            if (!cs.isValid())
+            {
+                return;
+            }
             setup.setCallsign(cs);
             const bool ignoreGlobal = ui->cb_IgnoreGlobal->isChecked();
             if (ignoreGlobal && setup.isEqualToGlobal(gs))
@@ -160,13 +199,22 @@ namespace swift::gui::components
 
             CInterpolationSetupList setups = ui->tvp_InterpolationSetup->container();
             const int replaced = setups.replaceOrAddObjectByCallsign(setup);
-            if (replaced < 1) { return; }
+            if (replaced < 1)
+            {
+                return;
+            }
             const bool set = this->setSetupsToContext(setups);
-            if (!set) { return; }
+            if (!set)
+            {
+                return;
+            }
 
             const QPointer<CInterpolationSetupComponent> myself(this);
             QTimer::singleShot(250, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->displaySetupsPerCallsign();
             });
         }
@@ -175,7 +223,9 @@ namespace swift::gui::components
     void CInterpolationSetupComponent::removeOrResetSetup()
     {
         const bool global = (this->getSetupMode() == CInterpolationSetupComponent::SetupGlobal);
-        if (!this->checkPrerequisites(!global, true)) {}
+        if (!this->checkPrerequisites(!global, true))
+        {
+        }
         if (global)
         {
             // reset
@@ -189,13 +239,22 @@ namespace swift::gui::components
             const CCallsign cs = ui->comp_CallsignCompleter->getCallsign(false);
             CInterpolationSetupList setups = ui->tvp_InterpolationSetup->container();
             const int removed = setups.removeByCallsign(cs);
-            if (removed < 1) { return; } // nothing done
+            if (removed < 1)
+            {
+                return;
+            } // nothing done
             const bool set = this->setSetupsToContext(setups);
-            if (!set) { return; }
+            if (!set)
+            {
+                return;
+            }
 
             const QPointer<CInterpolationSetupComponent> myself(this);
             QTimer::singleShot(100, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->displaySetupsPerCallsign();
             });
         }
@@ -242,8 +301,14 @@ namespace swift::gui::components
 
     bool CInterpolationSetupComponent::setSetupsToContext(const CInterpolationSetupList &setups, bool force)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return false; }
-        if (!force && setups == m_lastSetSetups) { return false; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return false;
+        }
+        if (!force && setups == m_lastSetSetups)
+        {
+            return false;
+        }
         const bool ignoreGlobal = ui->cb_IgnoreGlobal->isChecked();
         sGui->getIContextSimulator()->setInterpolationAndRenderingSetupsPerCallsign(setups, ignoreGlobal);
         m_lastSetSetups = setups;
@@ -252,7 +317,10 @@ namespace swift::gui::components
 
     void CInterpolationSetupComponent::onSetupChanged()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         this->displaySetupsPerCallsign();
     }
 
@@ -261,7 +329,10 @@ namespace swift::gui::components
         if (deletedObjects.canConvert<CInterpolationSetupList>())
         {
             const auto deletedSetups = deletedObjects.value<CInterpolationSetupList>();
-            if (deletedSetups.isEmpty()) { return; }
+            if (deletedSetups.isEmpty())
+            {
+                return;
+            }
 
             // make sure the setups are really deleted
             // it can be they are already in the container, but there is no guarantee

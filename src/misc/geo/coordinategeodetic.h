@@ -346,7 +346,10 @@ namespace swift::misc // NOLINT(modernize-concat-nested-namespaces)
             //! Is null?
             bool isNull() const override
             {
-                if (m_geodeticHeight.isNull()) { return true; }
+                if (m_geodeticHeight.isNull())
+                {
+                    return true;
+                }
                 return math::CMathUtils::epsilonZeroLimits(m_x) && math::CMathUtils::epsilonZeroLimits(m_y) &&
                        math::CMathUtils::epsilonZeroLimits(m_z);
             }

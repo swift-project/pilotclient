@@ -36,7 +36,10 @@ namespace swift::sound::sample_provider
                 double in2 = (m_channels == 1) ? 0 : samples.at(sample + 1);
                 m_simpleCompressor.process(in1, in2);
                 samples[sample] = static_cast<float>(in1);
-                if (m_channels > 1) { samples[sample + 1] = static_cast<float>(in2); }
+                if (m_channels > 1)
+                {
+                    samples[sample + 1] = static_cast<float>(in2);
+                }
             }
         }
         return samplesRead;
@@ -48,8 +51,14 @@ namespace swift::sound::sample_provider
 
     void CSimpleCompressorEffect::setChannels(int channels)
     {
-        if (channels < 1) { channels = 1; }
-        else if (channels > 2) { channels = 2; }
+        if (channels < 1)
+        {
+            channels = 1;
+        }
+        else if (channels > 2)
+        {
+            channels = 2;
+        }
         m_channels = channels;
     }
 } // namespace swift::sound::sample_provider

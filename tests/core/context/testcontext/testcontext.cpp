@@ -103,9 +103,15 @@ int main(int argc, char *argv[])
     CApplication a(CApplicationInfo::UnitTest);
     a.addNetworkOptions();
     const bool setup = a.parseCommandLineArgsAndLoadSetup();
-    if (!setup) { qWarning() << "No setup loaded"; }
+    if (!setup)
+    {
+        qWarning() << "No setup loaded";
+    }
     int r = EXIT_FAILURE;
-    if (a.start()) { r = QTest::qExec(&to, args); }
+    if (a.start())
+    {
+        r = QTest::qExec(&to, args);
+    }
     a.gracefulShutdown();
     return r;
 }

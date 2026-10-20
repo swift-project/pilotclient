@@ -42,7 +42,10 @@ namespace XSwiftBus
 
         std::tuple<float, float, float, float> getFrameStats()
         {
-            if (m_total < 0.001f) { return {}; } // no DIV by 0
+            if (m_total < 0.001f)
+            {
+                return {};
+            } // no DIV by 0
             const float fps = m_samples.size() / m_total;
             const float ratio = 1 - m_totalOverBudget / m_total;
             const float miles = m_totalMetersShort / 1852.0f;
@@ -65,10 +68,16 @@ namespace XSwiftBus
             {
                 auto &oldSample = m_samples[m_lastSampleIndex];
                 m_total -= oldSample;
-                if (oldSample > c_framePeriodBudget) { m_totalOverBudget -= oldSample - c_framePeriodBudget; }
+                if (oldSample > c_framePeriodBudget)
+                {
+                    m_totalOverBudget -= oldSample - c_framePeriodBudget;
+                }
                 oldSample = current;
             }
-            else { m_samples.push_back(current); }
+            else
+            {
+                m_samples.push_back(current);
+            }
 
             m_total += current;
             if (current > c_framePeriodBudget)
@@ -123,7 +132,10 @@ namespace XSwiftBus
 
     std::tuple<double, double, double, double> CService::getFrameStats()
     {
-        if (!m_framePeriodSampler) { return {}; }
+        if (!m_framePeriodSampler)
+        {
+            return {};
+        }
         const auto result = m_framePeriodSampler->getFrameStats();
         return std::make_tuple(static_cast<double>(std::get<0>(result)), static_cast<double>(std::get<1>(result)),
                                static_cast<double>(std::get<2>(result)), static_cast<double>(std::get<3>(result)));
@@ -144,7 +156,10 @@ namespace XSwiftBus
 
     void CService::addTextMessage(const std::string &text, double red, double green, double blue)
     {
-        if (text.empty()) { return; }
+        if (text.empty())
+        {
+            return;
+        }
         static const CMessage::string ellipsis = u8"\u2026";
         const unsigned lineLength = m_messages.maxLineLength() - 1;
 
@@ -160,14 +175,20 @@ namespace XSwiftBus
             wrappedLines.back() += ellipsis;
             begin = end;
         }
-        if (characters > 0) { wrappedLines.emplace_back(begin.base, text.end()); }
+        if (characters > 0)
+        {
+            wrappedLines.emplace_back(begin.base, text.end());
+        }
         for (const auto &line : wrappedLines)
         {
             m_messages.addMessage(
                 { line, static_cast<float>(red), static_cast<float>(green), static_cast<float>(blue) });
         }
 
-        if (!m_messages.isVisible() && m_popupMessageWindow) { m_messages.toggle(); }
+        if (!m_messages.isVisible() && m_popupMessageWindow)
+        {
+            m_messages.toggle();
+        }
 
         if (m_disappearMessageWindow)
         {
@@ -213,7 +234,10 @@ namespace XSwiftBus
     std::string CService::getAircraftLivery() const
     {
         std::string liveryPath = m_liveryPath.get();
-        if (liveryPath.empty()) { return {}; }
+        if (liveryPath.empty())
+        {
+            return {};
+        }
 
         // liveryPath end with / and we need to get rid of it
         liveryPath.pop_back();
@@ -224,7 +248,10 @@ namespace XSwiftBus
     {
         int version;
         XPLMGetVersions(&version, nullptr, nullptr);
-        if (version > 5000) { version /= 10; }
+        if (version > 5000)
+        {
+            version /= 10;
+        }
         return version / 100;
     }
 
@@ -232,7 +259,10 @@ namespace XSwiftBus
     {
         int version;
         XPLMGetVersions(&version, nullptr, nullptr);
-        if (version > 5000) { version /= 10; }
+        if (version > 5000)
+        {
+            version /= 10;
+        }
         return version % 100;
     }
 
@@ -262,7 +292,10 @@ namespace XSwiftBus
         const bool w = this->writeConfig(s.isTcasEnabled(), s.isLogRenderPhases());
         this->updateMessageBoxFromSettings();
         INFO_LOG("Received settings " + s.convertToString());
-        if (w) { INFO_LOG("Written new config file"); }
+        if (w)
+        {
+            INFO_LOG("Written new config file");
+        }
     }
 
     static const char *introspection_service = DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
@@ -279,7 +312,10 @@ namespace XSwiftBus
 
         if (message.getInterfaceName() == DBUS_INTERFACE_INTROSPECTABLE)
         {
-            if (message.getMethodName() == "Introspect") { sendDBusReply(sender, serial, introspection_service); }
+            if (message.getMethodName() == "Introspect")
+            {
+                sendDBusReply(sender, serial, introspection_service);
+            }
         }
         else if (message.getInterfaceName() == XSWIFTBUS_SERVICE_INTERFACENAME)
         {
@@ -784,7 +820,10 @@ namespace XSwiftBus
     {
         if (m_sceneryIsLoading.get() != m_sceneryWasLoading)
         {
-            if (!m_sceneryIsLoading.get()) { onSceneryLoaded(); }
+            if (!m_sceneryIsLoading.get())
+            {
+                onSceneryLoaded();
+            }
             m_sceneryWasLoading = m_sceneryIsLoading.get();
         }
 

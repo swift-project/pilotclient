@@ -36,15 +36,24 @@ namespace swift::misc
             //! Product or file version
             const QString &productOrFileVersion() const
             {
-                if (!productVersionName.isEmpty()) { return productVersionName; }
-                if (!productVersion.isEmpty()) { return productVersion; }
+                if (!productVersionName.isEmpty())
+                {
+                    return productVersionName;
+                }
+                if (!productVersion.isEmpty())
+                {
+                    return productVersion;
+                }
                 return fileVersion;
             }
 
             //! Summary
             QString summary() const
             {
-                if (!errorMsg.isEmpty()) { return errorMsg; }
+                if (!errorMsg.isEmpty())
+                {
+                    return errorMsg;
+                }
                 static const QString s("Product: '%1' version: %2 language: %3 filename: '%4'");
                 return s.arg(productName, productOrFileVersion(), iso, fullFilename);
             }

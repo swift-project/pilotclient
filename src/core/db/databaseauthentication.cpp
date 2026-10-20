@@ -42,7 +42,10 @@ namespace swift::core::db
 
     void CDatabaseAuthenticationService::gracefulShutdown()
     {
-        if (m_shutdown) { return; }
+        if (m_shutdown)
+        {
+            return;
+        }
         m_shutdown = true;
         this->logoff();
     }
@@ -68,9 +71,18 @@ namespace swift::core::db
 
         const QString un(username.trimmed());
         const QString pw(password.trimmed());
-        if (un.isEmpty()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"No user name/id")); }
-        if (pw.isEmpty()) { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"No password")); }
-        if (!msgs.isEmpty()) { return msgs; }
+        if (un.isEmpty())
+        {
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"No user name/id"));
+        }
+        if (pw.isEmpty())
+        {
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"No password"));
+        }
+        if (!msgs.isEmpty())
+        {
+            return msgs;
+        }
 
         const CUrl url(sApp->getGlobalSetup().getDbLoginServiceUrl());
         QString msg;
@@ -83,7 +95,10 @@ namespace swift::core::db
         QUrlQuery params;
         params.addQueryItem("username", un);
         params.addQueryItem("password", pw);
-        if (sApp->getGlobalSetup().dbDebugFlag()) { CNetworkUtils::addDebugFlag(params); }
+        if (sApp->getGlobalSetup().dbDebugFlag())
+        {
+            CNetworkUtils::addDebugFlag(params);
+        }
 
         const QString query = params.toString();
         const QNetworkRequest request(CNetworkUtils::getSwiftNetworkRequest(url, CNetworkUtils::PostUrlEncoded,
@@ -97,7 +112,10 @@ namespace swift::core::db
 
     void CDatabaseAuthenticationService::logoff()
     {
-        if (!sApp) { return; }
+        if (!sApp)
+        {
+            return;
+        }
         CUrl url(sApp->getGlobalSetup().getDbLoginServiceUrl());
         url.setQuery("logoff=true");
         QNetworkRequest request(CNetworkUtils::getSwiftNetworkRequest(url));
@@ -110,7 +128,10 @@ namespace swift::core::db
         // always cleanup reply
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
 
-        if (m_shutdown) { return; }
+        if (m_shutdown)
+        {
+            return;
+        }
         QString urlString(nwReply->url().toString());
         if (urlString.contains("logoff", Qt::CaseInsensitive))
         {

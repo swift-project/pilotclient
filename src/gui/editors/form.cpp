@@ -38,9 +38,15 @@ namespace swift::gui::editors
 
     void CForm::pasted()
     {
-        if (!QApplication::clipboard()) { return; }
+        if (!QApplication::clipboard())
+        {
+            return;
+        }
         const QString data = QApplication::clipboard()->text();
-        if (!json::looksLikeSwiftJson(data)) { return; }
+        if (!json::looksLikeSwiftJson(data))
+        {
+            return;
+        }
         this->jsonPasted(data);
     }
 

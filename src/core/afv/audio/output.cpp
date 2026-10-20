@@ -59,7 +59,10 @@ namespace swift::core::afv::audio
             outputVolumeStreamArgs.PeakDb = static_cast<float>(20 * std::log10(outputVolumeStreamArgs.PeakRaw));
             const double db = qBound(m_minDb, outputVolumeStreamArgs.PeakDb, m_maxDb);
             double ratio = (db - m_minDb) / (m_maxDb - m_minDb);
-            if (ratio < 0.30) { ratio = 0.0; }
+            if (ratio < 0.30)
+            {
+                ratio = 0.0;
+            }
             ratio = std::min(ratio, 1.0);
             outputVolumeStreamArgs.PeakVU = ratio;
             emit outputVolumeStream(outputVolumeStreamArgs);
@@ -67,7 +70,10 @@ namespace swift::core::afv::audio
             m_maxSampleOutput = 0;
         }
 
-        if (channelCount == 2) { buffer = convertFromMonoToStereo(buffer); }
+        if (channelCount == 2)
+        {
+            buffer = convertFromMonoToStereo(buffer);
+        }
 
         memcpy(data, buffer.constData(), static_cast<size_t>(maxlen));
         return maxlen;
@@ -84,11 +90,17 @@ namespace swift::core::afv::audio
 
     void COutput::start(const CAudioDeviceInfo &outputDevice, ISampleProvider *sampleProvider)
     {
-        if (m_started) { return; }
+        if (m_started)
+        {
+            return;
+        }
 
         SWIFT_VERIFY_X(outputDevice.isValid() && outputDevice.isOutputDevice(), Q_FUNC_INFO, "Wrong output device");
 
-        if (m_audioOutputBuffer) { m_audioOutputBuffer->deleteLater(); }
+        if (m_audioOutputBuffer)
+        {
+            m_audioOutputBuffer->deleteLater();
+        }
         m_audioOutputBuffer = new CAudioOutputBuffer(sampleProvider, this);
         connect(m_audioOutputBuffer, &CAudioOutputBuffer::outputVolumeStream, this, &COutput::outputVolumeStream);
 
@@ -115,7 +127,10 @@ namespace swift::core::afv::audio
 
     void COutput::stop()
     {
-        if (!m_started) { return; }
+        if (!m_started)
+        {
+            return;
+        }
         m_started = false;
         m_audioOutput->stop();
         m_audioOutput.reset();

@@ -32,13 +32,19 @@ namespace swift::gui::views
 
     void CAtcStationTreeView::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
     {
-        if (!this->stationModel()) { return; }
+        if (!this->stationModel())
+        {
+            return;
+        }
         this->stationModel()->changedAtcStationConnectionStatus(station, added);
     }
 
     void CAtcStationTreeView::updateContainer(const CAtcStationList &stations)
     {
-        if (!this->stationModel()) { return; }
+        if (!this->stationModel())
+        {
+            return;
+        }
         this->storeState();
         this->stationModel()->updateContainer(stations);
         this->restoreState();
@@ -46,7 +52,10 @@ namespace swift::gui::views
 
     void CAtcStationTreeView::clear()
     {
-        if (!this->stationModel()) { return; }
+        if (!this->stationModel())
+        {
+            return;
+        }
         this->stationModel()->clear();
     }
 
@@ -54,15 +63,24 @@ namespace swift::gui::views
 
     void CAtcStationTreeView::setColumns(const CColumns &columns)
     {
-        if (this->stationModel()) { this->stationModel()->setColumns(columns); }
+        if (this->stationModel())
+        {
+            this->stationModel()->setColumns(columns);
+        }
     }
 
     void CAtcStationTreeView::fullResizeToContents() { m_dsFullResize.inputSignal(); }
 
     void CAtcStationTreeView::fullResizeToContentsImpl()
     {
-        if (this->isEmpty()) { return; }
-        for (int c = 0; c < this->model()->columnCount(); c++) { this->resizeColumnToContents(c); }
+        if (this->isEmpty())
+        {
+            return;
+        }
+        for (int c = 0; c < this->model()->columnCount(); c++)
+        {
+            this->resizeColumnToContents(c);
+        }
     }
 
     const CAtcStationTreeModel *CAtcStationTreeView::stationModel() const
@@ -86,7 +104,10 @@ namespace swift::gui::views
         const QVariant data = this->model()->data(index.siblingAtColumn(0)); // supposed to be the callsign
         const QString callsign = data.toString();
         const CAtcStationTreeModel *model = this->stationModel();
-        if (!model) { return {}; }
+        if (!model)
+        {
+            return {};
+        }
         return model->container().findFirstByCallsign(CCallsign(callsign, CCallsign::Atc));
     }
 
@@ -105,16 +126,28 @@ namespace swift::gui::views
     void CAtcStationTreeView::onSelected(const QItemSelection &selected, const QItemSelection &deselected)
     {
         Q_UNUSED(deselected);
-        if (selected.isEmpty()) { return; }
+        if (selected.isEmpty())
+        {
+            return;
+        }
         const CAtcStation atcStation = this->selectedObject(selected.indexes().front());
-        if (!atcStation.hasCallsign()) { return; }
+        if (!atcStation.hasCallsign())
+        {
+            return;
+        }
         emit this->objectSelected(atcStation);
     }
 
     void CAtcStationTreeView::customMenu(const QPoint &point)
     {
-        if (!this->stationModel()) { return; }
-        if (this->stationModel()->container().isEmpty()) { return; }
+        if (!this->stationModel())
+        {
+            return;
+        }
+        if (this->stationModel()->container().isEmpty())
+        {
+            return;
+        }
 
         auto *menu = new QMenu(this); // menu
 
@@ -169,14 +202,20 @@ namespace swift::gui::views
     void CAtcStationTreeView::tuneInAtc(const misc::aviation::CComSystem::ComUnit unit, const bool active)
     {
         const CAtcStation s(this->selectedObject());
-        if (s.getCallsign().isEmpty()) { return; }
+        if (s.getCallsign().isEmpty())
+        {
+            return;
+        }
         emit this->requestComFrequency(s.getFrequency(), unit, active);
     }
 
     void CAtcStationTreeView::requestTextMessage()
     {
         const CAtcStation s(this->selectedObject());
-        if (s.getCallsign().isEmpty()) { return; }
+        if (s.getCallsign().isEmpty())
+        {
+            return;
+        }
         emit this->requestTextMessageWidget(s.getCallsign());
     }
 } // namespace swift::gui::views

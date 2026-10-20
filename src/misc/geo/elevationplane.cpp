@@ -80,15 +80,24 @@ namespace swift::misc::geo
 
     void CElevationPlane::addAltitudeOffset(const CLength &offset)
     {
-        if (offset.isNull() || offset.isZeroEpsilonConsidered()) { return; }
+        if (offset.isNull() || offset.isZeroEpsilonConsidered())
+        {
+            return;
+        }
         const CAltitude newAlt = this->getAltitude().withOffset(offset);
         this->setGeodeticHeight(newAlt);
     }
 
     void CElevationPlane::switchAltitudeUnit(const CLengthUnit &unit)
     {
-        if (unit.isNull() || this->getAltitudeUnit().isNull()) { return; }
-        if (this->getAltitudeUnit() == unit) { return; }
+        if (unit.isNull() || this->getAltitudeUnit().isNull())
+        {
+            return;
+        }
+        if (this->getAltitudeUnit() == unit)
+        {
+            return;
+        }
         this->setGeodeticHeight(this->getAltitude().switchedUnit(unit));
     }
 
@@ -110,8 +119,14 @@ namespace swift::misc::geo
 
     bool CElevationPlane::isWithinRange(const ICoordinateGeodetic &coordinate) const
     {
-        if (coordinate.isNull()) { return false; }
-        if (this->isNull()) { return false; }
+        if (coordinate.isNull())
+        {
+            return false;
+        }
+        if (this->isNull())
+        {
+            return false;
+        }
         const CLength d = this->calculateGreatCircleDistance(coordinate);
         const bool inRange = (m_radius >= d);
         return inRange;
@@ -119,9 +134,18 @@ namespace swift::misc::geo
 
     bool CElevationPlane::isWithinRange(const ICoordinateGeodetic &coordinate, const CLength &radius) const
     {
-        if (coordinate.isNull()) { return false; }
-        if (radius.isNull()) { return false; }
-        if (this->isNull()) { return false; }
+        if (coordinate.isNull())
+        {
+            return false;
+        }
+        if (radius.isNull())
+        {
+            return false;
+        }
+        if (this->isNull())
+        {
+            return false;
+        }
         const CLength d = this->calculateGreatCircleDistance(coordinate);
         const bool inRange = (radius >= d);
         return inRange;
@@ -135,7 +159,10 @@ namespace swift::misc::geo
 
     QVariant CElevationPlane::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

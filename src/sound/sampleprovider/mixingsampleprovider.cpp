@@ -36,10 +36,16 @@ namespace swift::sound::sample_provider
             QVector<float> sourceBuffer;
 
             const int len = sampleProvider->readSamples(sourceBuffer, count);
-            for (int n = 0; n < len; n++) { samples[n] += sourceBuffer[n]; }
+            for (int n = 0; n < len; n++)
+            {
+                samples[n] += sourceBuffer[n];
+            }
 
             outputLen = qMax(len, outputLen);
-            if (sampleProvider->isFinished()) { finishedProviders.push_back(sampleProvider); }
+            if (sampleProvider->isFinished())
+            {
+                finishedProviders.push_back(sampleProvider);
+            }
         }
 
         for (ISampleProvider *sampleProvider : finishedProviders)

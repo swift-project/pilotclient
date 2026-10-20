@@ -33,16 +33,25 @@ namespace swift::misc::simulation::xplane
     QString getLastExistingPathFromFile(const QString &filePath)
     {
         const QFileInfo fileInfo(filePath);
-        if (!fileInfo.exists()) { return {}; }
+        if (!fileInfo.exists())
+        {
+            return {};
+        }
         QFile file(fileInfo.absoluteFilePath());
-        if (!file.open(QIODevice::ReadOnly)) { return {}; }
+        if (!file.open(QIODevice::ReadOnly))
+        {
+            return {};
+        }
 
         QString lastLine;
         QTextStream ts(&file);
         while (!ts.atEnd())
         {
             QString pathToCheck = ts.readLine();
-            if (QFileInfo::exists(pathToCheck)) { lastLine = pathToCheck; }
+            if (QFileInfo::exists(pathToCheck))
+            {
+                lastLine = pathToCheck;
+            }
         }
         return lastLine;
     }
@@ -99,10 +108,22 @@ namespace swift::misc::simulation::xplane
     const QString &CXPlaneUtil::xplaneRootDir()
     {
         static const QString dir = [] {
-            if (!xplane11Dir().isEmpty()) { return xplane11Dir(); }
-            else if (!xplane10Dir().isEmpty()) { return xplane10Dir(); }
-            else if (!xplane9Dir().isEmpty()) { return xplane9Dir(); }
-            else { return QString(); }
+            if (!xplane11Dir().isEmpty())
+            {
+                return xplane11Dir();
+            }
+            else if (!xplane10Dir().isEmpty())
+            {
+                return xplane10Dir();
+            }
+            else if (!xplane9Dir().isEmpty())
+            {
+                return xplane9Dir();
+            }
+            else
+            {
+                return QString();
+            }
         }();
         return dir;
     }
@@ -127,7 +148,10 @@ namespace swift::misc::simulation::xplane
 
     QStringList CXPlaneUtil::modelDirectoriesFromSimDir(const QString &simulatorDir)
     {
-        if (simulatorDir.isEmpty()) { return {}; }
+        if (simulatorDir.isEmpty())
+        {
+            return {};
+        }
         return QStringList({ simulatorDir });
     }
 
@@ -152,7 +176,10 @@ namespace swift::misc::simulation::xplane
     QStringList CXPlaneUtil::pluginSubdirectories(const QString &pluginDir)
     {
         const QString dirName = pluginDir.isEmpty() ? xplaneRootDir() : pluginDir;
-        if (!CDirectoryUtils::isDirExisting(dirName)) { return {}; }
+        if (!CDirectoryUtils::isDirExisting(dirName))
+        {
+            return {};
+        }
         const QDir dir(dirName);
         return dir.entryList(QDir::Dirs, QDir::Name | QDir::IgnoreCase);
     }
@@ -176,7 +203,10 @@ namespace swift::misc::simulation::xplane
         {
             const QString xswiftbusDir = CFileUtils::appendFilePathsAndFixUnc(
                 CXPlaneUtil::pluginDirFromRootDir(xplaneRootDir), CXPlaneUtil::xswiftbusPathName());
-            if (CDirectoryUtils::isDirExisting(xswiftbusDir)) { return xswiftbusDir; }
+            if (CDirectoryUtils::isDirExisting(xswiftbusDir))
+            {
+                return xswiftbusDir;
+            }
         }
         return {};
     }
@@ -190,14 +220,20 @@ namespace swift::misc::simulation::xplane
         if (!rootDir.isEmpty())
         {
             const QString xswiftbusLegacy = CFileUtils::appendFilePathsAndFixUnc(xplaneRootDir, legacyPath);
-            if (CDirectoryUtils::isDirExisting(xswiftbusLegacy)) { return xswiftbusLegacy; }
+            if (CDirectoryUtils::isDirExisting(xswiftbusLegacy))
+            {
+                return xswiftbusLegacy;
+            }
         }
         return {};
     }
 
     bool CXPlaneUtil::hasXSwiftBusBuildAndPluginDir(const QString &xplaneRootDir)
     {
-        if (CSwiftDirectories::getXSwiftBusBuildDirectory().isEmpty()) { return false; }
+        if (CSwiftDirectories::getXSwiftBusBuildDirectory().isEmpty())
+        {
+            return false;
+        }
         const QString xswiftBusPluginDir = CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir);
         return (!xswiftBusPluginDir.isEmpty());
     }
@@ -208,7 +244,10 @@ namespace swift::misc::simulation::xplane
         QStringList conflicts;
         for (const QString &file : files)
         {
-            if (file.contains("swift", Qt::CaseInsensitive)) { continue; }
+            if (file.contains("swift", Qt::CaseInsensitive))
+            {
+                continue;
+            }
             if (file.contains("ivap", Qt::CaseInsensitive))
             {
                 conflicts.push_back(file);
@@ -227,7 +266,10 @@ namespace swift::misc::simulation::xplane
     {
         const QString dirName = CFileUtils::fixWindowsUncPath(pluginDir.isEmpty() ? xplaneRootDir() : pluginDir);
         const QDir directory(dirName);
-        if (!directory.exists()) { return {}; }
+        if (!directory.exists())
+        {
+            return {};
+        }
 
         // this finds the current levels XPLs
         QStringList files = directory.entryList(xplFileFilter(), QDir::Files, QDir::Name | QDir::IgnoreCase);
@@ -236,24 +278,42 @@ namespace swift::misc::simulation::xplane
         {
             const QString subDir = CFileUtils::appendFilePaths(dirName, dir);
             const QStringList subDirFiles = CXPlaneUtil::findAllXplFiles(subDir);
-            if (subDirFiles.isEmpty()) { continue; }
-            for (const QString &file : subDirFiles) { files.push_back(CFileUtils::appendFilePaths(dir, file)); }
+            if (subDirFiles.isEmpty())
+            {
+                continue;
+            }
+            for (const QString &file : subDirFiles)
+            {
+                files.push_back(CFileUtils::appendFilePaths(dir, file));
+            }
         }
         return files;
     }
 
     bool CXPlaneUtil::hasNewerXSwiftBusBuild(const QString &xplaneRootDir)
     {
-        if (CSwiftDirectories::getXSwiftBusBuildDirectory().isEmpty()) { return false; }
+        if (CSwiftDirectories::getXSwiftBusBuildDirectory().isEmpty())
+        {
+            return false;
+        }
         const QString xswiftBusPluginDir = CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir);
-        if (xswiftBusPluginDir.isEmpty()) { return false; }
+        if (xswiftBusPluginDir.isEmpty())
+        {
+            return false;
+        }
 
         const QFileInfo fiLatestBuild =
             CFileUtils::findLastModified(CSwiftDirectories::getXSwiftBusBuildDirectory(), true, xplFileFilter());
-        if (!fiLatestBuild.lastModified().isValid()) { return false; }
+        if (!fiLatestBuild.lastModified().isValid())
+        {
+            return false;
+        }
 
         const QFileInfo fiLatestDeployed = CFileUtils::findLastModified(xswiftBusPluginDir, true, xplFileFilter());
-        if (!fiLatestDeployed.lastModified().isValid()) { return true; } // not yet existing
+        if (!fiLatestDeployed.lastModified().isValid())
+        {
+            return true;
+        } // not yet existing
 
         // newer?
         return fiLatestBuild.lastModified() > fiLatestDeployed.lastModified();
@@ -261,9 +321,15 @@ namespace swift::misc::simulation::xplane
 
     int CXPlaneUtil::copyXSwiftBusBuildFiles(const QString &xplaneRootDir)
     {
-        if (CSwiftDirectories::getXSwiftBusBuildDirectory().isEmpty()) { return -1; }
+        if (CSwiftDirectories::getXSwiftBusBuildDirectory().isEmpty())
+        {
+            return -1;
+        }
         const QString xswiftBusPluginDir = CXPlaneUtil::xswiftbusPluginDir(xplaneRootDir);
-        if (xswiftBusPluginDir.isEmpty()) { return -1; }
+        if (xswiftBusPluginDir.isEmpty())
+        {
+            return -1;
+        }
 
         return CDirectoryUtils::copyDirectoryRecursively(CSwiftDirectories::getXSwiftBusBuildDirectory(),
                                                          xswiftBusPluginDir, true);
@@ -284,7 +350,10 @@ namespace swift::misc::simulation::xplane
         }
 
         CStatusMessageList msgs;
-        if (modelDirectories.isEmpty()) { return msgs; }
+        if (modelDirectories.isEmpty())
+        {
+            return msgs;
+        }
         const QDir sd(simDir);
         const bool simDirExists = sd.exists();
         for (const QString &modelDir : modelDirectories)

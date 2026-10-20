@@ -50,7 +50,10 @@ namespace swift::gui::components
         const QString csString = ui->le_Callsign->text().trimmed().toUpper();
         const bool valid =
             onlyKnownCallsign ? this->isValidKnownCallsign(csString) : CCallsign::isValidAircraftCallsign(csString);
-        if (!valid) { return {}; }
+        if (!valid)
+        {
+            return {};
+        }
         return { csString, CCallsign::Aircraft };
     }
 
@@ -66,28 +69,46 @@ namespace swift::gui::components
 
     void CCallsignCompleter::setReadOnly(bool readOnly)
     {
-        if (ui->le_Callsign->isReadOnly() == readOnly) { return; }
+        if (ui->le_Callsign->isReadOnly() == readOnly)
+        {
+            return;
+        }
         ui->le_Callsign->setReadOnly(readOnly);
         this->setStyleSheet(this->styleSheet());
     }
 
     void CCallsignCompleter::updateCallsignsFromContext()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
-        if (!sGui->getIContextNetwork()) { return; }
-        if (completer()->wasUpdatedWithinTime(1500)) { return; } // avoid context call via DBus
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
+        if (!sGui->getIContextNetwork())
+        {
+            return;
+        }
+        if (completer()->wasUpdatedWithinTime(1500))
+        {
+            return;
+        } // avoid context call via DBus
         CCallsignSet validCallsigns;
         if (m_onlyWithParts)
         {
             //! \todo KB 2020-04 transfers allaircraft via DBus
             validCallsigns = sGui->getIContextNetwork()->getAircraftInRange().getCallsignsWithSynchronizedParts();
         }
-        else { validCallsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns(); }
+        else
+        {
+            validCallsigns = sGui->getIContextNetwork()->getAircraftInRangeCallsigns();
+        }
 
         if (m_addOwnCallsign && sGui->getIContextOwnAircraft())
         {
             const CCallsign ownCs = sGui->getIContextOwnAircraft()->getOwnAircraft().getCallsign();
-            if (!ownCs.isEmpty()) { validCallsigns.insert(ownCs); }
+            if (!ownCs.isEmpty())
+            {
+                validCallsigns.insert(ownCs);
+            }
         }
 
         const QStringList modelData = validCallsigns.getCallsignStrings(true);
@@ -104,7 +125,10 @@ namespace swift::gui::components
         if (cs.isValid())
         {
             m_dsValidCallsignEntered.inputSignal();
-            if (changed) { emit this->validChangedCallsignEntered(); }
+            if (changed)
+            {
+                emit this->validChangedCallsignEntered();
+            }
         }
     }
 
@@ -117,13 +141,22 @@ namespace swift::gui::components
         ui->led_Status->setOn(connected);
         ui->le_Callsign->clear();
         ui->le_Callsign->setEnabled(connected);
-        if (!connected) { completer()->clearData(); }
+        if (!connected)
+        {
+            completer()->clearData();
+        }
     }
 
     bool CCallsignCompleter::isValidKnownCallsign(const QString &callsignString) const
     {
-        if (!CCallsign::isValidAircraftCallsign(callsignString)) { return false; }
-        if (!completer()) { return false; }
+        if (!CCallsign::isValidAircraftCallsign(callsignString))
+        {
+            return false;
+        }
+        if (!completer())
+        {
+            return false;
+        }
         return completer()->contains(callsignString);
     }
 

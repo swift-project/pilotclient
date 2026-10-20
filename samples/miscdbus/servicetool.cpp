@@ -105,7 +105,10 @@ namespace swift::sample
             qtout << "----------------- receiver tests ----------------" << Qt::endl;
 
             // Low level test
-            if (connection.send(m)) { qtout << "Send via low level method " << Qt::endl; }
+            if (connection.send(m))
+            {
+                qtout << "Send via low level method " << Qt::endl;
+            }
 
             // same as interface message
             // but call the slot

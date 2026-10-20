@@ -15,13 +15,19 @@ namespace swift::misc::simulation
 
     CSimulatorInfoList CSimulatorInfoList::withNoDuplicates() const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         QList<int> simIndexes;
         CSimulatorInfoList newList;
         for (const CSimulatorInfo &simulator : *this)
         {
             const int i = static_cast<int>(simulator.getSimulator());
-            if (simIndexes.contains(i)) { continue; }
+            if (simIndexes.contains(i))
+            {
+                continue;
+            }
             newList.push_back(simulator);
             simIndexes.append(i);
         }
@@ -30,13 +36,25 @@ namespace swift::misc::simulation
 
     CSimulatorInfoList CSimulatorInfoList::splitIntoSingleSimulators() const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         CSimulatorInfoList newList;
         for (const CSimulatorInfo &simulator : *this)
         {
-            if (simulator.isUnspecified() || simulator.isNoSimulator()) { continue; }
-            if (simulator.isSingleSimulator()) { newList.push_back(simulator); }
-            else { newList.push_back(splitIntoSingleSimulators(simulator)); }
+            if (simulator.isUnspecified() || simulator.isNoSimulator())
+            {
+                continue;
+            }
+            if (simulator.isSingleSimulator())
+            {
+                newList.push_back(simulator);
+            }
+            else
+            {
+                newList.push_back(splitIntoSingleSimulators(simulator));
+            }
         }
         return newList;
     }
@@ -44,10 +62,22 @@ namespace swift::misc::simulation
     CSimulatorInfoList CSimulatorInfoList::splitIntoSingleSimulators(const CSimulatorInfo &sim)
     {
         CSimulatorInfoList sims;
-        if (sim.isP3D()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::P3D)); }
-        if (sim.isMSFS()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::MSFS)); }
-        if (sim.isMSFS2024()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::MSFS2024)); }
-        if (sim.isXPlane()) { sims.push_back(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
+        if (sim.isP3D())
+        {
+            sims.push_back(CSimulatorInfo(CSimulatorInfo::P3D));
+        }
+        if (sim.isMSFS())
+        {
+            sims.push_back(CSimulatorInfo(CSimulatorInfo::MSFS));
+        }
+        if (sim.isMSFS2024())
+        {
+            sims.push_back(CSimulatorInfo(CSimulatorInfo::MSFS2024));
+        }
+        if (sim.isXPlane())
+        {
+            sims.push_back(CSimulatorInfo(CSimulatorInfo::XPLANE));
+        }
         return sims;
     }
 } // namespace swift::misc::simulation

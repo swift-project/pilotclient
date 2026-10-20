@@ -31,8 +31,14 @@ namespace XSwiftBus
             const unsigned int flags = dbus_watch_get_flags(watch);
             short monitoredEvents = EV_PERSIST;
 
-            if (flags & DBUS_WATCH_READABLE) { monitoredEvents |= EV_READ; }
-            if (flags & DBUS_WATCH_WRITABLE) { monitoredEvents |= EV_WRITE; }
+            if (flags & DBUS_WATCH_READABLE)
+            {
+                monitoredEvents |= EV_READ;
+            }
+            if (flags & DBUS_WATCH_WRITABLE)
+            {
+                monitoredEvents |= EV_WRITE;
+            }
 
             const int fd = dbus_watch_get_unix_fd(watch);
             m_event.reset(event_new(m_base, fd, monitoredEvents, callback, this));
@@ -53,8 +59,14 @@ namespace XSwiftBus
             auto *watchHandler = static_cast<WatchHandler *>(data);
 
             unsigned int flags = 0;
-            if (event & EV_READ) { flags |= DBUS_WATCH_READABLE; }
-            if (event & EV_WRITE) { flags |= DBUS_WATCH_WRITABLE; }
+            if (event & EV_READ)
+            {
+                flags |= DBUS_WATCH_READABLE;
+            }
+            if (event & EV_WRITE)
+            {
+                flags |= DBUS_WATCH_WRITABLE;
+            }
             dbus_watch_handle(watchHandler->m_watch, flags);
         }
 
@@ -144,32 +156,50 @@ namespace XSwiftBus
     void CDBusDispatcher::remove(IDispatchable *dispatchable)
     {
         auto it = std::find(m_dispatchList.begin(), m_dispatchList.end(), dispatchable);
-        if (it != m_dispatchList.end()) { m_dispatchList.erase(it); }
+        if (it != m_dispatchList.end())
+        {
+            m_dispatchList.erase(it);
+        }
     }
 
     void CDBusDispatcher::waitAndRun()
     {
-        if (!m_eventBase) { return; }
+        if (!m_eventBase)
+        {
+            return;
+        }
         event_base_dispatch(m_eventBase.get());
     }
 
     void CDBusDispatcher::runOnce()
     {
-        if (!m_eventBase) { return; }
+        if (!m_eventBase)
+        {
+            return;
+        }
         event_base_loop(m_eventBase.get(), EVLOOP_NONBLOCK);
         dispatch();
     }
 
     void CDBusDispatcher::dispatch()
     {
-        if (m_dispatchList.empty()) { return; }
+        if (m_dispatchList.empty())
+        {
+            return;
+        }
 
-        for (IDispatchable *dispatchable : m_dispatchList) { dispatchable->dispatch(); }
+        for (IDispatchable *dispatchable : m_dispatchList)
+        {
+            dispatchable->dispatch();
+        }
     }
 
     dbus_bool_t CDBusDispatcher::dbusAddWatch(DBusWatch *watch)
     {
-        if (dbus_watch_get_enabled(watch) == FALSE) { return true; }
+        if (dbus_watch_get_enabled(watch) == FALSE)
+        {
+            return true;
+        }
 
         int fd = dbus_watch_get_unix_fd(watch);
         m_watchers.emplace(fd, std::make_unique<WatchHandler>(m_eventBase.get(), watch));
@@ -180,20 +210,35 @@ namespace XSwiftBus
     {
         for (auto it = m_watchers.begin(); it != m_watchers.end();)
         {
-            if (it->second->getWatch() == watch) { it = m_watchers.erase(it); }
-            else { ++it; }
+            if (it->second->getWatch() == watch)
+            {
+                it = m_watchers.erase(it);
+            }
+            else
+            {
+                ++it;
+            }
         }
     }
 
     void CDBusDispatcher::dbusWatchToggled(DBusWatch *watch)
     {
-        if (dbus_watch_get_enabled(watch) == TRUE) { dbusAddWatch(watch); }
-        else { dbusRemoveWatch(watch); }
+        if (dbus_watch_get_enabled(watch) == TRUE)
+        {
+            dbusAddWatch(watch);
+        }
+        else
+        {
+            dbusRemoveWatch(watch);
+        }
     }
 
     dbus_bool_t CDBusDispatcher::dbusAddTimeout(DBusTimeout *timeout)
     {
-        if (dbus_timeout_get_enabled(timeout) == FALSE) { return TRUE; }
+        if (dbus_timeout_get_enabled(timeout) == FALSE)
+        {
+            return TRUE;
+        }
         m_timeouts.emplace(m_timeouts.end(), std::make_unique<TimeoutHandler>(m_eventBase.get(), timeout));
         return true;
     }
