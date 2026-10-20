@@ -181,7 +181,7 @@ namespace swift::misc
         enum ColumnIndex
         {
             IndexOffsetMs = static_cast<int>(CPropertyIndexRef::GlobalIndexITimestampBased) +
-                ITimestampBased::IndexMSecsSinceEpoch + 1,
+                            ITimestampBased::IndexMSecsSinceEpoch + 1,
             IndexAdjustedMsWithOffset,
             IndexOffsetWithUnit // keep this as last item
         };

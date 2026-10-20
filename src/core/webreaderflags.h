@@ -33,7 +33,7 @@ namespace swift::core
             AirportReader = 1 << 6, //!< reader for airport list
             DbInfoDataReader = 1 << 7, //!< DB info data (metdata, how many data, when updated)
             AllVatsimReaders = VatsimDataReader | VatsimMetarReader | VatsimStatusReader |
-                VatsimServerFileReader, //!< all VATSIM readers
+                               VatsimServerFileReader, //!< all VATSIM readers
             AllSwiftDbReaders = IcaoDataReader | ModelReader | DbInfoDataReader | AirportReader, //!< all swift data
             AllReaders = AllSwiftDbReaders | AllVatsimReaders //!< everything
         };
