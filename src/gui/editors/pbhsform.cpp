@@ -51,7 +51,10 @@ namespace swift::gui::editors
         const QString v(ui->le_Bank->text().replace(',', '.'));
         bool ok {};
         double vd = v.toDouble(&ok);
-        if (!ok) { vd = 0.0; }
+        if (!ok)
+        {
+            vd = 0.0;
+        }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
@@ -69,7 +72,10 @@ namespace swift::gui::editors
         const QString v(ui->le_Pitch->text().replace(',', '.'));
         bool ok {};
         double vd = v.toDouble(&ok);
-        if (!ok) { vd = 0.0; }
+        if (!ok)
+        {
+            vd = 0.0;
+        }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
@@ -89,7 +95,10 @@ namespace swift::gui::editors
         const QString v(ui->le_Heading->text().replace(',', '.'));
         bool ok {};
         double vd = v.toDouble(&ok);
-        if (!ok) { vd = 0.0; }
+        if (!ok)
+        {
+            vd = 0.0;
+        }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
@@ -130,21 +139,30 @@ namespace swift::gui::editors
     void CPbhsForm::bankSliderChanged(int value)
     {
         const int angle = clampAngle(qRound(this->getBankAngleDegrees()));
-        if (value == angle) { return; } // avoid roundtrips
+        if (value == angle)
+        {
+            return;
+        } // avoid roundtrips
         ui->le_Bank->setText(QString::number(value));
     }
 
     void CPbhsForm::pitchSliderChanged(int value)
     {
         const int angle = clampAngle(qRound(this->getPitchAngleDegrees()));
-        if (value == angle) { return; } // avoid roundtrips
+        if (value == angle)
+        {
+            return;
+        } // avoid roundtrips
         ui->le_Pitch->setText(QString::number(value));
     }
 
     void CPbhsForm::headingSliderChanged(int value)
     {
         const int angle = clampAngle(qRound(this->getHeadingAngleDegrees()));
-        if (value == angle) { return; } // avoid roundtrips
+        if (value == angle)
+        {
+            return;
+        } // avoid roundtrips
         ui->le_Heading->setText(QString::number(value));
     }
 
@@ -152,10 +170,16 @@ namespace swift::gui::editors
     {
         const double ad = this->getBankAngleDegrees();
         QString n = QString::number(ad, 'g', 3 + RoundDigits);
-        if (ui->le_Pitch->validator()) { dotToLocaleDecimalPoint(n); }
+        if (ui->le_Pitch->validator())
+        {
+            dotToLocaleDecimalPoint(n);
+        }
         ui->le_Bank->setText(n);
         const int angle = clampAngle(qRound(ad));
-        if (angle == ui->hs_Bank->value()) { return; } // avoid roundtrips
+        if (angle == ui->hs_Bank->value())
+        {
+            return;
+        } // avoid roundtrips
         ui->hs_Bank->setValue(angle);
     }
 
@@ -169,10 +193,16 @@ namespace swift::gui::editors
     {
         const double ad = this->getPitchAngleDegrees();
         QString n = QString::number(ad, 'g', 3 + RoundDigits);
-        if (ui->le_Pitch->validator()) { dotToLocaleDecimalPoint(n); }
+        if (ui->le_Pitch->validator())
+        {
+            dotToLocaleDecimalPoint(n);
+        }
         ui->le_Pitch->setText(n);
         const int angle = clampAngle(qRound(ad));
-        if (angle == ui->hs_Pitch->value()) { return; } // avoid roundtrips
+        if (angle == ui->hs_Pitch->value())
+        {
+            return;
+        } // avoid roundtrips
         ui->hs_Pitch->setValue(angle);
     }
 
@@ -186,10 +216,16 @@ namespace swift::gui::editors
     {
         const double ad = this->getHeadingAngleDegrees();
         QString n = QString::number(ad, 'g', 3 + RoundDigits);
-        if (ui->le_Heading->validator()) { dotToLocaleDecimalPoint(n); }
+        if (ui->le_Heading->validator())
+        {
+            dotToLocaleDecimalPoint(n);
+        }
         ui->le_Heading->setText(n);
         const int angle = clampAngle(qRound(ad));
-        if (angle == ui->hs_Heading->value()) { return; } // avoid roundtrips
+        if (angle == ui->hs_Heading->value())
+        {
+            return;
+        } // avoid roundtrips
         ui->hs_Heading->setValue(angle);
     }
 

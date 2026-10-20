@@ -21,7 +21,10 @@ namespace swift::sound::sample_provider
 
     int CResourceSoundSampleProvider::readSamples(QVector<float> &samples, qint64 count)
     {
-        if (!m_resourceSound.isLoaded()) { return 0; }
+        if (!m_resourceSound.isLoaded())
+        {
+            return 0;
+        }
         if (count > m_tempBufferSize)
         {
             qDebug() << "Count too large for temp buffer" << count;
@@ -39,17 +42,29 @@ namespace swift::sound::sample_provider
 
         if (!qFuzzyCompare(m_gain, 1.0))
         {
-            for (int i = 0; i < samplesToCopy; i++) { m_tempBuffer[i] = static_cast<float>(m_gain * m_tempBuffer[i]); }
+            for (int i = 0; i < samplesToCopy; i++)
+            {
+                m_tempBuffer[i] = static_cast<float>(m_gain * m_tempBuffer[i]);
+            }
         }
 
-        for (int i = 0; i < samplesToCopy; i++) { samples[i] = m_tempBuffer.at(i); }
+        for (int i = 0; i < samplesToCopy; i++)
+        {
+            samples[i] = m_tempBuffer.at(i);
+        }
 
         m_position += samplesToCopy;
 
         if (m_position > availableSamples - 1)
         {
-            if (m_looping) { m_position = 0; }
-            else { m_isFinished = true; }
+            if (m_looping)
+            {
+                m_position = 0;
+            }
+            else
+            {
+                m_isFinished = true;
+            }
         }
 
         return static_cast<int>(samplesToCopy);

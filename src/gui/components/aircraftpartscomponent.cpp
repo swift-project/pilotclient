@@ -53,7 +53,10 @@ namespace swift::gui::components
 
     void CAircraftPartsComponent::sendAircraftParts()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         Q_ASSERT(sGui->getIContextNetwork());
         if (!sGui->getIContextNetwork()->isConnected())
@@ -80,7 +83,10 @@ namespace swift::gui::components
             static const QString question("'%1' does not support parts, enable parts for it?");
             const QMessageBox::StandardButton reply = QMessageBox::question(
                 this, "No parts supported", question.arg(callsign.asString()), QMessageBox::Yes | QMessageBox::No);
-            if (reply != QMessageBox::Yes) { return; }
+            if (reply != QMessageBox::Yes)
+            {
+                return;
+            }
             client.addCapability(CClient::FsdWithAircraftConfig);
             const bool enabled = sGui->getIContextNetwork()->setOtherClient(client);
             Q_UNUSED(enabled)
@@ -99,9 +105,15 @@ namespace swift::gui::components
 
     void CAircraftPartsComponent::setCurrentParts()
     {
-        if (!sGui->getIContextNetwork()->isConnected()) { return; }
+        if (!sGui->getIContextNetwork()->isConnected())
+        {
+            return;
+        }
         const CCallsign callsign(ui->comp_RemoteAircraftCompleter->getCallsign());
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
 
         const CAircraftPartsList partsList = sGui->getIContextNetwork()->getRemoteAircraftParts(callsign);
         if (partsList.isEmpty())
@@ -117,8 +129,14 @@ namespace swift::gui::components
 
     void CAircraftPartsComponent::requestPartsFromNetwork()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
-        if (!sGui->getIContextNetwork()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
+        if (!sGui->getIContextNetwork())
+        {
+            return;
+        }
 
         const CCallsign callsign(ui->comp_RemoteAircraftCompleter->getCallsign(true));
         if (callsign.isEmpty())
@@ -133,7 +151,10 @@ namespace swift::gui::components
         // simple approach to update UI when parts are received
         const QPointer<CAircraftPartsComponent> myself(this);
         QTimer::singleShot(3000, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             ui->pb_CurrentParts->click();
             ui->pb_RequestFromNetwork->setEnabled(true);
         });
@@ -147,8 +168,14 @@ namespace swift::gui::components
 
     void CAircraftPartsComponent::displayOwnParts()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
-        if (!sGui->getIContextOwnAircraft()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
+        if (!sGui->getIContextOwnAircraft())
+        {
+            return;
+        }
 
         const CSimulatedAircraft myAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
         const CCallsign cs = myAircraft.getCallsign();
@@ -159,8 +186,14 @@ namespace swift::gui::components
 
     void CAircraftPartsComponent::displayLogInSimulator()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
-        if (!sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
+        if (!sGui->getIContextSimulator())
+        {
+            return;
+        }
         const CCallsign callsign(ui->comp_RemoteAircraftCompleter->getCallsign(true));
         if (callsign.isEmpty())
         {

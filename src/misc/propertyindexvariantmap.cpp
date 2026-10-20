@@ -28,7 +28,10 @@ namespace swift::misc
 
     bool CPropertyIndexVariantMap::matchesVariant(const CVariant &variant) const
     {
-        if (this->isEmpty()) { return this->isWildcard(); }
+        if (this->isEmpty())
+        {
+            return this->isWildcard();
+        }
         const auto &map = this->map();
         for (auto it = map.begin(); it != map.end(); ++it)
         {
@@ -74,7 +77,10 @@ namespace swift::misc
         argument >> values;
         Q_ASSERT(indexes.size() == values.size());
         QMap<CPropertyIndex, CVariant> newMap;
-        for (int i = 0; i < indexes.size(); i++) { newMap.insert(indexes[i], values[i]); }
+        for (int i = 0; i < indexes.size(); i++)
+        {
+            newMap.insert(indexes[i], values[i]);
+        }
         // replace values in one step
         m_values.swap(newMap);
     }
@@ -93,7 +99,10 @@ namespace swift::misc
         stream >> values;
         Q_ASSERT(indexes.size() == values.size());
         QMap<CPropertyIndex, CVariant> newMap;
-        for (int i = 0; i < indexes.size(); i++) { newMap.insert(indexes[i], values[i]); }
+        for (int i = 0; i < indexes.size(); i++)
+        {
+            newMap.insert(indexes[i], values[i]);
+        }
         // replace values in one step
         m_values.swap(newMap);
     }

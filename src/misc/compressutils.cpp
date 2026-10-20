@@ -29,10 +29,16 @@ namespace swift::misc
     bool CCompressUtils::zipUncompress(const QString &file, const QString &directory, QStringList *stdOutAndError)
     {
         const QFileInfo fi(file);
-        if (!fi.exists()) { return false; }
+        if (!fi.exists())
+        {
+            return false;
+        }
         if (fi.suffix() != "zip")
         {
-            if (stdOutAndError) { stdOutAndError->push_back("Not a zip file"); }
+            if (stdOutAndError)
+            {
+                stdOutAndError->push_back("Not a zip file");
+            }
             return false;
         }
 
@@ -49,7 +55,10 @@ namespace swift::misc
             args << "-Command";
             args << "Expand-Archive";
             args << "-Path" << f;
-            if (!d.isEmpty()) { args << "-DestinationPath" << d; }
+            if (!d.isEmpty())
+            {
+                args << "-DestinationPath" << d;
+            }
             args << "-Force";
             zipProcess.setArguments(args);
         }
@@ -58,7 +67,10 @@ namespace swift::misc
             zipProcess.setProgram("unzip");
             QStringList args;
             args << f;
-            if (!d.isEmpty()) { args << "-d" << d; }
+            if (!d.isEmpty())
+            {
+                args << "-d" << d;
+            }
             zipProcess.setArguments(args);
         }
         return runZipProcess(&zipProcess, stdOutAndError);

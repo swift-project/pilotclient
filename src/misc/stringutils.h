@@ -77,7 +77,10 @@ namespace swift::misc
     int indexOfChar(const QString &s, F predicate)
     {
         auto it = std::find_if(s.begin(), s.end(), predicate);
-        if (it == s.end()) { return -1; }
+        if (it == s.end())
+        {
+            return -1;
+        }
         return static_cast<int>(std::distance(s.begin(), it));
     }
 
@@ -96,7 +99,10 @@ namespace swift::misc
         while (true)
         {
             begin = std::find_if(begin, s.end(), notPredicate);
-            if (begin == s.end()) { return result; }
+            if (begin == s.end())
+            {
+                return result;
+            }
             auto end = std::find_if(begin, s.end(), predicate);
             result.push_back(QStringView(s).slice(std::distance(s.begin(), begin), std::distance(begin, end)));
             begin = end;
@@ -158,7 +164,10 @@ namespace swift::misc
     //! Safe "at" function, returns empty string if index does not exists
     inline const QString &safeAt(const QStringList &stringList, int index)
     {
-        if (stringList.size() > index) { return stringList.at(index); }
+        if (stringList.size() > index)
+        {
+            return stringList.at(index);
+        }
         static const QString empty;
         return empty;
     }

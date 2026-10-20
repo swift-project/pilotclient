@@ -47,11 +47,17 @@ namespace swift::misc
     QString CProcessInfo::processNameFromId(qint64 pid)
     {
         HANDLE proc = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, static_cast<DWORD>(pid));
-        if (!proc) { return {}; }
+        if (!proc)
+        {
+            return {};
+        }
         wchar_t path[1024];
         auto len = GetModuleFileNameEx(proc, nullptr, path, std::extent_v<decltype(path)>);
         CloseHandle(proc);
-        if (len <= 0) { return {}; }
+        if (len <= 0)
+        {
+            return {};
+        }
         return QFileInfo(QString::fromWCharArray(path)).completeBaseName();
     }
 #else

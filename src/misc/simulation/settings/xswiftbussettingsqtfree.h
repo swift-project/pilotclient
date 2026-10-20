@@ -63,7 +63,10 @@ namespace swift::misc::simulation::settings
         void setMessageBoxValues(int leftPx, int topPx, int rightPx, int bottomPx, int lines, int durationMs,
                                  int freqRgb, int privRgb, int servRgb, int statRgb, int supRgb)
         {
-            if (topPx >= 0) { bottomPx = -1; }
+            if (topPx >= 0)
+            {
+                bottomPx = -1;
+            }
             lines = std::max(lines, 3);
             this->setMessageBoxValues(
                 std::to_string(leftPx) + ";" + std::to_string(topPx) + ";" + std::to_string(rightPx) + ";" +
@@ -94,7 +97,10 @@ namespace swift::misc::simulation::settings
         //! Set the maximum number of aircraft.
         bool setMaxPlanes(int planes)
         {
-            if (planes == m_maxPlanes) { return false; }
+            if (planes == m_maxPlanes)
+            {
+                return false;
+            }
             m_maxPlanes = planes;
             return true;
         }
@@ -105,7 +111,10 @@ namespace swift::misc::simulation::settings
         //! Set follow aircraft distance
         bool setFollowAircraftDistanceM(int meters)
         {
-            if (meters == m_followAircraftDistanceM) { return false; }
+            if (meters == m_followAircraftDistanceM)
+            {
+                return false;
+            }
             m_followAircraftDistanceM = meters;
             return true;
         }
@@ -119,7 +128,10 @@ namespace swift::misc::simulation::settings
         //! Set the maximum distance at which to draw aircraft (nautical miles).
         bool setMaxDrawDistanceNM(double nauticalMiles)
         {
-            if (xplane::qtfreeutils::isFuzzyEqual(nauticalMiles, m_maxDrawDistanceNM)) { return false; }
+            if (xplane::qtfreeutils::isFuzzyEqual(nauticalMiles, m_maxDrawDistanceNM))
+            {
+                return false;
+            }
             m_maxDrawDistanceNM = nauticalMiles;
             return true;
         }

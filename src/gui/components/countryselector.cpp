@@ -35,16 +35,28 @@ namespace swift::gui::components
 
     void CCountrySelector::setCountry(const CCountry &country)
     {
-        if (country == m_current) { return; }
+        if (country == m_current)
+        {
+            return;
+        }
         m_current = country;
-        if (country.getIsoCode() != ui->le_Iso->text()) { ui->le_Iso->setText(country.getIsoCode()); }
-        if (country.getName() != ui->cb_Country->currentText()) { ui->cb_Country->setCurrentText(country.getName()); }
+        if (country.getIsoCode() != ui->le_Iso->text())
+        {
+            ui->le_Iso->setText(country.getIsoCode());
+        }
+        if (country.getName() != ui->cb_Country->currentText())
+        {
+            ui->cb_Country->setCurrentText(country.getName());
+        }
         emit this->countryChanged(m_current);
     }
 
     void CCountrySelector::onCountriesLoaded()
     {
-        if (!sGui || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         const CCountryList countries = sGui->getWebDataServices()->getCountries();
 
         ui->le_Iso->setCompleter(new QCompleter(countries.toIsoList(true)));
@@ -54,16 +66,28 @@ namespace swift::gui::components
 
     void CCountrySelector::onIsoChanged()
     {
-        if (!sGui || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         const QString iso(ui->le_Iso->text().trimmed().toUpper());
-        if (m_current.getIsoCode() == iso) { return; }
+        if (m_current.getIsoCode() == iso)
+        {
+            return;
+        }
         this->setCountry(sGui->getWebDataServices()->getCountryForIsoCode(iso));
     }
 
     void CCountrySelector::onCountryNameChanged(const QString &name)
     {
-        if (!sGui || !sGui->hasWebDataServices()) { return; }
-        if (m_current.getName() == name) { return; }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return;
+        }
+        if (m_current.getName() == name)
+        {
+            return;
+        }
         this->setCountry(sGui->getWebDataServices()->getCountryForName(name));
     }
 } // namespace swift::gui::components

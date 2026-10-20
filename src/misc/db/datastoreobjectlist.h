@@ -43,10 +43,16 @@ namespace swift::misc::db
         CONTAINER findByKeys(const QSet<KEYTYPE> &keys) const
         {
             CONTAINER objects;
-            if (keys.isEmpty()) { return objects; }
+            if (keys.isEmpty())
+            {
+                return objects;
+            }
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
-                if (!keys.contains(obj.getDbKey())) { continue; }
+                if (!keys.contains(obj.getDbKey()))
+                {
+                    continue;
+                }
                 objects.push_back(obj);
             }
             return objects;
@@ -58,7 +64,10 @@ namespace swift::misc::db
             CONTAINER objects;
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
-                if (!obj.hasValidDbKey()) { continue; }
+                if (!obj.hasValidDbKey())
+                {
+                    continue;
+                }
                 objects.push_back(obj);
             }
             return objects;
@@ -70,7 +79,10 @@ namespace swift::misc::db
             CONTAINER objects;
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
-                if (obj.hasValidDbKey()) { continue; }
+                if (obj.hasValidDbKey())
+                {
+                    continue;
+                }
                 objects.push_back(obj);
             }
             return objects;
@@ -79,12 +91,18 @@ namespace swift::misc::db
         //! Object with max.key
         OBJ maxKeyObject() const
         {
-            if (this->container().isEmpty()) { return OBJ(); }
+            if (this->container().isEmpty())
+            {
+                return OBJ();
+            }
             const OBJ max = *std::max_element(this->container().begin(), this->container().end(),
                                               [](const OBJ &obj1, const OBJ &obj2) {
                                                   bool v1 = obj1.hasValidDbKey();
                                                   bool v2 = obj2.hasValidDbKey();
-                                                  if (v1 && v2) { return obj1.getDbKey() < obj2.getDbKey(); }
+                                                  if (v1 && v2)
+                                                  {
+                                                      return obj1.getDbKey() < obj2.getDbKey();
+                                                  }
                                                   return v2;
                                               });
             return max;
@@ -99,7 +117,10 @@ namespace swift::misc::db
             CSetBuilder<KEYTYPE> keys;
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
-                if (!obj.hasValidDbKey()) { continue; }
+                if (!obj.hasValidDbKey())
+                {
+                    continue;
+                }
                 keys.insert(obj.getDbKey());
             }
             return keys;
@@ -111,7 +132,10 @@ namespace swift::misc::db
             CMapBuilder<KEYTYPE, OBJ> map;
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
-                if (!obj.hasValidDbKey()) { continue; }
+                if (!obj.hasValidDbKey())
+                {
+                    continue;
+                }
                 map.insert(obj.getDbKey(), obj);
             }
             return map;
@@ -123,7 +147,10 @@ namespace swift::misc::db
             CSetBuilder<QString> keys;
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
-                if (!obj.hasValidDbKey()) { continue; }
+                if (!obj.hasValidDbKey())
+                {
+                    continue;
+                }
                 keys.insert(obj.getDbKeyAsString());
             }
             return keys;
@@ -132,13 +159,22 @@ namespace swift::misc::db
         //! The DB keys as string
         QString dbKeysAsString(const QString &separator) const
         {
-            if (ITimestampObjectList<OBJ, CONTAINER>::container().isEmpty()) { return {}; }
+            if (ITimestampObjectList<OBJ, CONTAINER>::container().isEmpty())
+            {
+                return {};
+            }
             const QSet<QString> keys = IDatastoreObjectList<OBJ, CONTAINER, KEYTYPE>::toDbKeyStringSet();
             QString s;
             for (const QString &k : keys)
             {
-                if (s.isEmpty()) { s += k; }
-                else { s += separator + k; }
+                if (s.isEmpty())
+                {
+                    s += k;
+                }
+                else
+                {
+                    s += separator + k;
+                }
             }
             return s;
         }
@@ -149,38 +185,62 @@ namespace swift::misc::db
             QSet<KEYTYPE> keys(this->toDbKeySet());
             if (keys.isEmpty())
             {
-                if (ok) { *ok = false; }
+                if (ok)
+                {
+                    *ok = false;
+                }
                 return KEYTYPE();
             }
             KEYTYPE max = *std::max_element(keys.begin(), keys.end());
-            if (ok) { *ok = true; }
+            if (ok)
+            {
+                *ok = true;
+            }
             return max;
         }
 
         //! Remove objects with keys
         int removeObjectsWithKeys(const QSet<KEYTYPE> &keys)
         {
-            if (keys.isEmpty()) { return 0; }
-            if (this->container().isEmpty()) { return 0; }
+            if (keys.isEmpty())
+            {
+                return 0;
+            }
+            if (this->container().isEmpty())
+            {
+                return 0;
+            }
             CONTAINER newValues;
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
-                if (keys.contains(obj.getDbKey())) { continue; }
+                if (keys.contains(obj.getDbKey()))
+                {
+                    continue;
+                }
                 newValues.push_back(obj);
             }
             const int delta = this->container().size() - newValues.size();
-            if (delta > 0) { this->container() = newValues; }
+            if (delta > 0)
+            {
+                this->container() = newValues;
+            }
             return delta;
         }
 
         //! Remove objects without key
         int removeObjectsWithoutDbKey()
         {
-            if (this->container().isEmpty()) { return 0; }
+            if (this->container().isEmpty())
+            {
+                return 0;
+            }
             CONTAINER newValues;
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
-                if (!obj.hasValidDbKey()) { continue; }
+                if (!obj.hasValidDbKey())
+                {
+                    continue;
+                }
                 newValues.push_back(obj);
             }
             int delta = this->container().size() - newValues.size();
@@ -191,7 +251,10 @@ namespace swift::misc::db
         //! Update or insert data (based on DB key)
         int replaceOrAddObjectsByKey(const CONTAINER &container)
         {
-            if (container.isEmpty()) { return 0; }
+            if (container.isEmpty())
+            {
+                return 0;
+            }
             if (this->container().isEmpty())
             {
                 this->container() = container;
@@ -211,7 +274,10 @@ namespace swift::misc::db
         {
             CONTAINER objs(this->container());
             objs.removeObjectsWithoutDbKey();
-            if (objs.isEmpty()) { return {}; }
+            if (objs.isEmpty())
+            {
+                return {};
+            }
             return objs.latestTimestamp();
         }
 
@@ -220,7 +286,10 @@ namespace swift::misc::db
         {
             CONTAINER objs(this->container());
             objs.removeObjectsWithoutDbKey();
-            if (objs.isEmpty()) { return {}; }
+            if (objs.isEmpty())
+            {
+                return {};
+            }
             return objs.oldestDbTimestamp();
         }
 
@@ -230,7 +299,10 @@ namespace swift::misc::db
             int count = 0;
             for (const OBJ &obj : ITimestampObjectList<OBJ, CONTAINER>::container())
             {
-                if (obj.hasValidDbKey() && withKey) { count++; }
+                if (obj.hasValidDbKey() && withKey)
+                {
+                    count++;
+                }
             }
             return count;
         }
@@ -323,7 +395,10 @@ namespace swift::misc::db
         static CONTAINER fromDatabaseJson(const QJsonArray &array)
         {
             CONTAINER container;
-            for (const QJsonValue &value : array) { container.push_back(OBJ::fromDatabaseJson(value.toObject())); }
+            for (const QJsonValue &value : array)
+            {
+                container.push_back(OBJ::fromDatabaseJson(value.toObject()));
+            }
             return container;
         }
 

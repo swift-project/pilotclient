@@ -109,16 +109,28 @@ namespace swift::misc
 
     void CIdentifier::appendName(const QString &name)
     {
-        if (m_name.endsWith(name)) { return; }
-        if (name.isEmpty()) { return; }
+        if (m_name.endsWith(name))
+        {
+            return;
+        }
+        if (name.isEmpty())
+        {
+            return;
+        }
         const int index = m_name.lastIndexOf(':');
-        if (index >= 0) { m_name = m_name.left(index); }
+        if (index >= 0)
+        {
+            m_name = m_name.left(index);
+        }
         m_name += QStringLiteral(":") + name;
     }
 
     void CIdentifier::linkWithQObjectName(QObject *object)
     {
-        if (!object) { return; }
+        if (!object)
+        {
+            return;
+        }
         QObject::connect(object, &QObject::objectNameChanged, object,
                          [=, this](const QString &name) { this->appendName(name); });
     }
@@ -136,7 +148,10 @@ namespace swift::misc
 
         const QString name = toDBusPath(m_name);
         Q_ASSERT_X(!name.contains("//") && !name.startsWith('/') && !name.endsWith('/'), Q_FUNC_INFO, "Invalid name");
-        if (!name.isEmpty()) { path += '/' % name; }
+        if (!name.isEmpty())
+        {
+            path += '/' % name;
+        }
         return path;
     }
 
@@ -212,7 +227,10 @@ namespace swift::misc
 
     QVariant CIdentifier::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
 
@@ -233,7 +251,10 @@ namespace swift::misc
 
     int CIdentifier::comparePropertyByIndex(CPropertyIndexRef index, const CIdentifier &compareValue) const
     {
-        if (index.isMyself()) { return Compare::compare(m_processId, compareValue.m_processId); }
+        if (index.isMyself())
+        {
+            return Compare::compare(m_processId, compareValue.m_processId);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
 

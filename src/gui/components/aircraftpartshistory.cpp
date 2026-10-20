@@ -51,10 +51,19 @@ namespace swift::gui::components
 
     void CAircraftPartsHistory::initGui()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork())
+        {
+            return;
+        }
         const bool needCallsigns = this->partsHistoryEnabled();
-        if (needCallsigns && !m_timerUpdateHistory.isActive()) { m_timerUpdateHistory.start(); }
-        else if (!needCallsigns) { m_timerUpdateHistory.stop(); }
+        if (needCallsigns && !m_timerUpdateHistory.isActive())
+        {
+            m_timerUpdateHistory.start();
+        }
+        else if (!needCallsigns)
+        {
+            m_timerUpdateHistory.stop();
+        }
 
         // avoid signal roundtrip
         const bool c = sGui->getIContextNetwork()->isAircraftPartsHistoryEnabled();
@@ -70,10 +79,19 @@ namespace swift::gui::components
 
     void CAircraftPartsHistory::updatePartsHistory()
     {
-        if (!this->hasContexts()) { return; }
-        if (!this->isVisible()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
+        if (!this->isVisible())
+        {
+            return;
+        }
         const CCallsign cs(ui->comp_CallsignCompleter->getCallsign());
-        if (cs.isEmpty()) { return; } // no or invalid callsign
+        if (cs.isEmpty())
+        {
+            return;
+        } // no or invalid callsign
         const auto currentAircraftParts = sGui->getIContextNetwork()->getRemoteAircraftParts(cs).frontOrDefault();
         const auto aircraftPartsHistory = sGui->getIContextNetwork()->getAircraftPartsHistory(cs);
 
@@ -113,7 +131,10 @@ namespace swift::gui::components
         }
 
         const size_t hash = qHash(html);
-        if (hash == m_htmlHash) { return; } // avoid to always scroll to the end when there is no update
+        if (hash == m_htmlHash)
+        {
+            return;
+        } // avoid to always scroll to the end when there is no update
         m_htmlHash = hash;
         m_text.setHtml(html);
         ui->te_Messages->setDocument(&m_text);
@@ -136,14 +157,23 @@ namespace swift::gui::components
 
     void CAircraftPartsHistory::toggleHistoryEnabled(bool enabled)
     {
-        if (!sGui || !sGui->getIContextNetwork() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || !sGui->getIContextNetwork() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
         const QObject *sender = QObject::sender();
-        if (sender == ui->cb_PartsHistoryEnabled) { sGui->getIContextNetwork()->enableAircraftPartsHistory(enabled); }
+        if (sender == ui->cb_PartsHistoryEnabled)
+        {
+            sGui->getIContextNetwork()->enableAircraftPartsHistory(enabled);
+        }
     }
 
     void CAircraftPartsHistory::connectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         Q_UNUSED(from);
-        if (to.isConnected() || to.isDisconnected()) { this->initGui(); }
+        if (to.isConnected() || to.isDisconnected())
+        {
+            this->initGui();
+        }
     }
 } // namespace swift::gui::components

@@ -17,41 +17,68 @@ namespace swift::misc::network
     QStringList CRemoteFileList::getNames(bool sorted) const
     {
         QStringList fileNames;
-        for (const CRemoteFile &rf : *this) { fileNames.append(rf.getName()); }
-        if (sorted) { fileNames.sort(); }
+        for (const CRemoteFile &rf : *this)
+        {
+            fileNames.append(rf.getName());
+        }
+        if (sorted)
+        {
+            fileNames.sort();
+        }
         return fileNames;
     }
 
     QStringList CRemoteFileList::getBaseNamesPlusSize(bool sorted) const
     {
         QStringList fileNames;
-        for (const CRemoteFile &rf : *this) { fileNames.append(rf.getBaseNameAndSize()); }
-        if (sorted) { fileNames.sort(); }
+        for (const CRemoteFile &rf : *this)
+        {
+            fileNames.append(rf.getBaseNameAndSize());
+        }
+        if (sorted)
+        {
+            fileNames.sort();
+        }
         return fileNames;
     }
 
     CRemoteFile CRemoteFileList::findFirstByNameOrDefault(const QString &name) const
     {
-        if (name.isEmpty()) { return {}; }
+        if (name.isEmpty())
+        {
+            return {};
+        }
         return this->findFirstByOrDefault(&CRemoteFile::getName, name);
     }
 
     CRemoteFile CRemoteFileList::findFirstContainingNameOrDefault(const QString &name, Qt::CaseSensitivity cs) const
     {
-        if (name.isEmpty()) { return {}; }
+        if (name.isEmpty())
+        {
+            return {};
+        }
         for (const CRemoteFile &rf : *this)
         {
-            if (rf.getName().contains(name, cs)) { return rf; }
+            if (rf.getName().contains(name, cs))
+            {
+                return rf;
+            }
         }
         return {};
     }
 
     CRemoteFile CRemoteFileList::findFirstByMatchingBaseNameOrDefault(const QString &baseName) const
     {
-        if (baseName.isEmpty()) { return {}; }
+        if (baseName.isEmpty())
+        {
+            return {};
+        }
         for (const CRemoteFile &rf : *this)
         {
-            if (rf.matchesBaseName(baseName)) { return rf; }
+            if (rf.matchesBaseName(baseName))
+            {
+                return rf;
+            }
         }
         return {};
     }
@@ -61,7 +88,10 @@ namespace swift::misc::network
         CRemoteFileList files;
         for (const CRemoteFile &rf : *this)
         {
-            if (CFileUtils::isExecutableFile(rf.getName())) { files.push_back(rf); }
+            if (CFileUtils::isExecutableFile(rf.getName()))
+            {
+                files.push_back(rf);
+            }
         }
         return files;
     }
@@ -69,7 +99,10 @@ namespace swift::misc::network
     qint64 CRemoteFileList::getTotalFileSize() const
     {
         qint64 s = 0;
-        for (const CRemoteFile &rf : *this) { s += rf.getSize(); }
+        for (const CRemoteFile &rf : *this)
+        {
+            s += rf.getSize();
+        }
         return s;
     }
 
@@ -81,13 +114,19 @@ namespace swift::misc::network
     CRemoteFileList CRemoteFileList::fromDatabaseJson(const QJsonArray &array)
     {
         CRemoteFileList roles;
-        for (const QJsonValue &value : array) { roles.push_back(CRemoteFile::fromDatabaseJson(value.toObject())); }
+        for (const QJsonValue &value : array)
+        {
+            roles.push_back(CRemoteFile::fromDatabaseJson(value.toObject()));
+        }
         return roles;
     }
 
     CRemoteFileList CRemoteFileList::fromDatabaseJson(const QString &json)
     {
-        if (json.isEmpty()) { return {}; }
+        if (json.isEmpty())
+        {
+            return {};
+        }
         return CRemoteFileList::fromDatabaseJson(json::jsonArrayFromString(json));
     }
 } // namespace swift::misc::network

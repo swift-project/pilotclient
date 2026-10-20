@@ -52,7 +52,10 @@ namespace swift::gui::editors
     {
         CPropertyIndexVariantMap vm;
 
-        if (ui->cb_Name->isChecked()) { vm.addValue(CAircraftModel::IndexName, ui->le_Name->text().trimmed()); }
+        if (ui->cb_Name->isChecked())
+        {
+            vm.addValue(CAircraftModel::IndexName, ui->le_Name->text().trimmed());
+        }
 
         if (ui->cb_Description->isChecked())
         {
@@ -83,7 +86,10 @@ namespace swift::gui::editors
         {
             const QString cgv = ui->le_CG->text().trimmed();
             CLength cg = CLength::null();
-            if (!cgv.isEmpty()) { cg.parseFromString(cgv, CPqString::SeparatorBestGuess); }
+            if (!cgv.isEmpty())
+            {
+                cg.parseFromString(cgv, CPqString::SeparatorBestGuess);
+            }
             vm.addValue(CAircraftModel::IndexCG, cg);
         }
 
@@ -113,7 +119,10 @@ namespace swift::gui::editors
             ui->selector_ModeSelector->setValue(CAircraftModel::Include);
             ui->selector_ModeSelector->setReadOnly(false);
         }
-        else { ui->selector_ModeSelector->setReadOnly(true); }
+        else
+        {
+            ui->selector_ModeSelector->setReadOnly(true);
+        }
 
         CFormDbUser::userChanged();
     }
@@ -121,33 +130,63 @@ namespace swift::gui::editors
     void CModelMappingModifyForm::returnPressed()
     {
         QCheckBox *cb = widgetToCheckbox(sender());
-        if (!cb) { return; }
+        if (!cb)
+        {
+            return;
+        }
         cb->setChecked(true);
     }
 
     void CModelMappingModifyForm::changed()
     {
         QCheckBox *cb = widgetToCheckbox(sender());
-        if (!cb) { return; }
+        if (!cb)
+        {
+            return;
+        }
         cb->setChecked(true);
     }
 
     QCheckBox *CModelMappingModifyForm::widgetToCheckbox(QObject *widget) const
     {
-        if (!widget) { return nullptr; }
-        if (widget == ui->le_Description) { return ui->cb_Description; }
-        if (widget == ui->le_Name) { return ui->cb_Name; }
-        if (widget == ui->selector_ModeSelector) { return ui->cb_Mode; }
-        if (widget == ui->le_CG) { return ui->cb_CG; }
-        if (widget == ui->le_Parts) { return ui->cb_Parts; }
-        if (widget == ui->selector_SimulatorSelector) { return ui->cb_Simulator; }
+        if (!widget)
+        {
+            return nullptr;
+        }
+        if (widget == ui->le_Description)
+        {
+            return ui->cb_Description;
+        }
+        if (widget == ui->le_Name)
+        {
+            return ui->cb_Name;
+        }
+        if (widget == ui->selector_ModeSelector)
+        {
+            return ui->cb_Mode;
+        }
+        if (widget == ui->le_CG)
+        {
+            return ui->cb_CG;
+        }
+        if (widget == ui->le_Parts)
+        {
+            return ui->cb_Parts;
+        }
+        if (widget == ui->selector_SimulatorSelector)
+        {
+            return ui->cb_Simulator;
+        }
         return nullptr;
     }
 
     void CModelMappingModifyForm::onCGEdited()
     {
         QString cgv = ui->le_CG->text().trimmed();
-        if (isDigitsOnlyString(cgv)) { cgv += "ft"; }
+        if (isDigitsOnlyString(cgv))
+        {
+            cgv += "ft";
+        }
         CLength cg = CLength::null();
         cg.parseFromString(cgv, CPqString::SeparatorBestGuess);
         ui->le_CG->setText(cg.isNull() ? "" : cg.toQString(true));

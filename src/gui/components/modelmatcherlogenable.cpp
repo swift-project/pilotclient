@@ -41,7 +41,10 @@ namespace swift::gui::components
 
         QPointer<CModelMatcherLogEnable> myself(this);
         QTimer::singleShot(5000, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->initGui();
         });
     }
@@ -54,7 +57,10 @@ namespace swift::gui::components
 
     void CModelMatcherLogEnable::enabledCheckboxChanged(bool enabled)
     {
-        if (!this->hasContexts()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
         const QObject *sender = QObject::sender();
 
         const bool detailed = (sender == ui->cb_LogDetailed) ? enabled : ui->cb_LogDetailed->isChecked();
@@ -66,8 +72,14 @@ namespace swift::gui::components
         if (sender == ui->cb_LogReverseLookup || sender == ui->cb_LogDetailed)
         {
             ReverseLookupLogging revLog = RevLogDisabled;
-            if (reverse && simplified) { revLog = RevLogEnabledSimplified; }
-            else if (reverse) { revLog = RevLogEnabled; }
+            if (reverse && simplified)
+            {
+                revLog = RevLogEnabledSimplified;
+            }
+            else if (reverse)
+            {
+                revLog = RevLogEnabled;
+            }
 
             sGui->getIContextNetwork()->enableReverseLookupMessages(revLog);
         }
@@ -75,8 +87,14 @@ namespace swift::gui::components
         if (sender == ui->cb_LogMatchingMessages || sender == ui->cb_LogDetailed)
         {
             MatchingLog matchingLog = MatchingLogNothing;
-            if (matching && simplified) { matchingLog = MatchingLogSimplified; }
-            else if (matching) { matchingLog = MatchingLogAll; }
+            if (matching && simplified)
+            {
+                matchingLog = MatchingLogSimplified;
+            }
+            else if (matching)
+            {
+                matchingLog = MatchingLogAll;
+            }
 
             sGui->getIContextSimulator()->enableMatchingMessages(matchingLog);
         }
@@ -103,13 +121,19 @@ namespace swift::gui::components
 
             const bool simplified = revLog.testFlag(RevLogSimplifiedInfo) || matchingLog == MatchingLogSimplified;
             const bool detailed = !simplified;
-            if (detailed != ui->cb_LogDetailed->isChecked()) { ui->cb_LogDetailed->setChecked(detailed); }
+            if (detailed != ui->cb_LogDetailed->isChecked())
+            {
+                ui->cb_LogDetailed->setChecked(detailed);
+            }
         }
     }
 
     bool CModelMatcherLogEnable::hasContexts() const
     {
-        if (!sGui || sGui->isShuttingDown()) { return false; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return false;
+        }
         return sGui->getIContextSimulator() && sGui->getIContextNetwork();
     }
 
@@ -118,6 +142,9 @@ namespace swift::gui::components
     void CModelMatcherLogEnable::connectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         Q_UNUSED(from);
-        if (to.isConnected() || to.isDisconnected()) { this->initGui(); }
+        if (to.isConnected() || to.isDisconnected())
+        {
+            this->initGui();
+        }
     }
 } // namespace swift::gui::components

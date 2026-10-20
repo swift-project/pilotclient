@@ -16,10 +16,16 @@ namespace swift::misc::simulation
 
     CDistributor CDistributorList::findByKeyOrAlias(const QString &keyOrAlias) const
     {
-        if (keyOrAlias.isEmpty()) { return {}; }
+        if (keyOrAlias.isEmpty())
+        {
+            return {};
+        }
         for (const CDistributor &distributor : (*this))
         {
-            if (distributor.matchesKeyOrAlias(keyOrAlias)) { return distributor; }
+            if (distributor.matchesKeyOrAlias(keyOrAlias))
+            {
+                return distributor;
+            }
         }
         return {};
     }
@@ -27,11 +33,26 @@ namespace swift::misc::simulation
     CDistributor CDistributorList::findByModelData(const CAircraftModel &model) const
     {
         // some stuipd hardcoded resolutions for distributors
-        if (model.getDistributor().hasValidDbKey()) { return model.getDistributor(); }
-        if (model.getModelString().startsWith("WOA", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("WOAI"); }
-        if (model.getDescription().contains("WOA", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("WOAI"); }
-        if (model.getDescription().contains("IVAO", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("IVAO"); }
-        if (model.getModelString().startsWith("PAI ", Qt::CaseInsensitive)) { return this->findByKeyOrAlias("PAI"); }
+        if (model.getDistributor().hasValidDbKey())
+        {
+            return model.getDistributor();
+        }
+        if (model.getModelString().startsWith("WOA", Qt::CaseInsensitive))
+        {
+            return this->findByKeyOrAlias("WOAI");
+        }
+        if (model.getDescription().contains("WOA", Qt::CaseInsensitive))
+        {
+            return this->findByKeyOrAlias("WOAI");
+        }
+        if (model.getDescription().contains("IVAO", Qt::CaseInsensitive))
+        {
+            return this->findByKeyOrAlias("IVAO");
+        }
+        if (model.getModelString().startsWith("PAI ", Qt::CaseInsensitive))
+        {
+            return this->findByKeyOrAlias("PAI");
+        }
         if (model.getDescription().startsWith("Project AI ", Qt::CaseInsensitive))
         {
             return this->findByKeyOrAlias("PAI");
@@ -48,12 +69,18 @@ namespace swift::misc::simulation
     CDistributor CDistributorList::smartDistributorSelector(const CDistributor &distributor) const
     {
         // key is not necessarily a DB key, so use complete data, happens when key is set from raw data
-        if (distributor.isLoadedFromDb()) { return distributor; }
+        if (distributor.isLoadedFromDb())
+        {
+            return distributor;
+        }
         if (distributor.hasValidDbKey())
         {
             const QString key(distributor.getDbKey());
             CDistributor d(this->findByKey(key));
-            if (d.hasCompleteData()) { return d; }
+            if (d.hasCompleteData())
+            {
+                return d;
+            }
 
             // more lenient search
             return this->findByKeyOrAlias(key);
@@ -66,7 +93,10 @@ namespace swift::misc::simulation
     {
         const CDistributor d = this->smartDistributorSelector(distributorPattern);
         // key is not necessarily a DB key, so use complete data, happens when key is set from raw data
-        if (d.hasCompleteData()) { return d; }
+        if (d.hasCompleteData())
+        {
+            return d;
+        }
         return this->findByModelData(model);
     }
 
@@ -78,26 +108,47 @@ namespace swift::misc::simulation
 
     QStringList CDistributorList::getDbKeysAndAliases(bool sort) const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         QStringList sl;
         for (const CDistributor &d : *this)
         {
-            if (!d.hasValidDbKey()) { continue; }
+            if (!d.hasValidDbKey())
+            {
+                continue;
+            }
             sl.append(d.getDbKey());
-            if (d.hasAlias1()) { sl.append(d.getAlias1()); }
-            if (d.hasAlias2()) { sl.append(d.getAlias2()); }
+            if (d.hasAlias1())
+            {
+                sl.append(d.getAlias1());
+            }
+            if (d.hasAlias2())
+            {
+                sl.append(d.getAlias2());
+            }
         }
-        if (sort) { sl.sort(); }
+        if (sort)
+        {
+            sl.sort();
+        }
         return sl;
     }
 
     CDistributorList CDistributorList::matchesSimulator(const CSimulatorInfo &simulator) const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         CDistributorList distributors;
         for (const CDistributor &distributor : (*this))
         {
-            if (distributor.matchesSimulator(simulator)) { distributors.push_back(distributor); }
+            if (distributor.matchesSimulator(simulator))
+            {
+                distributors.push_back(distributor);
+            }
         }
         return distributors;
     }

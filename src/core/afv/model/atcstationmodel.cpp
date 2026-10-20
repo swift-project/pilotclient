@@ -38,14 +38,20 @@ namespace swift::core::afv::model
         // Add stations which didn't exist yet
         for (const auto &station : atcStations)
         {
-            if (!m_atcStations.contains(station)) { addStation(station); }
+            if (!m_atcStations.contains(station))
+            {
+                addStation(station);
+            }
         }
 
         // Remove all stations which are no longer there
         for (int i = m_atcStations.size() - 1; i >= 0; i--)
         {
             CSampleAtcStation &station = m_atcStations[i];
-            if (!m_atcStations.contains(station)) { removeStationAtPosition(i); }
+            if (!m_atcStations.contains(station))
+            {
+                removeStationAtPosition(i);
+            }
         }
     }
 

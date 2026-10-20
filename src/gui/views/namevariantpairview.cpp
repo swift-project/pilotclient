@@ -29,14 +29,20 @@ namespace swift::gui::views
     {
         Q_ASSERT(m_model);
         bool changed = m_model->addOrUpdateByName(name, value, icon, skipEqualValues);
-        if (resize && changed) { this->resizeToContents(); }
+        if (resize && changed)
+        {
+            this->resizeToContents();
+        }
         return changed;
     }
 
     void CNameVariantPairView::removeByName(const QString &name, bool resize)
     {
         m_model->removeByName(name);
-        if (resize) { this->resizeToContents(); }
+        if (resize)
+        {
+            this->resizeToContents();
+        }
     }
 
     bool CNameVariantPairView::containsName(const QString &name) { return m_model->containsName(name); }

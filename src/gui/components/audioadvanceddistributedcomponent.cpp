@@ -28,15 +28,24 @@ namespace swift::gui::components
 
     void CAudioAdvancedDistributedComponent::reloadRegisteredDevices()
     {
-        if (!hasContexts()) { return; }
+        if (!hasContexts())
+        {
+            return;
+        }
         const CAudioDeviceInfoList registeredDevices = sGui->getIContextAudio()->getRegisteredDevices();
         ui->tvp_RegisteredDevices->updateContainerMaybeAsync(registeredDevices);
     }
 
     bool CAudioAdvancedDistributedComponent::hasContexts()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getCContextAudioBase()) { return false; }
-        if (!sGui->getIContextNetwork()) { return false; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getCContextAudioBase())
+        {
+            return false;
+        }
+        if (!sGui->getIContextNetwork())
+        {
+            return false;
+        }
         return true;
     }
 } // namespace swift::gui::components

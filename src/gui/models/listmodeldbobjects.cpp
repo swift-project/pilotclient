@@ -49,23 +49,38 @@ namespace swift::gui::models
     template <typename T, typename K, bool UseCompare>
     QVariant CListModelDbObjects<T, K, UseCompare>::data(const QModelIndex &index, int role) const
     {
-        if (role != Qt::BackgroundRole) { return CListModelBase<ContainerType, UseCompare>::data(index, role); }
-        if (isHighlightedIndex(index)) { return QBrush(m_highlightColor); }
+        if (role != Qt::BackgroundRole)
+        {
+            return CListModelBase<ContainerType, UseCompare>::data(index, role);
+        }
+        if (isHighlightedIndex(index))
+        {
+            return QBrush(m_highlightColor);
+        }
         return CListModelBase<ContainerType, UseCompare>::data(index, role);
     }
 
     template <typename T, typename K, bool UseCompare>
     K CListModelDbObjects<T, K, UseCompare>::dbKeyForIndex(const QModelIndex &index) const
     {
-        if (!index.isValid()) { return ObjectType::invalidDbKey(); }
+        if (!index.isValid())
+        {
+            return ObjectType::invalidDbKey();
+        }
         return this->at(index).getDbKey();
     }
 
     template <typename T, typename K, bool UseCompare>
     bool CListModelDbObjects<T, K, UseCompare>::isHighlightedIndex(const QModelIndex &index) const
     {
-        if (!index.isValid()) { return false; }
-        if (m_highlightKeys.isEmpty()) { return false; }
+        if (!index.isValid())
+        {
+            return false;
+        }
+        if (m_highlightKeys.isEmpty())
+        {
+            return false;
+        }
         return m_highlightKeys.contains(dbKeyForIndex(index));
     }
 
@@ -78,10 +93,16 @@ namespace swift::gui::models
     template <typename T, typename K, bool UseCompare>
     void COrderableListModelDbObjects<T, K, UseCompare>::moveItems(const ContainerType &items, int position)
     {
-        if (items.isEmpty()) { return; }
+        if (items.isEmpty())
+        {
+            return;
+        }
         ContainerType container(this->container());
         int order = 0;
-        if (position >= 0 && position < container.size()) { order = container[position].getOrder(); }
+        if (position >= 0 && position < container.size())
+        {
+            order = container[position].getOrder();
+        }
         this->setSortColumnToOrder();
         container.moveTo(items, order);
 

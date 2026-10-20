@@ -51,7 +51,10 @@ namespace swift::gui::components
 
     void CSimulatorSelector::setMode(CSimulatorSelector::Mode mode, bool forced)
     {
-        if (m_mode == mode && !forced) { return; }
+        if (m_mode == mode && !forced)
+        {
+            return;
+        }
         m_mode = mode;
 
         ui->wi_CheckBoxes->setVisible(false);
@@ -70,7 +73,10 @@ namespace swift::gui::components
 
     CSimulatorInfo CSimulatorSelector::getValue() const
     {
-        if (m_noSelectionMeansAll && this->isUnselected()) { return CSimulatorInfo::allSimulators(); }
+        if (m_noSelectionMeansAll && this->isUnselected())
+        {
+            return CSimulatorInfo::allSimulators();
+        }
 
         switch (m_mode)
         {
@@ -88,7 +94,10 @@ namespace swift::gui::components
     void CSimulatorSelector::setValue(const CSimulatorInfo &simulator)
     {
         const CSimulatorInfo current(this->getValue());
-        if (simulator == current) { return; } // avoid unnecessary signals
+        if (simulator == current)
+        {
+            return;
+        } // avoid unnecessary signals
 
         // checkboxes
         ui->cb_XPlane->setChecked(simulator.isXPlane());
@@ -140,7 +149,10 @@ namespace swift::gui::components
         if (sGui && sGui->supportsContexts() && sGui->getIContextSimulator())
         {
             const CSimulatorPluginInfo pluginInfo = sGui->getIContextSimulator()->getSimulatorPluginInfo();
-            if (!this->isSingleSelection()) { this->setMode(RadioButtons); } // only one sim can be connected
+            if (!this->isSingleSelection())
+            {
+                this->setMode(RadioButtons);
+            } // only one sim can be connected
 
             if (pluginInfo.isValid())
             {
@@ -149,14 +161,23 @@ namespace swift::gui::components
             }
             else
             {
-                if (makeReadOnly) { this->setReadOnly(false); }
+                if (makeReadOnly)
+                {
+                    this->setReadOnly(false);
+                }
                 const CSimulatorInfo simulator = sGui->getIContextSimulator()->getModelSetLoaderSimulator();
-                if (simulator.isSingleSimulator()) { this->setValue(simulator); }
+                if (simulator.isSingleSimulator())
+                {
+                    this->setValue(simulator);
+                }
             }
         }
         else
         {
-            if (makeReadOnly) { this->setReadOnly(false); }
+            if (makeReadOnly)
+            {
+                this->setReadOnly(false);
+            }
         }
     }
 
@@ -168,10 +189,16 @@ namespace swift::gui::components
             return;
         }
 
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         QPointer<CSimulatorSelector> myself(this);
         QTimer::singleShot(deferredMs, this, [=, this] {
-            if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+            if (!sGui || sGui->isShuttingDown() || !myself)
+            {
+                return;
+            }
             this->setToConnectedSimulator(makeReadOnly);
         });
     }
@@ -278,7 +305,10 @@ namespace swift::gui::components
 
     void CSimulatorSelector::clear()
     {
-        if (m_mode == CheckBoxes) { this->uncheckAll(); }
+        if (m_mode == CheckBoxes)
+        {
+            this->uncheckAll();
+        }
     }
 
     bool CSimulatorSelector::isSingleSelection() const { return m_mode == RadioButtons || m_mode == ComboBox; }
@@ -299,7 +329,10 @@ namespace swift::gui::components
 
     void CSimulatorSelector::radioButtonChanged(bool checked)
     {
-        if (m_mode != RadioButtons) { return; }
+        if (m_mode != RadioButtons)
+        {
+            return;
+        }
         if (!checked)
         {
             return;
@@ -309,21 +342,30 @@ namespace swift::gui::components
 
     void CSimulatorSelector::checkBoxChanged(bool checked)
     {
-        if (m_mode != CheckBoxes) { return; }
+        if (m_mode != CheckBoxes)
+        {
+            return;
+        }
         Q_UNUSED(checked);
         m_digestButtonsChanged.inputSignal();
     }
 
     void CSimulatorSelector::comboBoxChanged(const QString &value)
     {
-        if (m_mode != ComboBox) { return; }
+        if (m_mode != ComboBox)
+        {
+            return;
+        }
         Q_UNUSED(value);
         m_digestButtonsChanged.inputSignal();
     }
 
     void CSimulatorSelector::rememberSelection()
     {
-        if (!m_rememberSelection) { return; }
+        if (!m_rememberSelection)
+        {
+            return;
+        }
         if (this->isSingleSelection())
         {
             // single
@@ -347,14 +389,20 @@ namespace swift::gui::components
     void CSimulatorSelector::changedLastSelectionRb()
     {
         // force decoupled update
-        if (m_mode != RadioButtons) { return; }
+        if (m_mode != RadioButtons)
+        {
+            return;
+        }
         this->triggerSetToLastSelection();
     }
 
     void CSimulatorSelector::changedLastSelectionCb()
     {
         // force decoupled update
-        if (m_mode != CheckBoxes) { return; }
+        if (m_mode != CheckBoxes)
+        {
+            return;
+        }
         this->triggerSetToLastSelection();
     }
 
@@ -362,7 +410,10 @@ namespace swift::gui::components
     {
         QPointer<CSimulatorSelector> myself(this);
         QTimer::singleShot(100, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->setToLastSelection();
         });
     }

@@ -69,7 +69,10 @@ namespace swift::gui::components
         xPlanePluginDir = QFileDialog::getExistingDirectory(parentWidget(), tr("Choose your X-Plane plugin directory"),
                                                             xPlanePluginDir, m_fileDialogOptions);
 
-        if (xPlanePluginDir.isEmpty()) { return; } // canceled
+        if (xPlanePluginDir.isEmpty())
+        {
+            return;
+        } // canceled
         if (!QDir(xPlanePluginDir).exists())
         {
             const CStatusMessage msg = CStatusMessage(this, CLogCategories::validation())
@@ -87,7 +90,10 @@ namespace swift::gui::components
         downloadDir = QFileDialog::getExistingDirectory(parentWidget(), tr("Choose your X-Plane plugin directory"),
                                                         downloadDir, m_fileDialogOptions);
 
-        if (downloadDir.isEmpty()) { return; } // canceled
+        if (downloadDir.isEmpty())
+        {
+            return;
+        } // canceled
         if (!QDir(downloadDir).exists())
         {
             const CStatusMessage msg =
@@ -180,9 +186,15 @@ namespace swift::gui::components
                 CStatusMessage(this, CLogCategories::validation()).info(u"Uncompressed xswiftbus in '%1'")
                 << xSwiftBusDirectory;
             this->showOverlayMessagesWithConfirmation(msg, false, "Delete downloaded file?", [=] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 QFile downloadFile(downloadFileName);
-                if (!downloadFile.exists()) { return; } // removed in meantime
+                if (!downloadFile.exists())
+                {
+                    return;
+                } // removed in meantime
                 const bool removed = downloadFile.remove();
                 Q_UNUSED(removed);
             });
@@ -203,13 +215,19 @@ namespace swift::gui::components
                                   "like 'plugin/xswiftbus'.\n\nOpen the archive?",
                                   QMessageBox::Yes | QMessageBox::No);
 
-        if (reply == QMessageBox::Yes) { QDesktopServices::openUrl(QUrl::fromLocalFile(destFile.absoluteFilePath())); }
+        if (reply == QMessageBox::Yes)
+        {
+            QDesktopServices::openUrl(QUrl::fromLocalFile(destFile.absoluteFilePath()));
+        }
     }
 
     void CInstallXSwiftBusComponent::triggerDownloadingOfXSwiftBusFile()
     {
         using namespace std::chrono_literals;
-        if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown()) { return; }
+        if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown())
+        {
+            return;
+        }
         const CRemoteFile rf = this->getRemoteFileSelected();
         if (!rf.getBaseName().contains(CBuildConfig::getVersionString()))
         {
@@ -221,7 +239,10 @@ namespace swift::gui::components
                                u"Continue with this version?")
                     .arg(CBuildConfig::getVersionString()),
                 QMessageBox::Yes | QMessageBox::No);
-            if (reply != QMessageBox::Yes) { return; }
+            if (reply != QMessageBox::Yes)
+            {
+                return;
+            }
         }
 
         if (!this->existsDownloadDir())
@@ -249,13 +270,19 @@ namespace swift::gui::components
             const QMessageBox::StandardButton reply = QMessageBox::question(
                 this, "The file already exists", "Do you want to use the existing '" + saveAsFile + "'?",
                 QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-            if (reply == QMessageBox::Cancel) { return; }
+            if (reply == QMessageBox::Cancel)
+            {
+                return;
+            }
             if (reply == QMessageBox::Yes)
             {
                 const CStatusMessage msg = CStatusMessage(this).info(u"Using existing file '%1'") << saveAsFile;
                 const QPointer<CInstallXSwiftBusComponent> guard(this);
                 QTimer::singleShot(100, this, [=, this] {
-                    if (guard.isNull()) { return; }
+                    if (guard.isNull())
+                    {
+                        return;
+                    }
                     this->downloadedXSwiftBusFile(msg);
                 });
                 return;
@@ -281,7 +308,10 @@ namespace swift::gui::components
     void CInstallXSwiftBusComponent::downloadedXSwiftBusFile(const CStatusMessage &status)
     {
         this->hideLoading();
-        if (sGui && sGui->isShuttingDown()) { return; }
+        if (sGui && sGui->isShuttingDown())
+        {
+            return;
+        }
         if (status.isWarningOrAbove())
         {
             this->showOverlayMessage(status);
@@ -339,10 +369,16 @@ namespace swift::gui::components
     void CInstallXSwiftBusComponent::updatesChanged()
     {
         const CUpdateInfo updateInfo = m_updates.get();
-        if (updateInfo.getArtifactsXSwiftBus().isEmpty()) { return; }
+        if (updateInfo.getArtifactsXSwiftBus().isEmpty())
+        {
+            return;
+        }
         const CArtifactList artifacts =
             updateInfo.getArtifactsXSwiftBusLatestVersionFirst().findWithUnrestrictedDistributions();
-        if (artifacts.isEmpty()) { return; }
+        if (artifacts.isEmpty())
+        {
+            return;
+        }
 
         const CRemoteFileList remoteFiles = artifacts.asRemoteFiles();
         if (!remoteFiles.isEmpty())
@@ -357,12 +393,18 @@ namespace swift::gui::components
             {
                 const CRemoteFile rf =
                     remoteFiles.findFirstContainingNameOrDefault(CBuildConfig::getVersionString(), Qt::CaseInsensitive);
-                if (rf.hasName()) { current = rf.getBaseNameAndSize(); }
+                if (rf.hasName())
+                {
+                    current = rf.getBaseNameAndSize();
+                }
             }
             else
             {
                 const CRemoteFile rf = remoteFiles.findFirstByMatchingBaseNameOrDefault(m_defaultDownloadName);
-                if (rf.hasName()) { current = rf.getBaseNameAndSize(); }
+                if (rf.hasName())
+                {
+                    current = rf.getBaseNameAndSize();
+                }
             }
 
             ui->cb_DownloadFile->setCurrentText(current.isEmpty() ? remoteFiles.frontOrDefault().getBaseNameAndSize() :
@@ -373,14 +415,20 @@ namespace swift::gui::components
 
     void CInstallXSwiftBusComponent::openInstallDir()
     {
-        if (!this->existsXSwiftBusPluginDir()) { return; }
+        if (!this->existsXSwiftBusPluginDir())
+        {
+            return;
+        }
         const QString file = CFileUtils::fixWindowsUncPath(ui->le_XSwiftBusPluginDir->text());
         QDesktopServices::openUrl(QUrl::fromLocalFile(file));
     }
 
     void CInstallXSwiftBusComponent::openDownloadDir()
     {
-        if (!this->existsDownloadDir()) { return; }
+        if (!this->existsDownloadDir())
+        {
+            return;
+        }
         const QString file = CFileUtils::fixWindowsUncPath(ui->le_DownloadDir->text());
         QDesktopServices::openUrl(QUrl::fromLocalFile(file));
     }

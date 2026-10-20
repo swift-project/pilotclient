@@ -20,7 +20,10 @@ namespace swift::misc
     CPropertyIndexRef CPropertyIndexRef::copyFrontRemoved() const
     {
         SWIFT_VERIFY_X(!this->isEmpty(), Q_FUNC_INFO, "Empty index");
-        if (this->isEmpty() || !m_begin) { return -1; }
+        if (this->isEmpty() || !m_begin)
+        {
+            return -1;
+        }
         CPropertyIndexRef copy = *this;
         ++copy.m_begin;
         --copy.m_sizeOrIndex;
@@ -41,7 +44,10 @@ namespace swift::misc
 
     bool CPropertyIndexRef::startsWith(int index) const
     {
-        if (this->isEmpty()) { return false; }
+        if (this->isEmpty())
+        {
+            return false;
+        }
         return this->frontToInt() == index;
     }
 
@@ -49,14 +55,20 @@ namespace swift::misc
     {
         Q_UNUSED(i18n);
         QString s;
-        if (this->isEmpty()) { return s; }
+        if (this->isEmpty())
+        {
+            return s;
+        }
 
         auto it = m_begin ? m_begin : &m_sizeOrIndex;
         auto end = it + (m_begin ? m_sizeOrIndex : 1);
         for (; it != end; ++it)
         {
             Q_ASSERT(*it >= static_cast<int>(CPropertyIndexRef::GlobalIndexCValueObject));
-            if (!s.isEmpty()) { s.append(";"); }
+            if (!s.isEmpty())
+            {
+                s.append(";");
+            }
             s.append(QString::number(*it));
         }
         return s;

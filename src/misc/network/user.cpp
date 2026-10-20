@@ -44,8 +44,14 @@ namespace swift::misc::network
 
     QString CUser::getRealNameAndHomeBase(const QString &separator) const
     {
-        if (!this->hasHomeBase()) { return this->getRealName(); }
-        if (!this->hasRealName()) { return this->getHomeBase().asString(); }
+        if (!this->hasHomeBase())
+        {
+            return this->getRealName();
+        }
+        if (!this->hasRealName())
+        {
+            return this->getHomeBase().asString();
+        }
         return this->getRealName() % separator % this->getHomeBase().asString();
     }
 
@@ -53,7 +59,10 @@ namespace swift::misc::network
     {
         if (this->hasRealName())
         {
-            if (this->hasId()) { return this->getRealName() % u" (" % this->getId() % QStringLiteral(")"); }
+            if (this->hasId())
+            {
+                return this->getRealName() % u" (" % this->getId() % QStringLiteral(")");
+            }
             return this->getRealName();
         }
         return this->getId();
@@ -61,7 +70,10 @@ namespace swift::misc::network
 
     bool CUser::setCallsign(const CCallsign &callsign)
     {
-        if (m_callsign == callsign) { return false; }
+        if (m_callsign == callsign)
+        {
+            return false;
+        }
         m_callsign = callsign;
         this->deriveHomeBaseFromCallsign();
         return true;
@@ -72,14 +84,23 @@ namespace swift::misc::network
         Q_UNUSED(i18n)
         if (m_realname.isEmpty()) return QStringLiteral("<no realname>");
         QString s = m_realname;
-        if (this->hasId()) { s += u" (" % m_id % u')'; }
-        if (this->hasCallsign()) { s += u' ' % this->getCallsign().getStringAsSet(); }
+        if (this->hasId())
+        {
+            s += u" (" % m_id % u')';
+        }
+        if (this->hasCallsign())
+        {
+            s += u' ' % this->getCallsign().getStringAsSet();
+        }
         return s;
     }
 
     void CUser::deriveHomeBaseFromCallsign()
     {
-        if (m_callsign.isEmpty()) { return; }
+        if (m_callsign.isEmpty())
+        {
+            return;
+        }
         if (m_homebase.isEmpty())
         {
             if (m_callsign.isAtcCallsign())
@@ -90,7 +111,10 @@ namespace swift::misc::network
                 {
                     // copilot
                 }
-                else { m_homebase = m_callsign.getIcaoCode(); }
+                else
+                {
+                    m_homebase = m_callsign.getIcaoCode();
+                }
             }
         }
     }
@@ -132,7 +156,10 @@ namespace swift::misc::network
     {
         CStatusMessageList msgs;
         // callsign optional
-        if (!this->hasId()) { msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid id")); }
+        if (!this->hasId())
+        {
+            msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid id"));
+        }
         if (!this->hasRealName())
         {
             msgs.push_back(CStatusMessage(CStatusMessage::SeverityWarning, u"Invalid real name"));
@@ -146,8 +173,14 @@ namespace swift::misc::network
 
     QString CUser::get7DigitId() const
     {
-        if (!this->hasNumericId()) { return m_id; }
-        if (m_id.length() > 6) { return m_id; }
+        if (!this->hasNumericId())
+        {
+            return m_id;
+        }
+        if (m_id.length() > 6)
+        {
+            return m_id;
+        }
 
         static const QString zeros("0000000");
         return zeros.left(7 - m_id.length()) % m_id;
@@ -155,37 +188,70 @@ namespace swift::misc::network
 
     int CUser::getIntegerId() const
     {
-        if (m_id.isEmpty()) { return -1; }
-        if (is09OnlyString(m_id)) { return m_id.toInt(); }
+        if (m_id.isEmpty())
+        {
+            return -1;
+        }
+        if (is09OnlyString(m_id))
+        {
+            return m_id.toInt();
+        }
         return -1;
     }
 
     bool CUser::hasNumericId() const
     {
-        if (m_id.isEmpty()) { return false; }
+        if (m_id.isEmpty())
+        {
+            return false;
+        }
         return is09OnlyString(m_id);
     }
 
     void CUser::updateMissingParts(const CUser &otherUser)
     {
-        if (this == &otherUser) { return; }
-        if (!this->hasRealName()) { this->setRealName(otherUser.getRealName()); }
-        if (!this->hasId()) { this->setId(otherUser.getId()); }
-        if (!this->hasValidEmail()) { this->setEmail(otherUser.getEmail()); }
-        if (!this->hasCallsign()) { this->setCallsign(otherUser.getCallsign()); }
+        if (this == &otherUser)
+        {
+            return;
+        }
+        if (!this->hasRealName())
+        {
+            this->setRealName(otherUser.getRealName());
+        }
+        if (!this->hasId())
+        {
+            this->setId(otherUser.getId());
+        }
+        if (!this->hasValidEmail())
+        {
+            this->setEmail(otherUser.getEmail());
+        }
+        if (!this->hasCallsign())
+        {
+            this->setCallsign(otherUser.getCallsign());
+        }
     }
 
     void CUser::synchronizeData(CUser &otherUser)
     {
-        if (this == &otherUser) { return; }
+        if (this == &otherUser)
+        {
+            return;
+        }
         this->updateMissingParts(otherUser);
         otherUser.updateMissingParts(*this);
     }
 
     bool CUser::isValidVatsimId(const QString &id)
     {
-        if (id.isEmpty()) { return false; }
-        if (!is09OnlyString(id)) { return false; }
+        if (id.isEmpty())
+        {
+            return false;
+        }
+        if (!is09OnlyString(id))
+        {
+            return false;
+        }
         const int i = id.toInt();
         return i >= 100000 && i <= 9999999;
     }
@@ -193,7 +259,10 @@ namespace swift::misc::network
     QString CUser::beautifyRealName(const QString &realName)
     {
         QString newRealName(realName.simplified().trimmed());
-        if (newRealName.isEmpty()) { return newRealName; }
+        if (newRealName.isEmpty())
+        {
+            return newRealName;
+        }
         if (is09OnlyString(newRealName))
         {
             return newRealName;
@@ -207,7 +276,10 @@ namespace swift::misc::network
             // Joe Doe -> valid
             // jOE dOE -> invalid
             // Joe McArthur -> valid
-            if (uc > 1 && lc > 2 && lc > uc) { return newRealName; } // mixed case name, no need to beautify
+            if (uc > 1 && lc > 2 && lc > uc)
+            {
+                return newRealName;
+            } // mixed case name, no need to beautify
             if (ch.isLower())
             {
                 lc++;
@@ -226,7 +298,10 @@ namespace swift::misc::network
         bool upperNextChar = true;
         while (i != newRealName.end())
         {
-            if (i->isSpace() || *i == '-') { upperNextChar = true; }
+            if (i->isSpace() || *i == '-')
+            {
+                upperNextChar = true;
+            }
             else if (upperNextChar)
             {
                 const QChar u(i->toUpper());
@@ -240,7 +315,10 @@ namespace swift::misc::network
 
     QVariant CUser::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -280,7 +358,10 @@ namespace swift::misc::network
 
     int CUser::comparePropertyByIndex(CPropertyIndexRef index, const CUser &compareValue) const
     {
-        if (index.isMyself()) { return this->getRealName().compare(compareValue.getRealName(), Qt::CaseInsensitive); }
+        if (index.isMyself())
+        {
+            return this->getRealName().compare(compareValue.getRealName(), Qt::CaseInsensitive);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

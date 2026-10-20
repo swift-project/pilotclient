@@ -42,13 +42,19 @@ namespace swift::core::context
 
     void CContextAudioProxy::registerDevices(const CAudioDeviceInfoList &devices)
     {
-        if (devices.isEmpty()) { return; }
+        if (devices.isEmpty())
+        {
+            return;
+        }
         m_dBusInterface->callDBus(QLatin1String("registerDevices"), devices);
     }
 
     void CContextAudioProxy::unRegisterDevices(const CAudioDeviceInfoList &devices)
     {
-        if (devices.isEmpty()) { return; }
+        if (devices.isEmpty())
+        {
+            return;
+        }
         m_dBusInterface->callDBus(QLatin1String("unRegisterDevices"), devices);
     }
 

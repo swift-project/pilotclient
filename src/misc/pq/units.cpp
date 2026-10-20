@@ -23,7 +23,10 @@ namespace swift::misc::physical_quantities
 
     QString CAngleUnit::makeRoundedQStringWithUnit(double value, int digits, bool withGroupSeparator, bool i18n) const
     {
-        if (digits < 0) { digits = this->getDisplayDigits(); }
+        if (digits < 0)
+        {
+            digits = this->getDisplayDigits();
+        }
         QString s;
         if ((*this) == CAngleUnit::sexagesimalDeg())
         {
@@ -46,13 +49,19 @@ namespace swift::misc::physical_quantities
             s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
             s = s.arg(fabs(de), 0, 'f', 0).arg(fabs(mi), 3 + digits, 'f', digits, '0');
         }
-        else { s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, withGroupSeparator, i18n); }
+        else
+        {
+            s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, withGroupSeparator, i18n);
+        }
         return s;
     }
 
     QString CTimeUnit::makeRoundedQStringWithUnit(double value, int digits, bool withGroupSeparator, bool i18n) const
     {
-        if (digits < 0) { digits = this->getDisplayDigits(); }
+        if (digits < 0)
+        {
+            digits = this->getDisplayDigits();
+        }
         QString s;
         if ((*this) == CTimeUnit::hms())
         {
@@ -87,7 +96,10 @@ namespace swift::misc::physical_quantities
             s = i18n ? QCoreApplication::translate("CMeasurementUnit", fmt) : fmt;
             s = s.arg(fabs(mi), 2, 'f', 0, '0').arg(fabs(se), 3 + digits, 'f', digits, '0');
         }
-        else { s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, withGroupSeparator, i18n); }
+        else
+        {
+            s = this->CMeasurementUnit::makeRoundedQStringWithUnit(value, digits, withGroupSeparator, i18n);
+        }
         return s;
     }
 

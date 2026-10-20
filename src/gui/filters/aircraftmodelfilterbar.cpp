@@ -55,7 +55,10 @@ namespace swift::gui::filters
         // connect deferred, avoid to filter during the UI "swing in period"
         QPointer<CAircraftModelFilterBar> myself(this);
         QTimer::singleShot(2500, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->connectTriggerFilterSignals();
         });
     }
@@ -67,12 +70,24 @@ namespace swift::gui::filters
     std::unique_ptr<IModelFilter<CAircraftModelList>> CAircraftModelFilterBar::createModelFilter() const
     {
         CAircraftModel::ModelModeFilter mf = CAircraftModel::All;
-        if (ui->cbt_IncludeExclude->checkState() == Qt::Checked) { mf = CAircraftModel::Include; }
-        else if (ui->cbt_IncludeExclude->checkState() == Qt::Unchecked) { mf = CAircraftModel::Exclude; }
+        if (ui->cbt_IncludeExclude->checkState() == Qt::Checked)
+        {
+            mf = CAircraftModel::Include;
+        }
+        else if (ui->cbt_IncludeExclude->checkState() == Qt::Unchecked)
+        {
+            mf = CAircraftModel::Exclude;
+        }
 
         DbKeyStateFilter dbf = swift::misc::db::All;
-        if (ui->cbt_Db->checkState() == Qt::Checked) { dbf = swift::misc::db::Valid; }
-        else if (ui->cbt_Db->checkState() == Qt::Unchecked) { dbf = swift::misc::db::Invalid; }
+        if (ui->cbt_Db->checkState() == Qt::Checked)
+        {
+            dbf = swift::misc::db::Valid;
+        }
+        else if (ui->cbt_Db->checkState() == Qt::Unchecked)
+        {
+            dbf = swift::misc::db::Invalid;
+        }
 
         return std::make_unique<CAircraftModelFilter>(
             convertDbId(ui->le_Id->text()), ui->le_ModelString->text(), ui->le_ModelDescription->text(), mf, dbf,

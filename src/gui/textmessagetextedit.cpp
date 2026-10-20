@@ -55,9 +55,18 @@ namespace swift::gui
 
     void CTextMessageTextEdit::insertTextMessage(const CTextMessage &textMessage, int maxMessages)
     {
-        if (maxMessages < 0 && m_keepMaxMessages >= 0) { maxMessages = m_keepMaxMessages; }
-        if (maxMessages >= 0) { m_messages.push_backMaxElements(textMessage, maxMessages); }
-        else { m_messages.push_back(textMessage); }
+        if (maxMessages < 0 && m_keepMaxMessages >= 0)
+        {
+            maxMessages = m_keepMaxMessages;
+        }
+        if (maxMessages >= 0)
+        {
+            m_messages.push_backMaxElements(textMessage, maxMessages);
+        }
+        else
+        {
+            m_messages.push_back(textMessage);
+        }
         this->redrawHtml();
     }
 
@@ -84,9 +93,15 @@ namespace swift::gui
 
     QString CTextMessageTextEdit::toHtml(const CTextMessageList &messages, bool withFrom, bool withTo)
     {
-        if (messages.isEmpty()) { return {}; }
+        if (messages.isEmpty())
+        {
+            return {};
+        }
         QString html("<table>");
-        for (const CTextMessage &msg : messages) { html += CTextMessageTextEdit::toHtml(msg, withFrom, withTo); }
+        for (const CTextMessage &msg : messages)
+        {
+            html += CTextMessageTextEdit::toHtml(msg, withFrom, withTo);
+        }
         html += "</table>";
         return html;
     }
@@ -94,14 +109,23 @@ namespace swift::gui
     QString CTextMessageTextEdit::toHtml(const CTextMessage &message, bool withFrom, bool withTo)
     {
         QString rowClass(message.wasSent() ? "sent" : "received");
-        if (message.isSupervisorMessage()) { rowClass += " supervisor"; }
+        if (message.isSupervisorMessage())
+        {
+            rowClass += " supervisor";
+        }
 
         QString html(u"<tr class=\"" % rowClass.trimmed() % u"\"><td class=\"timestamp\">" %
                      message.getFormattedUtcTimestampHms() % u"</td>");
 
-        if (withFrom) { html += u"<td class=\"sender\">" % message.getSenderCallsign().asString() % u"</td>"; }
+        if (withFrom)
+        {
+            html += u"<td class=\"sender\">" % message.getSenderCallsign().asString() % u"</td>";
+        }
 
-        if (withTo) { html += u"<td class=\"recipient\">" % message.getRecipientCallsignOrFrequency() % u"</td>"; }
+        if (withTo)
+        {
+            html += u"<td class=\"recipient\">" % message.getRecipientCallsignOrFrequency() % u"</td>";
+        }
 
         html += u"<td class=\"message\">" % message.getHtmlEncodedMessage() % u"</td></tr>";
         return html;
@@ -131,22 +155,43 @@ namespace swift::gui
     void CTextMessageTextEdit::keepLastNMessages()
     {
         QObject *sender = QObject::sender();
-        if (sender == m_actionAll) { m_keepMaxMessages = -1; }
-        else if (sender == m_actionLast10) { m_keepMaxMessages = 10; }
-        else if (sender == m_actionLast25) { m_keepMaxMessages = 25; }
+        if (sender == m_actionAll)
+        {
+            m_keepMaxMessages = -1;
+        }
+        else if (sender == m_actionLast10)
+        {
+            m_keepMaxMessages = 10;
+        }
+        else if (sender == m_actionLast25)
+        {
+            m_keepMaxMessages = 25;
+        }
     }
 
     void CTextMessageTextEdit::setVisibleFields()
     {
         QObject *sender = QObject::sender();
-        if (sender == m_actionWithRecipient) { m_withRecipient = m_actionWithRecipient->isChecked(); }
-        else if (sender == m_actionWithSender) { m_withSender = m_actionWithSender->isChecked(); }
+        if (sender == m_actionWithRecipient)
+        {
+            m_withRecipient = m_actionWithRecipient->isChecked();
+        }
+        else if (sender == m_actionWithSender)
+        {
+            m_withSender = m_actionWithSender->isChecked();
+        }
     }
 
     void CTextMessageTextEdit::setWordWrap(bool wordWrap)
     {
         m_wordWrap = wordWrap;
-        if (m_wordWrap) { this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere); }
-        else { this->setWordWrapMode(QTextOption::NoWrap); }
+        if (m_wordWrap)
+        {
+            this->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+        }
+        else
+        {
+            this->setWordWrapMode(QTextOption::NoWrap);
+        }
     }
 } // namespace swift::gui

@@ -65,12 +65,16 @@ namespace swift::misc::weather
             // Loop stop condition:
             // - Invalid data
             // - One match found and token not repeatable
-            do {
+            do
+            {
                 QRegularExpressionMatch match = re.match(metarString);
                 if (match.hasMatch())
                 {
                     // If invalid data, we return straight away
-                    if (!validateAndSet(match, metar)) { return false; }
+                    if (!validateAndSet(match, metar))
+                    {
+                        return false;
+                    }
 
                     // Remove the captured part
                     metarString.replace(re, QString());
@@ -79,7 +83,10 @@ namespace swift::misc::weather
                 else
                 {
                     // No (more) match found.
-                    if (!isMandatory()) { isValid = true; }
+                    if (!isMandatory())
+                    {
+                        isValid = true;
+                    }
                     break;
                 }
             }
@@ -110,7 +117,10 @@ namespace swift::misc::weather
         bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
         {
             QString reportTypeAsString = match.captured("reporttype");
-            if (reportTypeAsString.isEmpty() || !getReportTypeHash().contains(reportTypeAsString)) { return false; }
+            if (reportTypeAsString.isEmpty() || !getReportTypeHash().contains(reportTypeAsString))
+            {
+                return false;
+            }
 
             metar.setReportType(getReportTypeHash().value(reportTypeAsString));
             return true;
@@ -205,9 +215,18 @@ namespace swift::misc::weather
                 metar.setAutomated(true);
                 return true;
             }
-            else if (match.captured(1) == "NIL") { return true; }
-            else if (match.captured(1).size() == 3) { return true; }
-            else { return false; }
+            else if (match.captured(1) == "NIL")
+            {
+                return true;
+            }
+            else if (match.captured(1).size() == 3)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         bool isMandatory() const override { return false; }
@@ -241,7 +260,10 @@ namespace swift::misc::weather
             if (directionAsString == "///") return true;
             int direction = 0;
             bool directionVariable = false;
-            if (directionAsString == "VRB") { directionVariable = true; }
+            if (directionAsString == "VRB")
+            {
+                directionVariable = true;
+            }
             else
             {
                 direction = directionAsString.toInt(&ok);
@@ -557,18 +579,30 @@ namespace swift::misc::weather
         {
             QString intensityAsString = match.captured("intensity");
             CPresentWeather::Intensity itensity = CPresentWeather::Moderate;
-            if (!intensityAsString.isEmpty()) { itensity = getIntensityHash().value(intensityAsString); }
+            if (!intensityAsString.isEmpty())
+            {
+                itensity = getIntensityHash().value(intensityAsString);
+            }
 
             QString descriptorAsString = match.captured("descriptor");
             CPresentWeather::Descriptor descriptor = CPresentWeather::None;
-            if (!descriptorAsString.isEmpty()) { descriptor = getDescriptorHash().value(descriptorAsString); }
+            if (!descriptorAsString.isEmpty())
+            {
+                descriptor = getDescriptorHash().value(descriptorAsString);
+            }
 
             int weatherPhenomena = 0;
             QString wp1AsString = match.captured("wp1");
-            if (!wp1AsString.isEmpty()) { weatherPhenomena |= getWeatherPhenomenaHash().value(wp1AsString); }
+            if (!wp1AsString.isEmpty())
+            {
+                weatherPhenomena |= getWeatherPhenomenaHash().value(wp1AsString);
+            }
 
             QString wp2AsString = match.captured("wp2");
-            if (!wp2AsString.isEmpty()) { weatherPhenomena |= getWeatherPhenomenaHash().value(wp2AsString); }
+            if (!wp2AsString.isEmpty())
+            {
+                weatherPhenomena |= getWeatherPhenomenaHash().value(wp2AsString);
+            }
 
             CPresentWeather presentWeather(itensity, descriptor, weatherPhenomena);
             metar.addPresentWeather(presentWeather);
@@ -656,7 +690,9 @@ namespace swift::misc::weather
                                    getCoverage().value(coverageAsString));
             metar.addCloudLayer(cloudLayer);
             QString cb_tcu = match.captured("cb_tcu");
-            if (!cb_tcu.isEmpty()) {}
+            if (!cb_tcu.isEmpty())
+            {
+            }
             return true;
         }
 
@@ -746,11 +782,17 @@ namespace swift::misc::weather
             }
 
             int temperature = temperatureAsString.toInt();
-            if (temperatureNegative) { temperature *= -1; }
+            if (temperatureNegative)
+            {
+                temperature *= -1;
+            }
             metar.setTemperature(CTemperature(temperature, CTemperatureUnit::C()));
 
             int dewPoint = dewPointAsString.toInt();
-            if (dewPointNegative) { dewPoint *= -1; }
+            if (dewPointNegative)
+            {
+                dewPoint *= -1;
+            }
             metar.setDewPoint(CTemperature(dewPoint, CTemperatureUnit::C()));
 
             return true;

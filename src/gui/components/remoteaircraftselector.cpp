@@ -47,7 +47,10 @@ namespace swift::gui::components
     {
         static const CCallsign empty {};
         const int index = ui->cb_RemoteAircraftSelector->currentIndex();
-        if (index < 0 || index > m_aircraft.size()) { return empty; }
+        if (index < 0 || index > m_aircraft.size())
+        {
+            return empty;
+        }
         return m_aircraft[index].getCallsign();
     }
 
@@ -63,14 +66,23 @@ namespace swift::gui::components
     void CRemoteAircraftSelector::onAddedAircraft(const CSimulatedAircraft &aircraft)
     {
         CCallsign cs(aircraft.getCallsign());
-        if (cs.isEmpty()) { return; }
-        if (m_aircraft.containsCallsign(cs)) { return; }
+        if (cs.isEmpty())
+        {
+            return;
+        }
+        if (m_aircraft.containsCallsign(cs))
+        {
+            return;
+        }
         m_dsFillComboBox.inputSignal(); // fill combo box
     }
 
     void CRemoteAircraftSelector::onRemovedAircraft(const CCallsign &callsign)
     {
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
         if (m_aircraft.containsCallsign(callsign))
         {
             m_dsFillComboBox.inputSignal(); // fill combo box
@@ -79,34 +91,55 @@ namespace swift::gui::components
 
     void CRemoteAircraftSelector::comboBoxChanged(const QString &text)
     {
-        if (m_currentText == text) { return; }
+        if (m_currentText == text)
+        {
+            return;
+        }
         m_currentText = text;
         emit this->changedCallsign();
     }
 
     void CRemoteAircraftSelector::fillComboBox()
     {
-        if (!this->isVisible()) { return; } // for performance reasons
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!this->isVisible())
+        {
+            return;
+        } // for performance reasons
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         const CCallsign currentSelection(this->getSelectedCallsign());
         m_aircraft = sGui->getIContextNetwork()->getAircraftInRange().sortedByCallsign();
         ui->cb_RemoteAircraftSelector->clear();
-        if (m_aircraft.isEmpty()) { return; }
+        if (m_aircraft.isEmpty())
+        {
+            return;
+        }
 
         QStringList items;
         for (const CSimulatedAircraft &aircraft : m_aircraft)
         {
-            if (aircraft.getCallsign().isEmpty()) { continue; }
+            if (aircraft.getCallsign().isEmpty())
+            {
+                continue;
+            }
             QString i(aircraft.getCallsign().toQString());
             if (aircraft.hasAircraftDesignator())
             {
                 i += u" (" % aircraft.getAircraftIcaoCode().toQString(false) % u')';
             }
-            if (aircraft.hasRealName()) { i += u" - " % aircraft.getPilotRealName(); }
+            if (aircraft.hasRealName())
+            {
+                i += u" - " % aircraft.getPilotRealName();
+            }
             if (m_showPartsEnabled)
             {
-                if (aircraft.isPartsSynchronized()) { i += QStringLiteral(" [parts]"); }
+                if (aircraft.isPartsSynchronized())
+                {
+                    i += QStringLiteral(" [parts]");
+                }
             }
             items.append(i);
         }
@@ -115,7 +148,10 @@ namespace swift::gui::components
         ui->cb_RemoteAircraftSelector->addItems(items);
 
         // set old selection if possible
-        if (currentSelection.isEmpty()) { return; }
+        if (currentSelection.isEmpty())
+        {
+            return;
+        }
         int index = m_aircraft.firstIndexOfCallsign(currentSelection);
         if (index >= 0 && index < ui->cb_RemoteAircraftSelector->count())
         {

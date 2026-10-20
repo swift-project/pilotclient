@@ -67,13 +67,19 @@ namespace swift::misc::aviation
 
     bool CAircraftCategory::isLevel(const QList<int> &level) const
     {
-        if (level.size() != 3) { return false; }
+        if (level.size() != 3)
+        {
+            return false;
+        }
         return m_l1 == level[0] && m_l2 == level[1] && m_l3 == level[2];
     }
 
     bool CAircraftCategory::isLevel(const CAircraftCategory &category) const
     {
-        if (category.isNull()) { return false; }
+        if (category.isNull())
+        {
+            return false;
+        }
         return category.m_l1 == m_l1 && category.m_l2 == m_l2 && category.m_l3 == m_l3;
     }
 
@@ -90,26 +96,41 @@ namespace swift::misc::aviation
 
     int CAircraftCategory::getDepth() const
     {
-        if (this->isFirstLevel()) { return 1; }
-        if (m_l3 == 0 && m_l2 > 0 && m_l1 > 0) { return 2; }
+        if (this->isFirstLevel())
+        {
+            return 1;
+        }
+        if (m_l3 == 0 && m_l2 > 0 && m_l1 > 0)
+        {
+            return 2;
+        }
         return 3;
     }
 
     QString CAircraftCategory::getLevelString() const
     {
-        if (this->isNull()) { return {}; }
+        if (this->isNull())
+        {
+            return {};
+        }
         return QStringLiteral("%1.%2.%3").arg(m_l1).arg(m_l2).arg(m_l3);
     }
 
     QString CAircraftCategory::getLevelAndName() const
     {
-        if (this->isNull()) { return {}; }
+        if (this->isNull())
+        {
+            return {};
+        }
         return QStringLiteral("%1 %2").arg(this->getLevelString(), this->getName());
     }
 
     QString CAircraftCategory::getLevelAndPath() const
     {
-        if (this->isNull()) { return {}; }
+        if (this->isNull())
+        {
+            return {};
+        }
         return QStringLiteral("%1 %2").arg(this->getLevelString(), this->getPath());
     }
 
@@ -120,15 +141,27 @@ namespace swift::misc::aviation
 
     bool CAircraftCategory::matchesLevel(int l1, int l2, int l3) const
     {
-        if (l1 != m_l1) { return false; }
-        if (l2 > 0 && l2 != m_l2) { return false; }
-        if (l3 > 0 && l3 != m_l3) { return false; }
+        if (l1 != m_l1)
+        {
+            return false;
+        }
+        if (l2 > 0 && l2 != m_l2)
+        {
+            return false;
+        }
+        if (l3 > 0 && l3 != m_l3)
+        {
+            return false;
+        }
         return true;
     }
 
     bool CAircraftCategory::matchesLevel(const QList<int> &level) const
     {
-        if (level.isEmpty()) { return false; }
+        if (level.isEmpty())
+        {
+            return false;
+        }
         const int l1 = level.first();
         const int l2 = level.size() > 1 ? level.at(1) : 0;
         const int l3 = level.size() > 2 ? level.at(2) : 0;
@@ -137,7 +170,10 @@ namespace swift::misc::aviation
 
     QVariant CAircraftCategory::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
@@ -180,7 +216,10 @@ namespace swift::misc::aviation
 
     int CAircraftCategory::comparePropertyByIndex(CPropertyIndexRef index, const CAircraftCategory &compareValue) const
     {
-        if (index.isMyself()) { return m_path.compare(compareValue.getPath(), Qt::CaseInsensitive); }
+        if (index.isMyself())
+        {
+            return m_path.compare(compareValue.getPath(), Qt::CaseInsensitive);
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
@@ -221,9 +260,15 @@ namespace swift::misc::aviation
     {
         // any faster or better way to compare can be used here
         int c = Compare::compare(m_l1, other.m_l1);
-        if (c != 0) { return c; }
+        if (c != 0)
+        {
+            return c;
+        }
         c = Compare::compare(m_l2, other.m_l2);
-        if (c != 0) { return c; }
+        if (c != 0)
+        {
+            return c;
+        }
         c = Compare::compare(m_l3, other.m_l3);
         return c;
     }

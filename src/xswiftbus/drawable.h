@@ -29,7 +29,10 @@ namespace XSwiftBus
         //! Register the draw callback.
         void show()
         {
-            if (m_visible) { return; }
+            if (m_visible)
+            {
+                return;
+            }
             m_visible = true;
             XPLMRegisterDrawCallback(callback, m_phase, m_before, static_cast<void *>(this));
         }
@@ -37,7 +40,10 @@ namespace XSwiftBus
         //! Unregister the draw callback.
         void hide()
         {
-            if (!m_visible) { return; }
+            if (!m_visible)
+            {
+                return;
+            }
             m_visible = false;
             XPLMUnregisterDrawCallback(callback, m_phase, m_before, static_cast<void *>(this));
         }

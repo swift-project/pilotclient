@@ -122,7 +122,10 @@ namespace swift::misc
                 {
                     list.push_back(fromQStringList(T::getLogCategories()));
                 }
-                if constexpr (QMetaTypeId<T>::Defined) { list.push_back(QMetaType(qMetaTypeId<T>()).name()); }
+                if constexpr (QMetaTypeId<T>::Defined)
+                {
+                    list.push_back(QMetaType(qMetaTypeId<T>()).name());
+                }
                 if constexpr (std::is_base_of_v<QObject, T>)
                 {
                     list.appendCategoriesFromMetaObject(T::staticMetaObject);
@@ -132,10 +135,19 @@ namespace swift::misc
             auto list = staticList;
             if constexpr (std::is_base_of_v<QObject, T>)
             {
-                if (ptr) { list.appendCategoriesFromMetaObject(*ptr->metaObject(), T::staticMetaObject); }
+                if (ptr)
+                {
+                    list.appendCategoriesFromMetaObject(*ptr->metaObject(), T::staticMetaObject);
+                }
             }
-            else { Q_UNUSED(ptr); }
-            if (list.isEmpty()) { return { CLogCategories::uncategorized() }; }
+            else
+            {
+                Q_UNUSED(ptr);
+            }
+            if (list.isEmpty())
+            {
+                return { CLogCategories::uncategorized() };
+            }
             return list;
         }
 

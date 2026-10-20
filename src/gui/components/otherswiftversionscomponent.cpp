@@ -42,18 +42,27 @@ namespace swift::gui::components
 
     CApplicationInfo COtherSwiftVersionsComponent::selectedOtherVersion() const
     {
-        if (!this->hasSelection()) { return CApplicationInfo::null(); }
+        if (!this->hasSelection())
+        {
+            return CApplicationInfo::null();
+        }
         return ui->tvp_ApplicationInfo->selectedObject();
     }
 
     void COtherSwiftVersionsComponent::reloadOtherVersionsDeferred(int deferMs)
     {
-        if (deferMs <= 0) { ui->tvp_ApplicationInfo->otherSwiftVersionsFromDataDiretoriesAndResize(true); }
+        if (deferMs <= 0)
+        {
+            ui->tvp_ApplicationInfo->otherSwiftVersionsFromDataDiretoriesAndResize(true);
+        }
         else
         {
             QPointer<COtherSwiftVersionsComponent> myself(this);
             QTimer::singleShot(deferMs, this, [=] {
-                if (myself) { myself->reloadOtherVersionsDeferred(-1); }
+                if (myself)
+                {
+                    myself->reloadOtherVersionsDeferred(-1);
+                }
             });
         }
     }
@@ -67,7 +76,10 @@ namespace swift::gui::components
 
     void COtherSwiftVersionsComponent::onObjectSelected(const CVariant &object)
     {
-        if (!object.canConvert<CApplicationInfo>()) { return; }
+        if (!object.canConvert<CApplicationInfo>())
+        {
+            return;
+        }
         const auto info(object.value<CApplicationInfo>());
         emit this->versionChanged(info);
     }

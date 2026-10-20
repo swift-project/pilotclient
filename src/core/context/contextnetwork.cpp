@@ -43,14 +43,23 @@ namespace swift::core::context
         key = "";
 
         // only allow overwrite via environment variable in dev builds
-        if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return false; }
+        if (!CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            return false;
+        }
 
         const QString clientIdAsString = qEnvironmentVariable("SWIFT_VATSIM_CLIENT_ID");
         bool ok = true;
         id = clientIdAsString.toInt(&ok, 0); // base 0 means C convention
-        if (!ok || id == 0) { return false; }
+        if (!ok || id == 0)
+        {
+            return false;
+        }
         key = qEnvironmentVariable("SWIFT_VATSIM_CLIENT_KEY").toLower();
-        if (key.isEmpty()) { return false; }
+        if (key.isEmpty())
+        {
+            return false;
+        }
         return true;
     }
 #endif

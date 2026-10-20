@@ -45,7 +45,10 @@ namespace swift::gui::components
         Q_UNUSED(count)
         Q_UNUSED(url)
 
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
         if (entity.testFlag(CEntityFlags::CountryEntity) && CEntityFlags::isFinishedReadState(readState))
         {
             ui->tvp_Countries->updateContainerMaybeAsync(sApp->getWebDataServices()->getCountries());
@@ -54,7 +57,10 @@ namespace swift::gui::components
 
     void CDbCountryComponent::onReload()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
         sApp->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::CountryEntity);
     }
 } // namespace swift::gui::components

@@ -57,7 +57,10 @@ namespace swift::misc::network
         if (cap.testFlag(FsdWithGroundFlag)) sl << "gnd.flag";
         if (cap.testFlag(FsdModelString)) sl << "modelstring";
         if (cap.testFlag(FsdWithVisualPositions)) sl << "visual pos.";
-        if (sl.isEmpty()) { return {}; }
+        if (sl.isEmpty())
+        {
+            return {};
+        }
         return sl.join(", ");
     }
 
@@ -72,19 +75,28 @@ namespace swift::misc::network
     void CClient::setQueriedModelString(const QString &modelString)
     {
         m_modelString = modelString.trimmed();
-        if (!modelString.isEmpty()) { this->addCapability(CClient::FsdModelString); }
+        if (!modelString.isEmpty())
+        {
+            this->addCapability(CClient::FsdModelString);
+        }
     }
 
     CIcons::IconIndex CClient::toIcon() const
     {
-        if (!m_swift) { return m_user.toIcon(); }
+        if (!m_swift)
+        {
+            return m_user.toIcon();
+        }
 
         return CIcons::Swift16;
     }
 
     QVariant CClient::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

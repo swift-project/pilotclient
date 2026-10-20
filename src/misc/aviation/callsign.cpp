@@ -46,21 +46,66 @@ namespace swift::misc::aviation
 
     int CCallsign::suffixToSortOrder(const QString &suffix)
     {
-        if (QStringView(u"FSS") == suffix) { return 1; }
-        if (QStringView(u"CTR") == suffix) { return 2; }
-        if (QStringView(u"APP") == suffix) { return 3; }
-        if (QStringView(u"DEP") == suffix) { return 4; }
-        if (QStringView(u"TWR") == suffix) { return 5; }
-        if (QStringView(u"GND") == suffix) { return 6; }
-        if (QStringView(u"DEL") == suffix) { return 7; }
-        if (QStringView(u"ATIS") == suffix) { return 8; }
-        if (QStringView(u"SUP") == suffix) { return 9; }
-        if (QStringView(u"OBS") == suffix) { return 10; }
-        if (QStringView(u"INS") == suffix) { return 11; } // instructor/mentor
-        if (QStringView(u"ADM") == suffix) { return 12; } // admin
-        if (QStringView(u"VATGOV") == suffix) { return 13; } // VATSIM governors
-        if (QStringView(u"VATSIM") == suffix) { return 14; } // VATSIM founder
-        if (QStringView(u"EXAM") == suffix) { return 15; }
+        if (QStringView(u"FSS") == suffix)
+        {
+            return 1;
+        }
+        if (QStringView(u"CTR") == suffix)
+        {
+            return 2;
+        }
+        if (QStringView(u"APP") == suffix)
+        {
+            return 3;
+        }
+        if (QStringView(u"DEP") == suffix)
+        {
+            return 4;
+        }
+        if (QStringView(u"TWR") == suffix)
+        {
+            return 5;
+        }
+        if (QStringView(u"GND") == suffix)
+        {
+            return 6;
+        }
+        if (QStringView(u"DEL") == suffix)
+        {
+            return 7;
+        }
+        if (QStringView(u"ATIS") == suffix)
+        {
+            return 8;
+        }
+        if (QStringView(u"SUP") == suffix)
+        {
+            return 9;
+        }
+        if (QStringView(u"OBS") == suffix)
+        {
+            return 10;
+        }
+        if (QStringView(u"INS") == suffix)
+        {
+            return 11;
+        } // instructor/mentor
+        if (QStringView(u"ADM") == suffix)
+        {
+            return 12;
+        } // admin
+        if (QStringView(u"VATGOV") == suffix)
+        {
+            return 13;
+        } // VATSIM governors
+        if (QStringView(u"VATSIM") == suffix)
+        {
+            return 14;
+        } // VATSIM founder
+        if (QStringView(u"EXAM") == suffix)
+        {
+            return 15;
+        }
         return std::numeric_limits<int>::max();
     }
 
@@ -110,42 +155,102 @@ namespace swift::misc::aviation
     void CCallsign::addLogDetailsToList(CStatusMessageList *log, const CCallsign &callsign, const QString &message,
                                         const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
     {
-        if (!log) { return; }
-        if (message.isEmpty()) { return; }
+        if (!log)
+        {
+            return;
+        }
+        if (message.isEmpty())
+        {
+            return;
+        }
         log->push_back(logMessage(callsign, message, extraCategories, s));
     }
 
     const CIcon &CCallsign::atcSuffixToIcon(const QString &suffix)
     {
-        if (suffix.length() < 3) { return CIcon::iconByIndex(CIcons::NetworkRoleUnknown); }
+        if (suffix.length() < 3)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleUnknown);
+        }
         const QString sfx = suffix.toUpper();
-        if (QStringView(u"APP") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleApproach); }
-        if (QStringView(u"DEP") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleDeparture); }
-        if (QStringView(u"GND") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleGround); }
-        if (QStringView(u"TWR") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleTower); }
-        if (QStringView(u"DEL") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleDelivery); }
-        if (QStringView(u"CTR") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleCenter); }
-        if (QStringView(u"SUP") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
-        if (QStringView(u"OBS") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleObs); }
-        if (QStringView(u"INS") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
-        if (QStringView(u"FSS") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleFss); }
-        if (QStringView(u"ATIS") == sfx) { return CIcon::iconByIndex(CIcons::AviationAtis); }
-        if (QStringView(u"EXAM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleMnt); }
-        if (QStringView(u"VATSIM") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
-        if (QStringView(u"VATGOV") == sfx) { return CIcon::iconByIndex(CIcons::NetworkRoleSup); }
+        if (QStringView(u"APP") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleApproach);
+        }
+        if (QStringView(u"DEP") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleDeparture);
+        }
+        if (QStringView(u"GND") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleGround);
+        }
+        if (QStringView(u"TWR") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleTower);
+        }
+        if (QStringView(u"DEL") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleDelivery);
+        }
+        if (QStringView(u"CTR") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleCenter);
+        }
+        if (QStringView(u"SUP") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleSup);
+        }
+        if (QStringView(u"OBS") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleObs);
+        }
+        if (QStringView(u"INS") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleMnt);
+        }
+        if (QStringView(u"FSS") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleFss);
+        }
+        if (QStringView(u"ATIS") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::AviationAtis);
+        }
+        if (QStringView(u"EXAM") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleMnt);
+        }
+        if (QStringView(u"VATSIM") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleSup);
+        }
+        if (QStringView(u"VATGOV") == sfx)
+        {
+            return CIcon::iconByIndex(CIcons::NetworkRoleSup);
+        }
         return CIcon::iconByIndex(CIcons::NetworkRoleUnknown);
     }
 
     bool CCallsign::isAtcCallsign() const
     {
-        if (this->getTypeHint() == Atc) { return true; }
-        if (!this->hasSuffix()) { return false; }
+        if (this->getTypeHint() == Atc)
+        {
+            return true;
+        }
+        if (!this->hasSuffix())
+        {
+            return false;
+        }
         return atcCallsignSuffixes().contains(this->getSuffix(), Qt::CaseInsensitive);
     }
 
     bool CCallsign::isSupervisorCallsign() const
     {
-        if (this->getTypeHint() == Aircraft) { return false; }
+        if (this->getTypeHint() == Aircraft)
+        {
+            return false;
+        }
         return m_callsign.endsWith("SUP");
     }
 
@@ -176,7 +281,10 @@ namespace swift::misc::aviation
     QString CCallsign::getFsdCallsignString() const
     {
         // mainly used to fix the cross coupled callsigns such as *EDDF_TWR
-        if (m_callsignAsSet.startsWith('*')) { return this->getStringAsSet(); }
+        if (m_callsignAsSet.startsWith('*'))
+        {
+            return this->getStringAsSet();
+        }
         return this->asString();
     }
 
@@ -186,15 +294,24 @@ namespace swift::misc::aviation
     {
         if (this->isAtcCallsign())
         {
-            if (m_callsign.length() >= 4) { return m_callsign.left(4).toUpper(); }
+            if (m_callsign.length() >= 4)
+            {
+                return m_callsign.left(4).toUpper();
+            }
         }
         return {};
     }
 
     bool CCallsign::isAtcAlikeCallsign() const
     {
-        if (this->getTypeHint() == Aircraft) { return false; }
-        if (!this->hasSuffix()) { return false; }
+        if (this->getTypeHint() == Aircraft)
+        {
+            return false;
+        }
+        if (!this->hasSuffix())
+        {
+            return false;
+        }
         return atcAlikeCallsignSuffixes().contains(this->getSuffix(), Qt::CaseInsensitive);
     }
 
@@ -202,17 +319,29 @@ namespace swift::misc::aviation
 
     QString CCallsign::getAsObserverCallsignString() const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         QString obs = this->getStringAsSet();
-        if (obs.endsWith("_OBS", Qt::CaseInsensitive)) { return obs; } // already OBS
-        if (obs.contains('_')) { obs = obs.left(obs.lastIndexOf('_')); }
+        if (obs.endsWith("_OBS", Qt::CaseInsensitive))
+        {
+            return obs;
+        } // already OBS
+        if (obs.contains('_'))
+        {
+            obs = obs.left(obs.lastIndexOf('_'));
+        }
         return obs.append("_OBS").toUpper();
     }
 
     QString CCallsign::getSuffix() const
     {
         QString s;
-        if (this->hasSuffix()) { s = this->getStringAsSet().section('_', -1).toUpper(); }
+        if (this->hasSuffix())
+        {
+            s = this->getStringAsSet().section('_', -1).toUpper();
+        }
         return s;
     }
 
@@ -234,12 +363,21 @@ namespace swift::misc::aviation
         // UPSE123 4 characters, then number
 
         flightNumber.clear();
-        if (m_callsign.length() < 3) { return {}; }
-        if (this->isAtcCallsign()) { return {}; }
+        if (m_callsign.length() < 3)
+        {
+            return {};
+        }
+        if (this->isAtcCallsign())
+        {
+            return {};
+        }
 
         thread_local const QRegularExpression regExp("(^[A-Z]{3,})(\\d+)");
         const QRegularExpressionMatch match = regExp.match(m_callsign);
-        if (!match.hasMatch()) { return {}; }
+        if (!match.hasMatch())
+        {
+            return {};
+        }
         // 0 is whole capture
         const QString airline = match.captured(1);
         flightNumber = match.captured(2); // null string if not exits
@@ -268,7 +406,10 @@ namespace swift::misc::aviation
 
     QString CCallsign::getFlightIndentification() const
     {
-        if (this->isAtcCallsign()) { return {}; }
+        if (this->isAtcCallsign())
+        {
+            return {};
+        }
         QString flightNumber;
         QString identification;
         const QString airline = this->getAirlinePrefix(flightNumber, identification);
@@ -277,7 +418,10 @@ namespace swift::misc::aviation
 
     QString CCallsign::getFlightNumber() const
     {
-        if (this->isAtcCallsign()) { return {}; }
+        if (this->isAtcCallsign())
+        {
+            return {};
+        }
         QString flightNumber;
         const QString airline = this->getAirlinePrefix(flightNumber);
         return airline.isEmpty() ? QString() : flightNumber;
@@ -285,7 +429,10 @@ namespace swift::misc::aviation
 
     int CCallsign::getFlightNumberInt() const
     {
-        if (this->isAtcCallsign()) { return -1; }
+        if (this->isAtcCallsign())
+        {
+            return -1;
+        }
         bool ok {};
         const int fn = this->getFlightNumber().toInt(&ok);
         return ok ? fn : -1;
@@ -309,7 +456,10 @@ namespace swift::misc::aviation
 
     QVariant CCallsign::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -340,7 +490,10 @@ namespace swift::misc::aviation
 
     int CCallsign::comparePropertyByIndex(CPropertyIndexRef index, const CCallsign &compareValue) const
     {
-        if (index.isMyself()) { return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive); }
+        if (index.isMyself())
+        {
+            return m_callsign.compare(compareValue.m_callsign, Qt::CaseInsensitive);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -368,7 +521,10 @@ namespace swift::misc::aviation
 
     bool CCallsign::isValidAircraftCallsign(const QString &callsign)
     {
-        if (callsign.length() < 2 || callsign.length() > 10) { return false; }
+        if (callsign.length() < 2 || callsign.length() > 10)
+        {
+            return false;
+        }
         return !containsChar(callsign, [](QChar c) { return !c.isUpper() && !c.isDigit(); });
     }
 
@@ -380,7 +536,10 @@ namespace swift::misc::aviation
     bool CCallsign::isValidAtcCallsign(const QString &callsign)
     {
         // Ref T664, allow ATC with hyphen, such as Ml-SNO_CTR
-        if (callsign.length() < 2 || callsign.length() > 10) { return false; }
+        if (callsign.length() < 2 || callsign.length() > 10)
+        {
+            return false;
+        }
         return !containsChar(callsign, [](QChar c) { return c != '-' && c != '_' && !c.isUpper() && !c.isDigit(); });
     }
 
@@ -400,7 +559,10 @@ namespace swift::misc::aviation
 
     bool CCallsign::looksLikeAtcCallsign(const QString &callsign)
     {
-        if (!callsign.contains("_")) { return false; }
+        if (!callsign.contains("_"))
+        {
+            return false;
+        }
         const QStringView uc = callsign.toUpper();
         return std::any_of(CCallsign::atcAlikeCallsignSuffixes().cbegin(), CCallsign::atcAlikeCallsignSuffixes().cend(),
                            [&](const QString &r) { return uc.endsWith(r); });

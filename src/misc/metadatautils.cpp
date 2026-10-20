@@ -22,7 +22,10 @@ namespace swift::misc
             {
                 fails++;
                 // normally a consecutive order of metatypes, we allow a space before we break
-                if (fails > 3) { break; }
+                if (fails > 3)
+                {
+                    break;
+                }
                 continue;
             }
             QMetaType metaType(mt);
@@ -41,18 +44,27 @@ namespace swift::misc
 
     QString className(const QObject *object)
     {
-        if (!object) { return "nullptr"; }
+        if (!object)
+        {
+            return "nullptr";
+        }
         return object->metaObject()->className();
     }
 
     QString classNameShort(const QObject *object)
     {
-        if (!object) { return "nullptr"; }
+        if (!object)
+        {
+            return "nullptr";
+        }
         const QString fn = object->metaObject()->className();
         if (fn.contains("::"))
         {
             const int index = fn.lastIndexOf("::");
-            if (fn.length() > index + 3) { return fn.mid(index + 2); }
+            if (fn.length() > index + 3)
+            {
+                return fn.mid(index + 2);
+            }
         }
         return fn;
     }

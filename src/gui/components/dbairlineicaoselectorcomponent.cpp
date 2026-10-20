@@ -91,12 +91,21 @@ namespace swift::gui::components
 
     void CDbAirlineIcaoSelectorComponent::onDataChanged()
     {
-        if (!sGui) { return; }
+        if (!sGui)
+        {
+            return;
+        }
         QString s(ui->le_Airline->text());
-        if (s.isEmpty()) { return; }
+        if (s.isEmpty())
+        {
+            return;
+        }
         CAirlineIcaoCode icao;
         int dbKey = CDatastoreUtility::extractIntegerKey(s);
-        if (dbKey >= 0) { icao = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey); }
+        if (dbKey >= 0)
+        {
+            icao = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey);
+        }
         else
         {
             const QString designator = this->getRawDesignator();

@@ -36,8 +36,14 @@ namespace swift::sound
                 // used for too long or hanging sounds
                 QPointer<CNotificationPlayer> myself(this);
                 QTimer::singleShot(3000, effect, [=, this] {
-                    if (!myself || !m_playingEffect) { return; }
-                    if (currentEffect != m_playingEffectCounter) { return; }
+                    if (!myself || !m_playingEffect)
+                    {
+                        return;
+                    }
+                    if (currentEffect != m_playingEffectCounter)
+                    {
+                        return;
+                    }
                     m_playingEffect->stop();
                 });
             }
@@ -46,7 +52,10 @@ namespace swift::sound
 
     void CNotificationPlayer::updateDirectory(const QString &directory)
     {
-        if (directory == m_directory && !m_effects.isEmpty()) { return; }
+        if (directory == m_directory && !m_effects.isEmpty())
+        {
+            return;
+        }
         m_directory = directory;
 
         const QStringList types = QSoundEffect::supportedMimeTypes();
@@ -68,8 +77,14 @@ namespace swift::sound
 
     void CNotificationPlayer::onPlayingChanged()
     {
-        if (!m_playingEffect) { return; }
-        if (m_playingEffect->isPlaying()) { return; }
+        if (!m_playingEffect)
+        {
+            return;
+        }
+        if (m_playingEffect->isPlaying())
+        {
+            return;
+        }
         m_playingEffect.clear();
     }
 
@@ -77,8 +92,14 @@ namespace swift::sound
                                            const QString &name)
     {
         QSoundEffect *e = nullptr;
-        if (m_effects.contains(f)) { e = m_effects[f]; }
-        if (e) { e->deleteLater(); }
+        if (m_effects.contains(f))
+        {
+            e = m_effects[f];
+        }
+        if (e)
+        {
+            e->deleteLater();
+        }
 
         // file if existing
         const QUrl url = QUrl::fromLocalFile(CSwiftDirectories::soundFilePathOrDefaultPath(directory, name));

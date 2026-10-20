@@ -27,15 +27,27 @@ namespace swift::gui
     {
         Q_ASSERT(menu);
         CActionBindings boundActions;
-        if (!menu || menu->isEmpty()) { return boundActions; }
+        if (!menu || menu->isEmpty())
+        {
+            return boundActions;
+        }
         for (QAction *action : menu->actions())
         {
-            if (action->text().isEmpty()) { continue; }
-            if (action->isSeparator()) { continue; }
+            if (action->text().isEmpty())
+            {
+                continue;
+            }
+            if (action->isSeparator())
+            {
+                continue;
+            }
 
             const QString pathNew =
                 CGuiActionBindHandler::appendPath(path, action->text()).remove('&'); // remove E&xit key codes
-            if (action->menu()) { CGuiActionBindHandler::bindMenu(action->menu(), pathNew); }
+            if (action->menu())
+            {
+                CGuiActionBindHandler::bindMenu(action->menu(), pathNew);
+            }
 
             const bool hasIcon = !action->icon().isNull();
             auto *bindHandler = new CGuiActionBindHandler(action);
@@ -78,7 +90,10 @@ namespace swift::gui
 
     void CGuiActionBindHandler::actionBindWasDestroyed(CGuiActionBindHandler *bindHandler)
     {
-        if (!bindHandler) { return; }
+        if (!bindHandler)
+        {
+            return;
+        }
         bindHandler->reset();
         // do not delete, as it might be still referenced somewhere
     }
@@ -110,9 +125,18 @@ namespace swift::gui
 
     void CGuiActionBindHandler::boundFunction(bool enabled)
     {
-        if (!enabled || !this->hasTarget()) { return; }
-        if (m_action) { m_action->trigger(); }
-        else if (m_button) { m_button->click(); }
+        if (!enabled || !this->hasTarget())
+        {
+            return;
+        }
+        if (m_action)
+        {
+            m_action->trigger();
+        }
+        else if (m_button)
+        {
+            m_button->click();
+        }
     }
 
     QString CGuiActionBindHandler::appendPath(const QString &path, const QString &name)

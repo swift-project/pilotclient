@@ -48,12 +48,18 @@ namespace swift::core::context
     IContextApplication::IContextApplication(CCoreFacadeConfig::ContextMode mode, CCoreFacade *runtime)
         : IContext(mode, runtime)
     {
-        if (mode == CCoreFacadeConfig::NotUsed) { return; }
+        if (mode == CCoreFacadeConfig::NotUsed)
+        {
+            return;
+        }
         QPointer<IContextApplication> myself(this);
 
         connect(CSettingsCache::instance(), &CSettingsCache::valuesChangedByLocal, this,
                 [=, this](const CValueCachePacket &settings) {
-                    if (!myself) { return; }
+                    if (!myself)
+                    {
+                        return;
+                    }
                     this->changeSettings(settings, {});
                 });
 
@@ -66,7 +72,10 @@ namespace swift::core::context
         Q_ASSERT_X(sApp && sApp->getInputManager(), Q_FUNC_INFO, "Missing input manager");
         bool s = connect(sApp->getInputManager(), &CInputManager::hotkeyActionRegistered, this,
                          [=, this](const QStringList &actions) {
-                             if (!myself) { return; }
+                             if (!myself)
+                             {
+                                 return;
+                             }
                              this->registerHotkeyActions(actions, {});
                          });
         Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey action failed");
@@ -74,7 +83,10 @@ namespace swift::core::context
 
         s = connect(this, &IContextApplication::hotkeyActionsRegistered, sApp->getInputManager(),
                     [=](const QStringList &actions, const CIdentifier &origin) {
-                        if (origin.hasApplicationProcessId()) { return; }
+                        if (origin.hasApplicationProcessId())
+                        {
+                            return;
+                        }
                         sApp->getInputManager()->registerRemoteActions(actions);
                     });
         Q_ASSERT_X(s, Q_FUNC_INFO, "Connect hotkey actions failed");
@@ -83,7 +95,10 @@ namespace swift::core::context
         s = connect(
             sApp->getInputManager(), &CInputManager::remoteActionFromLocal, this,
             [=, this](const QString &action, bool argument) {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->callHotkeyActionRemotely(action, argument, {});
             },
             Qt::QueuedConnection);
@@ -118,7 +133,10 @@ namespace swift::core::context
 
     bool IContextApplication::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
-        if (!this->getRuntime()) { return false; }
+        if (!this->getRuntime())
+        {
+            return false;
+        }
         return this->getRuntime()->parseCommandLine(commandLine, originator);
     }
 } // namespace swift::core::context

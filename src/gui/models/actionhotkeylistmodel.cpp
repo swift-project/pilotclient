@@ -24,8 +24,14 @@ namespace swift::gui::models
 
     QVariant CActionHotkeyListModel::data(const QModelIndex &index, int role) const
     {
-        if (!index.isValid()) { return {}; }
-        if (index.row() >= m_actionHotkeys.size() || index.row() < 0) { return {}; }
+        if (!index.isValid())
+        {
+            return {};
+        }
+        if (index.row() >= m_actionHotkeys.size() || index.row() < 0)
+        {
+            return {};
+        }
 
         if (role == Qt::DisplayRole)
         {
@@ -41,7 +47,10 @@ namespace swift::gui::models
                 return combination.asStringWithDeviceNames();
                 // return combination.toQString();
             }
-            if (col == 2) { return m_actionHotkeys[index.row()].getAction(); }
+            if (col == 2)
+            {
+                return m_actionHotkeys[index.row()].getAction();
+            }
         }
         else if (role == ActionHotkeyRole)
         {
@@ -73,7 +82,10 @@ namespace swift::gui::models
         Q_UNUSED(index)
         beginInsertRows(QModelIndex(), position, position + rows - 1);
 
-        for (int row = 0; row < rows; ++row) { m_actionHotkeys.push_back(swift::misc::input::CActionHotkey()); }
+        for (int row = 0; row < rows; ++row)
+        {
+            m_actionHotkeys.push_back(swift::misc::input::CActionHotkey());
+        }
 
         endInsertRows();
         return true;

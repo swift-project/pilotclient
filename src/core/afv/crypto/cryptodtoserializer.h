@@ -91,7 +91,10 @@ namespace swift::core::afv::crypto
                     reinterpret_cast<const unsigned char *>(adPayloadBuffer.buffer().constData()),
                     adPayloadBuffer.size(), nullptr, reinterpret_cast<const unsigned char *>(nonce.constData()),
                     reinterpret_cast<const unsigned char *>(transmitKey.constData()));
-                if (result != 0) { return {}; }
+                if (result != 0)
+                {
+                    return {};
+                }
 
                 QBuffer packetBuffer;
                 packetBuffer.open(QIODevice::WriteOnly);

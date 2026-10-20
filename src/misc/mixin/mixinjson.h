@@ -199,7 +199,10 @@ namespace swift::misc
         DerivedObj JsonByMetaClass<Derived>::fromJson(const QString &jsonString, bool acceptCacheJson)
         {
             DerivedObj obj;
-            if (jsonString.isEmpty()) { return obj; }
+            if (jsonString.isEmpty())
+            {
+                return obj;
+            }
             const QJsonObject jsonObj =
                 acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
             obj.convertFromJson(jsonObj);
@@ -215,7 +218,10 @@ namespace swift::misc
             DerivedObj obj;
             try
             {
-                if (jsonString.isEmpty()) { return obj; }
+                if (jsonString.isEmpty())
+                {
+                    return obj;
+                }
                 const QJsonObject jsonObj =
                     acceptCacheJson ? json::swiftDataObjectValue(jsonString) : json::jsonObjectFromString(jsonString);
                 obj.convertFromJson(jsonObj);

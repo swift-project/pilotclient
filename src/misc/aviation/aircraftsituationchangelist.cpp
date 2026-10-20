@@ -13,19 +13,28 @@ namespace swift::misc::aviation
 
     CAircraftSituationChange CAircraftSituationChangeList::frontOrNull() const
     {
-        if (this->isEmpty()) { return CAircraftSituationChange::null(); }
+        if (this->isEmpty())
+        {
+            return CAircraftSituationChange::null();
+        }
         return this->front();
     }
 
     CAircraftSituationChange CAircraftSituationChangeList::backOrNull() const
     {
-        if (this->isEmpty()) { return CAircraftSituationChange::null(); }
+        if (this->isEmpty())
+        {
+            return CAircraftSituationChange::null();
+        }
         return this->back();
     }
 
     CAircraftSituationChange CAircraftSituationChangeList::indexOrNull(int index) const
     {
-        if (this->size() > index) { return (*this)[index]; }
+        if (this->size() > index)
+        {
+            return (*this)[index];
+        }
         return CAircraftSituationChange::null();
     }
 } // namespace swift::misc::aviation

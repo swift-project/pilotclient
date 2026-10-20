@@ -18,7 +18,10 @@ namespace swift::misc::input
         CActionHotkeyList subsets;
         for (const auto &actionHotkey : *this)
         {
-            if (actionHotkey.getCombination().isSubsetOf(other.getCombination())) { subsets.push_back(actionHotkey); }
+            if (actionHotkey.getCombination().isSubsetOf(other.getCombination()))
+            {
+                subsets.push_back(actionHotkey);
+            }
         }
         return subsets;
     }
@@ -28,7 +31,10 @@ namespace swift::misc::input
         CActionHotkeyList supersets;
         for (const CActionHotkey &actionHotkey : *this)
         {
-            if (other.getCombination().isSubsetOf(actionHotkey.getCombination())) { supersets.push_back(actionHotkey); }
+            if (other.getCombination().isSubsetOf(actionHotkey.getCombination()))
+            {
+                supersets.push_back(actionHotkey);
+            }
         }
         return supersets;
     }
@@ -38,7 +44,10 @@ namespace swift::misc::input
         CActionHotkeyList sameMachineKeys;
         for (const CActionHotkey &actionHotkey : *this)
         {
-            if (!actionHotkey.isForSameMachineId(key)) { continue; }
+            if (!actionHotkey.isForSameMachineId(key))
+            {
+                continue;
+            }
             sameMachineKeys.push_back(actionHotkey);
         }
         return sameMachineKeys;

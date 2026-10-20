@@ -87,7 +87,10 @@ namespace swift::gui::editors
 
     CInterpolationAndRenderingSetupBase::InterpolatorMode CInterpolationSetupForm::getInterpolatorMode() const
     {
-        if (ui->rb_Linear->isChecked()) { return CInterpolationAndRenderingSetupBase::Linear; }
+        if (ui->rb_Linear->isChecked())
+        {
+            return CInterpolationAndRenderingSetupBase::Linear;
+        }
         return CInterpolationAndRenderingSetupBase::Spline;
     }
 

@@ -135,7 +135,10 @@ namespace swift::gui::components
         QString relativeModelFile = thisVersionModelFile;
         relativeModelFile =
             relativeModelFile.replace(CSwiftDirectories::applicationDataDirectory(), "", Qt::CaseInsensitive);
-        if (relativeModelFile.length() < 2) { return false; }
+        if (relativeModelFile.length() < 2)
+        {
+            return false;
+        }
         relativeModelFile = relativeModelFile.mid(relativeModelFile.indexOf('/', 1));
 
         const QString otherModelFile =
@@ -149,7 +152,10 @@ namespace swift::gui::components
 
         // read other file
         const QString jsonString = CFileUtils::readFileToString(fiOtherModelFile.absoluteFilePath());
-        if (jsonString.isEmpty()) { return false; }
+        if (jsonString.isEmpty())
+        {
+            return false;
+        }
         try
         {
             models = CAircraftModelList::fromMultipleJsonFormats(jsonString);
@@ -171,7 +177,10 @@ namespace swift::gui::components
 
     bool CCopyModelsFromOtherSwiftVersionsComponent::confirmOverride(const QString &msg)
     {
-        if (!sApp || sApp->isShuttingDown()) { return false; }
+        if (!sApp || sApp->isShuttingDown())
+        {
+            return false;
+        }
         if (ui->cb_Silent->isChecked())
         {
             // allow UI updates
@@ -201,7 +210,10 @@ namespace swift::gui::components
     void CCopyModelsFromOtherSwiftVersionsWizardPage::initializePage()
     {
         // force reload as the other version could be changed
-        if (m_copyModels) { m_copyModels->reloadOtherVersions(1000); }
+        if (m_copyModels)
+        {
+            m_copyModels->reloadOtherVersions(1000);
+        }
     }
 
     bool CCopyModelsFromOtherSwiftVersionsWizardPage::validatePage()

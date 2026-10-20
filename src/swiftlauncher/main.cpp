@@ -42,7 +42,10 @@ int main(int argc, char *argv[])
     const QCommandLineOption installerOption { { "i", "installer" },
                                                QCoreApplication::translate("main", "Installer setup.") };
     a.addParserOption(installerOption);
-    if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
+    if (!a.parseCommandLineArgsAndLoadSetup())
+    {
+        return EXIT_FAILURE;
+    }
     a.initAndStartWebDataServices(swift::core::CWebReaderFlags::AllSwiftDbReaders,
                                   CDatabaseReaderConfigList::forLauncher());
 
@@ -58,7 +61,10 @@ int main(int argc, char *argv[])
 
     CSwiftLauncher launcher(installMode);
     const int res = a.exec();
-    if (res != EXIT_SUCCESS || !launcher.shouldStartAppDetached()) { return res; }
+    if (res != EXIT_SUCCESS || !launcher.shouldStartAppDetached())
+    {
+        return res;
+    }
 
     const bool s = launcher.startDetached();
     return s ? EXIT_SUCCESS : EXIT_FAILURE;

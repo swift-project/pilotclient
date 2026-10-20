@@ -32,7 +32,10 @@ namespace swift::gui::models
 
     void CDistributorListModel::setDistributorMode(CDistributorListModel::DistributorMode distributorMode)
     {
-        if (m_distributorMode == distributorMode) { return; }
+        if (m_distributorMode == distributorMode)
+        {
+            return;
+        }
         m_distributorMode = distributorMode;
         m_columns.clear();
         switch (distributorMode)

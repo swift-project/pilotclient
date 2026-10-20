@@ -13,7 +13,10 @@ namespace swift::misc
 
     QJsonObject &CVariantMap::mergeToJson(QJsonObject &json) const
     {
-        for (auto it = cbegin(); it != cend(); ++it) { json.insert(it.key(), it.value().toJson()); }
+        for (auto it = cbegin(); it != cend(); ++it)
+        {
+            json.insert(it.key(), it.value().toJson());
+        }
         return json;
     }
 
@@ -44,7 +47,10 @@ namespace swift::misc
         for (const auto &key : keys)
         {
             auto value = json.value(key);
-            if (value.isUndefined()) { continue; }
+            if (value.isUndefined())
+            {
+                continue;
+            }
             CJsonScope scope(key);
             Q_UNUSED(scope);
             CVariant var;
@@ -55,7 +61,10 @@ namespace swift::misc
 
     QJsonObject &CVariantMap::mergeToMemoizedJson(QJsonObject &json) const
     {
-        for (auto it = cbegin(); it != cend(); ++it) { json.insert(it.key(), it.value().toMemoizedJson()); }
+        for (auto it = cbegin(); it != cend(); ++it)
+        {
+            json.insert(it.key(), it.value().toMemoizedJson());
+        }
         return json;
     }
 
@@ -86,7 +95,10 @@ namespace swift::misc
         for (const auto &key : keys)
         {
             auto value = json.value(key);
-            if (value.isUndefined()) { continue; }
+            if (value.isUndefined())
+            {
+                continue;
+            }
             CJsonScope scope(key);
             Q_UNUSED(scope);
             CVariant var;
@@ -107,8 +119,14 @@ namespace swift::misc
             Q_UNUSED(scope);
             CVariant value;
             auto message = value.convertFromJsonNoThrow(it.value().toObject(), categories, prefix);
-            if (message.isSuccess()) { implementationOf(*this).insert(cend(), key, value); }
-            else { messages.push_back(message); }
+            if (message.isSuccess())
+            {
+                implementationOf(*this).insert(cend(), key, value);
+            }
+            else
+            {
+                messages.push_back(message);
+            }
         }
         return messages;
     }
@@ -121,13 +139,22 @@ namespace swift::misc
         for (const auto &key : keys)
         {
             auto value = json.value(key);
-            if (value.isUndefined()) { continue; }
+            if (value.isUndefined())
+            {
+                continue;
+            }
             CJsonScope scope(key);
             Q_UNUSED(scope);
             CVariant var;
             auto message = var.convertFromJsonNoThrow(value.toObject(), categories, prefix);
-            if (message.isSuccess()) { insert(key, var); }
-            else { messages.push_back(message); }
+            if (message.isSuccess())
+            {
+                insert(key, var);
+            }
+            else
+            {
+                messages.push_back(message);
+            }
         }
         return messages;
     }
@@ -145,8 +172,14 @@ namespace swift::misc
             Q_UNUSED(scope);
             CVariant value;
             auto message = value.convertFromMemoizedJsonNoThrow(it.value().toObject(), categories, prefix);
-            if (message.isSuccess()) { implementationOf(*this).insert(cend(), key, value); }
-            else { messages.push_back(message); }
+            if (message.isSuccess())
+            {
+                implementationOf(*this).insert(cend(), key, value);
+            }
+            else
+            {
+                messages.push_back(message);
+            }
         }
         return messages;
     }
@@ -160,13 +193,22 @@ namespace swift::misc
         for (const auto &key : keys)
         {
             auto value = json.value(key);
-            if (value.isUndefined()) { continue; }
+            if (value.isUndefined())
+            {
+                continue;
+            }
             CJsonScope scope(key);
             Q_UNUSED(scope);
             CVariant var;
             auto message = var.convertFromMemoizedJsonNoThrow(value.toObject(), categories, prefix);
-            if (message.isSuccess()) { insert(key, var); }
-            else { messages.push_back(message); }
+            if (message.isSuccess())
+            {
+                insert(key, var);
+            }
+            else
+            {
+                messages.push_back(message);
+            }
         }
         return messages;
     }

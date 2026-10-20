@@ -62,14 +62,20 @@ namespace swift::misc
 
     void CStatusMessageList::addCategory(const CLogCategory &category)
     {
-        for (auto &msg : *this) { msg.addCategory(category); }
+        for (auto &msg : *this)
+        {
+            msg.addCategory(category);
+        }
     }
 
     void CStatusMessageList::addValidationCategory() { this->addCategory(CLogCategories::validation()); }
 
     void CStatusMessageList::addCategories(const CLogCategoryList &categories)
     {
-        for (auto &msg : *this) { msg.addCategories(categories); }
+        for (auto &msg : *this)
+        {
+            msg.addCategories(categories);
+        }
     }
 
     void CStatusMessageList::addValidationMessage(const QString &validationText,
@@ -82,24 +88,36 @@ namespace swift::misc
 
     void CStatusMessageList::setCategory(const CLogCategory &category)
     {
-        for (auto &msg : *this) { msg.setCategory(category); }
+        for (auto &msg : *this)
+        {
+            msg.setCategory(category);
+        }
     }
 
     void CStatusMessageList::setCategories(const CLogCategoryList &categories)
     {
-        for (auto &msg : *this) { msg.setCategories(categories); }
+        for (auto &msg : *this)
+        {
+            msg.setCategories(categories);
+        }
     }
 
     void CStatusMessageList::clampSeverity(CStatusMessage::StatusSeverity severity)
     {
-        for (auto &msg : *this) { msg.clampSeverity(severity); }
+        for (auto &msg : *this)
+        {
+            msg.clampSeverity(severity);
+        }
     }
 
     void CStatusMessageList::warningToError()
     {
         for (CStatusMessage &msg : *this)
         {
-            if (msg.getSeverity() != CStatusMessage::SeverityWarning) { continue; }
+            if (msg.getSeverity() != CStatusMessage::SeverityWarning)
+            {
+                continue;
+            }
             msg.setSeverity(CStatusMessage::SeverityError);
         }
     }
@@ -114,20 +132,29 @@ namespace swift::misc
 
     void CStatusMessageList::removeWarningsAndBelow()
     {
-        if (this->isEmpty()) { return; }
+        if (this->isEmpty())
+        {
+            return;
+        }
         this->removeIf(&CStatusMessage::getSeverity, CStatusMessage::SeverityWarning);
         this->removeInfoAndBelow();
     }
 
     void CStatusMessageList::removeSeverity(CStatusMessage::StatusSeverity severity)
     {
-        if (this->isEmpty()) { return; }
+        if (this->isEmpty())
+        {
+            return;
+        }
         this->removeIf(&CStatusMessage::getSeverity, severity);
     }
 
     void CStatusMessageList::removeInfoAndBelow()
     {
-        if (this->isEmpty()) { return; }
+        if (this->isEmpty())
+        {
+            return;
+        }
         this->removeIf(&CStatusMessage::getSeverity, CStatusMessage::SeverityDebug);
         this->removeIf(&CStatusMessage::getSeverity, CStatusMessage::SeverityInfo);
     }
@@ -135,7 +162,10 @@ namespace swift::misc
     int CStatusMessageList::keepLatest(int estimtatedNumber)
     {
         const int oldSize = this->size();
-        if (estimtatedNumber >= oldSize) { return 0; }
+        if (estimtatedNumber >= oldSize)
+        {
+            return 0;
+        }
         if (estimtatedNumber < 1)
         {
             this->clear();
@@ -157,8 +187,14 @@ namespace swift::misc
         for (const CStatusMessage &msg : *this)
         {
             CStatusMessage::StatusSeverity ms = msg.getSeverity();
-            if (ms == CStatusMessage::SeverityError) { return CStatusMessage::SeverityError; }
-            if (ms <= s) { continue; }
+            if (ms == CStatusMessage::SeverityError)
+            {
+                return CStatusMessage::SeverityError;
+            }
+            if (ms <= s)
+            {
+                continue;
+            }
             s = ms;
         }
         return s;
@@ -171,20 +207,32 @@ namespace swift::misc
         counts.insert(SeverityInfo, 0);
         counts.insert(SeverityWarning, 0);
         counts.insert(SeverityError, 0);
-        for (const CStatusMessage &m : *this) { counts[m.getSeverity()]++; }
+        for (const CStatusMessage &m : *this)
+        {
+            counts[m.getSeverity()]++;
+        }
         return counts;
     }
 
     CStatusMessage CStatusMessageList::toSingleMessage() const
     {
-        if (this->isEmpty()) { return {}; }
-        if (this->size() == 1) { return this->front(); }
+        if (this->isEmpty())
+        {
+            return {};
+        }
+        if (this->size() == 1)
+        {
+            return this->front();
+        }
         QStringList newMsgs;
         CStatusMessage::StatusSeverity s = CStatusMessage::SeverityDebug;
         CLogCategoryList cats;
         for (const CStatusMessage &msg : *this)
         {
-            if (msg.isEmpty()) { continue; }
+            if (msg.isEmpty())
+            {
+                continue;
+            }
             newMsgs.append(msg.getMessage());
             CStatusMessage::StatusSeverity ms = msg.getSeverity();
             s = std::max(s, ms);
@@ -196,16 +244,25 @@ namespace swift::misc
 
     QString CStatusMessageList::toHtml(const CPropertyIndexList &indexes) const
     {
-        if (indexes.isEmpty() || this->isEmpty()) { return {}; }
+        if (indexes.isEmpty() || this->isEmpty())
+        {
+            return {};
+        }
         QString html;
         int line = 1;
         const bool withLineNumbers = indexes.contains(CPropertyIndexRef::GlobalIndexLineNumber);
         CPropertyIndexList usedIndexes(indexes);
-        if (withLineNumbers) { usedIndexes.remove(CPropertyIndexRef::GlobalIndexLineNumber); }
+        if (withLineNumbers)
+        {
+            usedIndexes.remove(CPropertyIndexRef::GlobalIndexLineNumber);
+        }
         for (const CStatusMessage &statusMessage : *this)
         {
             QString rowHtml;
-            if (withLineNumbers) { rowHtml = u"<td>" % QString::number(line++) % u"</td>"; }
+            if (withLineNumbers)
+            {
+                rowHtml = u"<td>" % QString::number(line++) % u"</td>";
+            }
 
             for (const CPropertyIndex &index : usedIndexes)
             {

@@ -79,14 +79,21 @@ namespace swift::core::context
     bool CContextAudioBase::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
         Q_UNUSED(originator)
-        if (commandLine.isEmpty()) { return false; }
+        if (commandLine.isEmpty())
+        {
+            return false;
+        }
         CSimpleCommandParser parser({
-            ".vol", ".volume", // output volume
+            ".vol",
+            ".volume", // output volume
             ".mute", // mute
             ".unmute", // unmute
         });
         parser.parse(commandLine);
-        if (!parser.isKnownCommand()) { return false; }
+        if (!parser.isKnownCommand())
+        {
+            return false;
+        }
 
         if (parser.matchesCommand(".mute"))
         {
@@ -112,15 +119,24 @@ namespace swift::core::context
     {
         CContextAudioBase::registerHelp();
 
-        if (CContextAudioBase::isNoAudioSet()) { CLogMessage(this).info(u"Voice client disabled"); }
-        else { this->initVoiceClient(); }
+        if (CContextAudioBase::isNoAudioSet())
+        {
+            CLogMessage(this).info(u"Voice client disabled");
+        }
+        else
+        {
+            this->initVoiceClient();
+        }
 
         // here we are in a base class of one context
         // the whole context/facade system is not initialized when this code here is executed
 
         QPointer<CContextAudioBase> myself(this);
         QTimer::singleShot(5000, this, [=, this] {
-            if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+            if (!myself || !sApp || sApp->isShuttingDown())
+            {
+                return;
+            }
 
             const CSettings as = m_audioSettings.getThreadLocal();
             this->setMasterOutputVolume(as.getOutVolume());
@@ -138,7 +154,10 @@ namespace swift::core::context
 
     void CContextAudioBase::initVoiceClient()
     {
-        if (m_voiceClient || !sApp) { return; }
+        if (m_voiceClient || !sApp)
+        {
+            return;
+        }
 
         const CAudioDeviceInfoList devices = CAudioDeviceInfoList::allDevices();
         if (devices != m_activeLocalDevices)
@@ -163,7 +182,10 @@ namespace swift::core::context
             // S_OK: The COM library was initialized successfully on this thread.
             // S_FALSE: The COM library is already initialized on this thread. Reference count was incremented. This is
             // not an error.
-            if (hr == S_OK || hr == S_FALSE) { m_winCoInitialized = true; }
+            if (hr == S_OK || hr == S_FALSE)
+            {
+                m_winCoInitialized = true;
+            }
         }
 #endif
 
@@ -223,12 +245,18 @@ namespace swift::core::context
 
     void CContextAudioBase::setRxTx(bool rx1, bool tx1, bool rx2, bool tx2)
     {
-        if (m_voiceClient) { m_voiceClient->setRxTx(rx1, tx1, rx2, tx2); }
+        if (m_voiceClient)
+        {
+            m_voiceClient->setRxTx(rx1, tx1, rx2, tx2);
+        }
     }
 
     void CContextAudioBase::getRxTx(bool &rx1, bool &tx1, bool &rx2, bool &tx2) const
     {
-        if (m_voiceClient) { m_voiceClient->setRxTx(rx1, tx1, rx2, tx2); }
+        if (m_voiceClient)
+        {
+            m_voiceClient->setRxTx(rx1, tx1, rx2, tx2);
+        }
     }
 
     const CIdentifier &CContextAudioBase::audioRunsWhere() const
@@ -239,20 +267,32 @@ namespace swift::core::context
 
     bool CContextAudioBase::isEnabledComUnit(CComSystem::ComUnit comUnit) const
     {
-        if (!m_voiceClient) { return false; }
+        if (!m_voiceClient)
+        {
+            return false;
+        }
         return m_voiceClient->isEnabledComUnit(comUnit);
     }
 
     bool CContextAudioBase::isTransmittingComUnit(CComSystem::ComUnit comUnit) const
     {
-        if (!m_voiceClient) { return false; }
+        if (!m_voiceClient)
+        {
+            return false;
+        }
         return m_voiceClient->isTransmittingComUnit(comUnit);
     }
 
     bool CContextAudioBase::connectAudioWithNetworkCredentials()
     {
-        if (!m_voiceClient) { return false; }
-        if (!sApp || sApp->isShuttingDown() || !sApp->getIContextNetwork()) { return false; }
+        if (!m_voiceClient)
+        {
+            return false;
+        }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getIContextNetwork())
+        {
+            return false;
+        }
 
         const CEcosystem ecoSystem = this->getIContextNetwork()->getConnectedServer().getEcosystem();
         if (ecoSystem != CEcosystem::vatsim())
@@ -295,7 +335,10 @@ namespace swift::core::context
 
     bool CContextAudioBase::isNoAudioSet()
     {
-        if (!sApp) { return false; }
+        if (!sApp)
+        {
+            return false;
+        }
         return sApp->isParserOptionSet("noaudio");
     }
 
@@ -338,8 +381,14 @@ namespace swift::core::context
     void CContextAudioBase::setCurrentAudioDevices(const CAudioDeviceInfo &inputDevice,
                                                    const CAudioDeviceInfo &outputDevice)
     {
-        if (!m_voiceClient) { return; }
-        if (!sApp) { return; }
+        if (!m_voiceClient)
+        {
+            return;
+        }
+        if (!sApp)
+        {
+            return;
+        }
 
         if (!inputDevice.getName().isEmpty() && inputDevice.getName() != m_inputDeviceSetting.get())
         {
@@ -359,7 +408,10 @@ namespace swift::core::context
 
     void CContextAudioBase::setMasterOutputVolume(int volume)
     {
-        if (!m_voiceClient) { return; }
+        if (!m_voiceClient)
+        {
+            return;
+        }
 
         const bool wasMuted = this->isOutputMuted();
         volume = CSettings::fixOutVolume(volume);
@@ -390,8 +442,14 @@ namespace swift::core::context
 
     void CContextAudioBase::setComOutputVolume(CComSystem::ComUnit comUnit, int volume)
     {
-        if (comUnit != CComSystem::Com1 && comUnit != CComSystem::Com2) { return; }
-        if (!m_voiceClient) { return; }
+        if (comUnit != CComSystem::Com1 && comUnit != CComSystem::Com2)
+        {
+            return;
+        }
+        if (!m_voiceClient)
+        {
+            return;
+        }
 
         volume = CSettings::fixOutVolume(volume);
 
@@ -418,30 +476,51 @@ namespace swift::core::context
 
     int CContextAudioBase::getMasterOutputVolume() const
     {
-        if (!m_voiceClient) { return 0; }
+        if (!m_voiceClient)
+        {
+            return 0;
+        }
         return m_voiceClient->getNormalizedMasterOutputVolume();
     }
 
     int CContextAudioBase::getComOutputVolume(CComSystem::ComUnit comUnit) const
     {
-        if (!m_voiceClient) { return 0; }
+        if (!m_voiceClient)
+        {
+            return 0;
+        }
         return m_voiceClient->getNormalizedComOutputVolume(comUnit);
     }
 
     void CContextAudioBase::setOutputMute(bool muted)
     {
-        if (!m_voiceClient) { return; }
-        if (this->isOutputMuted() == muted) { return; } // avoid roundtrips / unnecessary signals
+        if (!m_voiceClient)
+        {
+            return;
+        }
+        if (this->isOutputMuted() == muted)
+        {
+            return;
+        } // avoid roundtrips / unnecessary signals
 
-        if (muted) { m_outMasterVolumeBeforeMute = m_voiceClient->getNormalizedMasterOutputVolume(); }
+        if (muted)
+        {
+            m_outMasterVolumeBeforeMute = m_voiceClient->getNormalizedMasterOutputVolume();
+        }
 
         m_voiceClient->setOutputMuted(muted);
-        if (!muted) { m_voiceClient->setNormalizedMasterOutputVolume(m_outMasterVolumeBeforeMute); }
+        if (!muted)
+        {
+            m_voiceClient->setNormalizedMasterOutputVolume(m_outMasterVolumeBeforeMute);
+        }
     }
 
     bool CContextAudioBase::isOutputMuted() const
     {
-        if (!m_voiceClient) { return false; }
+        if (!m_voiceClient)
+        {
+            return false;
+        }
         return m_voiceClient->isOutputMuted();
     }
 
@@ -454,7 +533,10 @@ namespace swift::core::context
             // Play additional notification
             const QPointer<const CContextAudioBase> myself(this);
             QTimer::singleShot(ms, this, [=, this] {
-                if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+                if (!sApp || sApp->isShuttingDown() || !myself)
+                {
+                    return;
+                }
                 this->playNotification(CNotificationSounds::NotificationTextMessageSupervisor, true);
             });
         }
@@ -470,31 +552,46 @@ namespace swift::core::context
 
         const CSettings settings = m_audioSettings.getThreadLocal();
         const bool play = !considerSettings || settings.isNotificationFlagSet(notification);
-        if (!play) { return; }
+        if (!play)
+        {
+            return;
+        }
 
         if (volume < 0 || volume > 100)
         {
             volume = 90;
-            if (considerSettings) { volume = qMax(25, settings.getNotificationVolume()); }
+            if (considerSettings)
+            {
+                volume = qMax(25, settings.getNotificationVolume());
+            }
         }
         m_notificationPlayer.play(notification, volume);
     }
 
     void CContextAudioBase::enableAudioLoopback(bool enable)
     {
-        if (!m_voiceClient) { return; }
+        if (!m_voiceClient)
+        {
+            return;
+        }
         m_voiceClient->setLoopBack(enable);
     }
 
     bool CContextAudioBase::isAudioLoopbackEnabled() const
     {
-        if (!m_voiceClient) { return false; }
+        if (!m_voiceClient)
+        {
+            return false;
+        }
         return m_voiceClient->isLoopback();
     }
 
     void CContextAudioBase::setVoiceTransmission(bool enable)
     {
-        if (!m_voiceClient) { return; }
+        if (!m_voiceClient)
+        {
+            return;
+        }
         m_voiceClient->setPtt(enable);
     }
 
@@ -520,46 +617,76 @@ namespace swift::core::context
 
     void CContextAudioBase::audioIncreaseVolume(bool enabled)
     {
-        if (!enabled) { return; }
+        if (!enabled)
+        {
+            return;
+        }
         const int v = qRound(this->getMasterOutputVolume() * 1.05);
         this->setMasterOutputVolume(v);
     }
 
     void CContextAudioBase::audioDecreaseVolume(bool enabled)
     {
-        if (!enabled) { return; }
+        if (!enabled)
+        {
+            return;
+        }
         const int v = qRound(this->getMasterOutputVolume() / 1.05);
         this->setMasterOutputVolume(v);
     }
 
     void CContextAudioBase::audioIncreaseVolumeCom1(bool enabled)
     {
-        if (!enabled) { return; }
-        if (isComUnitIntegrated()) { return; }
+        if (!enabled)
+        {
+            return;
+        }
+        if (isComUnitIntegrated())
+        {
+            return;
+        }
         const int v = qRound(this->getComOutputVolume(CComSystem::Com1) * 1.05);
         this->setComOutputVolume(CComSystem::Com1, v);
     }
 
     void CContextAudioBase::audioDecreaseVolumeCom1(bool enabled)
     {
-        if (!enabled) { return; }
-        if (isComUnitIntegrated()) { return; }
+        if (!enabled)
+        {
+            return;
+        }
+        if (isComUnitIntegrated())
+        {
+            return;
+        }
         const int v = qRound(this->getComOutputVolume(CComSystem::Com1) / 1.05);
         this->setComOutputVolume(CComSystem::Com1, v);
     }
 
     void CContextAudioBase::audioIncreaseVolumeCom2(bool enabled)
     {
-        if (!enabled) { return; }
-        if (isComUnitIntegrated()) { return; }
+        if (!enabled)
+        {
+            return;
+        }
+        if (isComUnitIntegrated())
+        {
+            return;
+        }
         const int v = qRound(this->getComOutputVolume(CComSystem::Com2) * 1.05);
         this->setComOutputVolume(CComSystem::Com2, v);
     }
 
     void CContextAudioBase::audioDecreaseVolumeCom2(bool enabled)
     {
-        if (!enabled) { return; }
-        if (isComUnitIntegrated()) { return; }
+        if (!enabled)
+        {
+            return;
+        }
+        if (isComUnitIntegrated())
+        {
+            return;
+        }
         const int v = qRound(this->getComOutputVolume(CComSystem::Com2) / 1.05);
         this->setComOutputVolume(CComSystem::Com2, v);
     }
@@ -567,7 +694,10 @@ namespace swift::core::context
     void CContextAudioBase::xCtxNetworkConnectionStatusChanged(const CConnectionStatus &from,
                                                                const CConnectionStatus &to)
     {
-        if (!m_voiceClient) { return; }
+        if (!m_voiceClient)
+        {
+            return;
+        }
 
         Q_UNUSED(from)
         SWIFT_VERIFY_X(this->getIContextNetwork(), Q_FUNC_INFO, "Missing network context");
@@ -580,12 +710,18 @@ namespace swift::core::context
 
             // one reason for not connecting is NOT using the VATSIM ecosystem
         }
-        else if (to.isDisconnected()) { m_voiceClient->disconnectFrom(); }
+        else if (to.isDisconnected())
+        {
+            m_voiceClient->disconnectFrom();
+        }
     }
 
     void CContextAudioBase::onAfvConnectionStatusChanged(int status)
     {
-        if (!m_voiceClient) { return; }
+        if (!m_voiceClient)
+        {
+            return;
+        }
 
         const CCallsign cs = m_voiceClient->getCallsign();
         const auto s = static_cast<CAfvClient::ConnectionStatus>(status);
@@ -599,7 +735,10 @@ namespace swift::core::context
 
     void CContextAudioBase::onAfvConnectionFailure(const CStatusMessage &msg)
     {
-        if (!m_voiceClient) { return; }
+        if (!m_voiceClient)
+        {
+            return;
+        }
         emit this->voiceClientFailure(msg);
     }
 

@@ -21,7 +21,10 @@ namespace swift::misc::simulation::fscommon
 
     bool CAircraftCfgEntriesList::containsModelWithTitle(const QString &title, Qt::CaseSensitivity caseSensitivity)
     {
-        if (title.isEmpty()) { return false; }
+        if (title.isEmpty())
+        {
+            return false;
+        }
         return this->containsBy([=](const CAircraftCfgEntries &entries) {
             return title.compare(entries.getTitle(), caseSensitivity) == 0;
         });
@@ -34,10 +37,16 @@ namespace swift::misc::simulation::fscommon
         QString last;
         for (const QString &title : titles)
         {
-            if (title.isEmpty()) { continue; }
+            if (title.isEmpty())
+            {
+                continue;
+            }
             if (title.compare(last, Qt::CaseInsensitive) == 0)
             {
-                if (!ambiguousTitles.contains(title, Qt::CaseInsensitive)) { ambiguousTitles.append(title); }
+                if (!ambiguousTitles.contains(title, Qt::CaseInsensitive))
+                {
+                    ambiguousTitles.append(title);
+                }
             }
             last = title;
         }
@@ -47,14 +56,20 @@ namespace swift::misc::simulation::fscommon
     QStringList CAircraftCfgEntriesList::getTitles(bool sorted) const
     {
         QStringList titles = this->transform(predicates::MemberTransform(&CAircraftCfgEntries::getTitle));
-        if (sorted) { titles.sort(Qt::CaseInsensitive); }
+        if (sorted)
+        {
+            titles.sort(Qt::CaseInsensitive);
+        }
         return titles;
     }
 
     QSet<QString> CAircraftCfgEntriesList::getTitleSetUpperCase() const
     {
         CSetBuilder<QString> titlesUc;
-        for (const CAircraftCfgEntries &entries : *this) { titlesUc.insert(entries.getTitle().toUpper()); }
+        for (const CAircraftCfgEntries &entries : *this)
+        {
+            titlesUc.insert(entries.getTitle().toUpper());
+        }
         return titlesUc;
     }
 
@@ -65,7 +80,10 @@ namespace swift::misc::simulation::fscommon
 
     bool CAircraftCfgEntriesList::containsTitle(const QString &title) const
     {
-        if (title.isEmpty()) { return false; }
+        if (title.isEmpty())
+        {
+            return false;
+        }
         return std::any_of(cbegin(), cend(), [&](const CAircraftCfgEntries &entries) {
             return stringCompare(entries.getTitle(), title, Qt::CaseInsensitive);
         });
@@ -81,7 +99,10 @@ namespace swift::misc::simulation::fscommon
             if (ignoreDuplicatesAndEmptyModelStrings)
             {
                 const QString key = entries.getTitle().toUpper();
-                if (key.isEmpty()) { continue; }
+                if (key.isEmpty())
+                {
+                    continue;
+                }
                 if (keys.contains(key))
                 {
                     CStatusMessage msg(this);

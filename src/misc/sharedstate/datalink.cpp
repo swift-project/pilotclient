@@ -15,8 +15,14 @@ namespace swift::misc::shared_state
         if (status != m_connected)
         {
             m_connected = status;
-            if (m_connected) { emit connected(); }
-            else { emit disconnected(); }
+            if (m_connected)
+            {
+                emit connected();
+            }
+            else
+            {
+                emit disconnected();
+            }
         }
     }
 

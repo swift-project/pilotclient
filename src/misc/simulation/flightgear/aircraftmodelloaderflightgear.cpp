@@ -22,7 +22,10 @@ namespace swift::misc::simulation::flightgear
     CAircraftModelLoaderFlightgear::~CAircraftModelLoaderFlightgear()
     {
         // that should be safe as long as the worker uses deleteLater (which it does)
-        if (m_parserWorker) { m_parserWorker->waitForFinished(); }
+        if (m_parserWorker)
+        {
+            m_parserWorker->waitForFinished();
+        }
     }
 
     void CAircraftModelLoaderFlightgear::updateInstalledModels(const CAircraftModelList &models)
@@ -37,7 +40,10 @@ namespace swift::misc::simulation::flightgear
                                                                              const QStringList &excludeDirectories)
     {
         Q_UNUSED(excludeDirectories);
-        if (rootDirectory.isEmpty()) { return {}; }
+        if (rootDirectory.isEmpty())
+        {
+            return {};
+        }
         CAircraftModelList installedModels;
 
         QDir searchPath(rootDirectory);
@@ -51,7 +57,10 @@ namespace swift::misc::simulation::flightgear
             {
                 continue;
             }
-            if (aircraftIt.filePath().contains("/AI/Aircraft")) { continue; }
+            if (aircraftIt.filePath().contains("/AI/Aircraft"))
+            {
+                continue;
+            }
             CAircraftModel model;
             QString modelName = aircraftIt.fileName();
             modelName = modelName.remove("-set.xml");
@@ -71,7 +80,10 @@ namespace swift::misc::simulation::flightgear
                                                                         const QStringList &excludeDirectories)
     {
         Q_UNUSED(excludeDirectories);
-        if (rootDirectory.isEmpty()) { return {}; }
+        if (rootDirectory.isEmpty())
+        {
+            return {};
+        }
 
         CAircraftModelList installedModels;
 
@@ -115,8 +127,14 @@ namespace swift::misc::simulation::flightgear
         {
             QString dir = rootDirectory;
             dir.replace('\\', '/');
-            if (dir.contains("/AI/Aircraft")) { allModels.push_back(parseAIAirplanes(dir, excludeDirectories)); }
-            else { allModels.push_back(parseFlyableAirplanes(dir, excludeDirectories)); }
+            if (dir.contains("/AI/Aircraft"))
+            {
+                allModels.push_back(parseAIAirplanes(dir, excludeDirectories));
+            }
+            else
+            {
+                allModels.push_back(parseFlyableAirplanes(dir, excludeDirectories));
+            }
         }
 
         return allModels;
@@ -133,14 +151,20 @@ namespace swift::misc::simulation::flightgear
 
         if (mode.testFlag(LoadInBackground))
         {
-            if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
+            if (m_parserWorker && !m_parserWorker->isFinished())
+            {
+                return;
+            }
             emit this->diskLoadingStarted(simulator, mode);
 
             m_parserWorker = CWorker::fromTask(this, "CAircraftModelLoaderFlightgear::performParsing",
                                                [this, modelDirs, excludedDirectoryPatterns, modelConsolidation]() {
                                                    auto models =
                                                        this->performParsing(modelDirs, excludedDirectoryPatterns);
-                                                   if (modelConsolidation) { modelConsolidation(models, true); }
+                                                   if (modelConsolidation)
+                                                   {
+                                                       modelConsolidation(models, true);
+                                                   }
                                                    return models;
                                                });
             m_parserWorker->thenWithResult<CAircraftModelList>(this, [=, this](const auto &models) {

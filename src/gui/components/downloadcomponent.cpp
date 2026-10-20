@@ -61,7 +61,10 @@ namespace swift::gui::components
 
     bool CDownloadComponent::setDownloadFiles(const CRemoteFileList &remoteFiles)
     {
-        if (!m_waitingForDownload.isEmpty()) { return false; }
+        if (!m_waitingForDownload.isEmpty())
+        {
+            return false;
+        }
         m_remoteFiles = remoteFiles;
         this->clear();
         return true;
@@ -81,7 +84,10 @@ namespace swift::gui::components
         downloadDir = QFileDialog::getExistingDirectory(parentWidget(), tr("Choose your download directory"),
                                                         downloadDir, m_fileDialogOptions);
 
-        if (downloadDir.isEmpty()) { return; } // canceled
+        if (downloadDir.isEmpty())
+        {
+            return;
+        } // canceled
         if (!QDir(downloadDir).exists())
         {
             const CStatusMessage msg =
@@ -97,13 +103,22 @@ namespace swift::gui::components
     {
         ui->pb_Download->setEnabled(false);
         ui->pb_Launch->setEnabled(false);
-        if (m_remoteFiles.isEmpty()) { return false; }
-        if (!m_waitingForDownload.isEmpty()) { return false; }
+        if (m_remoteFiles.isEmpty())
+        {
+            return false;
+        }
+        if (!m_waitingForDownload.isEmpty())
+        {
+            return false;
+        }
         if (delayMs > 0)
         {
             const QPointer<CDownloadComponent> myself(this);
             QTimer::singleShot(delayMs, this, [=, this] {
-                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                if (!myself || !sGui || sGui->isShuttingDown())
+                {
+                    return;
+                }
                 this->triggerDownloadingOfFiles();
             });
             return true;
@@ -117,15 +132,24 @@ namespace swift::gui::components
 
     bool CDownloadComponent::haveAllDownloadsCompleted() const
     {
-        if (this->isDownloading()) { return false; }
-        if (!m_waitingForDownload.isEmpty()) { return false; }
+        if (this->isDownloading())
+        {
+            return false;
+        }
+        if (!m_waitingForDownload.isEmpty())
+        {
+            return false;
+        }
         return true;
     }
 
     CDownloadComponent::Mode CDownloadComponent::getMode() const
     {
         Mode mode = ui->cb_Shutdown->isChecked() ? ShutdownSwift : JustDownload;
-        if (ui->cb_StartAfterDownload) { mode |= StartAfterDownload; }
+        if (ui->cb_StartAfterDownload)
+        {
+            mode |= StartAfterDownload;
+        }
         return mode;
     }
 
@@ -161,7 +185,10 @@ namespace swift::gui::components
 
     bool CDownloadComponent::triggerDownloadingOfNextFile()
     {
-        if (m_waitingForDownload.isEmpty()) { return false; }
+        if (m_waitingForDownload.isEmpty())
+        {
+            return false;
+        }
         const CRemoteFile rf = m_waitingForDownload.front();
         m_waitingForDownload.pop_front();
         return this->triggerDownloadingOfFile(rf);
@@ -169,7 +196,10 @@ namespace swift::gui::components
 
     bool CDownloadComponent::triggerDownloadingOfFile(const CRemoteFile &remoteFile)
     {
-        if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown()) { return false; }
+        if (!sGui || !sGui->hasWebDataServices() || sGui->isShuttingDown())
+        {
+            return false;
+        }
         if (!this->existsDownloadDir())
         {
             const CStatusMessage msg =
@@ -202,7 +232,10 @@ namespace swift::gui::components
             {
                 const QPointer<CDownloadComponent> myself(this);
                 QTimer::singleShot(10, this, [=, this] {
-                    if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                    if (!myself || !sGui || sGui->isShuttingDown())
+                    {
+                        return;
+                    }
                     this->downloadedFile(CStatusMessage(this).info(u"File was already downloaded"));
                 });
                 return true;
@@ -240,7 +273,10 @@ namespace swift::gui::components
         this->showCompletedFileMessage(justDownloaded);
         this->hideLoading();
 
-        if (sGui && sGui->isShuttingDown()) { return; }
+        if (sGui && sGui->isShuttingDown())
+        {
+            return;
+        }
         if (status.isWarningOrAbove())
         {
             this->showOverlayMessage(status, CDownloadComponent::OverlayMsgTimeout);
@@ -249,14 +285,20 @@ namespace swift::gui::components
         }
 
         const bool t = this->triggerDownloadingOfNextFile();
-        if (!t) { this->lastFileDownloaded(); }
+        if (!t)
+        {
+            this->lastFileDownloaded();
+        }
     }
 
     void CDownloadComponent::lastFileDownloaded()
     {
         const QPointer<CDownloadComponent> myself(this);
         QTimer::singleShot(0, this, [=, this] {
-            if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+            if (!myself || !sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             myself->ui->pb_Download->setEnabled(true);
             myself->ui->pb_Launch->setEnabled(true);
             emit allDownloadsCompleted();
@@ -266,14 +308,26 @@ namespace swift::gui::components
 
     void CDownloadComponent::startDownloadedExecutable()
     {
-        if (!ui->cb_StartAfterDownload->isChecked()) { return; }
-        if (!this->haveAllDownloadsCompleted()) { return; }
+        if (!ui->cb_StartAfterDownload->isChecked())
+        {
+            return;
+        }
+        if (!this->haveAllDownloadsCompleted())
+        {
+            return;
+        }
         const CRemoteFileList executables = m_remoteFiles.findExecutableFiles();
-        if (executables.isEmpty()) { return; }
+        if (executables.isEmpty())
+        {
+            return;
+        }
 
         // try to start
         const QDir dir(ui->le_DownloadDir->text());
-        if (!dir.exists()) { return; }
+        if (!dir.exists())
+        {
+            return;
+        }
 
         QString msg;
         if (CBuildConfig::isRunningOnMacOSPlatform())
@@ -282,17 +336,26 @@ namespace swift::gui::components
                   "mount the disk image '%1' and run the installer inside "
                   "to proceed with the update.";
         }
-        else { msg = ui->cb_Shutdown->isChecked() ? QString("Start '%1' and close swift?") : QString("Start '%1'?"); }
+        else
+        {
+            msg = ui->cb_Shutdown->isChecked() ? QString("Start '%1' and close swift?") : QString("Start '%1'?");
+        }
 
         for (const CRemoteFile &rf : executables)
         {
             const QString executable = CFileUtils::appendFilePaths(dir.absolutePath(), rf.getBaseName());
             QFile executableFile(executable);
-            if (!executableFile.exists()) { continue; }
+            if (!executableFile.exists())
+            {
+                continue;
+            }
 
             QMessageBox::StandardButton reply =
                 QMessageBox::question(this, "Start?", msg.arg(rf.getName()), QMessageBox::Yes | QMessageBox::No);
-            if (reply != QMessageBox::Yes) { return; }
+            if (reply != QMessageBox::Yes)
+            {
+                return;
+            }
 
             const CPlatform p = CArtifact::artifactNameToPlatform(rf.getName());
             if (!CPlatform::canRunOnCurrentPlatform(p))
@@ -314,7 +377,10 @@ namespace swift::gui::components
             if (started && shutdown && sGui)
             {
                 QTimer::singleShot(250, sGui, [] {
-                    if (!sGui) { return; }
+                    if (!sGui)
+                    {
+                        return;
+                    }
                     CGuiApplication::exit();
                 });
                 break;
@@ -324,14 +390,20 @@ namespace swift::gui::components
 
     bool CDownloadComponent::existsDownloadDir() const
     {
-        if (ui->le_DownloadDir->text().isEmpty()) { return false; }
+        if (ui->le_DownloadDir->text().isEmpty())
+        {
+            return false;
+        }
         const QDir dir(ui->le_DownloadDir->text());
         return dir.exists() && dir.isReadable();
     }
 
     void CDownloadComponent::openDownloadDir()
     {
-        if (!this->existsDownloadDir()) { return; }
+        if (!this->existsDownloadDir())
+        {
+            return;
+        }
         QDesktopServices::openUrl(QUrl::fromLocalFile(ui->le_DownloadDir->text()));
     }
 

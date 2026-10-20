@@ -40,7 +40,10 @@ namespace swift::gui::components
                 Qt::QueuedConnection);
 
         // use version signal as trigger for completion
-        if (!m_updateInfo.get().isEmpty()) { this->changedUpdateInfo(); }
+        if (!m_updateInfo.get().isEmpty())
+        {
+            this->changedUpdateInfo();
+        }
     }
 
     CUpdateInfoComponent::~CUpdateInfoComponent() = default;
@@ -60,14 +63,20 @@ namespace swift::gui::components
         const QStringList settings = m_updateSettings.get();
         Q_ASSERT_X(settings.size() == 2, Q_FUNC_INFO, "wrong setting");
         const QString channel = settings.front();
-        if (channel.isEmpty()) { return false; }
+        if (channel.isEmpty())
+        {
+            return false;
+        }
 
         const CUpdateInfo info = m_updateInfo.get();
         const CDistribution d = info.getDistributions().findFirstByChannelOrDefault(channel);
         const QVersionNumber vCurrentChannelPlatform =
             info.getArtifactsPilotClient().findByDistribution(d).getLatestQVersion();
         const QVersionNumber vCurrent = CBuildConfig::getVersion();
-        if (vCurrentChannelPlatform.isNull()) { return false; }
+        if (vCurrentChannelPlatform.isNull())
+        {
+            return false;
+        }
         return (vCurrentChannelPlatform > vCurrent);
     }
 
@@ -75,14 +84,20 @@ namespace swift::gui::components
     {
         QPointer<CUpdateInfoComponent> myself(this);
         QTimer::singleShot(10, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             ui->pb_DownloadInstaller->click();
         });
     }
 
     void CUpdateInfoComponent::requestLoadOfSetup()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         sGui->reloadUpdateInfo();
     }
 
@@ -105,7 +120,10 @@ namespace swift::gui::components
         {
             ui->cb_Platforms->insertItem(i++, CIcon(platform.toIcon()).toPixmap(), platform.getPlatformName());
         }
-        if (platforms.contains(settings.last())) { ui->cb_Platforms->setCurrentText(settings.last()); }
+        if (platforms.contains(settings.last()))
+        {
+            ui->cb_Platforms->setCurrentText(settings.last());
+        }
         else if (platforms.contains(CPlatform::currentPlatform().getPlatformName()))
         {
             ui->cb_Platforms->setCurrentText(CPlatform::currentPlatform().getPlatformName());
@@ -119,7 +137,10 @@ namespace swift::gui::components
             ui->cb_Channels->insertItem(i++, CIcon(distribution.getRestrictionIcon()).toPixmap(),
                                         distribution.getChannel());
         }
-        if (distributions.containsChannel(settings.front())) { ui->cb_Channels->setCurrentText(settings.front()); }
+        if (distributions.containsChannel(settings.front()))
+        {
+            ui->cb_Channels->setCurrentText(settings.front());
+        }
 
         this->uiSelectionChanged();
         connect(ui->cb_Platforms, &QComboBox::currentTextChanged, this, &CUpdateInfoComponent::platformChanged,
@@ -142,7 +163,10 @@ namespace swift::gui::components
                                     .arg(currentXsb, currentSwift);
             const QMessageBox::StandardButton reply = QMessageBox::question(this, QStringLiteral("Download xswiftbus"),
                                                                             msg, QMessageBox::Yes | QMessageBox::No);
-            if (reply != QMessageBox::Yes) { return; }
+            if (reply != QMessageBox::Yes)
+            {
+                return;
+            }
         }
 
         if (!m_installXSwiftBusDialog)
@@ -168,7 +192,10 @@ namespace swift::gui::components
                                                     "Do you want to continue?")
                                          .arg(platform, CPlatform::currentPlatform().getPlatformName()),
                                      QMessageBox::Yes | QMessageBox::No);
-            if (ret != QMessageBox::Yes) { return; }
+            if (ret != QMessageBox::Yes)
+            {
+                return;
+            }
         }
 
         // find artifcat
@@ -183,7 +210,10 @@ namespace swift::gui::components
         }
 
         const CRemoteFile rf = artifact.asRemoteFile();
-        if (rf.getUrl().isHavingHtmlSuffix()) { QDesktopServices::openUrl(rf.getUrl()); }
+        if (rf.getUrl().isHavingHtmlSuffix())
+        {
+            QDesktopServices::openUrl(rf.getUrl());
+        }
         else
         {
             m_downloadDialog->setMode(CDownloadComponent::SwiftInstaller);
@@ -198,7 +228,10 @@ namespace swift::gui::components
         const QString platform = this->getSelectedOrDefaultPlatform().getPlatformName();
         const QStringList settings({ channel, platform });
         const CStatusMessage m = m_updateSettings.setAndSave(settings);
-        if (m.isFailure()) { CLogMessage::preformatted(m); }
+        if (m.isFailure())
+        {
+            CLogMessage::preformatted(m);
+        }
     }
 
     void CUpdateInfoComponent::channelChanged() { this->uiSelectionChanged(); }
@@ -240,15 +273,24 @@ namespace swift::gui::components
 
         emit this->selectionChanged();
 
-        if (newer && latestPilotClient.isLoadedFromDb()) { emit this->newerPilotClientAvailable(latestPilotClient); }
+        if (newer && latestPilotClient.isLoadedFromDb())
+        {
+            emit this->newerPilotClientAvailable(latestPilotClient);
+        }
     }
 
     const CPlatform &CUpdateInfoComponent::getSelectedOrDefaultPlatform() const
     {
         const QStringList settings = m_updateSettings.get(); // channel / platform
         QString p = ui->cb_Platforms->currentText();
-        if (p.isEmpty()) { p = settings.last(); }
-        if (p.isEmpty()) { p = CPlatform::currentPlatform().getPlatformName(); }
+        if (p.isEmpty())
+        {
+            p = settings.last();
+        }
+        if (p.isEmpty())
+        {
+            p = CPlatform::currentPlatform().getPlatformName();
+        }
         return CPlatform::stringToPlatformObject(p);
     }
 
@@ -256,7 +298,10 @@ namespace swift::gui::components
     {
         const QStringList settings = m_updateSettings.get(); // channel / platform
         QString c = ui->cb_Channels->currentText();
-        if (c.isEmpty()) { c = settings.first(); }
+        if (c.isEmpty())
+        {
+            c = settings.first();
+        }
         const CUpdateInfo updateInfo(m_updateInfo.get());
         return c.isEmpty() ? updateInfo.getDistributions().getMostStableOrDefault() :
                              updateInfo.getDistributions().findFirstByChannelOrDefault(c);

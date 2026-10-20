@@ -43,18 +43,30 @@ namespace swift::gui::components
     void CApplicationCloseDialog::onAccepted()
     {
         const QModelIndexList indexes = ui->lv_UnsavedSettings->selectionModel()->selectedIndexes();
-        if (indexes.isEmpty()) { return; }
+        if (indexes.isEmpty())
+        {
+            return;
+        }
         QStringList saveKeys;
         const QList<int> rows = CGuiUtility::indexToUniqueRows(indexes);
         for (int r : rows)
         {
             const QString description = m_settingsDescriptions[r];
             const QString key = m_settingsDictionary.key(description);
-            if (!key.isEmpty()) { saveKeys.append(key); }
+            if (!key.isEmpty())
+            {
+                saveKeys.append(key);
+            }
         }
-        if (saveKeys.isEmpty()) { return; }
+        if (saveKeys.isEmpty())
+        {
+            return;
+        }
         const CStatusMessage msg = sApp->saveSettingsByKey(saveKeys);
-        if (msg.isFailure()) { CLogMessage::preformatted(msg); }
+        if (msg.isFailure())
+        {
+            CLogMessage::preformatted(msg);
+        }
     }
 
     void CApplicationCloseDialog::onRejected()

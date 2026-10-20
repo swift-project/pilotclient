@@ -47,7 +47,10 @@ namespace swift::gui::models
 
     void CSimulatedAircraftListModel::setAircraftMode(AircraftMode mode)
     {
-        if (m_mode == mode) { return; }
+        if (m_mode == mode)
+        {
+            return;
+        }
         m_mode = mode;
         m_columns.clear();
         switch (mode)

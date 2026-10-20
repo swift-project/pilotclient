@@ -117,7 +117,10 @@ namespace swift::misc::network
     QString CServer::getServerSessionId(bool onlyConnected) const
     {
         const bool isConnected = this->isConnected();
-        if (onlyConnected && !isConnected) { return {}; }
+        if (onlyConnected && !isConnected)
+        {
+            return {};
+        }
         static const QString session("%1 %2 %3:%4 [%5] %6 %7");
         return session.arg(isConnected ? u"connected" : u"disconnected")
             .arg(this->getName(), this->getAddress())
@@ -128,8 +131,14 @@ namespace swift::misc::network
 
     QVariant CServer::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -176,7 +185,10 @@ namespace swift::misc::network
 
     int CServer::comparePropertyByIndex(CPropertyIndexRef index, const CServer &compareValue) const
     {
-        if (index.isMyself()) { return this->getName().compare(compareValue.getName()); }
+        if (index.isMyself())
+        {
+            return this->getName().compare(compareValue.getName());
+        }
         if (ITimestampBased::canHandleIndex(index))
         {
             return ITimestampBased::comparePropertyByIndex(index, compareValue);

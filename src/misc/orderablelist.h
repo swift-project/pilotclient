@@ -34,7 +34,10 @@ namespace swift::misc
         void resetOrder(int offset = 0)
         {
             int c = offset;
-            for (OBJ &obj : container()) { obj.setOrder(c++); }
+            for (OBJ &obj : container())
+            {
+                obj.setOrder(c++);
+            }
         }
 
         //! All order values set or missing some?
@@ -50,7 +53,10 @@ namespace swift::misc
             QList<int> orders;
             for (const OBJ &obj : container())
             {
-                if (!obj.hasValidOrder()) { continue; }
+                if (!obj.hasValidOrder())
+                {
+                    continue;
+                }
                 orders.append(obj.getOrder());
             }
             return orders;
@@ -60,12 +66,18 @@ namespace swift::misc
         CONTAINER withoutItemsOfSameOrder(const CONTAINER &items) const
         {
             const QList<int> orders = items.orderValues();
-            if (orders.isEmpty()) { return this->container(); }
+            if (orders.isEmpty())
+            {
+                return this->container();
+            }
 
             CONTAINER newContainer;
             for (const OBJ &obj : container())
             {
-                if (orders.contains(obj.getOrder())) { continue; }
+                if (orders.contains(obj.getOrder()))
+                {
+                    continue;
+                }
                 newContainer.push_back(obj);
             }
             return newContainer;
@@ -75,12 +87,18 @@ namespace swift::misc
         void removeItemsWithSameOrder(const CONTAINER &items)
         {
             const QList<int> orders = items.orderValues();
-            if (orders.isEmpty()) { return; }
+            if (orders.isEmpty())
+            {
+                return;
+            }
 
             CONTAINER newContainer;
             for (const OBJ &obj : container())
             {
-                if (orders.contains(obj.getOrder())) { continue; }
+                if (orders.contains(obj.getOrder()))
+                {
+                    continue;
+                }
                 newContainer.push_back(obj);
             }
             this->container() = newContainer;
@@ -89,7 +107,10 @@ namespace swift::misc
         //! Move items to given order
         void moveTo(const CONTAINER &items, int targetOrder)
         {
-            if (items.isEmpty()) { return; }
+            if (items.isEmpty())
+            {
+                return;
+            }
             CONTAINER newContainer(this->withoutItemsOfSameOrder(items)); // this container without items
             CONTAINER newItems(items);
             const int shift = items.size();
@@ -97,7 +118,10 @@ namespace swift::misc
             newContainer.resetOrder();
             for (OBJ &obj : newContainer)
             {
-                if (obj.getOrder() < targetOrder) { continue; }
+                if (obj.getOrder() < targetOrder)
+                {
+                    continue;
+                }
                 obj.setOrder(obj.getOrder() + shift);
             }
             newItems.sortAscendingByOrder(); // sort by old order
@@ -110,25 +134,40 @@ namespace swift::misc
         void freezeOrder()
         {
             int c = 0;
-            for (OBJ &obj : container()) { obj.setOrder(c++); }
+            for (OBJ &obj : container())
+            {
+                obj.setOrder(c++);
+            }
         }
 
         //! Current reverse order of list will be new order values
         void freezeOrderReverse()
         {
             int c = this->container().size() - 1;
-            for (OBJ &obj : container()) { obj.setOrder(c--); }
+            for (OBJ &obj : container())
+            {
+                obj.setOrder(c--);
+            }
         }
 
         //! Object with min.order or default
         OBJ minOrderOrDefault() const
         {
-            if (container().isEmpty()) { return OBJ(); }
+            if (container().isEmpty())
+            {
+                return OBJ();
+            }
             OBJ min = container().front();
             for (const OBJ &obj : container())
             {
-                if (!obj.hasValidOrder()) { continue; }
-                if (obj.getOrder() < min.getOrder()) { min = obj; }
+                if (!obj.hasValidOrder())
+                {
+                    continue;
+                }
+                if (obj.getOrder() < min.getOrder())
+                {
+                    min = obj;
+                }
             }
             return min;
         }
@@ -136,12 +175,21 @@ namespace swift::misc
         //! Object with max.order or default
         OBJ maxOrderOrDefault() const
         {
-            if (container().isEmpty()) { return OBJ(); }
+            if (container().isEmpty())
+            {
+                return OBJ();
+            }
             OBJ max = container().front();
             for (const OBJ &obj : container())
             {
-                if (!obj.hasValidOrder()) { continue; }
-                if (obj.getOrder() > max.getOrder()) { max = obj; }
+                if (!obj.hasValidOrder())
+                {
+                    continue;
+                }
+                if (obj.getOrder() > max.getOrder())
+                {
+                    max = obj;
+                }
             }
             return max;
         }

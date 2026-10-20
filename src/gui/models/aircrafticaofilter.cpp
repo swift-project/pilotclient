@@ -22,7 +22,10 @@ namespace swift::gui::models
 
     CAircraftIcaoCodeList CAircraftIcaoFilter::filter(const CAircraftIcaoCodeList &inContainer) const
     {
-        if (!this->isValid()) { return inContainer; }
+        if (!this->isValid())
+        {
+            return inContainer;
+        }
         CAircraftIcaoCodeList outContainer;
         const bool filterCombinedCode = !m_combinedType.isEmpty() && !m_combinedType.contains('-') &&
                                         CAircraftIcaoCode::isValidCombinedType(m_combinedType);
@@ -41,15 +44,24 @@ namespace swift::gui::models
             }
             if (!m_designator.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(icao.getDesignator(), m_designator)) { continue; }
+                if (!this->stringMatchesFilterExpression(icao.getDesignator(), m_designator))
+                {
+                    continue;
+                }
             }
             if (!m_family.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(icao.getFamily(), m_family)) { continue; }
+                if (!this->stringMatchesFilterExpression(icao.getFamily(), m_family))
+                {
+                    continue;
+                }
             }
             if (!m_manufacturer.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(icao.getManufacturer(), m_manufacturer)) { continue; }
+                if (!this->stringMatchesFilterExpression(icao.getManufacturer(), m_manufacturer))
+                {
+                    continue;
+                }
             }
             if (!m_description.isEmpty())
             {
@@ -57,11 +69,17 @@ namespace swift::gui::models
                     !this->stringMatchesFilterExpression(icao.getModelDescription(), m_description) &&
                     !this->stringMatchesFilterExpression(icao.getModelSwiftDescription(), m_description) &&
                     !this->stringMatchesFilterExpression(icao.getModelIataDescription(), m_description);
-                if (ignore) { continue; }
+                if (ignore)
+                {
+                    continue;
+                }
             }
             if (filterCombinedCode)
             {
-                if (icao.getCombinedType() != m_combinedType) { continue; }
+                if (icao.getCombinedType() != m_combinedType)
+                {
+                    continue;
+                }
             }
             outContainer.push_back(icao);
         }

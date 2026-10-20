@@ -137,8 +137,14 @@ namespace swift::gui::models
         Q_ASSERT(isValidColumn(column));
         const CColumn col = m_columns[column];
         Q_ASSERT(col.isSortable());
-        if (!col.isSortable()) { return {}; }
-        if (col.hasSortPropertyIndex()) { return col.getSortPropertyIndex(); }
+        if (!col.isSortable())
+        {
+            return {};
+        }
+        if (col.hasSortPropertyIndex())
+        {
+            return col.getSortPropertyIndex();
+        }
         return col.getPropertyIndex();
     }
 
@@ -146,7 +152,10 @@ namespace swift::gui::models
     {
         for (int i = 0; i < m_columns.size(); i++)
         {
-            if (m_columns.at(i).getPropertyIndex() == propertyIndex) { return i; }
+            if (m_columns.at(i).getPropertyIndex() == propertyIndex)
+            {
+                return i;
+            }
         }
         return -1;
     }
@@ -155,7 +164,10 @@ namespace swift::gui::models
     {
         for (int i = 0; i < m_columns.size(); i++)
         {
-            if (m_columns.at(i).getColumnName() == name) { return i; }
+            if (m_columns.at(i).getColumnName() == name)
+            {
+                return i;
+            }
         }
         return -1;
     }
@@ -188,7 +200,10 @@ namespace swift::gui::models
 
     bool CColumns::isSortable(int column) const
     {
-        if (!isValidColumn(column)) { return false; }
+        if (!isValidColumn(column))
+        {
+            return false;
+        }
         return m_columns.at(column).isSortable();
     }
 
@@ -209,17 +224,26 @@ namespace swift::gui::models
     {
         if (percentages.isEmpty())
         {
-            for (CColumn &column : m_columns) { column.setWidthPercentage(-1); }
+            for (CColumn &column : m_columns)
+            {
+                column.setWidthPercentage(-1);
+            }
             return;
         }
 
         int c = 0;
-        for (CColumn &column : m_columns) { column.setWidthPercentage(percentages.at(c++)); }
+        for (CColumn &column : m_columns)
+        {
+            column.setWidthPercentage(percentages.at(c++));
+        }
     }
 
     QList<int> CColumns::calculateWidths(int totalWidth) const
     {
-        if (m_columns.isEmpty() || !this->hasAnyWidthPercentage()) { return {}; }
+        if (m_columns.isEmpty() || !this->hasAnyWidthPercentage())
+        {
+            return {};
+        }
 
         int totalPercentage = 0;
         const int averagePercentage = 100 / m_columns.size();
@@ -229,7 +253,10 @@ namespace swift::gui::models
             totalPercentage += c.hasWidthPercentage() ? c.getWidthPercentage() : averagePercentage;
         }
 
-        if (totalPercentage < 1) { return {}; }
+        if (totalPercentage < 1)
+        {
+            return {};
+        }
 
         // ideally totalPercentage would be 100%, but there is no guarantee
         const double part = static_cast<double>(totalWidth) / totalPercentage;
@@ -250,20 +277,29 @@ namespace swift::gui::models
 
     void CColumns::insertEmptyColumn()
     {
-        if (this->endsWithEmptyColumn()) { return; }
+        if (this->endsWithEmptyColumn())
+        {
+            return;
+        }
         this->addColumn(CColumn::emptyColumn());
     }
 
     bool CColumns::endsWithEmptyColumn() const
     {
-        if (m_columns.isEmpty()) { return false; }
+        if (m_columns.isEmpty())
+        {
+            return false;
+        }
         const CColumn c = m_columns.last();
         return c.getPropertyIndex() == CPropertyIndexRef::GlobalIndexEmpty;
     }
 
     const CDefaultFormatter *CColumns::getFormatter(const QModelIndex &index) const
     {
-        if (!this->isValidColumn(index)) { return nullptr; }
+        if (!this->isValidColumn(index))
+        {
+            return nullptr;
+        }
         const CColumn c = m_columns.at(index.column());
         return c.getFormatter();
     }

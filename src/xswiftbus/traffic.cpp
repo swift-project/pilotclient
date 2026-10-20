@@ -41,7 +41,10 @@ namespace XSwiftBus
           modelName(modelName_)
     {
         std::memset(static_cast<void *>(&positions), 0, sizeof(positions));
-        for (auto &position : positions) { position.size = sizeof(position); }
+        for (auto &position : positions)
+        {
+            position.size = sizeof(position);
+        }
         std::memset(static_cast<void *>(&surveillance), 0, sizeof(surveillance));
         surveillance.size = sizeof(surveillance);
         std::memset(static_cast<void *>(&surfaces), 0, sizeof(surfaces));
@@ -50,7 +53,10 @@ namespace XSwiftBus
             surfaces.lights.strbLights = 1;
 
         std::strncpy(label, callsign.c_str(), sizeof(label));
-        for (auto &position : positions) { memcpy(position.label, label, sizeof(label)); }
+        for (auto &position : positions)
+        {
+            memcpy(position.label, label, sizeof(label));
+        }
 
         std::srand(static_cast<unsigned int>(std::time(nullptr)));
         surfaces.lights.timeOffset = static_cast<uint16_t>(std::rand() % 0xffff);
@@ -96,8 +102,14 @@ namespace XSwiftBus
 
             updateConfiguration();
             auto err = XPMPMultiplayerInit(&m_configuration, related.c_str(), doc8643.c_str());
-            if (err && *err) { cleanup(); }
-            else { m_initialized = true; }
+            if (err && *err)
+            {
+                cleanup();
+            }
+            else
+            {
+                m_initialized = true;
+            }
         }
 
         return m_initialized;
@@ -108,7 +120,10 @@ namespace XSwiftBus
         if (!m_enabledMultiplayer)
         {
             auto err = XPMPMultiplayerEnable();
-            if (*err) { cleanup(); }
+            if (*err)
+            {
+                cleanup();
+            }
             else
             {
                 m_enabledMultiplayer = true;
@@ -148,7 +163,10 @@ namespace XSwiftBus
 
     void CTraffic::emitSimFrame()
     {
-        if (m_emitSimFrame) { sendDBusSignal("simFrame"); }
+        if (m_emitSimFrame)
+        {
+            sendDBusSignal("simFrame");
+        }
         m_emitSimFrame = !m_emitSimFrame;
     }
 
@@ -193,28 +211,46 @@ namespace XSwiftBus
 
     void CTraffic::followNextPlane()
     {
-        if (m_planesByCallsign.empty() || m_followPlaneViewCallsign.empty()) { return; }
+        if (m_planesByCallsign.empty() || m_followPlaneViewCallsign.empty())
+        {
+            return;
+        }
         auto callsignIt =
             std::find(m_followPlaneViewSequence.begin(), m_followPlaneViewSequence.end(), m_followPlaneViewCallsign);
 
         // If we are not at the end, increase by one
-        if (callsignIt != m_followPlaneViewSequence.end()) { callsignIt++; }
+        if (callsignIt != m_followPlaneViewSequence.end())
+        {
+            callsignIt++;
+        }
         // If we were already at the end or reached it now, start from the beginning
-        if (callsignIt == m_followPlaneViewSequence.end()) { callsignIt = m_followPlaneViewSequence.begin(); }
+        if (callsignIt == m_followPlaneViewSequence.end())
+        {
+            callsignIt = m_followPlaneViewSequence.begin();
+        }
 
         m_followPlaneViewCallsign = *callsignIt;
     }
 
     void CTraffic::followPreviousPlane()
     {
-        if (m_planesByCallsign.empty() || m_followPlaneViewCallsign.empty()) { return; }
+        if (m_planesByCallsign.empty() || m_followPlaneViewCallsign.empty())
+        {
+            return;
+        }
         auto callsignIt =
             std::find(m_followPlaneViewSequence.rbegin(), m_followPlaneViewSequence.rend(), m_followPlaneViewCallsign);
 
         // If we are not at the end, increase by one
-        if (callsignIt != m_followPlaneViewSequence.rend()) { callsignIt++; }
+        if (callsignIt != m_followPlaneViewSequence.rend())
+        {
+            callsignIt++;
+        }
         // If we were already at the end or reached it now, start from the beginning
-        if (callsignIt == m_followPlaneViewSequence.rend()) { callsignIt = m_followPlaneViewSequence.rbegin(); }
+        if (callsignIt == m_followPlaneViewSequence.rend())
+        {
+            callsignIt = m_followPlaneViewSequence.rbegin();
+        }
 
         m_followPlaneViewCallsign = *callsignIt;
     }
@@ -222,9 +258,15 @@ namespace XSwiftBus
     bool CTraffic::containsCallsign(const std::string &callsign) const
     {
         //! \fixme can be removed with C++20, as it then has a contains function
-        if (callsign.empty()) { return false; }
+        if (callsign.empty())
+        {
+            return false;
+        }
         const auto planeIt = m_planesByCallsign.find(callsign);
-        if (planeIt == m_planesByCallsign.end()) { return false; }
+        if (planeIt == m_planesByCallsign.end())
+        {
+            return false;
+        }
         return true;
     }
 
@@ -245,7 +287,10 @@ namespace XSwiftBus
         initXPlanePath();
 
         auto err = XPMPMultiplayerLoadCSLPackages(path.c_str());
-        if (*err) { return err; }
+        if (*err)
+        {
+            return err;
+        }
 
         for (int i = 0, end = XPMPGetNumberOfInstalledModels(); i < end; ++i)
         {
@@ -270,9 +315,18 @@ namespace XSwiftBus
             s.setDrawingLabels(drawing);
             this->setSettings(s);
         }
-        if (rgb >= 0) { m_labels.setColor((rgb & 0xff0000) >> 16, (rgb & 0x00ff00) >> 8, rgb & 0x0000ff); }
-        if (drawing) { m_labels.show(); }
-        else { m_labels.hide(); }
+        if (rgb >= 0)
+        {
+            m_labels.setColor((rgb & 0xff0000) >> 16, (rgb & 0x00ff00) >> 8, rgb & 0x0000ff);
+        }
+        if (drawing)
+        {
+            m_labels.show();
+        }
+        else
+        {
+            m_labels.hide();
+        }
     }
 
     bool CTraffic::isDrawingLabels() const { return m_labels.isVisible(); }
@@ -280,20 +334,29 @@ namespace XSwiftBus
     void CTraffic::setMaxPlanes(int planes)
     {
         CSettings s = this->getSettings();
-        if (s.setMaxPlanes(planes)) { this->setSettings(s); }
+        if (s.setMaxPlanes(planes))
+        {
+            this->setSettings(s);
+        }
     }
 
     void CTraffic::setMaxDrawDistance(double nauticalMiles)
     {
         CSettings s = this->getSettings();
-        if (s.setMaxDrawDistanceNM(nauticalMiles)) { this->setSettings(s); }
+        if (s.setMaxDrawDistanceNM(nauticalMiles))
+        {
+            this->setSettings(s);
+        }
     }
 
     void CTraffic::addPlane(const std::string &callsign, const std::string &modelName, const std::string &aircraftIcao,
                             const std::string &airlineIcao, const std::string &livery)
     {
         auto planeIt = m_planesByCallsign.find(callsign);
-        if (planeIt != m_planesByCallsign.end()) { return; }
+        if (planeIt != m_planesByCallsign.end())
+        {
+            return;
+        }
 
         XPMPPlaneID id = nullptr;
         if (modelName.empty() || m_modelStrings.count(modelName) == 0)
@@ -336,7 +399,10 @@ namespace XSwiftBus
         }
 
         auto planeIt = m_planesByCallsign.find(callsign);
-        if (planeIt == m_planesByCallsign.end()) { return; }
+        if (planeIt == m_planesByCallsign.end())
+        {
+            return;
+        }
 
         m_followPlaneViewSequence.erase(
             std::remove(m_followPlaneViewSequence.begin(), m_followPlaneViewSequence.end(), callsign),
@@ -380,10 +446,16 @@ namespace XSwiftBus
         for (size_t i = 0; i < callsigns.size(); i++)
         {
             auto planeIt = m_planesByCallsign.find(callsigns.at(i));
-            if (planeIt == m_planesByCallsign.end()) { continue; }
+            if (planeIt == m_planesByCallsign.end())
+            {
+                continue;
+            }
 
             Plane *plane = planeIt->second;
-            if (!plane) { continue; }
+            if (!plane)
+            {
+                continue;
+            }
             plane->positions[2].lat = latitudesDeg.at(i);
             plane->positions[2].lon = longitudesDeg.at(i);
             plane->positions[2].elevation = altitudesFt.at(i);
@@ -403,7 +475,10 @@ namespace XSwiftBus
                 std::memcpy(&plane->positions[1], &plane->positions[2], sizeof(plane->positions[0]));
             }
 
-            if (setOnGround) { plane->isOnGround = onGrounds.at(i); }
+            if (setOnGround)
+            {
+                plane->isOnGround = onGrounds.at(i);
+            }
         }
     }
 
@@ -422,10 +497,16 @@ namespace XSwiftBus
         for (size_t i = 0; i < callsigns.size(); i++)
         {
             auto planeIt = m_planesByCallsign.find(callsigns.at(i));
-            if (planeIt == m_planesByCallsign.end()) { continue; }
+            if (planeIt == m_planesByCallsign.end())
+            {
+                continue;
+            }
 
             Plane *plane = planeIt->second;
-            if (!plane) { continue; }
+            if (!plane)
+            {
+                continue;
+            }
 
             plane->hasSurfaces = true;
             plane->targetGearPosition = static_cast<float>(gears.at(i));
@@ -462,15 +543,30 @@ namespace XSwiftBus
         for (size_t i = 0; i < callsigns.size(); i++)
         {
             auto planeIt = m_planesByCallsign.find(callsigns.at(i));
-            if (planeIt == m_planesByCallsign.end()) { continue; }
+            if (planeIt == m_planesByCallsign.end())
+            {
+                continue;
+            }
 
             Plane *plane = planeIt->second;
-            if (!plane) { continue; }
+            if (!plane)
+            {
+                continue;
+            }
 
             plane->surveillance.code = codes.at(i);
-            if (idents.at(i)) { plane->surveillance.mode = xpmpTransponderMode_ModeC_Ident; }
-            else if (modeCs.at(i)) { plane->surveillance.mode = xpmpTransponderMode_ModeC; }
-            else { plane->surveillance.mode = xpmpTransponderMode_Standby; }
+            if (idents.at(i))
+            {
+                plane->surveillance.mode = xpmpTransponderMode_ModeC_Ident;
+            }
+            else if (modeCs.at(i))
+            {
+                plane->surveillance.mode = xpmpTransponderMode_ModeC;
+            }
+            else
+            {
+                plane->surveillance.mode = xpmpTransponderMode_Standby;
+            }
         }
     }
 
@@ -478,7 +574,10 @@ namespace XSwiftBus
                                          std::vector<double> &longitudesDeg, std::vector<double> &elevationsM,
                                          std::vector<bool> &waterFlags, std::vector<double> &verticalOffsets) const
     {
-        if (callsigns.empty() || m_planesByCallsign.empty()) { return; }
+        if (callsigns.empty() || m_planesByCallsign.empty())
+        {
+            return;
+        }
 
         const auto requestedCallsigns = callsigns;
         callsigns.clear();
@@ -491,7 +590,10 @@ namespace XSwiftBus
         for (const auto &requestedCallsign : requestedCallsigns)
         {
             const auto planeIt = m_planesByCallsign.find(requestedCallsign);
-            if (planeIt == m_planesByCallsign.end()) { continue; }
+            if (planeIt == m_planesByCallsign.end())
+            {
+                continue;
+            }
 
             const Plane *plane = planeIt->second;
             assert(plane);
@@ -507,7 +609,10 @@ namespace XSwiftBus
                     plane->terrainProbe
                         .getElevation(latDeg, lonDeg, plane->positions[2].elevation, requestedCallsign, isWater)
                         .front();
-                if (std::isnan(groundElevation)) { groundElevation = 0.0; }
+                if (std::isnan(groundElevation))
+                {
+                    groundElevation = 0.0;
+                }
             }
 
             callsigns.push_back(requestedCallsign);
@@ -561,7 +666,10 @@ namespace XSwiftBus
 
         if (message.getInterfaceName() == DBUS_INTERFACE_INTROSPECTABLE)
         {
-            if (message.getMethodName() == "Introspect") { sendDBusReply(sender, serial, introspection_traffic); }
+            if (message.getMethodName() == "Introspect")
+            {
+                sendDBusReply(sender, serial, introspection_traffic);
+            }
         }
         else if (message.getInterfaceName() == XSWIFTBUS_TRAFFIC_INTERFACENAME)
         {
@@ -577,7 +685,10 @@ namespace XSwiftBus
                     sendDBusMessage(reply);
                 });
             }
-            else if (message.getMethodName() == "initialize") { sendDBusReply(sender, serial, initialize()); }
+            else if (message.getMethodName() == "initialize")
+            {
+                sendDBusReply(sender, serial, initialize());
+            }
             else if (message.getMethodName() == "cleanup")
             {
                 maybeSendEmptyDBusReply(wantsReply, sender, serial);
@@ -838,7 +949,10 @@ namespace XSwiftBus
 
         // This interpolation is only intended to smooth over
         // small errors. Give up if the error is too large.
-        if (t1 > 3s || t2 > 3s) { return; }
+        if (t1 > 3s || t2 > 3s)
+        {
+            return;
+        }
 
         const double dLat = plane->positions[2].lat - plane->positions[0].lat;
         const double dLon = plane->positions[2].lon - plane->positions[0].lon;
@@ -889,7 +1003,10 @@ namespace XSwiftBus
             double windowPos[4] {};
             XPLMWorldToLocal(planePos.lat, planePos.lon, planePos.elevation * metersPerFt, &worldPos[0], &worldPos[1],
                              &worldPos[2]);
-            if (distanceSquared(worldPos) > maxRangeM * maxRangeM) { continue; }
+            if (distanceSquared(worldPos) > maxRangeM * maxRangeM)
+            {
+                continue;
+            }
             matrixMultVec(localPos, worldMat.data(), worldPos);
             matrixMultVec(windowPos, projMat.data(), localPos);
 
@@ -994,8 +1111,14 @@ namespace XSwiftBus
 
             // make sure we can use it with tan in range +-90 degrees and the result of tan not getting too high
             // we limit to +-85deg, tan 45deg: 1 | tan 60deg: 1.73 | tan 85deg: 11.4
-            if (usedCameraPitchDeg >= 85.0) { usedCameraPitchDeg = 85.0; }
-            else if (usedCameraPitchDeg <= -85.0) { usedCameraPitchDeg = -85.0; }
+            if (usedCameraPitchDeg >= 85.0)
+            {
+                usedCameraPitchDeg = 85.0;
+            }
+            else if (usedCameraPitchDeg <= -85.0)
+            {
+                usedCameraPitchDeg = -85.0;
+            }
             traffic->m_deltaCameraPosition.pitchDeg = usedCameraPitchDeg;
 
             // Now calculate where the camera should be positioned to be x
@@ -1072,7 +1195,10 @@ namespace XSwiftBus
             // avoid underflow of camera into ground
             if (plane->isOnGround)
             {
-                if (traffic->m_deltaCameraPosition.dyMeters < 10) { traffic->m_deltaCameraPosition.dyMeters = 10; }
+                if (traffic->m_deltaCameraPosition.dyMeters < 10)
+                {
+                    traffic->m_deltaCameraPosition.dyMeters = 10;
+                }
             }
 
             XPLMWorldToLocal(plane->positions[3].lat, plane->positions[3].lon,
@@ -1121,8 +1247,14 @@ namespace XSwiftBus
         {
             // if XPlane looses focus it can happen that key down is NOT reset
             // for the camera we use the init flag instead, so it is only run once
-            if (flags & xplm_DownFlag) { traffic->m_isSpacePressed = true; }
-            if (flags & xplm_UpFlag) { traffic->m_isSpacePressed = false; }
+            if (flags & xplm_DownFlag)
+            {
+                traffic->m_isSpacePressed = true;
+            }
+            if (flags & xplm_UpFlag)
+            {
+                traffic->m_isSpacePressed = false;
+            }
         }
         else if (virtualKey == XPLM_VK_DOWN && (flags & xplm_UpFlag))
         {
@@ -1144,70 +1276,142 @@ namespace XSwiftBus
 
     bool CTraffic::isPlusMinus180(float v)
     {
-        if (std::isnan(v)) { return false; }
-        if (v > 180.00001f || v < -180.00001f) { return false; }
+        if (std::isnan(v))
+        {
+            return false;
+        }
+        if (v > 180.00001f || v < -180.00001f)
+        {
+            return false;
+        }
         return true;
     }
 
     bool CTraffic::isPlusMinus180(double v)
     {
-        if (std::isnan(v)) { return false; }
-        if (v > 180.00001 || v < -180.00001) { return false; }
+        if (std::isnan(v))
+        {
+            return false;
+        }
+        if (v > 180.00001 || v < -180.00001)
+        {
+            return false;
+        }
         return true;
     }
 
     float CTraffic::normalizeToPlusMinus180Deg(float v)
     {
-        if (std::isnan(v)) { return 0.0f; }
+        if (std::isnan(v))
+        {
+            return 0.0f;
+        }
         return static_cast<float>(normalizeToPlusMinus180Deg(static_cast<double>(v)));
     }
 
     double CTraffic::normalizeToPlusMinus180Deg(double v)
     {
-        if (std::isnan(v)) { return 0.0; }
+        if (std::isnan(v))
+        {
+            return 0.0;
+        }
         const double n = normalizeValue(v, -180.0, 180.0);
-        if (n <= -180.0) { return 180.0; }
-        if (n > 180.0) { return 180.0; }
+        if (n <= -180.0)
+        {
+            return 180.0;
+        }
+        if (n > 180.0)
+        {
+            return 180.0;
+        }
         return n;
     }
 
     float CTraffic::normalizeToZero360Deg(float v)
     {
-        if (std::isnan(v)) { return 0.0f; }
+        if (std::isnan(v))
+        {
+            return 0.0f;
+        }
         return static_cast<float>(normalizeToZero360Deg(static_cast<double>(v)));
     }
 
     double CTraffic::normalizeToZero360Deg(double v)
     {
-        if (std::isnan(v)) { return 0.0; }
+        if (std::isnan(v))
+        {
+            return 0.0;
+        }
         const double n = normalizeValue(v, 0, 360.0);
-        if (n >= 360.0) { return 0.0; }
-        if (n < 0.0) { return 0.0; }
+        if (n >= 360.0)
+        {
+            return 0.0;
+        }
+        if (n < 0.0)
+        {
+            return 0.0;
+        }
         return n;
     }
 
     bool CTraffic::isValidPosition(const XPMPPlanePosition_t &position)
     {
-        if (!isPlusMinus180(position.lat)) { return false; }
-        if (!isPlusMinus180(position.lon)) { return false; }
-        if (!isPlusMinus180(position.pitch)) { return false; }
-        if (!isPlusMinus180(position.roll)) { return false; }
-        if (!isPlusMinus180(position.heading)) { return false; }
-        if (position.elevation < -2000.0 || position.elevation > 100000.0) { return false; }
+        if (!isPlusMinus180(position.lat))
+        {
+            return false;
+        }
+        if (!isPlusMinus180(position.lon))
+        {
+            return false;
+        }
+        if (!isPlusMinus180(position.pitch))
+        {
+            return false;
+        }
+        if (!isPlusMinus180(position.roll))
+        {
+            return false;
+        }
+        if (!isPlusMinus180(position.heading))
+        {
+            return false;
+        }
+        if (position.elevation < -2000.0 || position.elevation > 100000.0)
+        {
+            return false;
+        }
 
         return true;
     }
 
     bool CTraffic::isValidPosition(const XPLMCameraPosition_t *camPos)
     {
-        if (!isPlusMinus180(camPos->roll)) { return false; }
-        if (!isPlusMinus180(camPos->pitch)) { return false; }
-        if (!isPlusMinus180(camPos->heading)) { return false; }
+        if (!isPlusMinus180(camPos->roll))
+        {
+            return false;
+        }
+        if (!isPlusMinus180(camPos->pitch))
+        {
+            return false;
+        }
+        if (!isPlusMinus180(camPos->heading))
+        {
+            return false;
+        }
 
         // x, y, z not in -1..1 range
-        if (std::isnan(camPos->x)) { return false; }
-        if (std::isnan(camPos->y)) { return false; }
-        if (std::isnan(camPos->z)) { return false; }
+        if (std::isnan(camPos->x))
+        {
+            return false;
+        }
+        if (std::isnan(camPos->y))
+        {
+            return false;
+        }
+        if (std::isnan(camPos->z))
+        {
+            return false;
+        }
 
         return true;
     }
@@ -1221,7 +1425,10 @@ namespace XSwiftBus
 
     std::string CTraffic::pos2String(const XPLMCameraPosition_t *camPos)
     {
-        if (!camPos) { return "camera position invalid"; }
+        if (!camPos)
+        {
+            return "camera position invalid";
+        }
         return "x, y, z: " + std::to_string(camPos->x) + "/" + std::to_string(camPos->y) + "/" +
                std::to_string(camPos->z) + " zoom: " + std::to_string(camPos->zoom) +
                " prh: " + std::to_string(camPos->pitch) + "/" + std::to_string(camPos->roll) + "/" +

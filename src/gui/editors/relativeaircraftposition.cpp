@@ -32,10 +32,16 @@ namespace swift::gui::editors
 
     CCoordinateGeodetic CRelativeAircraftPosition::getRelativeCoordinate(const CAngle &bearingOffset) const
     {
-        if (m_originCoordinate.isNull()) { return CCoordinateGeodetic::null(); }
+        if (m_originCoordinate.isNull())
+        {
+            return CCoordinateGeodetic::null();
+        }
         const CLength distance(ui->sb_Distance->value(), CLengthUnit::m());
         CAngle relBearing(ui->sb_RelativeBearing->value(), CAngleUnit::deg());
-        if (!bearingOffset.isNull()) { relBearing += bearingOffset; }
+        if (!bearingOffset.isNull())
+        {
+            relBearing += bearingOffset;
+        }
         return m_originCoordinate.calculatePosition(distance, relBearing);
     }
 

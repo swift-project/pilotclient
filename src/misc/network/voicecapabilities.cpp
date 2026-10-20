@@ -141,10 +141,22 @@ namespace swift::misc::network
             const CVoiceCapabilities vc(text);
             return vc;
         }
-        if (text.contains("TEXT", Qt::CaseInsensitive)) { return { TextOnly }; }
-        if (text.contains("ONLY", Qt::CaseInsensitive)) { return { TextOnly }; }
-        if (text.contains("RECEIVE", Qt::CaseInsensitive)) { return { VoiceReceivingOnly }; }
-        if (text.contains("VOICE", Qt::CaseInsensitive)) { return { Voice }; }
+        if (text.contains("TEXT", Qt::CaseInsensitive))
+        {
+            return { TextOnly };
+        }
+        if (text.contains("ONLY", Qt::CaseInsensitive))
+        {
+            return { TextOnly };
+        }
+        if (text.contains("RECEIVE", Qt::CaseInsensitive))
+        {
+            return { VoiceReceivingOnly };
+        }
+        if (text.contains("VOICE", Qt::CaseInsensitive))
+        {
+            return { Voice };
+        }
         return { Unknown };
     }
 

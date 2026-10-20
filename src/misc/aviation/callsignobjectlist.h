@@ -38,7 +38,10 @@ namespace swift::misc::aviation
         swift::misc::aviation::CCallsignSet getCallsigns() const
         {
             CCallsignSet cs;
-            for (const OBJ &obj : this->container()) { cs.push_back(obj.getCallsign()); }
+            for (const OBJ &obj : this->container())
+            {
+                cs.push_back(obj.getCallsign());
+            }
             return cs;
         }
 
@@ -51,7 +54,10 @@ namespace swift::misc::aviation
         //! Get callsigns as strings
         QString getCallsignsAsString(const QString &separator, bool sorted = false) const
         {
-            if (this->container().isEmpty()) { return {}; }
+            if (this->container().isEmpty())
+            {
+                return {};
+            }
             const QStringList callsigns = this->getCallsignStrings(sorted);
             return callsigns.join(separator);
         }
@@ -80,7 +86,10 @@ namespace swift::misc::aviation
             for (auto current = container().end(); current != container().begin(); /* Do nothing */)
             {
                 --current;
-                if (current->getCallsign() == callsign) { return *current; }
+                if (current->getCallsign() == callsign)
+                {
+                    return *current;
+                }
             }
             return ifNotFound;
         }
@@ -89,7 +98,10 @@ namespace swift::misc::aviation
         CONTAINER findBySuffix(const QString &suffix) const
         {
             CONTAINER r;
-            if (suffix.isEmpty()) { return r; }
+            if (suffix.isEmpty())
+            {
+                return r;
+            }
             const QString sfxUpper(suffix.trimmed().toUpper());
             r = this->container().findBy(
                 [=](const OBJ &csObj) { return (csObj.getCallsign().getSuffix() == sfxUpper); });
@@ -101,7 +113,10 @@ namespace swift::misc::aviation
         {
             for (int i = 0; i < this->container().size(); i++)
             {
-                if (this->container()[i].getCallsign() == callsign) { return i; }
+                if (this->container()[i].getCallsign() == callsign)
+                {
+                    return i;
+                }
             }
             return -1;
         }
@@ -126,9 +141,18 @@ namespace swift::misc::aviation
             for (const OBJ &csObj : this->container())
             {
                 const QString s = csObj.getCallsign().getSuffix();
-                if (s.isEmpty()) { continue; }
-                if (r.contains(s)) { r[s] = r[s] + 1; }
-                else { r.insert(s, 1); }
+                if (s.isEmpty())
+                {
+                    continue;
+                }
+                if (r.contains(s))
+                {
+                    r[s] = r[s] + 1;
+                }
+                else
+                {
+                    r.insert(s, 1);
+                }
             }
             return r;
         }
@@ -141,7 +165,10 @@ namespace swift::misc::aviation
             for (const OBJ &csObj : this->container())
             {
                 const QString s = csObj.getCallsign().getSuffix();
-                if (s.isEmpty() || suffixes.contains(s, Qt::CaseInsensitive)) { continue; }
+                if (s.isEmpty() || suffixes.contains(s, Qt::CaseInsensitive))
+                {
+                    continue;
+                }
                 suffixes << s;
             }
             return suffixes;
@@ -167,7 +194,10 @@ namespace swift::misc::aviation
                     CONTAINER perCallsign({ csObj });
                     result.insert(cs, perCallsign);
                 }
-                else { result[cs].push_back(csObj); }
+                else
+                {
+                    result[cs].push_back(csObj);
+                }
             }
             return result;
         }
@@ -176,7 +206,10 @@ namespace swift::misc::aviation
         int replaceOrAddObjectByCallsign(const OBJ &otherObject)
         {
             const CCallsign cs(otherObject.getCallsign());
-            if (cs.isEmpty()) { return 0; }
+            if (cs.isEmpty())
+            {
+                return 0;
+            }
             CONTAINER &copy(this->container());
             copy.removeByCallsign(cs);
             copy.push_back(otherObject);
@@ -186,13 +219,19 @@ namespace swift::misc::aviation
         //! Replace or add objects by callsign
         int replaceOrAddObjectsByCallsign(const CONTAINER &others)
         {
-            if (others.isEmpty()) { return 0; }
+            if (others.isEmpty())
+            {
+                return 0;
+            }
             int c = 0;
             CONTAINER copy(this->container());
             for (const OBJ &obj : others)
             {
                 const CCallsign cs(obj.getCallsign());
-                if (cs.isEmpty()) { continue; }
+                if (cs.isEmpty())
+                {
+                    continue;
+                }
                 copy.removeByCallsign(cs);
                 copy.push_back(obj);
                 c++;
@@ -208,13 +247,19 @@ namespace swift::misc::aviation
             const CCallsign cs = objectBeforeChanges.getCallsign();
             if (this->containsCallsign(cs))
             {
-                if (changedValues.isEmpty()) { return 0; }
+                if (changedValues.isEmpty())
+                {
+                    return 0;
+                }
                 c = this->container().applyIf(&OBJ::getCallsign, cs, changedValues);
             }
             else
             {
                 c = 1;
-                if (changedValues.isEmpty()) { this->container().push_back(objectBeforeChanges); }
+                if (changedValues.isEmpty())
+                {
+                    this->container().push_back(objectBeforeChanges);
+                }
                 else
                 {
                     OBJ objectAdded(objectBeforeChanges);
@@ -232,7 +277,10 @@ namespace swift::misc::aviation
         QMap<CCallsign, OBJ> asCallsignMap() const
         {
             QMap<CCallsign, OBJ> map;
-            for (const OBJ &obj : this->container()) { map.insert(obj.getCallsign(), obj); }
+            for (const OBJ &obj : this->container())
+            {
+                map.insert(obj.getCallsign(), obj);
+            }
             return map;
         }
 
@@ -242,7 +290,10 @@ namespace swift::misc::aviation
             QHash<CCallsign, OBJ> hash;
             for (const OBJ &obj : this->container())
             {
-                if (obj.getCallsign().isEmpty()) { continue; }
+                if (obj.getCallsign().isEmpty())
+                {
+                    continue;
+                }
                 hash.insert(obj.getCallsign(), obj);
             }
             return hash;

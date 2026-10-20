@@ -24,7 +24,10 @@ namespace swift::gui::models
 
     CLiveryList CLiveryFilter::filter(const CLiveryList &inContainer) const
     {
-        if (!this->isEnabled()) { return inContainer; }
+        if (!this->isEnabled())
+        {
+            return inContainer;
+        }
         CLiveryList outContainer;
         bool checkLiveryType = filterByLiveryType();
         for (const CLivery &livery : inContainer)
@@ -41,16 +44,28 @@ namespace swift::gui::models
             }
             if (checkLiveryType)
             {
-                if (!m_colorLiveries && livery.isColorLivery()) { continue; }
-                if (!m_airlineLiveries && livery.isAirlineLivery()) { continue; }
+                if (!m_colorLiveries && livery.isColorLivery())
+                {
+                    continue;
+                }
+                if (!m_airlineLiveries && livery.isAirlineLivery())
+                {
+                    continue;
+                }
             }
             if (!m_combinedCode.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(livery.getCombinedCode(), m_combinedCode)) { continue; }
+                if (!this->stringMatchesFilterExpression(livery.getCombinedCode(), m_combinedCode))
+                {
+                    continue;
+                }
             }
             if (!m_description.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(livery.getDescription(), m_description)) { continue; }
+                if (!this->stringMatchesFilterExpression(livery.getDescription(), m_description))
+                {
+                    continue;
+                }
             }
             if (!m_airlineIcaoDesignator.isEmpty())
             {
@@ -62,11 +77,17 @@ namespace swift::gui::models
             }
             if (m_fuselageColor.isValid())
             {
-                if (livery.getColorFuselage().colorDistance(m_fuselageColor) > m_maxColorDistance) { continue; }
+                if (livery.getColorFuselage().colorDistance(m_fuselageColor) > m_maxColorDistance)
+                {
+                    continue;
+                }
             }
             if (m_tailColor.isValid())
             {
-                if (livery.getColorTail().colorDistance(m_tailColor) > m_maxColorDistance) { continue; }
+                if (livery.getColorTail().colorDistance(m_tailColor) > m_maxColorDistance)
+                {
+                    continue;
+                }
             }
             outContainer.push_back(livery);
         }
@@ -75,8 +96,14 @@ namespace swift::gui::models
 
     bool CLiveryFilter::valid() const
     {
-        if (filterByLiveryType()) { return true; }
-        if (m_fuselageColor.isValid() || m_tailColor.isValid()) { return true; }
+        if (filterByLiveryType())
+        {
+            return true;
+        }
+        if (m_fuselageColor.isValid() || m_tailColor.isValid())
+        {
+            return true;
+        }
         return !(m_id < 0 && m_combinedCode.isEmpty() && m_description.isEmpty() && m_airlineIcaoDesignator.isEmpty());
     }
 

@@ -83,11 +83,17 @@ namespace swift::gui::components
                                                    &CRadarComponent::rangeZoomOut };
         void rangeZoomIn(bool keydown)
         {
-            if (keydown) { changeRangeInSteps(true); }
+            if (keydown)
+            {
+                changeRangeInSteps(true);
+            }
         }
         void rangeZoomOut(bool keydown)
         {
-            if (keydown) { changeRangeInSteps(false); }
+            if (keydown)
+            {
+                changeRangeInSteps(false);
+            }
         }
     };
 } // namespace swift::gui::components

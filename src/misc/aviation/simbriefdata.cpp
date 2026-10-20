@@ -26,13 +26,19 @@ namespace swift::misc::aviation
     CUrl CSimBriefData::getUrlAndUsername() const
     {
         CUrl url(this->getUrl());
-        if (!m_username.isEmpty()) { url.setQuery("username=" % m_username); }
+        if (!m_username.isEmpty())
+        {
+            url.setQuery("username=" % m_username);
+        }
         return url;
     }
 
     QVariant CSimBriefData::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

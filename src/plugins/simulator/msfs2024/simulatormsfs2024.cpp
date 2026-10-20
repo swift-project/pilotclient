@@ -28,7 +28,10 @@ namespace swift::simplugin::msfs2024
 
     bool CSimulatorMsFs2024::connectTo()
     {
-        if (!loadAndResolveMSFS2024SimConnect()) { return false; }
+        if (!loadAndResolveMSFS2024SimConnect())
+        {
+            return false;
+        }
         return CSimulatorFsxCommon::connectTo();
     }
 
@@ -43,7 +46,10 @@ namespace swift::simplugin::msfs2024
 
     void CSimulatorMsFs2024Listener::startImpl()
     {
-        if (!loadAndResolveMSFS2024SimConnect()) { return; }
+        if (!loadAndResolveMSFS2024SimConnect())
+        {
+            return;
+        }
         CSimulatorFsxCommonListener::startImpl();
     }
 

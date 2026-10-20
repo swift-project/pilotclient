@@ -66,7 +66,10 @@ namespace swift::simplugin::fsxcommon
         }
         case SIMCONNECT_RECV_ID_EXCEPTION:
         {
-            if (!simulatorFsxP3D->stillDisplayReceiveExceptions()) { break; }
+            if (!simulatorFsxP3D->stillDisplayReceiveExceptions())
+            {
+                break;
+            }
             simulatorFsxP3D->triggerAutoTraceSendId();
 
             SIMCONNECT_RECV_EXCEPTION *exception = static_cast<SIMCONNECT_RECV_EXCEPTION *>(pData);
@@ -90,7 +93,10 @@ namespace swift::simplugin::fsxcommon
                 {
                     // it can happen the object is not yet existing
                     CSimConnectObject simObject = simulatorFsxP3D->getSimObjectForTrace(trace);
-                    if (simObject.isInvalid()) { simObject = trace.simObject; } // take the one in the trace
+                    if (simObject.isInvalid())
+                    {
+                        simObject = trace.simObject;
+                    } // take the one in the trace
                     if (simObject.isValid())
                     {
                         if (simObject.isAircraft())
@@ -144,8 +150,14 @@ namespace swift::simplugin::fsxcommon
             case SystemEventSimStatus:
             {
                 const bool running = event->dwData ? true : false;
-                if (running) { simulatorFsxP3D->onSimRunning(); }
-                else { simulatorFsxP3D->onSimStopped(); }
+                if (running)
+                {
+                    simulatorFsxP3D->onSimRunning();
+                }
+                else
+                {
+                    simulatorFsxP3D->onSimStopped();
+                }
                 break;
             }
             case SystemEventPause:
@@ -212,7 +224,10 @@ namespace swift::simplugin::fsxcommon
             if (CSimulatorFsxCommon::isRequestForSimConnectObject(requestId))
             {
                 bool success = simulatorFsxP3D->setSimConnectObjectId(requestId, objectId);
-                if (!success) { break; } // not an request ID of ours
+                if (!success)
+                {
+                    break;
+                } // not an request ID of ours
                 success = simulatorFsxP3D->simulatorReportedObjectAdded(
                     objectId); // adding failed (no IDs), trigger follow up actions
                 if (!success)
@@ -273,7 +288,10 @@ namespace swift::simplugin::fsxcommon
                 if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId))
                 {
                     const CSimConnectObject simObject = simulatorFsxP3D->getSimObjectForObjectId(objectId);
-                    if (!simObject.hasValidRequestAndObjectId()) { break; }
+                    if (!simObject.hasValidRequestAndObjectId())
+                    {
+                        break;
+                    }
                     const CSimConnectDefinitions::SimObjectRequest subRequest =
                         CSimulatorFsxCommon::requestToSimObjectRequest(requestId);
 
@@ -335,7 +353,10 @@ namespace swift::simplugin::fsxcommon
                 else if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId))
                 {
                     const CSimConnectObject probeObj = simulatorFsxP3D->getSimObjectForObjectId(objectId);
-                    if (!probeObj.hasValidRequestAndObjectId()) { break; }
+                    if (!probeObj.hasValidRequestAndObjectId())
+                    {
+                        break;
+                    }
                     Q_ASSERT_X(probeObj.isTerrainProbe(), Q_FUNC_INFO, "No probe");
                     const CSimConnectDefinitions::SimObjectRequest subRequest =
                         CSimulatorFsxCommon::requestToSimObjectRequest(requestId);
@@ -350,7 +371,10 @@ namespace swift::simplugin::fsxcommon
                         if (objectId == probeObj.getObjectId())
                         {
                             const CCallsign cs = simulatorFsxP3D->m_pendingProbeRequests.value(requestId);
-                            if (cs.isEmpty()) { break; }
+                            if (cs.isEmpty())
+                            {
+                                break;
+                            }
                             simulatorFsxP3D->updateProbeFromSimulator(cs, *probeSimData);
                         }
                     }
@@ -370,7 +394,10 @@ namespace swift::simplugin::fsxcommon
         }
         case SIMCONNECT_RECV_ID_CLIENT_DATA:
         {
-            if (!simulatorFsxP3D->m_useSbOffsets) { break; }
+            if (!simulatorFsxP3D->m_useSbOffsets)
+            {
+                break;
+            }
             simulatorFsxP3D->m_sbDataReceived++;
             const SIMCONNECT_RECV_CLIENT_DATA *clientData = static_cast<SIMCONNECT_RECV_CLIENT_DATA *>(pData);
             if (clientData->dwRequestID == CSimConnectDefinitions::RequestSbData)

@@ -17,24 +17,36 @@ namespace swift::gui::models
 
     CCountryList CCountryFilter::filter(const CCountryList &inContainer) const
     {
-        if (!this->isValid()) { return inContainer; }
+        if (!this->isValid())
+        {
+            return inContainer;
+        }
         CCountryList outContainer;
         bool end = false;
         for (const CCountry &country : inContainer)
         {
             if (!m_isoCode.isEmpty())
             {
-                if (country.getIsoCode() != m_isoCode) { continue; }
+                if (country.getIsoCode() != m_isoCode)
+                {
+                    continue;
+                }
                 end = true; // there should be only one designator
             }
 
             if (!this->m_name.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(country.getName(), this->m_name)) { continue; }
+                if (!this->stringMatchesFilterExpression(country.getName(), this->m_name))
+                {
+                    continue;
+                }
             }
 
             outContainer.push_back(country);
-            if (end) { break; }
+            if (end)
+            {
+                break;
+            }
         }
         return outContainer;
     }

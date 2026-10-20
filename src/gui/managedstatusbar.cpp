@@ -34,15 +34,24 @@ namespace swift::gui
         m_statusBar->removeWidget(m_warningButton);
 
         // labels will be deleted with status bar
-        if (m_ownedStatusBar) { delete m_statusBar; }
+        if (m_ownedStatusBar)
+        {
+            delete m_statusBar;
+        }
     }
 
     void CManagedStatusBar::initStatusBar(QStatusBar *statusBar)
     {
-        if (m_statusBar) { return; }
+        if (m_statusBar)
+        {
+            return;
+        }
         m_ownedStatusBar = statusBar == nullptr;
         m_statusBar = statusBar ? statusBar : new QStatusBar();
-        if (m_statusBar->objectName().isEmpty()) { m_statusBar->setObjectName("sb_ManagedStatusBar"); }
+        if (m_statusBar->objectName().isEmpty())
+        {
+            m_statusBar->setObjectName("sb_ManagedStatusBar");
+        }
 
         m_statusBarIcon = new QLabel(m_statusBar);
         m_statusBarIcon->setObjectName(QString("lbl_StatusBarIcon").append(m_statusBar->objectName()));
@@ -91,29 +100,50 @@ namespace swift::gui
 
     void CManagedStatusBar::showWarningButton()
     {
-        if (!m_warningButton) { m_showWarnButtonInitially = true; }
-        else { m_warningButton->setHidden(false); }
+        if (!m_warningButton)
+        {
+            m_showWarnButtonInitially = true;
+        }
+        else
+        {
+            m_warningButton->setHidden(false);
+        }
     }
 
     void CManagedStatusBar::showErrorButton()
     {
-        if (!m_errorButton) { m_showErrorButtonInitially = true; }
-        else { m_errorButton->setHidden(false); }
+        if (!m_errorButton)
+        {
+            m_showErrorButtonInitially = true;
+        }
+        else
+        {
+            m_errorButton->setHidden(false);
+        }
     }
 
     void CManagedStatusBar::show()
     {
-        if (!m_statusBar) { return; }
+        if (!m_statusBar)
+        {
+            return;
+        }
         m_statusBar->show();
     }
 
     void CManagedStatusBar::hide()
     {
-        if (!m_statusBar) { return; }
+        if (!m_statusBar)
+        {
+            return;
+        }
         m_statusBar->hide();
 
         // reset minimum width
-        if (m_ownedStatusBar) { m_statusBar->setMinimumWidth(50); }
+        if (m_ownedStatusBar)
+        {
+            m_statusBar->setMinimumWidth(50);
+        }
     }
 
     void CManagedStatusBar::displayStatusMessage(const CStatusMessage &statusMessage)
@@ -123,11 +153,20 @@ namespace swift::gui
         Q_ASSERT_X(m_statusBarLabel, Q_FUNC_INFO, "Missing label");
 
         // already displaying a message with severity higher than this one?
-        if (statusMessage.isEmpty()) { return; }
-        if (!statusMessage.isSeverityHigherOrEqual(m_currentSeverity)) { return; }
+        if (statusMessage.isEmpty())
+        {
+            return;
+        }
+        if (!statusMessage.isSeverityHigherOrEqual(m_currentSeverity))
+        {
+            return;
+        }
 
         // used with log subscriber, make sure it is not displayed twice
-        if (statusMessage.wasHandledBy(this)) { return; }
+        if (statusMessage.wasHandledBy(this))
+        {
+            return;
+        }
         statusMessage.markAsHandledBy(this);
 
         this->show();
@@ -137,7 +176,10 @@ namespace swift::gui
         // restrict size for own status bars
         const QSize size = m_statusBar->window()->size();
         const int w = qRound(0.95 * size.width());
-        if (m_ownedStatusBar) { m_statusBar->setMaximumWidth(w); }
+        if (m_ownedStatusBar)
+        {
+            m_statusBar->setMaximumWidth(w);
+        }
 
         if (m_elideMode != Qt::ElideNone)
         {
@@ -145,24 +187,36 @@ namespace swift::gui
             const QString elidedText = metrics.elidedText(statusMessage.getMessage(), m_elideMode, qRound(0.90 * w));
             m_statusBarLabel->setText(elidedText);
         }
-        else { m_statusBarLabel->setText(statusMessage.getMessage()); }
+        else
+        {
+            m_statusBarLabel->setText(statusMessage.getMessage());
+        }
         m_currentSeverity = statusMessage.getSeverity();
     }
 
     void CManagedStatusBar::displayStatusMessages(const CStatusMessageList &statusMessages)
     {
-        for (const CStatusMessage &m : statusMessages) { this->displayStatusMessage(m); }
+        for (const CStatusMessage &m : statusMessages)
+        {
+            this->displayStatusMessage(m);
+        }
     }
 
     void CManagedStatusBar::setSizeGripEnabled(bool enabled)
     {
-        if (m_statusBar) { m_statusBar->setSizeGripEnabled(enabled); }
+        if (m_statusBar)
+        {
+            m_statusBar->setSizeGripEnabled(enabled);
+        }
     }
 
     void CManagedStatusBar::clearStatusBar()
     {
         m_currentSeverity = StatusSeverity::SeverityDebug;
-        if (!m_statusBar) { return; }
+        if (!m_statusBar)
+        {
+            return;
+        }
         m_statusBarIcon->clear();
         m_statusBarLabel->clear();
     }

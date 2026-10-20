@@ -26,7 +26,10 @@ namespace swift::misc::simulation
 
     void CRemoteAircraftProviderDummy::insertNewSituations(const CAircraftSituationList &situations)
     {
-        for (const CAircraftSituation &situation : situations) { this->storeAircraftSituation(situation); }
+        for (const CAircraftSituation &situation : situations)
+        {
+            this->storeAircraftSituation(situation);
+        }
     }
 
     void CRemoteAircraftProviderDummy::insertNewAircraftParts(const CCallsign &callsign, const CAircraftParts &parts,

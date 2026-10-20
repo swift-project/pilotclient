@@ -181,7 +181,10 @@ namespace swift::gui::components
     void CAtcStationComponent::update()
     {
         using namespace std::chrono_literals;
-        if (!this->canAccessContext()) { return; }
+        if (!this->canAccessContext())
+        {
+            return;
+        }
         Q_ASSERT(ui->tvp_AtcStationsOnline);
 
         // check if component is visible, if we have already data then skip update
@@ -207,7 +210,10 @@ namespace swift::gui::components
                 this->updateTreeView();
                 this->setOnlineTabs(stationsCount);
 
-                if (stationsCount < 1) { m_selectedCallsign.clear(); }
+                if (stationsCount < 1)
+                {
+                    m_selectedCallsign.clear();
+                }
                 else if (!m_selectedCallsign.isEmpty() && onlineStations.containsCallsign(m_selectedCallsign))
                 {
                     const CAtcStation lastSelected = onlineStations.findFirstByCallsign(m_selectedCallsign);
@@ -242,19 +248,28 @@ namespace swift::gui::components
 
     void CAtcStationComponent::getMetar(const QString &airportIcaoCode)
     {
-        if (!this->canAccessContext()) { return; }
+        if (!this->canAccessContext())
+        {
+            return;
+        }
         const CAirportIcaoCode icao(airportIcaoCode.isEmpty() ?
                                         ui->le_AtcStationsOnlineMetar->text().trimmed().toUpper() :
                                         airportIcaoCode.trimmed().toUpper());
         ui->le_AtcStationsOnlineMetar->setText(icao.asString());
-        if (!icao.hasValidIcaoCode(true)) { return; }
+        if (!icao.hasValidIcaoCode(true))
+        {
+            return;
+        }
         const CMetar metar(sGui->getIContextNetwork()->getMetarForAirport(icao));
         if (metar.hasMessage())
         {
             const QString metarText = metar.getMessage() % u"\n\n" % metar.getMetarText();
             ui->te_AtcStationsOnlineInfo->setText(metarText);
         }
-        else { ui->te_AtcStationsOnlineInfo->clear(); }
+        else
+        {
+            ui->te_AtcStationsOnlineInfo->clear();
+        }
     }
 
     void CAtcStationComponent::changedAtcStationsOnline()
@@ -283,8 +298,14 @@ namespace swift::gui::components
 
     void CAtcStationComponent::testCreateDummyOnlineAtcStations(int number)
     {
-        if (!sGui || !sGui->getIContextNetwork()) { return; }
-        if (this->canAccessContext()) { sGui->getIContextNetwork()->testCreateDummyOnlineAtcStations(number); }
+        if (!sGui || !sGui->getIContextNetwork())
+        {
+            return;
+        }
+        if (this->canAccessContext())
+        {
+            sGui->getIContextNetwork()->testCreateDummyOnlineAtcStations(number);
+        }
     }
 
     void CAtcStationComponent::requestOnlineStationsUpdate()
@@ -296,13 +317,22 @@ namespace swift::gui::components
     void CAtcStationComponent::infoAreaTabBarChanged(int index)
     {
         // ignore in those cases
-        if (!this->isVisibleWidget()) { return; }
-        if (this->isParentDockWidgetFloating()) { return; }
+        if (!this->isVisibleWidget())
+        {
+            return;
+        }
+        if (this->isParentDockWidgetFloating())
+        {
+            return;
+        }
 
         // here I know I am the selected widget, update, but keep GUI responsive (-> timer)
         const QPointer<CAtcStationComponent> myself(this);
         QTimer::singleShot(1000, this, [=, this] {
-            if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+            if (!sApp || sApp->isShuttingDown() || !myself)
+            {
+                return;
+            }
             this->update();
         });
         Q_UNUSED(index)
@@ -322,15 +352,30 @@ namespace swift::gui::components
     void CAtcStationComponent::setComFrequency(const physical_quantities::CFrequency &frequency,
                                                CComSystem::ComUnit unit, bool active)
     {
-        if (unit != CComSystem::Com1 && unit != CComSystem::Com2) { return; }
-        if (!CComSystem::isValidComFrequency(frequency)) { return; }
-        if (active) { sGui->getIContextOwnAircraft()->updateActiveComFrequency(frequency, unit, identifier()); }
-        else { sGui->getIContextOwnAircraft()->updateStandbyComFrequency(frequency, unit, identifier()); }
+        if (unit != CComSystem::Com1 && unit != CComSystem::Com2)
+        {
+            return;
+        }
+        if (!CComSystem::isValidComFrequency(frequency))
+        {
+            return;
+        }
+        if (active)
+        {
+            sGui->getIContextOwnAircraft()->updateActiveComFrequency(frequency, unit, identifier());
+        }
+        else
+        {
+            sGui->getIContextOwnAircraft()->updateStandbyComFrequency(frequency, unit, identifier());
+        }
     }
 
     void CAtcStationComponent::settingsChanged()
     {
-        if (!this->canAccessContext()) { return; }
+        if (!this->canAccessContext())
+        {
+            return;
+        }
         const CViewUpdateSettings settings = m_settingsView.get();
         const int ms = settings.getAtcUpdateTime().toMs();
         const bool connected = sGui->getIContextNetwork()->isConnected();
@@ -341,7 +386,10 @@ namespace swift::gui::components
             m_updateTimer.start(ms); // restart
             this->update();
         }
-        else { m_updateTimer.stop(); }
+        else
+        {
+            m_updateTimer.stop();
+        }
     }
 
     void CAtcStationComponent::airportsRead() { this->initCompleters(); }
@@ -354,7 +402,10 @@ namespace swift::gui::components
 
     void CAtcStationComponent::initCompleters()
     {
-        if (!sGui || !sGui->getWebDataServices()) { return; }
+        if (!sGui || !sGui->getWebDataServices())
+        {
+            return;
+        }
         const QStringList airports = sGui->getWebDataServices()->getAirports().allIcaoCodes(true);
         if (!airports.isEmpty())
         {
@@ -368,7 +419,10 @@ namespace swift::gui::components
     void CAtcStationComponent::onOnlineAtcStationVariantSelected(const CVariant &object)
     {
         ui->te_AtcStationsOnlineInfo->setText(""); // reset
-        if (!object.isValid() || !object.canConvert<CAtcStation>()) { return; }
+        if (!object.isValid() || !object.canConvert<CAtcStation>())
+        {
+            return;
+        }
         const CAtcStation station = object.valueOrDefault(CAtcStation());
         this->onOnlineAtcStationSelected(station);
     }
@@ -378,13 +432,19 @@ namespace swift::gui::components
         // pass copy, not reference -> can crash
         QPointer<CAtcStationComponent> myself(this);
         QTimer::singleShot(500, this, [=] {
-            if (myself) { myself->onOnlineAtcStationSelected(station); }
+            if (myself)
+            {
+                myself->onOnlineAtcStationSelected(station);
+            }
         });
     }
 
     void CAtcStationComponent::onOnlineAtcStationSelected(const CAtcStation &station)
     {
-        if (!station.hasCallsign()) { return; }
+        if (!station.hasCallsign())
+        {
+            return;
+        }
         const QString infoMessage =
             station.getCallsignAsString() % u": " %
             station.getFrequency().valueRoundedWithUnit(CFrequencyUnit::MHz(), 3) %
@@ -399,13 +459,19 @@ namespace swift::gui::components
     {
         using namespace std::chrono_literals;
 
-        if (!this->canAccessContext()) { return; }
+        if (!this->canAccessContext())
+        {
+            return;
+        }
         sGui->getIContextNetwork()->requestAtisUpdates();
         if (ui->tw_Atc->currentIndex() == TabAtcOnline)
         {
             ui->tvp_AtcStationsOnline->showOverlayHTMLMessage("Requested ATIS update", 5s);
         }
-        else { ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage("Requested ATIS update", 5s); }
+        else
+        {
+            ui->tvp_AtcStationsOnlineTree->showOverlayHTMLMessage("Requested ATIS update", 5s);
+        }
     }
 
     bool CAtcStationComponent::canAccessContext() const
@@ -433,7 +499,10 @@ namespace swift::gui::components
         {
             if (checked)
             {
-                if (!m_splitterSizes.isEmpty()) { ui->sp_AtcSplitter->setSizes(m_splitterSizes); }
+                if (!m_splitterSizes.isEmpty())
+                {
+                    ui->sp_AtcSplitter->setSizes(m_splitterSizes);
+                }
             }
             else
             {

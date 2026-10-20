@@ -226,28 +226,46 @@ namespace swift::gui::components
 
     void CDbMappingComponent::formatVPilotView()
     {
-        if (!m_vPilotEnabled || m_vPilotFormatted) { return; }
+        if (!m_vPilotEnabled || m_vPilotFormatted)
+        {
+            return;
+        }
         m_vPilotFormatted = true;
         ui->tvp_AircraftModelsForVPilot->presizeOrFullResizeToContents();
     }
 
     CAircraftModel CDbMappingComponent::getModelFromView(const QModelIndex &index) const
     {
-        if (!index.isValid()) { return {}; }
+        if (!index.isValid())
+        {
+            return {};
+        }
         const QObject *sender = QObject::sender();
 
         // check if we have an explicit sender
-        if (sender == ui->tvp_AircraftModelsForVPilot) { return ui->tvp_AircraftModelsForVPilot->at(index); }
-        if (sender == ui->comp_OwnAircraftModels->view()) { return ui->comp_OwnAircraftModels->view()->at(index); }
+        if (sender == ui->tvp_AircraftModelsForVPilot)
+        {
+            return ui->tvp_AircraftModelsForVPilot->at(index);
+        }
+        if (sender == ui->comp_OwnAircraftModels->view())
+        {
+            return ui->comp_OwnAircraftModels->view()->at(index);
+        }
         if (sender == ui->comp_StashAircraft || sender == ui->comp_StashAircraft->view())
         {
             return ui->comp_StashAircraft->view()->at(index);
         }
-        if (sender == ui->comp_OwnModelSet->view()) { return ui->comp_OwnModelSet->view()->at(index); }
+        if (sender == ui->comp_OwnModelSet->view())
+        {
+            return ui->comp_OwnModelSet->view()->at(index);
+        }
 
         // no sender, use current tab
         const CAircraftModelView *mv = this->currentModelView();
-        if (!mv) { return {}; }
+        if (!mv)
+        {
+            return {};
+        }
         return mv->at(index);
     }
 
@@ -261,7 +279,10 @@ namespace swift::gui::components
     bool CDbMappingComponent::hasSelectedModelsToStash() const
     {
         const CAircraftModelView *mv = this->currentModelView();
-        if (!mv) { return false; }
+        if (!mv)
+        {
+            return false;
+        }
         return mv->hasSelectedModelsToStash();
     }
 
@@ -293,10 +314,16 @@ namespace swift::gui::components
     void CDbMappingComponent::updateEditorsWhenApplicable()
     {
         const CAircraftModel currentEditorModel(ui->editor_ModelMapping->getValue());
-        if (!currentEditorModel.hasModelString()) { return; } // no related model
+        if (!currentEditorModel.hasModelString())
+        {
+            return;
+        } // no related model
         const QString modelString(currentEditorModel.getModelString());
         const CAircraftModel currentStashedModel(ui->comp_StashAircraft->getStashedModel(modelString));
-        if (!currentStashedModel.hasModelString()) { return; }
+        if (!currentStashedModel.hasModelString())
+        {
+            return;
+        }
 
         // we have found a model in the stashed models and this is the one currently displayed
         // in the editors
@@ -304,28 +331,43 @@ namespace swift::gui::components
         const CLivery stashedLivery(currentStashedModel.getLivery());
         if (stashedLivery.hasValidDbKey())
         {
-            if (ui->editor_AircraftModel->setLivery(stashedLivery)) { updated = true; }
+            if (ui->editor_AircraftModel->setLivery(stashedLivery))
+            {
+                updated = true;
+            }
         }
 
         const CDistributor stashedDistributor(currentStashedModel.getDistributor());
         if (stashedDistributor.hasValidDbKey())
         {
-            if (ui->editor_AircraftModel->setDistributor(stashedDistributor)) { updated = true; }
+            if (ui->editor_AircraftModel->setDistributor(stashedDistributor))
+            {
+                updated = true;
+            }
         }
 
         const CAircraftIcaoCode stashedIcaoCode(currentStashedModel.getAircraftIcaoCode());
         if (stashedIcaoCode.hasValidDbKey())
         {
-            if (ui->editor_AircraftModel->setAircraftIcao(stashedIcaoCode)) { updated = true; }
+            if (ui->editor_AircraftModel->setAircraftIcao(stashedIcaoCode))
+            {
+                updated = true;
+            }
         }
 
-        if (updated) { CLogMessage(this).info(u"Updated editor data for '%1'") << modelString; }
+        if (updated)
+        {
+            CLogMessage(this).info(u"Updated editor data for '%1'") << modelString;
+        }
     }
 
     CAircraftModelList CDbMappingComponent::getSelectedModelsToStash() const
     {
         const CAircraftModelView *mv = this->currentModelView();
-        if (!mv || !mv->hasSelectedModelsToStash()) { return {}; }
+        if (!mv || !mv->hasSelectedModelsToStash())
+        {
+            return {};
+        }
         return mv->selectedObjects();
     }
 
@@ -343,7 +385,10 @@ namespace swift::gui::components
 
     CDbMappingComponent::TabIndex CDbMappingComponent::currentTabIndex() const
     {
-        if (!ui->tw_ModelsToBeMapped) { return CDbMappingComponent::NoValidTab; }
+        if (!ui->tw_ModelsToBeMapped)
+        {
+            return CDbMappingComponent::NoValidTab;
+        }
         const int t = ui->tw_ModelsToBeMapped->currentIndex();
         return static_cast<TabIndex>(t);
     }
@@ -379,7 +424,10 @@ namespace swift::gui::components
     void CDbMappingComponent::handleStashDropRequest(const CAirlineIcaoCode &code) const
     {
         const CLivery stdLivery(sGui->getWebDataServices()->getStdLiveryForAirlineCode(code));
-        if (!stdLivery.hasValidDbKey()) { return; }
+        if (!stdLivery.hasValidDbKey())
+        {
+            return;
+        }
         ui->comp_StashAircraft->applyToSelected(stdLivery);
     }
 
@@ -395,7 +443,10 @@ namespace swift::gui::components
             const bool consolidate = !this->isStashTab();
             msgs.push_back(ui->comp_StashAircraft->stashModel(editorModel, true, consolidate));
         }
-        if (msgs.hasErrorMessages()) { this->showOverlayMessagesOrHTMLMessage(msgs); }
+        if (msgs.hasErrorMessages())
+        {
+            this->showOverlayMessagesOrHTMLMessage(msgs);
+        }
     }
 
     void CDbMappingComponent::displayAutoStashingDialog() { m_autoStashDialog->exec(); }
@@ -405,15 +456,27 @@ namespace swift::gui::components
     void CDbMappingComponent::removeDbModelsFromView()
     {
         const QStringList modelStrings(sGui->getWebDataServices()->getModelStrings());
-        if (modelStrings.isEmpty()) { return; }
+        if (modelStrings.isEmpty())
+        {
+            return;
+        }
         CAircraftModelView *mv = this->currentModelView();
-        if (mv) { mv->removeModelsWithModelString(modelStrings); }
+        if (mv)
+        {
+            mv->removeModelsWithModelString(modelStrings);
+        }
     }
 
     void CDbMappingComponent::showChangedAttributes()
     {
-        if (!this->hasStashedModels()) { return; }
-        if (this->currentTabIndex() != TabStash) { return; }
+        if (!this->hasStashedModels())
+        {
+            return;
+        }
+        if (this->currentTabIndex() != TabStash)
+        {
+            return;
+        }
         ui->comp_StashAircraft->showChangedAttributes();
     }
 
@@ -421,26 +484,53 @@ namespace swift::gui::components
 
     void CDbMappingComponent::applyFormLiveryData()
     {
-        if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
+        if (ui->comp_StashAircraft->view()->selectedRowCount() < 1)
+        {
+            return;
+        }
         const CStatusMessageList msgs = ui->editor_AircraftModel->validateLivery(true);
-        if (msgs.hasErrorMessages()) { this->showOverlayMessagesOrHTMLMessage(msgs); }
-        else { ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getLivery()); }
+        if (msgs.hasErrorMessages())
+        {
+            this->showOverlayMessagesOrHTMLMessage(msgs);
+        }
+        else
+        {
+            ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getLivery());
+        }
     }
 
     void CDbMappingComponent::applyFormAircraftIcaoData()
     {
-        if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
+        if (ui->comp_StashAircraft->view()->selectedRowCount() < 1)
+        {
+            return;
+        }
         const CStatusMessageList msgs = ui->editor_AircraftModel->validateAircraftIcao(true);
-        if (msgs.hasErrorMessages()) { this->showOverlayMessagesOrHTMLMessage(msgs); }
-        else { ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getAircraftIcao()); }
+        if (msgs.hasErrorMessages())
+        {
+            this->showOverlayMessagesOrHTMLMessage(msgs);
+        }
+        else
+        {
+            ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getAircraftIcao());
+        }
     }
 
     void CDbMappingComponent::applyFormDistributorData()
     {
-        if (ui->comp_StashAircraft->view()->selectedRowCount() < 1) { return; }
+        if (ui->comp_StashAircraft->view()->selectedRowCount() < 1)
+        {
+            return;
+        }
         const CStatusMessageList msgs = ui->editor_AircraftModel->validateDistributor(true);
-        if (msgs.hasErrorMessages()) { this->showOverlayMessagesOrHTMLMessage(msgs); }
-        else { ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getDistributor()); }
+        if (msgs.hasErrorMessages())
+        {
+            this->showOverlayMessagesOrHTMLMessage(msgs);
+        }
+        else
+        {
+            ui->comp_StashAircraft->applyToSelected(ui->editor_AircraftModel->getDistributor());
+        }
     }
 
     void CDbMappingComponent::modifyModelDialog()
@@ -452,7 +542,10 @@ namespace swift::gui::components
         }
 
         const auto s = static_cast<QDialog::DialogCode>(m_modelModifyDialog->exec());
-        if (s == QDialog::Rejected) { return; }
+        if (s == QDialog::Rejected)
+        {
+            return;
+        }
         const CPropertyIndexVariantMap vm = m_modelModifyDialog->getValues();
         ui->comp_StashAircraft->applyToSelected(vm);
     }
@@ -465,7 +558,10 @@ namespace swift::gui::components
         int h2 = ui->qw_EditorsScrollArea->minimumHeight();
         h2 = qRound(h2 * 1.10); // desired height of inner widget + some space for scrollarea
         int currentSize = ui->sp_MappingComponent->sizes().last(); // current size
-        if (h2 <= currentSize) { return; }
+        if (h2 <= currentSize)
+        {
+            return;
+        }
 
         int h1 {};
         if (h * 0.90 > h2)
@@ -498,12 +594,18 @@ namespace swift::gui::components
             CLogMessage(this).info(u"Start loading vPilot rulesets");
             ui->tvp_AircraftModelsForVPilot->showLoadIndicator();
         }
-        else { CLogMessage(this).warning(u"Loading vPilot rulesets already in progress"); }
+        else
+        {
+            CLogMessage(this).warning(u"Loading vPilot rulesets already in progress");
+        }
     }
 
     void CDbMappingComponent::onLoadVPilotDataFinished(bool success)
     {
-        if (!m_vPilotEnabled) { return; }
+        if (!m_vPilotEnabled)
+        {
+            return;
+        }
         if (success)
         {
             CLogMessage(this).info(u"Loading vPilot ruleset completed");
@@ -513,13 +615,19 @@ namespace swift::gui::components
                 ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(models);
             }
         }
-        else { CLogMessage(this).error(u"Loading vPilot ruleset failed"); }
+        else
+        {
+            CLogMessage(this).error(u"Loading vPilot ruleset failed");
+        }
         ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
     }
 
     void CDbMappingComponent::loadRemovedModels()
     {
-        if (!ui->comp_ModelWorkbench->view()) { return; }
+        if (!ui->comp_ModelWorkbench->view())
+        {
+            return;
+        }
         const QString logDir = CSwiftDirectories::logDirectory();
         ui->comp_ModelWorkbench->view()->showFileLoadDialog(logDir);
     }
@@ -530,7 +638,10 @@ namespace swift::gui::components
         {
             ui->tvp_AircraftModelsForVPilot->updateContainerMaybeAsync(m_vPilotReader.getAsModelsFromCache());
         }
-        else { ui->tvp_AircraftModelsForVPilot->hideLoadIndicator(); }
+        else
+        {
+            ui->tvp_AircraftModelsForVPilot->hideLoadIndicator();
+        }
     }
 
     void CDbMappingComponent::requestVPilotDataUpdate() { this->onVPilotCacheChanged(); }
@@ -546,7 +657,10 @@ namespace swift::gui::components
         const bool highlightOwnModels = ui->comp_OwnAircraftModels->view()->derivedModel()->highlightModels();
         const bool highlightModelSet = ui->comp_OwnModelSet->view()->derivedModel()->highlightModels();
         const bool highlight = highlightOwnModels || highlightModelSet || highlightVPilot;
-        if (!highlight) { return; }
+        if (!highlight)
+        {
+            return;
+        }
         const QStringList stashedModels(ui->comp_StashAircraft->getStashedModelStrings());
         if (highlightVPilot)
         {
@@ -599,8 +713,14 @@ namespace swift::gui::components
 
     void CDbMappingComponent::onModelsSuccessfullyPublished(const CAircraftModelList &models, bool directWrite)
     {
-        if (models.isEmpty()) { return; }
-        if (!directWrite) { return; } // no models wwritten, but CRs
+        if (models.isEmpty())
+        {
+            return;
+        }
+        if (!directWrite)
+        {
+            return;
+        } // no models wwritten, but CRs
         emit this->requestUpdatedData(CEntityFlags::ModelEntity);
     }
 
@@ -622,7 +742,10 @@ namespace swift::gui::components
 
     void CDbMappingComponent::ps_addToOwnModelSet()
     {
-        if (!this->canAddToModelSetTab()) { return; }
+        if (!this->canAddToModelSetTab())
+        {
+            return;
+        }
         const CAircraftModelList models(this->currentModelView()->selectedObjects());
         const CStatusMessage m = this->addToOwnModelSet(models, this->getOwnModelsSimulator());
         CLogMessage::preformatted(m);
@@ -630,12 +753,24 @@ namespace swift::gui::components
 
     void CDbMappingComponent::mergeWithVPilotModels()
     {
-        if (!ui->comp_OwnAircraftModels->modelLoader()) { return; }
-        if (m_vPilotReader.getModelsCount() < 1) { return; }
+        if (!ui->comp_OwnAircraftModels->modelLoader())
+        {
+            return;
+        }
+        if (m_vPilotReader.getModelsCount() < 1)
+        {
+            return;
+        }
         const CSimulatorInfo sim(ui->comp_OwnAircraftModels->getOwnModelsSimulator());
-        if (!sim.isSingleSimulator() || !sim.isMicrosoftOrPrepare3DSimulator()) { return; }
+        if (!sim.isSingleSimulator() || !sim.isMicrosoftOrPrepare3DSimulator())
+        {
+            return;
+        }
         CAircraftModelList ownModels(getOwnModels());
-        if (ownModels.isEmpty()) { return; }
+        if (ownModels.isEmpty())
+        {
+            return;
+        }
         ui->comp_OwnAircraftModels->view()->showLoadIndicator();
         CAircraftModelUtilities::mergeWithVPilotData(ownModels, m_vPilotReader.getAsModelsFromCache(), true);
         ui->comp_OwnAircraftModels->updateViewAndCache(ownModels);
@@ -643,13 +778,28 @@ namespace swift::gui::components
 
     void CDbMappingComponent::mergeSelectedWithVPilotModels()
     {
-        if (!ui->comp_OwnAircraftModels->modelLoader()) { return; }
-        if (m_vPilotReader.getModelsCount() < 1) { return; }
-        if (!ui->comp_OwnAircraftModels->view()->hasSelection()) { return; }
+        if (!ui->comp_OwnAircraftModels->modelLoader())
+        {
+            return;
+        }
+        if (m_vPilotReader.getModelsCount() < 1)
+        {
+            return;
+        }
+        if (!ui->comp_OwnAircraftModels->view()->hasSelection())
+        {
+            return;
+        }
         const CSimulatorInfo sim(ui->comp_OwnAircraftModels->getOwnModelsSimulator());
-        if (!sim.isSingleSimulator() || !sim.isMicrosoftOrPrepare3DSimulator()) { return; }
+        if (!sim.isSingleSimulator() || !sim.isMicrosoftOrPrepare3DSimulator())
+        {
+            return;
+        }
         CAircraftModelList ownModels(this->getOwnSelectedModels()); // subset
-        if (ownModels.isEmpty()) { return; }
+        if (ownModels.isEmpty())
+        {
+            return;
+        }
         ui->comp_OwnAircraftModels->view()->showLoadIndicator();
         CAircraftModelUtilities::mergeWithVPilotData(ownModels, m_vPilotReader.getAsModelsFromCache(), true);
 
@@ -706,7 +856,10 @@ namespace swift::gui::components
         static const QString ot("Stored own models");
         QString o(ot);
         const QString sim(ui->comp_OwnAircraftModels->getOwnModelsSimulator().toQString(true));
-        if (!sim.isEmpty()) { o = o.append(" ").append(sim); }
+        if (!sim.isEmpty())
+        {
+            o = o.append(" ").append(sim);
+        }
         const QString f = ui->comp_OwnAircraftModels->view()->hasFilter() ? "F" : "";
         o = CGuiUtility::replaceTabCountValue(o, ui->comp_OwnAircraftModels->view()->rowCount()) + f;
         ui->tw_ModelsToBeMapped->setTabText(i, o);
@@ -716,15 +869,24 @@ namespace swift::gui::components
 
     void CDbMappingComponent::stashSelectedModels()
     {
-        if (!this->hasSelectedModelsToStash()) { return; }
+        if (!this->hasSelectedModelsToStash())
+        {
+            return;
+        }
         CStatusMessageList msgs = ui->comp_StashAircraft->stashModels(this->getSelectedModelsToStash());
-        if (msgs.hasWarningOrErrorMessages()) { this->showOverlayMessagesOrHTMLMessage(msgs); }
+        if (msgs.hasWarningOrErrorMessages())
+        {
+            this->showOverlayMessagesOrHTMLMessage(msgs);
+        }
     }
 
     void CDbMappingComponent::onModelRowSelected(const QModelIndex &index)
     {
         CAircraftModel model(this->getModelFromView(index)); // data from view
-        if (!model.hasModelString()) { return; }
+        if (!model.hasModelString())
+        {
+            return;
+        }
 
         // we either use the model, or try to resolve the data to DB data
         bool dbModel = model.hasValidDbKey();
@@ -741,12 +903,30 @@ namespace swift::gui::components
         ui->editor_ModelMapping->setValue(model);
 
         // if found, then set in editor
-        if (livery.hasValidDbKey()) { ui->editor_AircraftModel->setLivery(livery); }
-        else { ui->editor_AircraftModel->clearLivery(); }
-        if (aircraftIcao.hasValidDbKey()) { ui->editor_AircraftModel->setAircraftIcao(aircraftIcao); }
-        else { ui->editor_AircraftModel->clearAircraftIcao(); }
-        if (distributor.hasValidDbKey()) { ui->editor_AircraftModel->setDistributor(distributor); }
-        else { ui->editor_AircraftModel->clearDistributor(); }
+        if (livery.hasValidDbKey())
+        {
+            ui->editor_AircraftModel->setLivery(livery);
+        }
+        else
+        {
+            ui->editor_AircraftModel->clearLivery();
+        }
+        if (aircraftIcao.hasValidDbKey())
+        {
+            ui->editor_AircraftModel->setAircraftIcao(aircraftIcao);
+        }
+        else
+        {
+            ui->editor_AircraftModel->clearAircraftIcao();
+        }
+        if (distributor.hasValidDbKey())
+        {
+            ui->editor_AircraftModel->setDistributor(distributor);
+        }
+        else
+        {
+            ui->editor_AircraftModel->clearDistributor();
+        }
 
         // request filtering
         if (m_autoFilterInDbViews)
@@ -964,7 +1144,10 @@ namespace swift::gui::components
 
         if (mapComp->currentTabIndex() == CDbMappingComponent::TabStash && mapComp->currentModelView()->hasSelection())
         {
-            if (m_menuActions.isEmpty()) { m_menuActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr }); }
+            if (m_menuActions.isEmpty())
+            {
+                m_menuActions = QList<QAction *>({ nullptr, nullptr, nullptr, nullptr });
+            }
 
             // stash view and selection
             menuActions.addMenuStashEditor();
@@ -1007,7 +1190,10 @@ namespace swift::gui::components
             return;
         }
 
-        if (m_menuActions.isEmpty()) { m_menuActions = QList<QAction *>({ nullptr, nullptr }); }
+        if (m_menuActions.isEmpty())
+        {
+            m_menuActions = QList<QAction *>({ nullptr, nullptr });
+        }
         menuActions.addMenu("Merge with vPilot data", CMenuAction::pathVPilot());
         m_menuActions[0] = menuActions.addAction(m_menuActions[0], "All", CMenuAction::pathVPilot(), this,
                                                  { mappingComponent(), &CDbMappingComponent::mergeWithVPilotModels });

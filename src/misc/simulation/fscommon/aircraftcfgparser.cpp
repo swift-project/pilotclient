@@ -53,7 +53,10 @@ namespace swift::misc::simulation::fscommon
     CAircraftCfgParser::~CAircraftCfgParser()
     {
         // that should be safe as long as the worker uses deleteLater (which it does)
-        if (m_parserWorker) { m_parserWorker->waitForFinished(); }
+        if (m_parserWorker)
+        {
+            m_parserWorker->waitForFinished();
+        }
     }
 
     void CAircraftCfgParser::startLoadingFromDisk(LoadMode mode, const ModelConsolidationCallback &modelConsolidation,
@@ -71,7 +74,10 @@ namespace swift::misc::simulation::fscommon
 
         if (mode.testFlag(LoadInBackground))
         {
-            if (m_parserWorker && !m_parserWorker->isFinished()) { return; }
+            if (m_parserWorker && !m_parserWorker->isFinished())
+            {
+                return;
+            }
             emit this->diskLoadingStarted(simulator, mode);
             m_parserWorker =
                 CWorker::fromTask(this, "CAircraftCfgParser::startLoadingFromDisk",
@@ -83,7 +89,10 @@ namespace swift::misc::simulation::fscommon
                                       if (msgs.isSuccess())
                                       {
                                           models = aircraftCfgEntriesList.toAircraftModelList(simulator, true, msgs);
-                                          if (modelConsolidation) { modelConsolidation(models, true); }
+                                          if (modelConsolidation)
+                                          {
+                                              modelConsolidation(models, true);
+                                          }
                                       }
                                       return std::make_tuple(aircraftCfgEntriesList, models, msgs);
                                   });
@@ -94,7 +103,10 @@ namespace swift::misc::simulation::fscommon
                     m_parsedCfgEntriesList = std::get<0>(tuple);
                     const CAircraftModelList models(std::get<1>(tuple));
                     const bool hasData = !models.isEmpty();
-                    if (hasData) { this->setModelsForSimulator(models, this->getSimulator()); }
+                    if (hasData)
+                    {
+                        this->setModelsForSimulator(models, this->getSimulator());
+                    }
                     // currently I treat no data as error
                     m_loadingMessages.push_front(hasData ? statusLoadingOk : statusLoadingError);
                 }
@@ -112,7 +124,10 @@ namespace swift::misc::simulation::fscommon
             m_loadingMessages = msgs;
             m_loadingMessages.freezeOrder();
             const bool hasData = !models.isEmpty();
-            if (hasData) { this->setCachedModels(models, this->getSimulator()); }
+            if (hasData)
+            {
+                this->setCachedModels(models, this->getSimulator());
+            }
             // currently I treat no data as error
             emit this->loadingFinished(hasData ? statusLoadingOk : statusLoadingError, simulator, ParsedData);
         }
@@ -140,7 +155,10 @@ namespace swift::misc::simulation::fscommon
         // function has to be threadsafe
         //
 
-        if (m_cancelLoading) { return {}; }
+        if (m_cancelLoading)
+        {
+            return {};
+        }
 
         // excluded?
         if (CFileUtils::isExcludedDirectory(directory, excludeDirectories) || isExcludedSubDirectory(directory))
@@ -187,15 +205,27 @@ namespace swift::misc::simulation::fscommon
 
         for (const auto &fileInfo : files)
         {
-            if (m_cancelLoading) { return {}; }
+            if (m_cancelLoading)
+            {
+                return {};
+            }
             if (fileInfo.isDir())
             {
                 const QString nextDir = fileInfo.absoluteFilePath();
-                if (currentDir.startsWith(nextDir, Qt::CaseInsensitive)) { continue; } // do not go up
-                if (dir == currentDir) { continue; } // do not recursively call same directory
+                if (currentDir.startsWith(nextDir, Qt::CaseInsensitive))
+                {
+                    continue;
+                } // do not go up
+                if (dir == currentDir)
+                {
+                    continue;
+                } // do not recursively call same directory
 
                 const CAircraftCfgEntriesList subList(performParsing(nextDir, excludeDirectories, messages));
-                if (messages.isSuccess()) { result.push_back(subList); }
+                if (messages.isSuccess())
+                {
+                    result.push_back(subList);
+                }
                 else
                 {
                     const CStatusMessage m = CStatusMessage(this).warning(u"Parsing failed for '%1'") << nextDir;
@@ -205,7 +235,10 @@ namespace swift::misc::simulation::fscommon
             else
             {
                 // Enforce air files only for P3D
-                if (getSimulator().isP3D() && !hasAirFiles) { continue; }
+                if (getSimulator().isP3D() && !hasAirFiles)
+                {
+                    continue;
+                }
 
                 // due to the filter we expect only "aircraft.cfg"/"sim.cfg" here
                 // remark: in a 1st version I have used QSettings to parse to file as ini file
@@ -270,7 +303,10 @@ namespace swift::misc::simulation::fscommon
         while (!in.atEnd())
         {
             const QString lineFixed(in.readLine().trimmed());
-            if (lineFixed.isEmpty()) { continue; }
+            if (lineFixed.isEmpty())
+            {
+                continue;
+            }
             if (lineFixed.startsWith("["))
             {
                 if (lineFixed.startsWith("[GENERAL]", Qt::CaseInsensitive))
@@ -281,7 +317,10 @@ namespace swift::misc::simulation::fscommon
                 if (lineFixed.startsWith(fltSection, Qt::CaseInsensitive))
                 {
                     CAircraftCfgEntries e(fileName, fltsimCounter);
-                    if (isRotorcraftPath) { e.setRotorcraft(true); }
+                    if (isRotorcraftPath)
+                    {
+                        e.setRotorcraft(true);
+                    }
                     tempEntries.append(e);
                     currentSection = Fltsim;
                     fltSection = fltSectionStr.arg(++fltsimCounter);
@@ -294,22 +333,34 @@ namespace swift::misc::simulation::fscommon
             {
             case General:
             {
-                if (lineFixed.startsWith("//")) { break; }
+                if (lineFixed.startsWith("//"))
+                {
+                    break;
+                }
                 if (atcType.isEmpty() || atcModel.isEmpty())
                 {
                     const QString c = getFixedIniLineContent(lineFixed);
-                    if (lineFixed.startsWith("atc_type", Qt::CaseInsensitive)) { atcType = c; }
+                    if (lineFixed.startsWith("atc_type", Qt::CaseInsensitive))
+                    {
+                        atcType = c;
+                    }
                     /*else if (lineFixed.startsWith("atc_model", Qt::CaseInsensitive))
                     {
                         atcModel = c;
                     }*/
-                    else if (lineFixed.startsWith("icao_type_designator", Qt::CaseInsensitive)) { atcModel = c; }
+                    else if (lineFixed.startsWith("icao_type_designator", Qt::CaseInsensitive))
+                    {
+                        atcModel = c;
+                    }
                 }
             }
             break;
             case Fltsim:
             {
-                if (lineFixed.startsWith("//")) { break; }
+                if (lineFixed.startsWith("//"))
+                {
+                    break;
+                }
                 CAircraftCfgEntries &e = tempEntries[tempEntries.size() - 1];
                 if (lineFixed.startsWith("atc_", Qt::CaseInsensitive))
                 {
@@ -377,7 +428,10 @@ namespace swift::misc::simulation::fscommon
         // store all entries
         const QFileInfo fileInfo(fnFixed);
         QDateTime fileTimestamp(fileInfo.lastModified());
-        if (!fileTimestamp.isValid() || fileInfo.birthTime() > fileTimestamp) { fileTimestamp = fileInfo.birthTime(); }
+        if (!fileTimestamp.isValid() || fileInfo.birthTime() > fileTimestamp)
+        {
+            fileTimestamp = fileInfo.birthTime();
+        }
         Q_ASSERT_X(fileTimestamp.isValid(), Q_FUNC_INFO, "Missing file timestamp");
 
         CAircraftCfgEntriesList result;
@@ -417,22 +471,34 @@ namespace swift::misc::simulation::fscommon
             const QStringList l = qv.toStringList();
             return l.join(",").trimmed();
         }
-        if (static_cast<QMetaType::Type>(qv.typeId()) == QMetaType::QString) { return qv.toString().trimmed(); }
+        if (static_cast<QMetaType::Type>(qv.typeId()) == QMetaType::QString)
+        {
+            return qv.toString().trimmed();
+        }
         Q_ASSERT(false);
         return {};
     }
 
     QString CAircraftCfgParser::getFixedIniLineContent(const QString &line)
     {
-        if (line.isEmpty()) { return {}; }
+        if (line.isEmpty())
+        {
+            return {};
+        }
 
         // Remove inline comments starting with ;
         const int indexComment = line.indexOf(';');
         QString content = QStringView { line }.left(indexComment - 1).trimmed().toString();
 
         const int index = line.indexOf('=');
-        if (index < 0) { return {}; }
-        if (line.length() < index + 1) { return {}; }
+        if (index < 0)
+        {
+            return {};
+        }
+        if (line.length() < index + 1)
+        {
+            return {};
+        }
 
         content = QStringView { content }.mid(index + 1).trimmed().toString();
 
@@ -458,7 +524,10 @@ namespace swift::misc::simulation::fscommon
             // if (content.endsWith('"'))   { content.remove(content.size() - 1, 1); }
 
             // Unlikely, title="B767-300ER - Condor "Retro Jet
-            if (content.startsWith('"')) { content.remove(0, 1); }
+            if (content.startsWith('"'))
+            {
+                content.remove(0, 1);
+            }
         }
 
         // fix C style linebreaks
@@ -484,12 +553,27 @@ namespace swift::misc::simulation::fscommon
 
     bool CAircraftCfgParser::isExcludedSubDirectory(const QString &checkDirectory)
     {
-        if (checkDirectory.isEmpty()) { return false; }
+        if (checkDirectory.isEmpty())
+        {
+            return false;
+        }
         const QString dir = CFileUtils::lastPathSegment(checkDirectory).toLower();
-        if (dir == u"texture" || dir.startsWith("texture.")) { return true; }
-        if (dir == u"sound" || dir == "soundai") { return true; }
-        if (dir == u"panel") { return true; }
-        if (dir == u"model") { return true; }
+        if (dir == u"texture" || dir.startsWith("texture."))
+        {
+            return true;
+        }
+        if (dir == u"sound" || dir == "soundai")
+        {
+            return true;
+        }
+        if (dir == u"panel")
+        {
+            return true;
+        }
+        if (dir == u"model")
+        {
+            return true;
+        }
         return false;
     }
 } // namespace swift::misc::simulation::fscommon

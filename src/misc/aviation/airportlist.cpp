@@ -23,7 +23,10 @@ namespace swift::misc::aviation
 
     bool CAirportList::containsAirportWithIcaoCode(const CAirportIcaoCode &icao) const
     {
-        if (icao.isEmpty()) { return false; }
+        if (icao.isEmpty())
+        {
+            return false;
+        }
         return this->contains(&CAirport::getIcao, icao);
     }
 
@@ -35,11 +38,17 @@ namespace swift::misc::aviation
 
     void CAirportList::updateMissingParts(const CAirportList &updateFromList)
     {
-        if (updateFromList.isEmpty()) { return; }
+        if (updateFromList.isEmpty())
+        {
+            return;
+        }
         for (CAirport &airport : *this)
         {
             const CAirport fromAirport = updateFromList.findFirstByIcao(airport.getIcao());
-            if (fromAirport.hasValidIcaoCode()) { airport.updateMissingParts(fromAirport); }
+            if (fromAirport.hasValidIcaoCode())
+            {
+                airport.updateMissingParts(fromAirport);
+            }
         }
     }
 
@@ -50,13 +59,22 @@ namespace swift::misc::aviation
 
     CAirport CAirportList::findFirstByNameOrLocation(const QString &nameOrLocation) const
     {
-        if (this->isEmpty() || nameOrLocation.isEmpty()) { return {}; }
+        if (this->isEmpty() || nameOrLocation.isEmpty())
+        {
+            return {};
+        }
         CAirportList airports =
             this->findBy([&](const CAirport &airport) { return airport.matchesDescriptiveName(nameOrLocation); });
-        if (!airports.isEmpty()) { return airports.frontOrDefault(); }
+        if (!airports.isEmpty())
+        {
+            return airports.frontOrDefault();
+        }
 
         airports = this->findBy([&](const CAirport &airport) { return airport.matchesLocation(nameOrLocation); });
-        if (!airports.isEmpty()) { return airports.frontOrDefault(); }
+        if (!airports.isEmpty())
+        {
+            return airports.frontOrDefault();
+        }
         return {};
     }
 
@@ -65,10 +83,16 @@ namespace swift::misc::aviation
         QStringList icaos;
         for (const CAirport &airport : *this)
         {
-            if (airport.getIcaoAsString().isEmpty()) { continue; }
+            if (airport.getIcaoAsString().isEmpty())
+            {
+                continue;
+            }
             icaos.push_back(airport.getIcaoAsString());
         }
-        if (sorted) { icaos.sort(); }
+        if (sorted)
+        {
+            icaos.sort();
+        }
         return icaos;
     }
 
@@ -77,10 +101,16 @@ namespace swift::misc::aviation
         QStringList names;
         for (const CAirport &airport : *this)
         {
-            if (airport.getDescriptiveName().isEmpty()) { continue; }
+            if (airport.getDescriptiveName().isEmpty())
+            {
+                continue;
+            }
             names.push_back(airport.getDescriptiveName());
         }
-        if (sorted) { names.sort(); }
+        if (sorted)
+        {
+            names.sort();
+        }
         return names;
     }
 
@@ -89,7 +119,10 @@ namespace swift::misc::aviation
         CSetBuilder<QString> locations;
         for (const CAirport &airport : *this)
         {
-            if (airport.getLocation().isEmpty()) { continue; }
+            if (airport.getLocation().isEmpty())
+            {
+                continue;
+            }
             locations.insert(airport.getLocation());
         }
 
@@ -102,10 +135,16 @@ namespace swift::misc::aviation
         for (const CAirport &airport : *this)
         {
             const QString l = airport.getLocationPlusOptionalName();
-            if (l.isEmpty()) { continue; }
+            if (l.isEmpty())
+            {
+                continue;
+            }
             locations.push_back(l);
         }
-        if (sorted) { locations.sort(); }
+        if (sorted)
+        {
+            locations.sort();
+        }
         return locations;
     }
 

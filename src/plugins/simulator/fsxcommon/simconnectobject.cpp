@@ -48,13 +48,19 @@ namespace swift::simplugin::fsxcommon
 
     void CSimConnectObject::setAircraftModelString(const QString &modelString)
     {
-        if (modelString.isEmpty()) { return; }
+        if (modelString.isEmpty())
+        {
+            return;
+        }
         m_aircraft.setModelString(modelString);
     }
 
     void CSimConnectObject::setAircraftCG(const physical_quantities::CLength &cg)
     {
-        if (cg.isNull()) { return; }
+        if (cg.isNull())
+        {
+            return;
+        }
         m_aircraft.setCG(cg);
     }
 
@@ -96,9 +102,18 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimConnectObject::isOutdatedPendingAdded(qint64 thresholdMs, qint64 currentMsSinceEpoch) const
     {
-        if (!this->isPendingAdded()) { return false; }
-        if (currentMsSinceEpoch < 0) { currentMsSinceEpoch = QDateTime::currentMSecsSinceEpoch(); }
-        if (m_tsCreated < 0) { return true; } // no valid timestamp
+        if (!this->isPendingAdded())
+        {
+            return false;
+        }
+        if (currentMsSinceEpoch < 0)
+        {
+            currentMsSinceEpoch = QDateTime::currentMSecsSinceEpoch();
+        }
+        if (m_tsCreated < 0)
+        {
+            return true;
+        } // no valid timestamp
         const qint64 delta = currentMsSinceEpoch - m_tsCreated;
         return delta > thresholdMs;
     }
@@ -199,14 +214,20 @@ namespace swift::simplugin::fsxcommon
                                                              const CInterpolationAndRenderingSetupPerCallsign &setup,
                                                              uint32_t aircraftNumber) const
     {
-        if (!m_interpolator) { return {}; }
+        if (!m_interpolator)
+        {
+            return {};
+        }
         return m_interpolator->getInterpolation(currentTimeSinceEpoch, setup, aircraftNumber);
     }
 
     const CAircraftSituation &
     CSimConnectObject::getLastInterpolatedSituation(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
     {
-        if (!m_interpolator) { return CAircraftSituation::null(); }
+        if (!m_interpolator)
+        {
+            return CAircraftSituation::null();
+        }
         return m_interpolator->getLastInterpolatedSituation(mode);
     }
 
@@ -214,7 +235,10 @@ namespace swift::simplugin::fsxcommon
     CSimConnectObject::getInterpolationMessages(CInterpolationAndRenderingSetupBase::InterpolatorMode mode) const
     {
         static const CStatusMessageList empty;
-        if (!m_interpolator) { return empty; }
+        if (!m_interpolator)
+        {
+            return empty;
+        }
         return m_interpolator->getInterpolationMessages(mode);
     }
 
@@ -233,8 +257,14 @@ namespace swift::simplugin::fsxcommon
 
     CSimConnectObject::SimObjectType CSimConnectObject::requestIdToType(DWORD requestId)
     {
-        if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId)) { return TerrainProbe; }
-        if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId)) { return AircraftNonAtc; }
+        if (CSimulatorFsxCommon::isRequestForSimObjTerrainProbe(requestId))
+        {
+            return TerrainProbe;
+        }
+        if (CSimulatorFsxCommon::isRequestForSimObjAircraft(requestId))
+        {
+            return AircraftNonAtc;
+        }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong range");
         return AircraftNonAtc;
     }
@@ -257,7 +287,10 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimConnectObject::isSameTypeGroup(CSimConnectObject::SimObjectType t1, CSimConnectObject::SimObjectType t2)
     {
-        if (t1 == t2) { return true; }
+        if (t1 == t2)
+        {
+            return true;
+        }
         return isAircraft(t1) && isAircraft(t2);
     }
 
@@ -268,14 +301,20 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimConnectObjects::insert(const CSimConnectObject &simObject, bool updateTimestamp)
     {
-        if (!simObject.hasCallsign()) { return false; }
+        if (!simObject.hasCallsign())
+        {
+            return false;
+        }
         if (updateTimestamp)
         {
             CSimConnectObject simObj(simObject);
             simObj.resetTimestampToNow();
             (*this)[simObj.getCallsign()] = simObj;
         }
-        else { (*this)[simObject.getCallsign()] = simObject; }
+        else
+        {
+            (*this)[simObject.getCallsign()] = simObject;
+        }
         return true;
     }
 
@@ -284,7 +323,10 @@ namespace swift::simplugin::fsxcommon
         // First check, if this request id belongs to us
         auto it = std::find_if(this->begin(), this->end(),
                                [requestId](const CSimConnectObject &obj) { return obj.getRequestId() == requestId; });
-        if (it == this->end()) { return false; }
+        if (it == this->end())
+        {
+            return false;
+        }
 
         // belongs to us
         it->setObjectId(objectId);
@@ -298,12 +340,21 @@ namespace swift::simplugin::fsxcommon
 
     CCallsignSet CSimConnectObjects::getAllCallsigns(bool withoutProbes) const
     {
-        if (this->isEmpty()) { return CCallsignSet(); }
-        if (!withoutProbes) { return CCallsignSet(this->keys()); }
+        if (this->isEmpty())
+        {
+            return CCallsignSet();
+        }
+        if (!withoutProbes)
+        {
+            return CCallsignSet(this->keys());
+        }
         CCallsignSet callsigns;
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.isAircraft()) { callsigns.insert(simObject.getCallsign().asString()); }
+            if (simObject.isAircraft())
+            {
+                callsigns.insert(simObject.getCallsign().asString());
+            }
         }
         return callsigns;
     }
@@ -322,18 +373,27 @@ namespace swift::simplugin::fsxcommon
     {
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.getObjectId() == objectId) { return simObject; }
+            if (simObject.getObjectId() == objectId)
+            {
+                return simObject;
+            }
         }
         return CSimConnectObject();
     }
 
     CSimConnectObject CSimConnectObjects::getOldestObject() const
     {
-        if (this->isEmpty()) { return CSimConnectObject(); }
+        if (this->isEmpty())
+        {
+            return CSimConnectObject();
+        }
         CSimConnectObject oldestSimObj = *this->begin();
         for (const CSimConnectObject &simObj : *this)
         {
-            if (!simObj.hasCreatedTimestamp()) { continue; }
+            if (!simObj.hasCreatedTimestamp())
+            {
+                continue;
+            }
             if (!oldestSimObj.hasCreatedTimestamp() ||
                 oldestSimObj.getCreatedTimestamp() > simObj.getCreatedTimestamp())
             {
@@ -347,7 +407,10 @@ namespace swift::simplugin::fsxcommon
     {
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.getRequestId() == requestId) { return simObject; }
+            if (simObject.getRequestId() == requestId)
+            {
+                return simObject;
+            }
         }
         return CSimConnectObject();
     }
@@ -357,9 +420,15 @@ namespace swift::simplugin::fsxcommon
         if (otherSimObj.hasValidObjectId())
         {
             CSimConnectObject obj = this->getSimObjectForObjectId(otherSimObj.getObjectId());
-            if (!obj.isInvalid()) { return obj; }
+            if (!obj.isInvalid())
+            {
+                return obj;
+            }
         }
-        if (!otherSimObj.hasValidRequestId()) { return CSimConnectObject(); }
+        if (!otherSimObj.hasValidRequestId())
+        {
+            return CSimConnectObject();
+        }
         return this->getSimObjectForRequestId(otherSimObj.getRequestId());
     }
 
@@ -398,7 +467,10 @@ namespace swift::simplugin::fsxcommon
     {
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.isPendingAdded()) { return true; }
+            if (simObject.isPendingAdded())
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -407,7 +479,10 @@ namespace swift::simplugin::fsxcommon
     {
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.isPendingRemoved()) { return true; }
+            if (simObject.isPendingRemoved())
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -417,7 +492,10 @@ namespace swift::simplugin::fsxcommon
         int c = 0;
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.isPendingAdded()) { c++; }
+            if (simObject.isPendingAdded())
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -427,7 +505,10 @@ namespace swift::simplugin::fsxcommon
         int c = 0;
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.isPendingRemoved()) { c++; }
+            if (simObject.isPendingRemoved())
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -437,7 +518,10 @@ namespace swift::simplugin::fsxcommon
         int c = 0;
         for (const CSimConnectObject &simObject : std::as_const(*this))
         {
-            if (simObject.isConfirmedAdded()) { c++; }
+            if (simObject.isConfirmedAdded())
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -447,7 +531,10 @@ namespace swift::simplugin::fsxcommon
         CCallsignSet callsigns;
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.isPendingAdded()) { callsigns.push_back(simObject.getCallsign()); }
+            if (simObject.isPendingAdded())
+            {
+                callsigns.push_back(simObject.getCallsign());
+            }
         }
         return callsigns;
     }
@@ -457,7 +544,10 @@ namespace swift::simplugin::fsxcommon
         CCallsignSet callsigns;
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.isPendingRemoved()) { callsigns.push_back(simObject.getCallsign()); }
+            if (simObject.isPendingRemoved())
+            {
+                callsigns.push_back(simObject.getCallsign());
+            }
         }
         return callsigns;
     }
@@ -467,7 +557,10 @@ namespace swift::simplugin::fsxcommon
         QList<CSimConnectObject> objs;
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.getType() == type) { objs.push_back(simObject); }
+            if (simObject.getType() == type)
+            {
+                objs.push_back(simObject);
+            }
         }
         return objs;
     }
@@ -483,7 +576,10 @@ namespace swift::simplugin::fsxcommon
     {
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.getType() == CSimConnectObject::TerrainProbe && !simObject.isPending()) { return simObject; }
+            if (simObject.getType() == CSimConnectObject::TerrainProbe && !simObject.isPending())
+            {
+                return simObject;
+            }
         }
         return CSimConnectObject();
     }
@@ -509,7 +605,10 @@ namespace swift::simplugin::fsxcommon
     {
         for (const CSimConnectObject &simObject : *this)
         {
-            if (simObject.getType() == type) { return true; }
+            if (simObject.getType() == type)
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -523,7 +622,10 @@ namespace swift::simplugin::fsxcommon
     int CSimConnectObjects::removeCallsigns(const CCallsignSet &callsigns)
     {
         int c = 0;
-        for (const CCallsign &cs : callsigns) { c += this->remove(cs); }
+        for (const CCallsign &cs : callsigns)
+        {
+            c += this->remove(cs);
+        }
         return c;
     }
 
@@ -536,12 +638,21 @@ namespace swift::simplugin::fsxcommon
         for (const CSimConnectObject &simObject : std::as_const(*this))
         {
             // verification takes at least a second, so we need some time before outdating
-            if (type != CSimConnectObject::AllTypes && simObject.getType() != type) { continue; }
-            if (!simObject.isOutdatedPendingAdded(5000, ts)) { continue; }
+            if (type != CSimConnectObject::AllTypes && simObject.getType() != type)
+            {
+                continue;
+            }
+            if (!simObject.isOutdatedPendingAdded(5000, ts))
+            {
+                continue;
+            }
             removedObjects.insert(simObject);
             removeCallsigns.insert(simObject.getCallsign());
         }
-        if (!removeCallsigns.isEmpty()) { this->removeCallsigns(removeCallsigns); }
+        if (!removeCallsigns.isEmpty())
+        {
+            this->removeCallsigns(removeCallsigns);
+        }
         return removedObjects;
     }
 } // namespace swift::simplugin::fsxcommon

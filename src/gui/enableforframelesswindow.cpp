@@ -46,7 +46,10 @@ namespace swift::gui
 
     void CEnableForFramelessWindow::setMode(CEnableForFramelessWindow::WindowMode mode)
     {
-        if (mode == m_windowMode) { return; }
+        if (mode == m_windowMode)
+        {
+            return;
+        }
         m_windowMode = mode;
 
         // set the main window or dock widget flags and attributes
@@ -59,15 +62,24 @@ namespace swift::gui
     void CEnableForFramelessWindow::setFrameless(bool frameless)
     {
         const bool isFrameless = this->isFrameless();
-        if (isFrameless == frameless) { return; }
+        if (isFrameless == frameless)
+        {
+            return;
+        }
 
         QWidget *w = this->getWidget();
-        if (!w) { return; }
+        if (!w)
+        {
+            return;
+        }
         const QRect oldFrameGeometry = w->frameGeometry();
         const QRect oldGeometry = w->geometry();
 
         WindowMode nonFrameLessMode = m_originalWindowMode; // Tool/Normal Window
-        if (nonFrameLessMode == WindowFrameless) { nonFrameLessMode = WindowNormal; }
+        if (nonFrameLessMode == WindowFrameless)
+        {
+            nonFrameLessMode = WindowNormal;
+        }
         this->setMode(frameless ? WindowFrameless : nonFrameLessMode);
 
         if (frameless)
@@ -94,24 +106,42 @@ namespace swift::gui
     void CEnableForFramelessWindow::alwaysOnTop(bool onTop)
     {
         Qt::WindowFlags flags = m_widget->windowFlags();
-        if (onTop) { flags |= Qt::WindowStaysOnTopHint; }
-        else { flags &= ~Qt::WindowStaysOnTopHint; }
+        if (onTop)
+        {
+            flags |= Qt::WindowStaysOnTopHint;
+        }
+        else
+        {
+            flags &= ~Qt::WindowStaysOnTopHint;
+        }
         m_widget->setWindowFlags(flags);
         this->windowFlagsChanged();
     }
 
     void CEnableForFramelessWindow::activate()
     {
-        if (!m_widget) { return; }
+        if (!m_widget)
+        {
+            return;
+        }
         m_widget->setWindowState(Qt::WindowActive);
     }
 
     CEnableForFramelessWindow::WindowMode CEnableForFramelessWindow::stringToWindowMode(const QString &s)
     {
         const QString ws(s.trimmed().toLower());
-        if (ws.isEmpty()) { return WindowNormal; }
-        if (ws.contains("frameless") || ws.startsWith("f")) { return WindowFrameless; }
-        if (ws.contains("tool") || ws.startsWith("t")) { return WindowTool; }
+        if (ws.isEmpty())
+        {
+            return WindowNormal;
+        }
+        if (ws.contains("frameless") || ws.startsWith("f"))
+        {
+            return WindowFrameless;
+        }
+        if (ws.contains("tool") || ws.startsWith("t"))
+        {
+            return WindowTool;
+        }
         return WindowNormal;
     }
 
@@ -173,19 +203,28 @@ namespace swift::gui
         m_widget->setProperty(m_framelessPropertyName.constData(), f);
         for (QObject *w : m_widget->children())
         {
-            if (w && w->isWidgetType()) { w->setProperty(m_framelessPropertyName.constData(), f); }
+            if (w && w->isWidgetType())
+            {
+                w->setProperty(m_framelessPropertyName.constData(), f);
+            }
         }
     }
 
     void CEnableForFramelessWindow::showMinimizedModeChecked()
     {
-        if (m_windowMode == CEnableForFramelessWindow::WindowTool) { this->toolToNormalWindow(); }
+        if (m_windowMode == CEnableForFramelessWindow::WindowTool)
+        {
+            this->toolToNormalWindow();
+        }
         m_widget->showMinimized();
     }
 
     void CEnableForFramelessWindow::showNormalModeChecked()
     {
-        if (m_windowMode == CEnableForFramelessWindow::WindowTool) { this->normalToToolWindow(); }
+        if (m_windowMode == CEnableForFramelessWindow::WindowTool)
+        {
+            this->normalToToolWindow();
+        }
         m_widget->showMinimized();
     }
 
@@ -226,9 +265,18 @@ namespace swift::gui
 
     bool CEnableForFramelessWindow::handleChangeEvent(QEvent *event)
     {
-        if (event->type() != QEvent::WindowStateChange) { return false; }
-        if (m_windowMode != WindowTool) { return false; }
-        if (!m_widget) { return false; }
+        if (event->type() != QEvent::WindowStateChange)
+        {
+            return false;
+        }
+        if (m_windowMode != WindowTool)
+        {
+            return false;
+        }
+        if (!m_widget)
+        {
+            return false;
+        }
 
         // make sure a tool window is changed to Normal window so it is show in taskbar
         // here we are already in transition state, so isMinimized means will be minimize right now
@@ -241,7 +289,10 @@ namespace swift::gui
             // decouple, otherwise we end up in infinite loop as it triggers a new changeEvent
 
             QTimer::singleShot(0, m_widget, [=, this] {
-                if (!widgetSelf) { return; }
+                if (!widgetSelf)
+                {
+                    return;
+                }
                 this->showMinimizedModeChecked();
             });
         }
@@ -250,7 +301,10 @@ namespace swift::gui
             // not tool, force tool window
             // decouple, otherwise we end up in infinite loop as it triggers a new changeEvent
             QTimer::singleShot(0, m_widget, [=, this] {
-                if (!widgetSelf) { return; }
+                if (!widgetSelf)
+                {
+                    return;
+                }
                 this->showNormalModeChecked();
             });
         }
@@ -260,20 +314,29 @@ namespace swift::gui
 
     void CEnableForFramelessWindow::addFramelessSizeGripToStatusBar(QStatusBar *statusBar)
     {
-        if (!statusBar) { return; }
+        if (!statusBar)
+        {
+            return;
+        }
         if (!m_framelessSizeGrip)
         {
             m_framelessSizeGrip = new QSizeGrip(m_widget);
             m_framelessSizeGrip->setObjectName("sg_FramelessSizeGrip");
             statusBar->addPermanentWidget(m_framelessSizeGrip);
         }
-        else { m_framelessSizeGrip->show(); }
+        else
+        {
+            m_framelessSizeGrip->show();
+        }
         statusBar->repaint();
     }
 
     void CEnableForFramelessWindow::hideFramelessSizeGripInStatusBar()
     {
-        if (!m_framelessSizeGrip) { return; }
+        if (!m_framelessSizeGrip)
+        {
+            return;
+        }
         m_framelessSizeGrip->hide();
     }
 

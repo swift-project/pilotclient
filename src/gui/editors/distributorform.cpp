@@ -45,7 +45,10 @@ namespace swift::gui::editors
 
     bool CDistributorForm::setValue(const swift::misc::simulation::CDistributor &distributor)
     {
-        if (m_currentDistributor == distributor) { return false; }
+        if (m_currentDistributor == distributor)
+        {
+            return false;
+        }
         m_currentDistributor = distributor;
 
         ui->comp_DistributorSelector->setDistributor(distributor);
@@ -112,14 +115,23 @@ namespace swift::gui::editors
     void CDistributorForm::onDroppedCode(const swift::misc::CVariant &variantDropped)
     {
         CDistributor distributor;
-        if (variantDropped.canConvert<CDistributor>()) { distributor = variantDropped.value<CDistributor>(); }
+        if (variantDropped.canConvert<CDistributor>())
+        {
+            distributor = variantDropped.value<CDistributor>();
+        }
         else if (variantDropped.canConvert<CDistributorList>())
         {
             const auto icaoList(variantDropped.value<CDistributorList>());
-            if (icaoList.isEmpty()) { return; }
+            if (icaoList.isEmpty())
+            {
+                return;
+            }
             distributor = icaoList.front();
         }
-        else { return; }
+        else
+        {
+            return;
+        }
         this->setValue(distributor);
     }
 

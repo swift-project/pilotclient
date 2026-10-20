@@ -67,8 +67,14 @@ namespace swift::core::fsd
         for (const auto &ch : str)
         {
             const ushort code = ch.unicode();
-            if (code < 0x80) { escaped += ch; }
-            else { escaped += "\\u" % QString::number(code, 16).rightJustified(4, '0'); }
+            if (code < 0x80)
+            {
+                escaped += ch;
+            }
+            else
+            {
+                escaped += "\\u" % QString::number(code, 16).rightJustified(4, '0');
+            }
         }
         return escaped;
     }
@@ -144,7 +150,10 @@ namespace swift::core::fsd
 
         const QString codecName(server.getFsdSetup().getTextCodec());
         auto codec = QStringDecoder::encodingForName(codecName);
-        if (!codec.has_value()) { codec = QStringConverter::Utf8; }
+        if (!codec.has_value())
+        {
+            codec = QStringConverter::Utf8;
+        }
         const int protocolRev = (server.getEcosystem() == CEcosystem::vatsim()) ? PROTOCOL_REVISION_VATSIM_VELOCITY :
                                                                                   PROTOCOL_REVISION_CLASSIC;
 
@@ -228,17 +237,26 @@ namespace swift::core::fsd
         if (!CThreadUtils::isInThisThread(this))
         {
             QMetaObject::invokeMethod(this, [=, this] {
-                if (sApp && !sApp->isShuttingDown()) { connectToServer(); }
+                if (sApp && !sApp->isShuttingDown())
+                {
+                    connectToServer();
+                }
             });
             return;
         }
 
-        if (m_socket->isOpen()) { return; }
+        if (m_socket->isOpen())
+        {
+            return;
+        }
         Q_ASSERT(!m_clientName.isEmpty());
         Q_ASSERT((m_versionMajor + m_versionMinor) > 0);
         Q_ASSERT(m_capabilities != Capabilities::None);
 
-        if (m_hostApplication.isEmpty()) { m_hostApplication = this->getSimulatorNameAndVersion().replace(':', ' '); }
+        if (m_hostApplication.isEmpty())
+        {
+            m_hostApplication = this->getSimulatorNameAndVersion().replace(':', ' ');
+        }
 
         this->clearState();
         m_filterPasswordFromLogin = true;
@@ -248,7 +266,10 @@ namespace swift::core::fsd
 
         const QPointer<CFSDClient> myself(this);
         QTimer::singleShot(timerMs, this, [=, this] {
-            if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+            if (!myself || !sApp || sApp->isShuttingDown())
+            {
+                return;
+            }
             this->pendingTimeoutCheck();
         });
 
@@ -262,7 +283,10 @@ namespace swift::core::fsd
         if (!CThreadUtils::isInThisThread(this))
         {
             QMetaObject::invokeMethod(this, [=, this] {
-                if (sApp && !sApp->isShuttingDown()) { disconnectFromServer(); }
+                if (sApp && !sApp->isShuttingDown())
+                {
+                    disconnectFromServer();
+                }
             });
             return;
         }
@@ -274,8 +298,14 @@ namespace swift::core::fsd
         CLoginMode mode = this->getLoginMode();
         if (m_socket->isOpen())
         {
-            if (mode.isPilot()) { this->sendDeletePilot(); }
-            else if (mode.isObserver()) { this->sendDeleteAtc(); }
+            if (mode.isPilot())
+            {
+                this->sendDeletePilot();
+            }
+            else if (mode.isObserver())
+            {
+                this->sendDeleteAtc();
+            }
         }
         m_socket->close();
 
@@ -329,7 +359,10 @@ namespace swift::core::fsd
 
     void CFSDClient::sendPilotDataUpdate()
     {
-        if (this->getConnectionStatus().isDisconnected() && !m_unitTestMode) { return; }
+        if (this->getConnectionStatus().isDisconnected() && !m_unitTestMode)
+        {
+            return;
+        }
         const CSimulatedAircraft myAircraft(getOwnAircraft());
         if (m_loginMode == CLoginMode::Observer)
         {
@@ -363,7 +396,10 @@ namespace swift::core::fsd
 
     void CFSDClient::sendInterimPilotDataUpdate()
     {
-        if (this->getConnectionStatus().isDisconnected()) { return; }
+        if (this->getConnectionStatus().isDisconnected())
+        {
+            return;
+        }
         const CSimulatedAircraft myAircraft(getOwnAircraft());
         InterimPilotDataUpdate interimPilotDataUpdate(
             getOwnCallsignAsString(), QString(), myAircraft.latitude().value(CAngleUnit::deg()),
@@ -383,8 +419,14 @@ namespace swift::core::fsd
 
     void CFSDClient::sendVisualPilotDataUpdate(bool slowUpdate)
     {
-        if (this->getConnectionStatus().isDisconnected() && !m_unitTestMode) { return; }
-        if (m_loginMode == CLoginMode::Observer || !isVisualPositionSendingEnabledForServer()) { return; }
+        if (this->getConnectionStatus().isDisconnected() && !m_unitTestMode)
+        {
+            return;
+        }
+        if (m_loginMode == CLoginMode::Observer || !isVisualPositionSendingEnabledForServer())
+        {
+            return;
+        }
         const CSimulatedAircraft myAircraft(getOwnAircraft());
 
         if (!slowUpdate)
@@ -397,13 +439,22 @@ namespace swift::core::fsd
                 std::abs(myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity &&
                 std::abs(myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s())) < minVelocity)
             {
-                if (m_stoppedSendingVisualPositions) { return; }
+                if (m_stoppedSendingVisualPositions)
+                {
+                    return;
+                }
                 m_stoppedSendingVisualPositions = true;
                 m_visualPositionUpdateSentCount = 0;
             }
-            else { m_stoppedSendingVisualPositions = false; }
+            else
+            {
+                m_stoppedSendingVisualPositions = false;
+            }
 
-            if (!m_serverWantsVisualPositions) { return; }
+            if (!m_serverWantsVisualPositions)
+            {
+                return;
+            }
         }
         VisualPilotDataUpdate visualPilotDataUpdate(
             getOwnCallsignAsString(), myAircraft.latitude().value(CAngleUnit::deg()),
@@ -419,9 +470,18 @@ namespace swift::core::fsd
             myAircraft.getVelocity().getRollVelocity(CAngleUnit::rad(), CTimeUnit::s()),
             myAircraft.getVelocity().getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s()));
 
-        if (m_stoppedSendingVisualPositions) { sendQueuedMessage(visualPilotDataUpdate.toStopped()); }
-        else if (m_visualPositionUpdateSentCount++ % 25 == 0) { sendQueuedMessage(visualPilotDataUpdate.toPeriodic()); }
-        else { sendQueuedMessage(visualPilotDataUpdate); }
+        if (m_stoppedSendingVisualPositions)
+        {
+            sendQueuedMessage(visualPilotDataUpdate.toStopped());
+        }
+        else if (m_visualPositionUpdateSentCount++ % 25 == 0)
+        {
+            sendQueuedMessage(visualPilotDataUpdate.toPeriodic());
+        }
+        else
+        {
+            sendQueuedMessage(visualPilotDataUpdate);
+        }
     }
 
     void CFSDClient::sendAtcDataUpdate(double latitude, double longitude)
@@ -487,11 +547,17 @@ namespace swift::core::fsd
 
     void CFSDClient::sendClientQuery(ClientQueryType queryType, const CCallsign &receiver, const QStringList &queryData)
     {
-        if (queryType == ClientQueryType::Unknown) { return; }
+        if (queryType == ClientQueryType::Unknown)
+        {
+            return;
+        }
         if (!CThreadUtils::isInThisThread(this))
         {
             QMetaObject::invokeMethod(this, [=, this] {
-                if (sApp && !sApp->isShuttingDown()) { sendClientQuery(queryType, receiver, queryData); }
+                if (sApp && !sApp->isShuttingDown())
+                {
+                    sendClientQuery(queryType, receiver, queryData);
+                }
             });
             return;
         }
@@ -526,7 +592,10 @@ namespace swift::core::fsd
         {
             const ClientQuery clientQuery(getOwnCallsignAsString(), receiverCallsign, ClientQueryType::ATIS);
             sendQueuedMessage(clientQuery);
-            if (m_serverType != ServerType::Vatsim) { m_pendingAtisQueries.insert(receiver, {}); }
+            if (m_serverType != ServerType::Vatsim)
+            {
+                m_pendingAtisQueries.insert(receiver, {});
+            }
         }
         else if (queryType == ClientQueryType::PublicIP)
         {
@@ -540,13 +609,19 @@ namespace swift::core::fsd
         }
         else if (queryType == ClientQueryType::FP)
         {
-            if (queryData.isEmpty()) { return; }
+            if (queryData.isEmpty())
+            {
+                return;
+            }
             const ClientQuery clientQuery(getOwnCallsignAsString(), "SERVER", ClientQueryType::FP, queryData);
             sendQueuedMessage(clientQuery);
         }
         else if (queryType == ClientQueryType::AircraftConfig)
         {
-            if (queryData.isEmpty()) { return; }
+            if (queryData.isEmpty())
+            {
+                return;
+            }
             const ClientQuery clientQuery(getOwnCallsignAsString(), receiverCallsign, ClientQueryType::AircraftConfig,
                                           queryData);
             sendQueuedMessage(clientQuery);
@@ -563,11 +638,17 @@ namespace swift::core::fsd
 
     void CFSDClient::sendTextMessages(const CTextMessageList &messages)
     {
-        if (messages.isEmpty()) { return; }
+        if (messages.isEmpty())
+        {
+            return;
+        }
         if (!CThreadUtils::isInThisThread(this))
         {
             QMetaObject::invokeMethod(this, [=, this] {
-                if (sApp && !sApp->isShuttingDown()) { sendTextMessages(messages); }
+                if (sApp && !sApp->isShuttingDown())
+                {
+                    sendTextMessages(messages);
+                }
             });
             return;
         }
@@ -577,7 +658,10 @@ namespace swift::core::fsd
 
         for (const auto &message : privateMessages)
         {
-            if (message.getRecipientCallsign().isEmpty()) { continue; }
+            if (message.getRecipientCallsign().isEmpty())
+            {
+                continue;
+            }
             const TextMessage textMessage(ownCallsign, message.getRecipientCallsign().getFsdCallsignString(),
                                           message.getMessage());
             sendQueuedMessage(textMessage);
@@ -609,27 +693,51 @@ namespace swift::core::fsd
 
     void CFSDClient::sendTextMessage(const CTextMessage &message)
     {
-        if (message.isEmpty()) { return; }
+        if (message.isEmpty())
+        {
+            return;
+        }
         sendTextMessages({ message });
     }
 
     void CFSDClient::sendTextMessage(TextMessageGroups receiverGroup, const QString &message)
     {
-        if (message.isEmpty()) { return; }
+        if (message.isEmpty())
+        {
+            return;
+        }
         if (!CThreadUtils::isInThisThread(this))
         {
             QMetaObject::invokeMethod(this, [=, this] {
-                if (sApp && !sApp->isShuttingDown()) { sendTextMessage(receiverGroup, message); }
+                if (sApp && !sApp->isShuttingDown())
+                {
+                    sendTextMessage(receiverGroup, message);
+                }
             });
             return;
         }
 
         QString receiver;
-        if (receiverGroup == TextMessageGroups::AllClients) { receiver = '*'; }
-        else if (receiverGroup == TextMessageGroups::AllAtcClients) { receiver = QStringLiteral("*A"); }
-        else if (receiverGroup == TextMessageGroups::AllPilotClients) { receiver = QStringLiteral("*P"); }
-        else if (receiverGroup == TextMessageGroups::AllSups) { receiver = QStringLiteral("*S"); }
-        else { return; }
+        if (receiverGroup == TextMessageGroups::AllClients)
+        {
+            receiver = '*';
+        }
+        else if (receiverGroup == TextMessageGroups::AllAtcClients)
+        {
+            receiver = QStringLiteral("*A");
+        }
+        else if (receiverGroup == TextMessageGroups::AllPilotClients)
+        {
+            receiver = QStringLiteral("*P");
+        }
+        else if (receiverGroup == TextMessageGroups::AllSups)
+        {
+            receiver = QStringLiteral("*S");
+        }
+        else
+        {
+            return;
+        }
         const TextMessage textMessage(getOwnCallsignAsString(), receiver, message);
         sendQueuedMessage(textMessage);
         if (receiver == QStringLiteral("*S"))
@@ -667,7 +775,10 @@ namespace swift::core::fsd
         if (!CThreadUtils::isInThisThread(this))
         {
             QMetaObject::invokeMethod(this, [=, this] {
-                if (sApp && !sApp->isShuttingDown()) { sendFlightPlan(flightPlan); }
+                if (sApp && !sApp->isShuttingDown())
+                {
+                    sendFlightPlan(flightPlan);
+                }
             });
             return;
         }
@@ -692,7 +803,10 @@ namespace swift::core::fsd
         {
             act = flightPlan.getAircraftInfo().asIcaoString();
         }
-        else { act = flightPlan.getAircraftInfo().asFaaString(); }
+        else
+        {
+            act = flightPlan.getAircraftInfo().asFaaString();
+        }
 
         Q_ASSERT_X(!act.isEmpty(), Q_FUNC_INFO, "Aircraft type must not be empty");
 
@@ -717,7 +831,10 @@ namespace swift::core::fsd
         if (!CThreadUtils::isInThisThread(this))
         {
             QMetaObject::invokeMethod(this, [=, this] {
-                if (sApp && !sApp->isShuttingDown()) { sendPlaneInfoRequest(receiver); }
+                if (sApp && !sApp->isShuttingDown())
+                {
+                    sendPlaneInfoRequest(receiver);
+                }
             });
             return;
         }
@@ -732,14 +849,20 @@ namespace swift::core::fsd
         if (!CThreadUtils::isInThisThread(this))
         {
             QMetaObject::invokeMethod(this, [=, this] {
-                if (sApp && !sApp->isShuttingDown()) { sendPlaneInfoRequestFsinn(callsign); }
+                if (sApp && !sApp->isShuttingDown())
+                {
+                    sendPlaneInfoRequestFsinn(callsign);
+                }
             });
             return;
         }
 
         const bool connected = isConnected();
         SWIFT_VERIFY_X(connected, Q_FUNC_INFO, "Can't send to server when disconnected");
-        if (!connected) { return; }
+        if (!connected)
+        {
+            return;
+        }
 
         const CSimulatedAircraft myAircraft(getOwnAircraft());
         const QString modelString = this->getConfiguredModelString(myAircraft);
@@ -760,7 +883,10 @@ namespace swift::core::fsd
 
     void CFSDClient::sendPlaneInformationFsinn(const CCallsign &callsign)
     {
-        if (this->getConnectionStatus().isDisconnected() && !m_unitTestMode) { return; }
+        if (this->getConnectionStatus().isDisconnected() && !m_unitTestMode)
+        {
+            return;
+        }
         const CSimulatedAircraft myAircraft(getOwnAircraft());
         const QString modelString = this->getConfiguredModelString(myAircraft);
         const PlaneInformationFsinn planeInformationFsinn(
@@ -772,7 +898,10 @@ namespace swift::core::fsd
 
     void CFSDClient::sendAircraftConfiguration(const QString &receiver, const QString &aircraftConfigJson)
     {
-        if (aircraftConfigJson.size() == 0) { return; }
+        if (aircraftConfigJson.size() == 0)
+        {
+            return;
+        }
         const ClientQuery clientQuery(getOwnCallsignAsString(), receiver, ClientQueryType::AircraftConfig,
                                       { aircraftConfigJson });
         sendQueuedMessage(clientQuery);
@@ -780,10 +909,19 @@ namespace swift::core::fsd
 
     void CFSDClient::sendMessageString(const QString &message)
     {
-        if (message.isEmpty()) { return; }
+        if (message.isEmpty())
+        {
+            return;
+        }
         const QByteArray bufferEncoded = m_encoder(message);
-        if (m_printToConsole) { qDebug() << "FSD Sent=>" << bufferEncoded; }
-        if (!m_unitTestMode) { m_socket->write(bufferEncoded); }
+        if (m_printToConsole)
+        {
+            qDebug() << "FSD Sent=>" << bufferEncoded;
+        }
+        if (!m_unitTestMode)
+        {
+            m_socket->write(bufferEncoded);
+        }
 
         // remove CR/LF and emit
         emitRawFsdMessage(message.trimmed(), true);
@@ -791,15 +929,30 @@ namespace swift::core::fsd
 
     void CFSDClient::sendQueuedMessage()
     {
-        if (m_queuedFsdMessages.isEmpty()) { return; }
+        if (m_queuedFsdMessages.isEmpty())
+        {
+            return;
+        }
         const qsizetype s = m_queuedFsdMessages.size(); // NOLINT(cppcoreguidelines-init-variables)
         this->sendMessageString(m_queuedFsdMessages.dequeue());
 
         // send up to 6 at once
-        if (s > 5) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
-        if (s > 10) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
-        if (s > 20) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
-        if (s > 30) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
+        if (s > 5)
+        {
+            this->sendMessageString(m_queuedFsdMessages.dequeue());
+        }
+        if (s > 10)
+        {
+            this->sendMessageString(m_queuedFsdMessages.dequeue());
+        }
+        if (s > 20)
+        {
+            this->sendMessageString(m_queuedFsdMessages.dequeue());
+        }
+        if (s > 30)
+        {
+            this->sendMessageString(m_queuedFsdMessages.dequeue());
+        }
 
         // overload
         // no idea, if we ever get here
@@ -808,10 +961,19 @@ namespace swift::core::fsd
             const StatusSeverity severity = s > 75 ? SeverityWarning : SeverityInfo;
             CLogMessage(this).log(severity, u"Too many queued messages (%1), bulk send!") << s;
             int sendNo = 10;
-            if (s > 75) { sendNo = 20; }
-            if (s > 100) { sendNo = 30; }
+            if (s > 75)
+            {
+                sendNo = 20;
+            }
+            if (s > 100)
+            {
+                sendNo = 30;
+            }
 
-            for (int i = 0; i < sendNo; i++) { this->sendMessageString(m_queuedFsdMessages.dequeue()); }
+            for (int i = 0; i < sendNo; i++)
+            {
+                this->sendMessageString(m_queuedFsdMessages.dequeue());
+            }
         }
     }
 
@@ -823,7 +985,10 @@ namespace swift::core::fsd
 
     QString CFSDClient::getConfiguredModelString(const CSimulatedAircraft &myAircraft) const
     {
-        if (!m_sendModelString) { return noModelString(); }
+        if (!m_sendModelString)
+        {
+            return noModelString();
+        }
         QReadLocker l(&m_lockUserClientBuffered);
         const QString ms = m_ownModelString.isEmpty() ? myAircraft.getModelString() : m_ownModelString;
         return ms.isEmpty() ? noModelString() : ms;
@@ -831,7 +996,10 @@ namespace swift::core::fsd
 
     QString CFSDClient::getConfiguredLiveryString(const CSimulatedAircraft &myAircraft) const
     {
-        if (!m_sendLiveryString) { return {}; }
+        if (!m_sendLiveryString)
+        {
+            return {};
+        }
         QReadLocker l(&m_lockUserClientBuffered);
         const QString livery = m_ownLivery.isEmpty() ? myAircraft.getModel().getSwiftLiveryString() : m_ownLivery;
         return livery;
@@ -860,7 +1028,10 @@ namespace swift::core::fsd
 
     void CFSDClient::sendClientResponse(ClientQueryType queryType, const QString &receiver)
     {
-        if (queryType == ClientQueryType::Unknown) { return; }
+        if (queryType == ClientQueryType::Unknown)
+        {
+            return;
+        }
         if (queryType == ClientQueryType::IsValidATC)
         {
             this->handleIllegalFsdState("Never use sendClientResponse with IsValidATC from the client");
@@ -910,8 +1081,14 @@ namespace swift::core::fsd
             // sector file in use (blank if pilot)
             responseData.push_back({});
             // current user rating
-            if (m_loginMode.isObserver()) { responseData.push_back(toQString(m_atcRating)); }
-            else { responseData.push_back(toQString(m_pilotRating)); }
+            if (m_loginMode.isObserver())
+            {
+                responseData.push_back(toQString(m_atcRating));
+            }
+            else
+            {
+                responseData.push_back(toQString(m_pilotRating));
+            }
 
             const ClientResponse pduClientQueryResponse(ownCallsign, receiver, ClientQueryType::RealName, responseData);
             sendQueuedMessage(pduClientQueryResponse);
@@ -1008,7 +1185,10 @@ namespace swift::core::fsd
                                  const QByteArray data = nwReply->readAll();
                                  const QJsonObject json = QJsonDocument::fromJson(data).object();
 
-                                 if (json.value("success").toBool()) { callback(json.value("token").toString()); }
+                                 if (json.value("success").toBool())
+                                 {
+                                     callback(json.value("token").toString());
+                                 }
                                  else
                                  {
                                      const QString error = json.value("error_msg").isString() ?
@@ -1024,13 +1204,22 @@ namespace swift::core::fsd
 
     void CFSDClient::sendIncrementalAircraftConfig()
     {
-        if (!m_unitTestMode && (!this->isConnected() || !this->getSetupForServer().sendAircraftParts())) { return; }
+        if (!m_unitTestMode && (!this->isConnected() || !this->getSetupForServer().sendAircraftParts()))
+        {
+            return;
+        }
         const CAircraftParts currentParts(this->getOwnAircraftParts());
 
         // If it hasn't changed, return
-        if (m_sentAircraftConfig == currentParts) { return; }
+        if (m_sentAircraftConfig == currentParts)
+        {
+            return;
+        }
 
-        if (!m_tokenBucket.tryConsume()) { return; }
+        if (!m_tokenBucket.tryConsume())
+        {
+            return;
+        }
 
         const QJsonObject previousConfig = m_sentAircraftConfig.toJson();
         const QJsonObject currentConfig = currentParts.toJson();
@@ -1088,7 +1277,10 @@ namespace swift::core::fsd
         {
             return;
         } // like in old version
-        if (atcDataUpdate.m_facility == CFacilityType::OBS && !cs.hasSuffix()) { return; }
+        if (atcDataUpdate.m_facility == CFacilityType::OBS && !cs.hasSuffix())
+        {
+            return;
+        }
 
         CFrequency freq(atcDataUpdate.m_frequencykHz, CFrequencyUnit::kHz());
         freq.switchUnit(CFrequencyUnit::MHz()); // we would not need to bother, but this makes it easier to identify
@@ -1186,9 +1378,15 @@ namespace swift::core::fsd
             {
                 CFrequency f(freqKhz, CFrequencyUnit::kHz());
                 CComSystem::roundToChannelSpacing(f, CComSystem::ChannelSpacing8_33KHz);
-                if (f == com1 || f == com2) { frequencies.push_back(f); }
+                if (f == com1 || f == com2)
+                {
+                    frequencies.push_back(f);
+                }
             }
-            if (frequencies.isEmpty()) { return; }
+            if (frequencies.isEmpty())
+            {
+                return;
+            }
             CTextMessageList messages(textMessage.m_message, frequencies, CCallsign(textMessage.sender()));
             messages.setCurrentUtcTime();
             emit textMessagesReceived(messages);
@@ -1351,13 +1549,25 @@ namespace swift::core::fsd
             // RefT323, also major tool such as PFPX and Simbrief do so
             if (rules == CFlightPlan::IFR)
             {
-                if (ca >= 1000) { cruiseAltString = u"FL" % QString::number(ca / 100); }
-                else { cruiseAltString = u"FL" % cruiseAltString; }
+                if (ca >= 1000)
+                {
+                    cruiseAltString = u"FL" % QString::number(ca / 100);
+                }
+                else
+                {
+                    cruiseAltString = u"FL" % cruiseAltString;
+                }
             }
             else // VFR
             {
-                if (ca >= 5000) { cruiseAltString = u"FL" % QString::number(ca / 100); }
-                else { cruiseAltString = cruiseAltString % u"ft"; }
+                if (ca >= 5000)
+                {
+                    cruiseAltString = u"FL" % QString::number(ca / 100);
+                }
+                else
+                {
+                    cruiseAltString = cruiseAltString % u"ft";
+                }
             }
         }
         CAltitude cruiseAlt;
@@ -1381,7 +1591,10 @@ namespace swift::core::fsd
     {
         const ClientQuery clientQuery = ClientQuery::fromTokens(tokens);
         // NOLINTBEGIN(bugprone-branch-clone)
-        if (clientQuery.m_queryType == ClientQueryType::Unknown) { return; }
+        if (clientQuery.m_queryType == ClientQueryType::Unknown)
+        {
+            return;
+        }
         if (clientQuery.m_queryType == ClientQueryType::IsValidATC)
         {
             // This is usually sent to the server only. If it ever arrives here, just ignore it.
@@ -1450,10 +1663,19 @@ namespace swift::core::fsd
             }
 
             const bool inRange = isAircraftInRange(callsign);
-            if (!inRange) { return; } // sort out all broadcasts we DO NOT NEED
-            if (!getSetupForServer().receiveAircraftParts()) { return; }
+            if (!inRange)
+            {
+                return;
+            } // sort out all broadcasts we DO NOT NEED
+            if (!getSetupForServer().receiveAircraftParts())
+            {
+                return;
+            }
             const QJsonObject config = doc.object().value("config").toObject();
-            if (config.isEmpty()) { return; }
+            if (config.isEmpty())
+            {
+                return;
+            }
 
             const qint64 offsetTimeMs = currentOffsetTime(callsign);
             emit aircraftConfigReceived(clientQuery.sender(), config, offsetTimeMs);
@@ -1464,15 +1686,24 @@ namespace swift::core::fsd
     void CFSDClient::handleClientResponse(const QStringList &tokens)
     {
         const ClientResponse clientResponse = ClientResponse::fromTokens(tokens);
-        if (clientResponse.isUnknownQuery()) { return; }
+        if (clientResponse.isUnknownQuery())
+        {
+            return;
+        }
         const QString sender = clientResponse.sender();
 
         QString responseData1;
         QString responseData2;
         // NOLINTBEGIN(bugprone-branch-clone)
-        if (!clientResponse.m_responseData.empty()) { responseData1 = clientResponse.m_responseData.at(0); }
+        if (!clientResponse.m_responseData.empty())
+        {
+            responseData1 = clientResponse.m_responseData.at(0);
+        }
 
-        if (clientResponse.m_responseData.size() > 1) { responseData2 = clientResponse.m_responseData.at(1); }
+        if (clientResponse.m_responseData.size() > 1)
+        {
+            responseData2 = clientResponse.m_responseData.at(1);
+        }
 
         if (clientResponse.m_queryType == ClientQueryType::IsValidATC)
         {
@@ -1483,31 +1714,61 @@ namespace swift::core::fsd
             Capabilities capabilities = Capabilities::None;
             for (auto keyValuePair : clientResponse.m_responseData)
             {
-                if (keyValuePair.count('=') != 1) { continue; }
+                if (keyValuePair.count('=') != 1)
+                {
+                    continue;
+                }
 
                 const QStringList split = keyValuePair.split('=');
-                if (split.size() < 2) { continue; }
+                if (split.size() < 2)
+                {
+                    continue;
+                }
                 const QString key = split.at(0);
                 const QString value = split.at(1);
 
-                if (value == "1") { capabilities |= fromQString<Capabilities>(key); }
+                if (value == "1")
+                {
+                    capabilities |= fromQString<Capabilities>(key);
+                }
             }
 
             CClient::Capabilities caps = CClient::None;
-            if (capabilities & Capabilities::AtcInfo) { caps |= CClient::FsdAtisCanBeReceived; }
-            if (capabilities & Capabilities::FastPos) { caps |= CClient::FsdWithInterimPositions; }
-            if (capabilities & Capabilities::VisPos) { caps |= CClient::FsdWithVisualPositions; }
-            if (capabilities & Capabilities::AircraftInfo) { caps |= CClient::FsdWithIcaoCodes; }
-            if (capabilities & Capabilities::AircraftConfig) { caps |= CClient::FsdWithAircraftConfig; }
+            if (capabilities & Capabilities::AtcInfo)
+            {
+                caps |= CClient::FsdAtisCanBeReceived;
+            }
+            if (capabilities & Capabilities::FastPos)
+            {
+                caps |= CClient::FsdWithInterimPositions;
+            }
+            if (capabilities & Capabilities::VisPos)
+            {
+                caps |= CClient::FsdWithVisualPositions;
+            }
+            if (capabilities & Capabilities::AircraftInfo)
+            {
+                caps |= CClient::FsdWithIcaoCodes;
+            }
+            if (capabilities & Capabilities::AircraftConfig)
+            {
+                caps |= CClient::FsdWithAircraftConfig;
+            }
 
             emit capabilityResponseReceived(clientResponse.sender(), caps);
         }
         else if (clientResponse.m_queryType == ClientQueryType::Com1Freq)
         {
-            if (responseData1.isEmpty()) { return; }
+            if (responseData1.isEmpty())
+            {
+                return;
+            }
             bool ok {};
             const double freqMHz = responseData1.toDouble(&ok);
-            if (!ok) { return; }
+            if (!ok)
+            {
+                return;
+            }
             emit com1FrequencyResponseReceived(clientResponse.sender(), CFrequency(freqMHz, CFrequencyUnit::MHz()));
         }
         else if (clientResponse.m_queryType == ClientQueryType::RealName)
@@ -1599,7 +1860,10 @@ namespace swift::core::fsd
             break;
         case ServerErrorCode::AuthTimeout: CLogMessage(this).warning(u"Client did not authenticate in time"); break;
         }
-        if (serverError.isFatalError()) { disconnectFromServer(); }
+        if (serverError.isFatalError())
+        {
+            disconnectFromServer();
+        }
     }
 
     void CFSDClient::handleRehost(const QStringList &tokens)
@@ -1637,7 +1901,10 @@ namespace swift::core::fsd
     void CFSDClient::handleMute(const QStringList &tokens)
     {
         const Mute mute = Mute::fromTokens(tokens);
-        if (mute.receiver() != m_ownCallsign.asString()) { return; }
+        if (mute.receiver() != m_ownCallsign.asString())
+        {
+            return;
+        }
         emit muteRequestReceived(mute.m_mute);
     }
 
@@ -1653,7 +1920,10 @@ namespace swift::core::fsd
 
         resolveLoadBalancing(host, [=, this](const QString &host) {
             socket->connectToHost(host, port);
-            if (!rehostingSocket) { this->startPositionTimers(); }
+            if (!rehostingSocket)
+            {
+                this->startPositionTimers();
+            }
         });
     }
 
@@ -1680,7 +1950,10 @@ namespace swift::core::fsd
                                            callback(host);
                                        } });
         }
-        else { callback(host); }
+        else
+        {
+            callback(host);
+        }
     }
 
     void CFSDClient::handleCustomPilotPacket(const QStringList &tokens)
@@ -1720,7 +1993,10 @@ namespace swift::core::fsd
         else if (subType == "VI")
         {
             // swift's updated interim pilot update.
-            if (!isInterimPositionReceivingEnabledForServer()) { return; }
+            if (!isInterimPositionReceivingEnabledForServer())
+            {
+                return;
+            }
 
             const InterimPilotDataUpdate interimPilotDataUpdate = InterimPilotDataUpdate::fromTokens(tokens);
             const CCallsign callsign(interimPilotDataUpdate.sender(), CCallsign::Aircraft);
@@ -1804,14 +2080,20 @@ namespace swift::core::fsd
 
     void CFSDClient::printSocketError(QAbstractSocket::SocketError socketError)
     {
-        if (m_rehosting) { return; }
+        if (m_rehosting)
+        {
+            return;
+        }
 
         CLogMessage(this).error(u"FSD socket error: %1") << this->socketErrorString(socketError);
     }
 
     void CFSDClient::handleSocketError(QAbstractSocket::SocketError socketError)
     {
-        if (m_rehosting) { return; }
+        if (m_rehosting)
+        {
+            return;
+        }
 
         const QString error = this->socketErrorString(socketError);
         switch (socketError)
@@ -1836,7 +2118,10 @@ namespace swift::core::fsd
 
     void CFSDClient::updateConnectionStatus(CConnectionStatus newStatus)
     {
-        if (this->getConnectionStatus() == newStatus) { return; }
+        if (this->getConnectionStatus() == newStatus)
+        {
+            return;
+        }
         if (newStatus.isConnected())
         {
             CEcosystem ecoSystem;
@@ -1874,7 +2159,10 @@ namespace swift::core::fsd
 
     void CFSDClient::consolidateTextMessage(const CTextMessage &textMessage)
     {
-        if (textMessage.isSupervisorMessage()) { emit this->textMessagesReceived(textMessage); }
+        if (textMessage.isSupervisorMessage())
+        {
+            emit this->textMessagesReceived(textMessage);
+        }
         else
         {
             m_textMessagesToConsolidate.addConsolidatedTextMessage(textMessage);
@@ -1892,7 +2180,10 @@ namespace swift::core::fsd
     {
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
 
-        if (markerTs < 0) { markerTs = QDateTime::currentMSecsSinceEpoch(); }
+        if (markerTs < 0)
+        {
+            markerTs = QDateTime::currentMSecsSinceEpoch();
+        }
         if (!m_lastPositionUpdate.contains(callsign))
         {
             m_lastPositionUpdate.insert(callsign, markerTs);
@@ -1946,7 +2237,10 @@ namespace swift::core::fsd
 
     void CFSDClient::clearState(const CCallsign &callsign)
     {
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
         m_pendingAtisQueries.remove(callsign);
         m_lastPositionUpdate.remove(callsign);
         m_interimPositionReceivers.remove(callsign);
@@ -1957,20 +2251,29 @@ namespace swift::core::fsd
     {
         QList<qint64> &offsets = m_lastOffsetTimes[callsign];
         offsets.push_front(offsetMs);
-        if (offsets.size() > c_maxOffsetTimes) { offsets.removeLast(); }
+        if (offsets.size() > c_maxOffsetTimes)
+        {
+            offsets.removeLast();
+        }
     }
 
     qint64 CFSDClient::averageOffsetTimeMs(const CCallsign &callsign, int &count, int maxLastValues) const
     {
         const QList<qint64> &offsets = m_lastOffsetTimes[callsign];
-        if (offsets.size() < 1) { return -1; }
+        if (offsets.size() < 1)
+        {
+            return -1;
+        }
         qint64 sum = 0;
         count = 0;
         for (qint64 v : offsets)
         {
             count++;
             sum += v;
-            if (count > maxLastValues) { break; }
+            if (count > maxLastValues)
+            {
+                break;
+            }
         }
         return qRound(static_cast<double>(sum) / count);
     }
@@ -2033,11 +2336,17 @@ namespace swift::core::fsd
 
     void CFSDClient::fsdMessageSettingsChanged()
     {
-        if (m_rawFsdMessageLogFile.isOpen()) { m_rawFsdMessageLogFile.close(); }
+        if (m_rawFsdMessageLogFile.isOpen())
+        {
+            m_rawFsdMessageLogFile.close();
+        }
         const CRawFsdMessageSettings setting = m_fsdMessageSetting.get();
         m_rawFsdMessagesEnabled = setting.areRawFsdMessagesEnabled();
 
-        if (setting.getFileWriteMode() == CRawFsdMessageSettings::None || setting.getFileDir().isEmpty()) { return; }
+        if (setting.getFileWriteMode() == CRawFsdMessageSettings::None || setting.getFileDir().isEmpty())
+        {
+            return;
+        }
         if (setting.getFileWriteMode() == CRawFsdMessageSettings::Truncate)
         {
             const QString filePath = CFileUtils::appendFilePaths(setting.getFileDir(), "rawfsdmessages.log");
@@ -2082,7 +2391,10 @@ namespace swift::core::fsd
 
     int CFSDClient::increaseStatisticsValue(const QString &identifier, const QString &appendix)
     {
-        if (identifier.isEmpty() || !m_statistics) { return -1; }
+        if (identifier.isEmpty() || !m_statistics)
+        {
+            return -1;
+        }
 
         QWriteLocker l(&m_lockStatistics);
         const QString i = appendix.isEmpty() ? identifier : identifier % u"." % appendix;
@@ -2091,7 +2403,10 @@ namespace swift::core::fsd
 
         constexpr int MaxTimeValues = 50;
         m_callByTime.push_front(QPair<qint64, QString>(QDateTime::currentMSecsSinceEpoch(), i));
-        if (m_callByTime.size() > MaxTimeValues) { m_callByTime.removeLast(); }
+        if (m_callByTime.size() > MaxTimeValues)
+        {
+            m_callByTime.removeLast();
+        }
         return v;
     }
 
@@ -2119,7 +2434,10 @@ namespace swift::core::fsd
             callByTime = m_callByTime;
         }
 
-        if (callStatistics.isEmpty()) { return {}; }
+        if (callStatistics.isEmpty())
+        {
+            return {};
+        }
         for (const auto [key, value] : makePairsRange(std::as_const(callStatistics)))
         {
             // key is pair.first, value is pair.second
@@ -2149,7 +2467,10 @@ namespace swift::core::fsd
             }
         }
 
-        if (reset) { this->clearStatistics(); }
+        if (reset)
+        {
+            this->clearStatistics();
+        }
         return stats;
     }
 
@@ -2161,7 +2482,10 @@ namespace swift::core::fsd
 
     void CFSDClient::readDataFromSocketMaxLines(int maxLines)
     {
-        if (m_socket->bytesAvailable() < 1) { return; }
+        if (m_socket->bytesAvailable() < 1)
+        {
+            return;
+        }
 
         int lines = 0;
 
@@ -2169,13 +2493,19 @@ namespace swift::core::fsd
         while (m_socket->canReadLine())
         {
             const QByteArray dataEncoded = m_socket->readLine();
-            if (dataEncoded.isEmpty()) { continue; }
+            if (dataEncoded.isEmpty())
+            {
+                continue;
+            }
             const QString data = m_decoder(dataEncoded);
             this->parseMessage(data);
             lines++;
 
             static constexpr int MaxLines = 75 - 1;
-            if (maxLines < 0) { maxLines = MaxLines; }
+            if (maxLines < 0)
+            {
+                maxLines = MaxLines;
+            }
 
             if (lines > maxLines)
             {
@@ -2186,8 +2516,14 @@ namespace swift::core::fsd
                     << MaxLines << DelayMs;
                 QPointer<CFSDClient> myself(this);
                 QTimer::singleShot(DelayMs, this, [=] {
-                    if (!sApp || sApp->isShuttingDown()) { return; }
-                    if (myself) { myself->readDataFromSocketMaxLines(newMax); }
+                    if (!sApp || sApp->isShuttingDown())
+                    {
+                        return;
+                    }
+                    if (myself)
+                    {
+                        myself->readDataFromSocketMaxLines(newMax);
+                    }
                 });
                 break;
             }
@@ -2197,7 +2533,10 @@ namespace swift::core::fsd
     QString CFSDClient::socketErrorString(QAbstractSocket::SocketError error) const
     {
         QString e = CFSDClient::socketErrorToQString(error);
-        if (!m_socket->errorString().isEmpty()) { e += QStringLiteral(": ") % m_socket->errorString(); }
+        if (!m_socket->errorString().isEmpty())
+        {
+            e += QStringLiteral(": ") % m_socket->errorString();
+        }
         return e;
     }
 
@@ -2213,7 +2552,10 @@ namespace swift::core::fsd
         QString cmd;
         const QString line = lineRaw.trimmed();
 
-        if (m_printToConsole) { qDebug() << "FSD Recv=>" << line; }
+        if (m_printToConsole)
+        {
+            qDebug() << "FSD Recv=>" << line;
+        }
         emitRawFsdMessage(line, false);
 
         for (const QString &str : makeKeysRange(std::as_const(m_messageTypeMapping)))
@@ -2238,7 +2580,10 @@ namespace swift::core::fsd
             const QString payload = line.mid(cmd.size()).trimmed();
 
             // We expected a payload, but there is nothing
-            if (payload.length() == 0) { return; }
+            if (payload.length() == 0)
+            {
+                return;
+            }
 
             const QStringList tokens = payload.split(':');
             switch (messageType)
@@ -2284,12 +2629,18 @@ namespace swift::core::fsd
             case MessageType::Unknown: handleUnknownPacket(tokens); break;
             }
         }
-        else { handleUnknownPacket(line); }
+        else
+        {
+            handleUnknownPacket(line);
+        }
     }
 
     void CFSDClient::emitRawFsdMessage(const QString &fsdMessage, bool isSent)
     {
-        if (!m_unitTestMode && !m_rawFsdMessagesEnabled) { return; }
+        if (!m_unitTestMode && !m_rawFsdMessagesEnabled)
+        {
+            return;
+        }
         QString fsdMessageFiltered(fsdMessage);
         if (m_filterPasswordFromLogin)
         {
@@ -2314,10 +2665,16 @@ namespace swift::core::fsd
 
     bool CFSDClient::saveNetworkStatistics(const QString &server)
     {
-        if (m_callStatistics.isEmpty()) { return false; }
+        if (m_callStatistics.isEmpty())
+        {
+            return false;
+        }
 
         const QString s = this->getNetworkStatisticsAsText(false, "\n");
-        if (s.isEmpty()) { return false; }
+        if (s.isEmpty())
+        {
+            return false;
+        }
         const QString fn = QStringLiteral("networkstatistics_%1_%2.log")
                                .arg(QDateTime::currentDateTimeUtc().toString("yyMMddhhmmss"), server);
         const QString fp = CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), fn);
@@ -2337,12 +2694,18 @@ namespace swift::core::fsd
         {
             m_interimPositionUpdateTimer.start(c_updateInterimPositionIntervalMsec);
         }
-        else { m_interimPositionUpdateTimer.stop(); }
+        else
+        {
+            m_interimPositionUpdateTimer.stop();
+        }
         if (this->isVisualPositionSendingEnabledForServer())
         {
             m_visualPositionUpdateTimer.start(c_updateVisualPositionIntervalMsec);
         }
-        else { m_visualPositionUpdateTimer.stop(); }
+        else
+        {
+            m_visualPositionUpdateTimer.stop();
+        }
         // NOLINTEND(bugprone-branch-clone)
     }
 
@@ -2376,7 +2739,10 @@ namespace swift::core::fsd
             m_mapAtisMessages[callsign].m_lineCount++;
             return;
         }
-        if (!m_mapAtisMessages.contains(callsign)) { return; }
+        if (!m_mapAtisMessages.contains(callsign))
+        {
+            return;
+        }
 
         // Ignore the check for line count.
         m_mapAtisMessages[callsign].m_lineCount++;
@@ -2401,10 +2767,16 @@ namespace swift::core::fsd
 
     void CFSDClient::pendingTimeoutCheck()
     {
-        if (!this->isPendingConnection()) { return; }
+        if (!this->isPendingConnection())
+        {
+            return;
+        }
 
         const qint64 age = QDateTime::currentMSecsSinceEpoch() - m_loginSince;
-        if (age < PendingConnectionTimeoutMs) { return; }
+        if (age < PendingConnectionTimeoutMs)
+        {
+            return;
+        }
 
         // time out
         CLogMessage(this).warning(u"Timeout on pending connection to '%1'") << this->getServer().getName();
@@ -2465,14 +2837,23 @@ namespace swift::core::fsd
 
     CLength CFSDClient::maxOrNotNull(const CLength &l1, const CLength &l2)
     {
-        if (l1.isNull()) { return l2; }
-        if (l2.isNull()) { return l1; }
+        if (l1.isNull())
+        {
+            return l2;
+        }
+        if (l2.isNull())
+        {
+            return l1;
+        }
         return (l2 > l1) ? l2 : l1;
     }
 
     QString CFSDClient::noColons(const QString &input)
     {
-        if (!input.contains(':')) { return input; }
+        if (!input.contains(':'))
+        {
+            return input;
+        }
         QString copy(input);
         return copy.remove(':');
     }
@@ -2494,7 +2875,10 @@ namespace swift::core::fsd
         QHash<QString, MessageType>::const_iterator i = m_messageTypeMapping.constBegin();
         while (i != m_messageTypeMapping.constEnd())
         {
-            if (i.value() == mt) { return i.key(); }
+            if (i.value() == mt)
+            {
+                return i.key();
+            }
             ++i;
         }
 
@@ -2504,7 +2888,10 @@ namespace swift::core::fsd
 
     void CFSDClient::handleIllegalFsdState(const QString &message)
     {
-        if (CBuildConfig::isLocalDeveloperDebugBuild()) { SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Illegal FSD state"); }
+        if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Illegal FSD state");
+        }
         CLogMessage(this).warning(message);
     }
 

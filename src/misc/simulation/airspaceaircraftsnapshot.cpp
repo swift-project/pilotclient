@@ -22,7 +22,10 @@ namespace swift::misc::simulation
         : m_timestampMsSinceEpoch(QDateTime::currentMSecsSinceEpoch()), m_restricted(restricted),
           m_renderingEnabled(renderingEnabled), m_threadName(QThread::currentThread()->objectName())
     {
-        if (allAircraft.isEmpty()) { return; }
+        if (allAircraft.isEmpty())
+        {
+            return;
+        }
 
         CSimulatedAircraftList aircraft(allAircraft);
         aircraft.sortByDistanceToReferencePositionRenderedCallsign();
@@ -72,10 +75,16 @@ namespace swift::misc::simulation
                 {
                     count++;
                     m_enabledAircraftCallsignsByDistance.push_back(cs);
-                    if (currentAircraft.isVtol()) { m_enabledVtolAircraftCallsignsByDistance.push_back(cs); }
+                    if (currentAircraft.isVtol())
+                    {
+                        m_enabledVtolAircraftCallsignsByDistance.push_back(cs);
+                    }
                 }
             }
-            else { m_disabledAircraftCallsignsByDistance.push_back(cs); }
+            else
+            {
+                m_disabledAircraftCallsignsByDistance.push_back(cs);
+            }
         }
     }
 
@@ -88,12 +97,18 @@ namespace swift::misc::simulation
             this->m_restrictionChanged = (snapshot.m_restricted != this->m_restricted) ||
                                          (snapshot.m_renderingEnabled != this->m_renderingEnabled);
         }
-        else { this->m_restrictionChanged = true; }
+        else
+        {
+            this->m_restrictionChanged = true;
+        }
     }
 
     QVariant CAirspaceAircraftSnapshot::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         return CValueObject::propertyByIndex(index);
     }
 

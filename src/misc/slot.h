@@ -32,7 +32,10 @@ namespace swift::misc
         called->clear();
         auto wrapper = [receiver, called, connection = promise.get_future().share(),
                         slot = std::forward<G>(slot)](auto &&...args) {
-            if (called->test_and_set()) { return; }
+            if (called->test_and_set())
+            {
+                return;
+            }
             QObject::disconnect(connection.get());
             private_ns::invokeSlot(slot, receiver, std::forward<decltype(args)>(args)...);
         };
@@ -96,7 +99,10 @@ namespace swift::misc
         bool singleShot(Args... args) const
         {
             // does NOT return the values of m_function!
-            if (!m_object || !m_function) { return false; }
+            if (!m_object || !m_function)
+            {
+                return false;
+            }
             QTimer::singleShot(0, m_object.data(), std::bind(*this, std::forward<Args>(args)...));
             return true;
         }

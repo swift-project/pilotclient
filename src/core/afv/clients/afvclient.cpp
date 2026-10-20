@@ -93,8 +93,14 @@ namespace swift::core::afv::clients
 
     void CAfvClient::connectWithContexts()
     {
-        if (m_connectedWithContext) { return; }
-        if (!hasContexts()) { return; }
+        if (m_connectedWithContext)
+        {
+            return;
+        }
+        if (!hasContexts())
+        {
+            return;
+        }
 
         // Disconnect all previously connect signals between the AfvClient and the required contexts
         for (auto *context : QVector<QObject *> { sApp->getIContextOwnAircraft(), sApp->getIContextNetwork() })
@@ -114,14 +120,20 @@ namespace swift::core::afv::clients
     void CAfvClient::fetchSimulatorSettings()
     {
         // call that in correct thread
-        if (!hasContexts()) { return; }
+        if (!hasContexts())
+        {
+            return;
+        }
 
         if (QThread::currentThread() != sApp->getIContextSimulator()->thread())
         {
             // Method needs to be executed in the context thread
             QPointer<CAfvClient> myself(this);
             QMetaObject::invokeMethod(sApp->getIContextSimulator(), [=, this]() {
-                if (myself) { this->fetchSimulatorSettings(); }
+                if (myself)
+                {
+                    this->fetchSimulatorSettings();
+                }
             });
             return;
         }
@@ -130,7 +142,10 @@ namespace swift::core::afv::clients
         const bool changed = integrated != m_integratedComUnit;
 
         m_integratedComUnit = integrated;
-        if (changed) { emit this->updatedFromOwnAircraftCockpit(); }
+        if (changed)
+        {
+            emit this->updatedFromOwnAircraftCockpit();
+        }
     }
 
     void CAfvClient::connectTo(const QString &cid, const QString &password, const QString &callsign,
@@ -141,7 +156,10 @@ namespace swift::core::afv::clients
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
             QMetaObject::invokeMethod(this, [=, this]() {
-                if (myself) { connectTo(cid, password, callsign, client); }
+                if (myself)
+                {
+                    connectTo(cid, password, callsign, client);
+                }
             });
             return;
         }
@@ -155,8 +173,14 @@ namespace swift::core::afv::clients
         {
             // check if connect simply did NOT receive an answer
             QTimer::singleShot(20 * 1000, this, [=, this] {
-                if (!myself) { return; }
-                if (m_retryConnectAttempt > 0) { return; } // already handled
+                if (!myself)
+                {
+                    return;
+                }
+                if (m_retryConnectAttempt > 0)
+                {
+                    return;
+                } // already handled
 
                 // this will reconnect ONLY if not already connected
                 this->retryConnectTo(cid, password, callsign, client, QStringLiteral("No connection afer 20secs"));
@@ -172,7 +196,10 @@ namespace swift::core::afv::clients
                 cid, password, callsign, client,
                 { // this is the callback when the connection has been established
                   this, [=, this](bool authenticated) {
-                      if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
+                      if (!myself)
+                      {
+                          return;
+                      } // cppcheck-suppress knownConditionTrueFalse
 
                       // HF stations aliased
                       const QVector<StationDto> aliasedStations = m_connection->getAllAliasedStations();
@@ -186,7 +213,10 @@ namespace swift::core::afv::clients
                           // as I run in "my thread" starting timer should be OK
                           {
                               QMutexLocker lock2(&m_mutex);
-                              if (m_voiceServerTimer) { m_voiceServerTimer->start(PositionUpdatesMs); }
+                              if (m_voiceServerTimer)
+                              {
+                                  m_voiceServerTimer->start(PositionUpdatesMs);
+                              }
                           }
                           m_retryConnectAttempt = 0;
                           emit this->connectionStatusChanged(Connected);
@@ -209,7 +239,10 @@ namespace swift::core::afv::clients
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
             QMetaObject::invokeMethod(this, [=, this]() {
-                if (myself) { disconnectFrom(stop); }
+                if (myself)
+                {
+                    disconnectFrom(stop);
+                }
             });
             return;
         }
@@ -227,7 +260,10 @@ namespace swift::core::afv::clients
 
         emit connectionStatusChanged(Disconnected);
 
-        if (stop) { this->stopAudio(); }
+        if (stop)
+        {
+            this->stopAudio();
+        }
     }
 
     QStringList CAfvClient::availableInputDevices() const
@@ -243,7 +279,10 @@ namespace swift::core::afv::clients
     void CAfvClient::setBypassEffects(bool value)
     {
         QMutexLocker lock(&m_mutexSampleProviders);
-        if (m_soundcardSampleProvider) { m_soundcardSampleProvider->setBypassEffects(value); }
+        if (m_soundcardSampleProvider)
+        {
+            m_soundcardSampleProvider->setBypassEffects(value);
+        }
     }
 
     bool CAfvClient::isOutputMuted() const
@@ -254,7 +293,10 @@ namespace swift::core::afv::clients
 
     void CAfvClient::setOutputMuted(bool mute)
     {
-        if (this->isOutputMuted() == mute) { return; }
+        if (this->isOutputMuted() == mute)
+        {
+            return;
+        }
         this->setNormalizedMasterOutputVolume(mute ? 0 : 50);
         emit this->changedOutputMute(mute);
     }
@@ -273,7 +315,10 @@ namespace swift::core::afv::clients
             // Method needs to be executed in the object thread since it will create new QObject children
             QPointer<CAfvClient> myself(this);
             QMetaObject::invokeMethod(this, [=, this]() {
-                if (myself) { startAudio(inputDevice, outputDevice); }
+                if (myself)
+                {
+                    startAudio(inputDevice, outputDevice);
+                }
             });
             return;
         }
@@ -319,7 +364,10 @@ namespace swift::core::afv::clients
                 connect(m_soundcardSampleProvider, &CSoundcardSampleProvider::receivingCallsignsChanged, this,
                         &CAfvClient::onReceivingCallsignsChanged);
 
-                if (m_outputSampleProvider) { m_outputSampleProvider->deleteLater(); }
+                if (m_outputSampleProvider)
+                {
+                    m_outputSampleProvider->deleteLater();
+                }
                 m_outputSampleProvider = new CVolumeSampleProvider(m_soundcardSampleProvider, this);
                 // m_outputSampleProvider->setGainRatio(outputVolume); // 2021-09 LT Disabled. Output volume is
                 // controlled independently for COM1/2
@@ -331,7 +379,10 @@ namespace swift::core::afv::clients
 
                 m_output->start(useOutputDevice, m_outputSampleProvider);
 
-                if (useInputDevice.getType() != CAudioDeviceInfo::Unknown) { m_input->start(useInputDevice); }
+                if (useInputDevice.getType() != CAudioDeviceInfo::Unknown)
+                {
+                    m_input->start(useInputDevice);
+                }
                 else
                 {
                     CLogMessage(this).warning(
@@ -397,7 +448,10 @@ namespace swift::core::afv::clients
         }
         CLogMessage(this).info(u"AFV Client stopped");
 
-        if (this->isOutputMuted()) { this->setOutputMuted(false); }
+        if (this->isOutputMuted())
+        {
+            this->setOutputMuted(false);
+        }
 
         emit this->inputVolumePeakVU(0.0);
         emit this->outputVolumePeakVU(0.0);
@@ -416,7 +470,10 @@ namespace swift::core::afv::clients
         this->stopAudio();
         QPointer<CAfvClient> myself(this);
         QTimer::singleShot(1000, this, [=] {
-            if (myself) { myself->startAudio(); }
+            if (myself)
+            {
+                myself->startAudio();
+            }
         });
     }
 
@@ -449,7 +506,10 @@ namespace swift::core::afv::clients
     void CAfvClient::setReceiveAudio(bool receive)
     {
         QMutexLocker lock(&m_mutexConnection);
-        if (!m_connection) { return; }
+        if (!m_connection)
+        {
+            return;
+        }
         m_connection->setReceiveAudio(receive);
     }
 
@@ -457,8 +517,14 @@ namespace swift::core::afv::clients
     {
         {
             QMutexLocker lock(&m_mutexTransceivers);
-            if (enable) { m_enabledTransceivers.insert(id); }
-            else { m_enabledTransceivers.remove(id); }
+            if (enable)
+            {
+                m_enabledTransceivers.insert(id);
+            }
+            else
+            {
+                m_enabledTransceivers.remove(id);
+            }
         }
 
         this->updateTransceivers();
@@ -473,7 +539,10 @@ namespace swift::core::afv::clients
     {
         // we double check, enabled and exist!
         const auto enabledTransceivers = this->getEnabledTransceivers(); // threadsafe
-        if (!enabledTransceivers.contains(id)) { return false; }
+        if (!enabledTransceivers.contains(id))
+        {
+            return false;
+        }
 
         const auto transceivers = this->getTransceivers(); // threadsafe
         return std::any_of(transceivers.cbegin(), transceivers.cend(),
@@ -487,7 +556,10 @@ namespace swift::core::afv::clients
 
     void CAfvClient::updateComFrequency(quint16 id, quint32 frequencyHz)
     {
-        if (id != 0 && id != 1) { return; }
+        if (id != 0 && id != 1)
+        {
+            return;
+        }
 
         // Fix rounding issues like 128074999 Hz -> 128075000 Hz
         quint32 roundedFrequencyHz = static_cast<quint32>(qRound(frequencyHz / 1000.0)) * 1000;
@@ -563,13 +635,19 @@ namespace swift::core::afv::clients
         QVector<TransceiverDto> newEnabledTransceivers;
         for (const TransceiverDto &transceiver : transceivers)
         {
-            if (enabledTransceivers.contains(transceiver.id)) { newEnabledTransceivers.push_back(transceiver); }
+            if (enabledTransceivers.contains(transceiver.id))
+            {
+                newEnabledTransceivers.push_back(transceiver);
+            }
         }
 
         // in connection and soundcard only use the enabled transceivers
         {
             QMutexLocker lock(&m_mutexConnection);
-            if (m_connection) { m_connection->updateTransceivers(callsign, newEnabledTransceivers); }
+            if (m_connection)
+            {
+                m_connection->updateTransceivers(callsign, newEnabledTransceivers);
+            }
         }
         {
             QMutexLocker lock(&m_mutexSampleProviders);
@@ -625,9 +703,15 @@ namespace swift::core::afv::clients
         this->setTransmittingTransceivers(txs);
 
         QSet<quint16> enabledTransceivers;
-        if (rx1 || tx1) { enabledTransceivers.insert(comUnitToTransceiverId(CComSystem::Com1)); }
+        if (rx1 || tx1)
+        {
+            enabledTransceivers.insert(comUnitToTransceiverId(CComSystem::Com1));
+        }
 
-        if (rx2 || tx2) { enabledTransceivers.insert(comUnitToTransceiverId(CComSystem::Com2)); }
+        if (rx2 || tx2)
+        {
+            enabledTransceivers.insert(comUnitToTransceiverId(CComSystem::Com2));
+        }
 
         {
             QMutexLocker lock(&m_mutexTransceivers);
@@ -652,8 +736,14 @@ namespace swift::core::afv::clients
         const QVector<TxTransceiverDto> transmits = getTransmittingTransceivers();
         for (const TxTransceiverDto &dto : transmits)
         {
-            if (dto.id == comUnitToTransceiverId(CComSystem::Com1)) { tx1 = true; }
-            if (dto.id == comUnitToTransceiverId(CComSystem::Com2)) { tx2 = true; }
+            if (dto.id == comUnitToTransceiverId(CComSystem::Com1))
+            {
+                tx1 = true;
+            }
+            if (dto.id == comUnitToTransceiverId(CComSystem::Com2))
+            {
+                tx2 = true;
+            }
         }
     }
 
@@ -689,13 +779,19 @@ namespace swift::core::afv::clients
             return;
         }
 
-        if (m_transmit == active) { return; }
+        if (m_transmit == active)
+        {
+            return;
+        }
         m_transmit = active;
 
         // thread safe block
         {
             QMutexLocker lock(&m_mutexSampleProviders);
-            if (m_soundcardSampleProvider) { m_soundcardSampleProvider->pttUpdate(active, m_transmittingTransceivers); }
+            if (m_soundcardSampleProvider)
+            {
+                m_soundcardSampleProvider->pttUpdate(active, m_transmittingTransceivers);
+            }
 
             /** TODO: RR 2019-10 as discussed
             https://discordapp.com/channels/539048679160676382/623947987822837779/633320595978846208
@@ -726,14 +822,23 @@ namespace swift::core::afv::clients
             // call in background thread of AFVClient to avoid lock issues
             QPointer<CAfvClient> myself(this);
             QTimer::singleShot(0, this, [=] {
-                if (!myself || !CAfvClient::hasContexts()) { return; }
+                if (!myself || !CAfvClient::hasContexts())
+                {
+                    return;
+                }
                 myself->setInputVolumeDb(valueDb);
             });
             return true; // not exactly "true" as we do it async
         }
 
-        if (valueDb > MaxDbIn) { valueDb = MaxDbIn; }
-        else if (valueDb < MinDbIn) { valueDb = MinDbIn; }
+        if (valueDb > MaxDbIn)
+        {
+            valueDb = MaxDbIn;
+        }
+        else if (valueDb < MinDbIn)
+        {
+            valueDb = MinDbIn;
+        }
 
         QMutexLocker lock(&m_mutex);
         bool changed = !qFuzzyCompare(m_inputVolumeDb, valueDb);
@@ -784,16 +889,28 @@ namespace swift::core::afv::clients
     int CAfvClient::getNormalizedComOutputVolume(CComSystem::ComUnit comUnit) const
     {
         QMutexLocker lock(&m_mutexVolume);
-        if (comUnit == CComSystem::Com1) { return m_outputVolumeCom1Normalized; }
-        if (comUnit == CComSystem::Com2) { return m_outputVolumeCom2Normalized; }
+        if (comUnit == CComSystem::Com1)
+        {
+            return m_outputVolumeCom1Normalized;
+        }
+        if (comUnit == CComSystem::Com2)
+        {
+            return m_outputVolumeCom2Normalized;
+        }
         qFatal("Invalid ComUnit");
         return 0;
     }
 
     bool CAfvClient::setNormalizedInputVolume(int volume)
     {
-        if (volume < 0) { volume = 0; }
-        else if (volume > 100) { volume = 100; }
+        if (volume < 0)
+        {
+            volume = 0;
+        }
+        else if (volume > 100)
+        {
+            volume = 100;
+        }
         const double range = MaxDbIn - MinDbIn;
         const double dB = MinDbIn + (volume * range / 100.0);
 
@@ -808,7 +925,10 @@ namespace swift::core::afv::clients
             // call in background thread of AFVClient to avoid lock issues
             QPointer<CAfvClient> myself(this);
             QTimer::singleShot(0, this, [=] {
-                if (!myself || !CAfvClient::hasContexts()) { return; }
+                if (!myself || !CAfvClient::hasContexts())
+                {
+                    return;
+                }
                 myself->setNormalizedMasterOutputVolume(volume);
             });
             return true; // not exactly "true" as we do it async
@@ -818,7 +938,10 @@ namespace swift::core::afv::clients
         {
             QMutexLocker lock(&m_mutexVolume);
             changed = m_outputMasterVolumeNormalized != volume;
-            if (changed) { m_outputMasterVolumeNormalized = volume; }
+            if (changed)
+            {
+                m_outputMasterVolumeNormalized = volume;
+            }
         }
 
         // Trigger update of com volumes
@@ -832,13 +955,28 @@ namespace swift::core::afv::clients
 
     bool CAfvClient::setNormalizedComOutputVolume(CComSystem::ComUnit comUnit, int volume)
     {
-        if (volume < 0) { volume = 0; }
-        else if (volume > 100) { volume = 100; }
+        if (volume < 0)
+        {
+            volume = 0;
+        }
+        else if (volume > 100)
+        {
+            volume = 100;
+        }
 
         // Save original volume
-        if (comUnit == CComSystem::Com1) { m_outputVolumeCom1Normalized = volume; }
-        else if (comUnit == CComSystem::Com2) { m_outputVolumeCom2Normalized = volume; }
-        else { qFatal("Invalid ComUnit"); }
+        if (comUnit == CComSystem::Com1)
+        {
+            m_outputVolumeCom1Normalized = volume;
+        }
+        else if (comUnit == CComSystem::Com2)
+        {
+            m_outputVolumeCom2Normalized = volume;
+        }
+        else
+        {
+            qFatal("Invalid ComUnit");
+        }
 
         // Calculate volume relative to master-output volume
         volume = qRound((double)volume * getNormalizedMasterOutputVolume() / 100);
@@ -846,7 +984,10 @@ namespace swift::core::afv::clients
         // Asymetric
         double range = MaxDbOut;
         double dB = 0;
-        if (volume >= 50) { volume -= 50; }
+        if (volume >= 50)
+        {
+            volume -= 50;
+        }
         else
         {
             dB = MinDbOut;
@@ -893,7 +1034,10 @@ namespace swift::core::afv::clients
             return;
         }
 
-        if (!this->isConnected()) { return; } // threadsafe
+        if (!this->isConnected())
+        {
+            return;
+        } // threadsafe
 
         const QString callsign = this->getCallsign(); // threadsafe
         const auto transmittingTransceivers = this->getTransmittingTransceivers(); // threadsafe
@@ -993,7 +1137,10 @@ namespace swift::core::afv::clients
     {
         QStringList coms;
         QMutexLocker lock(&m_mutexSampleProviders);
-        if (!m_soundcardSampleProvider) { return { { QString(), QString() } }; }
+        if (!m_soundcardSampleProvider)
+        {
+            return { { QString(), QString() } };
+        }
         coms << m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com1));
         coms << m_soundcardSampleProvider->getReceivingCallsignsString(comUnitToTransceiverId(CComSystem::Com2));
         return coms;
@@ -1002,7 +1149,10 @@ namespace swift::core::afv::clients
     bool CAfvClient::updateVoiceServerUrl(const QString &url)
     {
         QMutexLocker lock(&m_mutexConnection);
-        if (!m_connection) { return false; }
+        if (!m_connection)
+        {
+            return false;
+        }
         return m_connection->updateVoiceServerUrl(url);
     }
 
@@ -1056,8 +1206,14 @@ namespace swift::core::afv::clients
 
     void CAfvClient::checkServerHeartbeat()
     {
-        if (!this->isStarted()) { return; }
-        if (!this->isConnected()) { return; }
+        if (!this->isStarted())
+        {
+            return;
+        }
+        if (!this->isConnected())
+        {
+            return;
+        }
 
         if (this->isVoiceServerAlive())
         {
@@ -1068,7 +1224,10 @@ namespace swift::core::afv::clients
         // Heartbeat failure
         // it can happen that after connect we see an initial timeout
         const int failures = ++m_heartBeatFailures;
-        if (failures < 2) { return; }
+        if (failures < 2)
+        {
+            return;
+        }
 
         QString un;
         QString pw;
@@ -1081,14 +1240,23 @@ namespace swift::core::afv::clients
             cs = m_connection->getCallsign();
             client = m_connection->getClient();
         }
-        if (un.isEmpty() || pw.isEmpty()) { return; }
+        if (un.isEmpty() || pw.isEmpty())
+        {
+            return;
+        }
 
         // make sure we are disconnected
-        if (this->isConnected()) { this->disconnectFrom(false); }
+        if (this->isConnected())
+        {
+            this->disconnectFrom(false);
+        }
 
         QPointer<CAfvClient> myself(this);
         QTimer::singleShot(5 * 1000, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             const QString reason = QStringLiteral("Heartbeat failed %1 times").arg(failures);
             this->retryConnectTo(un, pw, cs, client, reason);
         });
@@ -1111,7 +1279,10 @@ namespace swift::core::afv::clients
 
     void CAfvClient::autoLogoffWithoutFsdNetwork()
     {
-        if (!hasContexts()) { return; }
+        if (!hasContexts())
+        {
+            return;
+        }
         if (!this->isConnected())
         {
             m_fsdConnectMismatches = 0;
@@ -1124,7 +1295,10 @@ namespace swift::core::afv::clients
             m_fsdConnectMismatches = 0;
             return;
         }
-        if (++m_fsdConnectMismatches < 2) { return; } // avoid a single issue causing logoff
+        if (++m_fsdConnectMismatches < 2)
+        {
+            return;
+        } // avoid a single issue causing logoff
 
         CLogMessage(this).warning(u"Auto logoff AFV client because FSD no longer connected");
         this->disconnectFrom();
@@ -1132,7 +1306,10 @@ namespace swift::core::afv::clients
 
     void CAfvClient::updateFromOwnAircraft(const CSimulatedAircraft &aircraft, bool withSignals)
     {
-        if (!sApp || sApp->isShuttingDown()) { return; }
+        if (!sApp || sApp->isShuttingDown())
+        {
+            return;
+        }
 
         TransceiverDto transceiverCom1;
         TransceiverDto transceiverCom2;
@@ -1194,8 +1371,14 @@ namespace swift::core::afv::clients
             }
 
             // Transmitting transceivers, currently ALLOW ONLY ONE
-            if (tx1 && e1) { newTransmittingTransceivers.push_back(transceiverCom1); }
-            else if (tx2 && e2) { newTransmittingTransceivers.push_back(transceiverCom2); }
+            if (tx1 && e1)
+            {
+                newTransmittingTransceivers.push_back(transceiverCom1);
+            }
+            else if (tx2 && e2)
+            {
+                newTransmittingTransceivers.push_back(transceiverCom2);
+            }
 
             // lock and update
             {
@@ -1241,12 +1424,18 @@ namespace swift::core::afv::clients
             }
         }
 
-        if (withSignals) { emit this->updatedFromOwnAircraftCockpit(); }
+        if (withSignals)
+        {
+            emit this->updatedFromOwnAircraftCockpit();
+        }
     }
 
     void CAfvClient::onUpdateTransceiversFromContext(const CSimulatedAircraft &aircraft, const CIdentifier &originator)
     {
-        if (originator == this->identifier()) { return; }
+        if (originator == this->identifier())
+        {
+            return;
+        }
         this->updateFromOwnAircraft(aircraft);
     }
 
@@ -1276,7 +1465,10 @@ namespace swift::core::afv::clients
     void CAfvClient::retryConnectTo(const QString &cid, const QString &password, const QString &callsign,
                                     const QString &client, const QString &reason)
     {
-        if (this->isConnected()) { return; }
+        if (this->isConnected())
+        {
+            return;
+        }
         m_retryConnectAttempt++;
 
         const int retrySecs = qMin(3 * 60, m_retryConnectAttempt * 30);
@@ -1296,15 +1488,24 @@ namespace swift::core::afv::clients
 
         QPointer<CAfvClient> myself(this);
         QTimer::singleShot(delayMs, this, [=, this] {
-            if (!myself) { return; }
-            if (myself->isConnected()) { return; }
+            if (!myself)
+            {
+                return;
+            }
+            if (myself->isConnected())
+            {
+                return;
+            }
             this->connectTo(cid, password, callsign, client);
         });
     }
 
     void CAfvClient::toggleTransmissionCapability(bool disableTransmission)
     {
-        if (m_disableTransmissionCapability == disableTransmission) { return; }
+        if (m_disableTransmissionCapability == disableTransmission)
+        {
+            return;
+        }
         m_disableTransmissionCapability = disableTransmission;
 
         if (disableTransmission)
@@ -1398,13 +1599,19 @@ namespace swift::core::afv::clients
         QMutexLocker lock(&m_mutexConnection);
 
         static const QString e;
-        if (!m_connection) { return e; }
+        if (!m_connection)
+        {
+            return e;
+        }
         return m_connection->getVoiceServerUrl();
     }
 
     bool CAfvClient::fuzzyMatchCallsign(const QString &callsign, const QString &compareTo) const
     {
-        if (callsign.isEmpty() || compareTo.isEmpty()) { return false; } // empty callsigns should NOT match
+        if (callsign.isEmpty() || compareTo.isEmpty())
+        {
+            return false;
+        } // empty callsigns should NOT match
 
         QString prefixA;
         QString suffixA;
@@ -1438,8 +1645,14 @@ namespace swift::core::afv::clients
 
     CComSystem::ComUnit CAfvClient::transceiverIdToComUnit(quint16 id)
     {
-        if (comUnitToTransceiverId(CComSystem::Com1) == id) { return CComSystem::Com1; }
-        if (comUnitToTransceiverId(CComSystem::Com2) == id) { return CComSystem::Com2; }
+        if (comUnitToTransceiverId(CComSystem::Com1) == id)
+        {
+            return CComSystem::Com1;
+        }
+        if (comUnitToTransceiverId(CComSystem::Com2) == id)
+        {
+            return CComSystem::Com2;
+        }
         return CComSystem::Com1;
     }
 
@@ -1468,14 +1681,26 @@ namespace swift::core::afv::clients
             // call in background thread of AFVClient to avoid lock issues
             QPointer<CAfvClient> myself(this);
             QTimer::singleShot(0, this, [=] {
-                if (!myself || !CAfvClient::hasContexts()) { return; }
+                if (!myself || !CAfvClient::hasContexts())
+                {
+                    return;
+                }
                 myself->setComOutputVolumeDb(comUnit, valueDb);
             });
             return true; // not exactly "true" as we do it async
         }
-        if (comUnit != CComSystem::Com1 && comUnit != CComSystem::Com2) { return false; }
-        if (valueDb > MaxDbOut) { valueDb = MaxDbOut; }
-        else if (valueDb < MinDbOut) { valueDb = MinDbOut; }
+        if (comUnit != CComSystem::Com1 && comUnit != CComSystem::Com2)
+        {
+            return false;
+        }
+        if (valueDb > MaxDbOut)
+        {
+            valueDb = MaxDbOut;
+        }
+        else if (valueDb < MinDbOut)
+        {
+            valueDb = MinDbOut;
+        }
 
         const double gainRatio = qPow(10, valueDb / 20.0);
         bool changed = false;
@@ -1504,7 +1729,10 @@ namespace swift::core::afv::clients
         // do NOT check on "changed", can be false, but "m_outputSampleProvider" is initialized
         // HINT: I do this tryLock here because I had deadlocks here, and I need to further investigate
         // As deadlocks mean (for the user) he needs to terminate the client I keep "trylock" that for now
-        if (!m_mutexSampleProviders.tryLock(1000)) { return false; }
+        if (!m_mutexSampleProviders.tryLock(1000))
+        {
+            return false;
+        }
 
         if (m_soundcardSampleProvider)
         {
@@ -1517,7 +1745,10 @@ namespace swift::core::afv::clients
     const CAudioDeviceInfo &CAfvClient::getInputDevice() const
     {
         QMutexLocker lock(&m_mutex);
-        if (m_input) { return m_input->device(); }
+        if (m_input)
+        {
+            return m_input->device();
+        }
         static const CAudioDeviceInfo nullDevice;
         return nullDevice;
     }
@@ -1525,7 +1756,10 @@ namespace swift::core::afv::clients
     const CAudioDeviceInfo &CAfvClient::getOutputDevice() const
     {
         QMutexLocker lock(&m_mutex);
-        if (m_output) { return m_output->device(); }
+        if (m_output)
+        {
+            return m_output->device();
+        }
         static const CAudioDeviceInfo nullDevice;
         return nullDevice;
     }
@@ -1533,7 +1767,10 @@ namespace swift::core::afv::clients
     bool CAfvClient::usesSameDevices(const CAudioDeviceInfo &inputDevice, const CAudioDeviceInfo &outputDevice)
     {
         QMutexLocker lock(&m_mutex);
-        if (!m_output || !m_input) { return false; }
+        if (!m_output || !m_input)
+        {
+            return false;
+        }
         const CAudioDeviceInfo i = m_input->device();
         const CAudioDeviceInfo o = m_output->device();
         lock.unlock();

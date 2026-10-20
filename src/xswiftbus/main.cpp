@@ -61,7 +61,10 @@ PLUGIN_API void XPluginReceiveMessage(XPLMPluginID from, long msg, void *param)
         {
         case XPLM_MSG_PLANE_LOADED:
         case XPLM_MSG_LIVERY_LOADED:
-            if (reinterpret_cast<intptr_t>(param) == XPLM_USER_AIRCRAFT) { g_plugin->onAircraftModelChanged(); }
+            if (reinterpret_cast<intptr_t>(param) == XPLM_USER_AIRCRAFT)
+            {
+                g_plugin->onAircraftModelChanged();
+            }
             break;
 
         case XPLM_MSG_AIRPORT_LOADED: g_plugin->onAircraftRepositioned(); break;

@@ -112,7 +112,10 @@ namespace swift::gui::components
         const QPointer<CTextMessageComponent> myself(this);
         QTimer::singleShot(2000, this, [=, this] {
             // init decoupled when sub components are fully init
-            if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+            if (!myself || !sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             this->onSettingsChanged(); // init
             this->showCurrentFrequenciesFromCockpit();
             const bool latestFirst = m_messageSettings.get().isLatestFirst();
@@ -152,27 +155,42 @@ namespace swift::gui::components
     CTextMessageTextEdit *CTextMessageComponent::getTextEdit(TextMessageTab tab) const
     {
         QWidget *w = this->getTabWidget(tab);
-        if (!w) { return nullptr; }
+        if (!w)
+        {
+            return nullptr;
+        }
         return this->findChild<CTextMessageTextEdit *>();
     }
 
     void CTextMessageComponent::selectTabWidget(TextMessageTab tab)
     {
         QWidget *w = this->getTabWidget(tab);
-        if (w) { ui->tw_TextMessages->setCurrentWidget(w); }
+        if (w)
+        {
+            ui->tw_TextMessages->setCurrentWidget(w);
+        }
     }
 
     void CTextMessageComponent::selectTabWidget(const CCallsign &callsign, bool addIfNotExisting)
     {
         QWidget *tab = this->findTextMessageTabByCallsign(callsign);
-        if (!tab && addIfNotExisting) { tab = this->addNewTextMessageTab(callsign); }
-        if (!tab) { return; }
+        if (!tab && addIfNotExisting)
+        {
+            tab = this->addNewTextMessageTab(callsign);
+        }
+        if (!tab)
+        {
+            return;
+        }
         ui->tw_TextMessages->setCurrentWidget(tab);
     }
 
     bool CTextMessageComponent::isCloseableTab(const QWidget *tabWidget) const
     {
-        if (!tabWidget) { return false; }
+        if (!tabWidget)
+        {
+            return false;
+        }
         return (tabWidget != ui->tb_TextMessagesAll && tabWidget != ui->tb_TextMessagesCOM1 &&
                 tabWidget != ui->tb_TextMessagesCOM2 && tabWidget != ui->tb_TextMessagesUnicom);
     }
@@ -180,8 +198,14 @@ namespace swift::gui::components
     void CTextMessageComponent::displayTextMessage(const CTextMessageList &messages)
     {
         using namespace std::chrono_literals;
-        if (messages.isEmpty()) { return; }
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (messages.isEmpty())
+        {
+            return;
+        }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
         const CTextMessageSettings msgSettings(m_messageSettings.getThreadLocal());
         const bool playNotification = sGui && sGui->getIContextAudio();
@@ -198,7 +222,10 @@ namespace swift::gui::components
                 ownAircraft.isSelcalSelected(message.getSelcalCode()))
             {
                 // this is SELCAL for me
-                if (playNotification) { sGui->getCContextAudioBase()->playSelcalTone(message.getSelcalCode()); }
+                if (playNotification)
+                {
+                    sGui->getCContextAudioBase()->playSelcalTone(message.getSelcalCode());
+                }
 
                 if (msgSettings.popupSelcalMessages())
                 {
@@ -214,7 +241,10 @@ namespace swift::gui::components
                 ui->tep_TextMessagesUnicom->insertTextMessage(message);
 
                 // Message was received from others
-                if (!message.wasSent()) { notification = CNotificationSounds::NotificationTextMessageUnicom; }
+                if (!message.wasSent())
+                {
+                    notification = CNotificationSounds::NotificationTextMessageUnicom;
+                }
                 relevantForMe = true;
             }
 
@@ -281,7 +311,10 @@ namespace swift::gui::components
                 ui->tvp_TextMessagesAll->resort();
                 addedToAllMessages = true;
             }
-            if (!relevantForMe) { continue; }
+            if (!relevantForMe)
+            {
+                continue;
+            }
 
             // Play notification
             if (playNotification && notification != CNotificationSounds::NoNotifications)
@@ -290,8 +323,14 @@ namespace swift::gui::components
             }
 
             // overlay message if this channel is not selected
-            if (message.isServerMessage()) { continue; }
-            if (message.isBroadcastMessage()) { continue; }
+            if (message.isServerMessage())
+            {
+                continue;
+            }
+            if (message.isBroadcastMessage())
+            {
+                continue;
+            }
 
             if (!message.wasSent() && !message.isSendToUnicom())
             {
@@ -317,7 +356,10 @@ namespace swift::gui::components
     {
         // this is called for every overlay widget as well
         Q_UNUSED(originator)
-        if (!this->isActivated()) { return; }
+        if (!this->isActivated())
+        {
+            return;
+        }
         this->showCurrentFrequenciesFromCockpit(aircraft);
     }
 
@@ -333,7 +375,10 @@ namespace swift::gui::components
     {
         ui->comp_AtcStations->setVisible(checked);
         ui->gb_MessageTo->setFlat(!checked);
-        if (checked) { ui->comp_AtcStations->updateStations(); }
+        if (checked)
+        {
+            ui->comp_AtcStations->updateStations();
+        }
     }
 
     void CTextMessageComponent::onSettingsChanged()
@@ -347,14 +392,20 @@ namespace swift::gui::components
             textEdit->setStyleSheetForContent(style);
         }
         ui->comp_SettingsStyle->setStyle(this->getStyleSheet());
-        if (latestFirst != ui->cb_LatestFirst->isChecked()) { ui->cb_LatestFirst->setChecked(latestFirst); }
+        if (latestFirst != ui->cb_LatestFirst->isChecked())
+        {
+            ui->cb_LatestFirst->setChecked(latestFirst);
+        }
         this->update(); // refresh window
     }
 
     void CTextMessageComponent::onLatestFirstChanged(bool checked)
     {
         CTextMessageSettings s = m_messageSettings.get();
-        if (s.isLatestFirst() == checked) { return; }
+        if (s.isLatestFirst() == checked)
+        {
+            return;
+        }
         s.setLatestFirst(checked);
         const CStatusMessage m = m_messageSettings.setAndSave(s);
         CLogMessage::preformatted(m);
@@ -368,7 +419,10 @@ namespace swift::gui::components
 
     void CTextMessageComponent::onAtcButtonClicked(const CAtcStation &station)
     {
-        if (station.getCallsign().isEmpty()) { return; }
+        if (station.getCallsign().isEmpty())
+        {
+            return;
+        }
         this->addNewTextMessageTab(station.getCallsign());
     }
 
@@ -398,23 +452,41 @@ namespace swift::gui::components
 
     bool CTextMessageComponent::isCorrespondingTextMessageTabSelected(const CTextMessage &textMessage) const
     {
-        if (!this->isVisibleWidgetHack()) { return false; }
-        if (!textMessage.hasValidRecipient()) { return false; }
-        if (textMessage.isEmpty()) { return false; } // ignore empty message
+        if (!this->isVisibleWidgetHack())
+        {
+            return false;
+        }
+        if (!textMessage.hasValidRecipient())
+        {
+            return false;
+        }
+        if (textMessage.isEmpty())
+        {
+            return false;
+        } // ignore empty message
         if (textMessage.isPrivateMessage())
         {
             // private message
             const CCallsign cs = textMessage.getSenderCallsign();
-            if (cs.isEmpty()) { return false; }
+            if (cs.isEmpty())
+            {
+                return false;
+            }
             const QWidget *tab = this->findTextMessageTabByCallsign(cs, false);
-            if (!tab) { return false; }
+            if (!tab)
+            {
+                return false;
+            }
             return ui->tw_TextMessages->currentWidget() == tab;
         }
         else
         {
             // frequency message
             const CSimulatedAircraft ownAircraft(this->getOwnAircraft());
-            if (ui->tw_TextMessages->currentWidget() == ui->tb_TextMessagesAll) { return true; }
+            if (ui->tw_TextMessages->currentWidget() == ui->tb_TextMessagesAll)
+            {
+                return true;
+            }
             if (textMessage.isSendToFrequency(ownAircraft.getCom1System().getFrequencyActive()))
             {
                 return ui->tw_TextMessages->currentWidget() == ui->tb_TextMessagesCOM1;
@@ -455,8 +527,14 @@ namespace swift::gui::components
         const QString f2n = QString::asprintf("%03.3f", freq2.valueRounded(CFrequencyUnit::MHz(), 3));
         QString f1 = QStringLiteral("COM1: %1").arg(f1n);
         QString f2 = QStringLiteral("COM2: %1").arg(f2n);
-        if (f1Stations.size() == 1) { f1 += u' ' % f1Stations.front().getCallsignAndControllerRealName(); }
-        if (f2Stations.size() == 1) { f2 += u' ' % f2Stations.front().getCallsignAndControllerRealName(); }
+        if (f1Stations.size() == 1)
+        {
+            f1 += u' ' % f1Stations.front().getCallsignAndControllerRealName();
+        }
+        if (f2Stations.size() == 1)
+        {
+            f2 += u' ' % f2Stations.front().getCallsignAndControllerRealName();
+        }
 
         ui->tb_TextMessagesCOM1->setToolTip(f1);
         ui->tb_TextMessagesCOM1->setToolTip(f2);
@@ -470,9 +548,15 @@ namespace swift::gui::components
 
     QWidget *CTextMessageComponent::addNewTextMessageTab(const CCallsign &callsign)
     {
-        if (callsign.isEmpty()) { return nullptr; }
+        if (callsign.isEmpty())
+        {
+            return nullptr;
+        }
         QWidget *w = this->findTextMessageTabByCallsign(callsign, false);
-        if (w) { return w; }
+        if (w)
+        {
+            return w;
+        }
 
         const QString tabName = callsign.asString();
         const QString style = this->getStyleSheet();
@@ -522,13 +606,19 @@ namespace swift::gui::components
 
     void CTextMessageComponent::setTabWidgetDescription(const CCallsign &callsign, int widgetIndex)
     {
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
 
         QString realName;
         if (sGui && !sGui->isShuttingDown() && sGui->getIContextNetwork())
         {
             realName = sGui->getIContextNetwork()->getUserForCallsign(callsign).getRealName();
-            if (!realName.isEmpty()) { ui->tw_TextMessages->setTabToolTip(widgetIndex, realName); }
+            if (!realName.isEmpty())
+            {
+                ui->tw_TextMessages->setTabToolTip(widgetIndex, realName);
+            }
         }
         const QString tt = realName.isEmpty() ? callsign.asString() : callsign.asString() % u": " % realName;
         ui->tw_TextMessages->setTabText(widgetIndex, tt);
@@ -536,11 +626,17 @@ namespace swift::gui::components
 
     QString CTextMessageComponent::getCallsignAndRealName(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return {}; }
+        if (callsign.isEmpty())
+        {
+            return {};
+        }
         if (m_showRealNames && sGui && !sGui->isShuttingDown() && sGui->getIContextNetwork())
         {
             const QString realName = sGui->getIContextNetwork()->getUserForCallsign(callsign).getRealName();
-            if (!realName.isEmpty()) { return callsign.asString() % u": " % realName; }
+            if (!realName.isEmpty())
+            {
+                return callsign.asString() % u": " % realName;
+            }
         }
         return callsign.asString();
     }
@@ -550,37 +646,70 @@ namespace swift::gui::components
         for (int index = ui->tw_TextMessages->count() - 1; index >= 0; index--)
         {
             QWidget *tab = ui->tw_TextMessages->widget(index);
-            if (!tab) { continue; }
-            if (!tab->toolTip().isEmpty()) { continue; }
+            if (!tab)
+            {
+                continue;
+            }
+            if (!tab->toolTip().isEmpty())
+            {
+                continue;
+            }
             const QString cs = tab->property("callsign").toString();
-            if (cs.isEmpty()) { continue; }
+            if (cs.isEmpty())
+            {
+                continue;
+            }
             this->setTabWidgetDescription(CCallsign(cs), index);
         }
     }
 
     void CTextMessageComponent::addPrivateChannelTextMessage(const CTextMessage &textMessage)
     {
-        if (!textMessage.isPrivateMessage()) { return; }
+        if (!textMessage.isPrivateMessage())
+        {
+            return;
+        }
         CCallsign cs = textMessage.wasSent() ? textMessage.getRecipientCallsign() : textMessage.getSenderCallsign();
-        if (cs.isEmpty()) { return; }
+        if (cs.isEmpty())
+        {
+            return;
+        }
 
         const bool isBroadcast = textMessage.isBroadcastMessage();
-        if (isBroadcast) { cs.markAsBroadcastCallsign(); }
+        if (isBroadcast)
+        {
+            cs.markAsBroadcastCallsign();
+        }
 
         const bool isWallopMessage = textMessage.isWallopMessage();
-        if (isWallopMessage) { cs.markAsWallopCallsign(); }
+        if (isWallopMessage)
+        {
+            cs.markAsWallopCallsign();
+        }
 
         const QWidget *tab = this->findTextMessageTabByCallsign(cs);
-        if (!tab) { tab = this->addNewTextMessageTab(cs); }
+        if (!tab)
+        {
+            tab = this->addNewTextMessageTab(cs);
+        }
         Q_ASSERT_X(tab, Q_FUNC_INFO, "Missing tab");
         auto *textEdit = tab->findChild<CTextMessageTextEdit *>();
         SWIFT_VERIFY_X(textEdit, Q_FUNC_INFO, "Missing text edit");
-        if (!textEdit) { return; } // do not crash, though this situation should not happen
+        if (!textEdit)
+        {
+            return;
+        } // do not crash, though this situation should not happen
         textEdit->insertTextMessage(textMessage);
 
         // sound
-        if (textMessage.isServerMessage()) { return; }
-        if (isBroadcast) { return; }
+        if (textMessage.isServerMessage())
+        {
+            return;
+        }
+        if (isBroadcast)
+        {
+            return;
+        }
 
         const bool playSound = !textMessage.wasSent() && !m_usedAsOverlayWidget && sGui && !sGui->isShuttingDown() &&
                                sGui->getIContextAudio();
@@ -602,7 +731,10 @@ namespace swift::gui::components
 
     CSimulatedAircraft CTextMessageComponent::getOwnAircraft() const
     {
-        if (!sGui || !sGui->getIContextOwnAircraft()) { return {}; }
+        if (!sGui || !sGui->getIContextOwnAircraft())
+        {
+            return {};
+        }
         return sGui->getIContextOwnAircraft()->getOwnAircraft();
     }
 
@@ -613,15 +745,27 @@ namespace swift::gui::components
         for (int index = ui->tw_TextMessages->count() - 1; index >= 0; index--)
         {
             QWidget *tab = ui->tw_TextMessages->widget(index);
-            if (tab && tab->property("callsign").toString() == callsign.asString()) { return tab; }
+            if (tab && tab->property("callsign").toString() == callsign.asString())
+            {
+                return tab;
+            }
         }
 
         QWidget *w = this->findTextMessageTabByName(callsign.asString());
-        if (w) { return w; }
-        if (!callsignResolution) { return nullptr; }
+        if (w)
+        {
+            return w;
+        }
+        if (!callsignResolution)
+        {
+            return nullptr;
+        }
 
         // resolve callsign to COM tab
-        if (!sGui || !sGui->getIContextNetwork()) { return nullptr; }
+        if (!sGui || !sGui->getIContextNetwork())
+        {
+            return nullptr;
+        }
         const CAtcStation station(sGui->getIContextNetwork()->getOnlineStationForCallsign(callsign));
         if (!station.getCallsign().isEmpty())
         {
@@ -640,13 +784,19 @@ namespace swift::gui::components
 
     QWidget *CTextMessageComponent::findTextMessageTabByName(const QString &name) const
     {
-        if (name.isEmpty()) { return nullptr; }
+        if (name.isEmpty())
+        {
+            return nullptr;
+        }
 
         // search the private message tabs first
         for (int index = ui->tw_TextMessages->count() - 1; index >= 0; index--)
         {
             const QString tabName = ui->tw_TextMessages->tabText(index);
-            if (!tabName.startsWith(name, Qt::CaseInsensitive)) { continue; }
+            if (!tabName.startsWith(name, Qt::CaseInsensitive))
+            {
+                continue;
+            }
             QWidget *tab = ui->tw_TextMessages->widget(index);
             return tab;
         }
@@ -659,9 +809,18 @@ namespace swift::gui::components
         const QObject *sender = QObject::sender(); // the button
         const QString tabName = sender->property("tabName").toString();
         QWidget *tw = this->findTextMessageTabByName(tabName);
-        if (!this->isCloseableTab(tw)) { return; }
-        if (tw) { index = ui->tw_TextMessages->indexOf(tw); }
-        if (index >= 0) { ui->tw_TextMessages->removeTab(index); }
+        if (!this->isCloseableTab(tw))
+        {
+            return;
+        }
+        if (tw)
+        {
+            index = ui->tw_TextMessages->indexOf(tw);
+        }
+        if (index >= 0)
+        {
+            ui->tw_TextMessages->removeTab(index);
+        }
     }
 
     void CTextMessageComponent::topLevelChanged(QWidget *widget, bool topLevel)
@@ -673,11 +832,20 @@ namespace swift::gui::components
 
     void CTextMessageComponent::textMessageEntered()
     {
-        if (!ui->fr_TextMessage->isVisible() || !ui->lep_TextMessages->isVisible()) { return; }
-        if (!this->isVisible()) { return; }
+        if (!ui->fr_TextMessage->isVisible() || !ui->lep_TextMessages->isVisible())
+        {
+            return;
+        }
+        if (!this->isVisible())
+        {
+            return;
+        }
 
         const QString cl(ui->lep_TextMessages->getLastEnteredLineFormatted());
-        if (!cl.isEmpty()) { this->handleEnteredTextMessage(cl); }
+        if (!cl.isEmpty())
+        {
+            this->handleEnteredTextMessage(cl);
+        }
     }
 
     bool CTextMessageComponent::isVisibleWidgetHack() const
@@ -687,12 +855,18 @@ namespace swift::gui::components
 
     CCallsign CTextMessageComponent::getCallsignPropertyForTab(int tabIndex, bool validated) const
     {
-        if (tabIndex < 0 || tabIndex >= ui->tw_TextMessages->count()) { return {}; }
+        if (tabIndex < 0 || tabIndex >= ui->tw_TextMessages->count())
+        {
+            return {};
+        }
         QWidget *tab = ui->tw_TextMessages->widget(tabIndex);
         if (tab && !tab->property("callsign").toString().isEmpty())
         {
             const CCallsign cs(tab->property("callsign").toString());
-            if (!validated) { return cs; }
+            if (!validated)
+            {
+                return cs;
+            }
             if (sGui && sGui->getIContextNetwork())
             {
                 const CAtcStation atc = sGui->getIContextNetwork()->getOnlineStationForCallsign(cs);
@@ -715,16 +889,25 @@ namespace swift::gui::components
     void CTextMessageComponent::emitDisplayInInfoWindow(const CVariant &message,
                                                         std::chrono::milliseconds displayDuration)
     {
-        if (m_usedAsOverlayWidget) { return; }
+        if (m_usedAsOverlayWidget)
+        {
+            return;
+        }
         emit this->displayInInfoWindow(message, displayDuration);
     }
 
     void CTextMessageComponent::handleEnteredTextMessage(const QString &textMessage)
     {
-        if (!this->isVisibleWidgetHack()) { return; }
+        if (!this->isVisibleWidgetHack())
+        {
+            return;
+        }
 
         QString cl(textMessage.trimmed().simplified());
-        if (cl.isEmpty()) { return; }
+        if (cl.isEmpty())
+        {
+            return;
+        }
 
         // is this a command?
         if (!cl.startsWith("."))
@@ -734,14 +917,20 @@ namespace swift::gui::components
         }
 
         // relay the command
-        if (cl.isEmpty()) { return; }
+        if (cl.isEmpty())
+        {
+            return;
+        }
         emit this->commandEntered(cl, this->componentIdentifier());
     }
 
     QString CTextMessageComponent::textMessageToCommand(const QString &enteredLine)
     {
         // only if visible
-        if (enteredLine.isEmpty()) { return {}; }
+        if (enteredLine.isEmpty())
+        {
+            return {};
+        }
 
         const int index = ui->tw_TextMessages->currentIndex();
         QString cmd(".msg ");
@@ -791,11 +980,20 @@ namespace swift::gui::components
                         // selectedTabText expected to be the callsign
                         // with T664 we resolve against the callsigns in the context if possible
                         const CCallsign cs = this->getCallsignPropertyForTab(index, true);
-                        if (cs.isEmpty()) { cmd.append(selectedTabText); }
-                        else { cmd.append(cs.isAtcCallsign() ? cs.getStringAsSet() : cs.asString()); }
+                        if (cs.isEmpty())
+                        {
+                            cmd.append(selectedTabText);
+                        }
+                        else
+                        {
+                            cmd.append(cs.isAtcCallsign() ? cs.getStringAsSet() : cs.asString());
+                        }
                     }
                 }
-                else { cmd.append(selectedTabText); }
+                else
+                {
+                    cmd.append(selectedTabText);
+                }
             }
             return cmd % u" " % enteredLine;
         }
@@ -803,23 +1001,38 @@ namespace swift::gui::components
 
     void CTextMessageComponent::onTextMessageReceived(const CTextMessageList &messages)
     {
-        if (!m_activeReceive) { return; }
+        if (!m_activeReceive)
+        {
+            return;
+        }
         this->displayTextMessage(messages);
     }
 
     void CTextMessageComponent::onTextMessageSent(const CTextMessage &sentMessage)
     {
-        if (!m_activeSend) { return; }
+        if (!m_activeSend)
+        {
+            return;
+        }
         this->displayTextMessage(sentMessage);
     }
 
     bool CTextMessageComponent::handleGlobalCommandLineText(const QString &commandLine, const CIdentifier &originator)
     {
-        if (originator == this->componentIdentifier()) { return false; }
-        if (commandLine.isEmpty() || commandLine.startsWith(".")) { return false; }
+        if (originator == this->componentIdentifier())
+        {
+            return false;
+        }
+        if (commandLine.isEmpty() || commandLine.startsWith("."))
+        {
+            return false;
+        }
 
         // no "dot" command input
-        if (!this->isVisibleWidgetHack()) { return false; } // invisible, do ignore
+        if (!this->isVisibleWidgetHack())
+        {
+            return false;
+        } // invisible, do ignore
         this->handleEnteredTextMessage(commandLine); // handle as it was entered by own command line
 
         return false; // we never handle the message directly, but forward it
@@ -846,11 +1059,17 @@ namespace swift::gui::components
                 w = this->addNewTextMessageTab(callsign);
             }
         }
-        if (!w) { return; }
+        if (!w)
+        {
+            return;
+        }
         ui->tw_TextMessages->setCurrentWidget(w);
 
         // force display
-        if (!m_usedAsOverlayWidget) { this->displayMyself(); }
+        if (!m_usedAsOverlayWidget)
+        {
+            this->displayMyself();
+        }
 
         emit this->textMessageTabSelected();
     }
@@ -904,7 +1123,10 @@ namespace swift::gui::components
 
     void CTextMessageComponent::updateAtcStationsButtons()
     {
-        if (!ui->gb_MessageTo->isChecked()) { return; }
+        if (!ui->gb_MessageTo->isChecked())
+        {
+            return;
+        }
         ui->comp_AtcStations->updateStations();
     }
 
@@ -919,9 +1141,15 @@ namespace swift::gui::components
 
     void CTextMessageComponent::focusTextEntry()
     {
-        if (!ui->lep_TextMessages->isVisible()) { return; }
+        if (!ui->lep_TextMessages->isVisible())
+        {
+            return;
+        }
         const CTextMessageSettings s = m_messageSettings.get();
-        if (m_usedAsOverlayWidget && !s.focusOverlayWindow()) { return; }
+        if (m_usedAsOverlayWidget && !s.focusOverlayWindow())
+        {
+            return;
+        }
         ui->lep_TextMessages->setFocus();
     }
 
@@ -935,10 +1163,19 @@ namespace swift::gui::components
 
     QString CTextMessageComponent::firstPartOfTabText(const QString &tabText)
     {
-        if (tabText.isEmpty()) { return {}; }
+        if (tabText.isEmpty())
+        {
+            return {};
+        }
         int index = tabText.indexOf(':');
-        if (index < 0) { index = tabText.indexOf(' '); }
-        if (index >= 0) { return tabText.left(index); }
+        if (index < 0)
+        {
+            index = tabText.indexOf(' ');
+        }
+        if (index >= 0)
+        {
+            return tabText.left(index);
+        }
         return tabText;
     }
 } // namespace swift::gui::components

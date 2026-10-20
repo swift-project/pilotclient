@@ -116,7 +116,10 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlane::unload()
     {
-        if (!this->isConnected()) { return; }
+        if (!this->isConnected())
+        {
+            return;
+        }
 
         // will call disconnect from
         CSimulatorPluginCommon::unload();
@@ -137,7 +140,10 @@ namespace swift::simplugin::xplane
 
     CStatusMessageList CSimulatorXPlane::getInterpolationMessages(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty() || !m_xplaneAircraftObjects.contains(callsign)) { return {}; }
+        if (callsign.isEmpty() || !m_xplaneAircraftObjects.contains(callsign))
+        {
+            return {};
+        }
         const CInterpolationAndRenderingSetupPerCallsign setup =
             this->getInterpolationSetupConsolidated(callsign, false);
         return m_xplaneAircraftObjects[callsign].getInterpolationMessages(setup.getInterpolatorMode());
@@ -146,9 +152,18 @@ namespace swift::simplugin::xplane
     bool CSimulatorXPlane::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation,
                                                      const CAircraftParts &parts)
     {
-        if (this->isShuttingDownOrDisconnected()) { return false; }
-        if (!m_trafficProxy) { return false; }
-        if (!m_xplaneAircraftObjects.contains(callsign)) { return false; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        }
+        if (!m_trafficProxy)
+        {
+            return false;
+        }
+        if (!m_xplaneAircraftObjects.contains(callsign))
+        {
+            return false;
+        }
 
         int u = 0;
         if (!situation.isNull())
@@ -174,12 +189,18 @@ namespace swift::simplugin::xplane
     {
         // XPlane specific checks for T778
         // https://discordapp.com/channels/539048679160676382/577213275184562176/696780159969132626
-        if (!plane.hasMSLGeodeticHeight()) { return false; }
+        if (!plane.hasMSLGeodeticHeight())
+        {
+            return false;
+        }
         if (isSuspiciousTerrainValue(plane))
         {
             // ignore values up to +- 1.0meters, those most likely mean no scenery
             const CLength distance = this->getDistanceToOwnAircraft(plane);
-            if (ignoreOutsideRange && distance > maxTerrainRequestDistance()) { return false; }
+            if (ignoreOutsideRange && distance > maxTerrainRequestDistance())
+            {
+                return false;
+            }
 
             static const CLength threshold = maxTerrainRequestDistance() * 0.50;
             if (distance > threshold)
@@ -214,7 +235,10 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlane::setFlightNetworkConnected(bool connected)
     {
-        if (connected && !this->isShuttingDownOrDisconnected()) { m_serviceProxy->resetFrameTotals(); }
+        if (connected && !this->isShuttingDownOrDisconnected())
+        {
+            m_serviceProxy->resetFrameTotals();
+        }
         m_serviceProxy->setFlightNetworkConnected(connected);
         CSimulatorPluginCommon::setFlightNetworkConnected(connected);
     }
@@ -227,7 +251,10 @@ namespace swift::simplugin::xplane
 
     bool CSimulatorXPlane::isSuspiciousTerrainValue(const CElevationPlane &elevation)
     {
-        if (!elevation.hasMSLGeodeticHeight()) { return true; }
+        if (!elevation.hasMSLGeodeticHeight())
+        {
+            return true;
+        }
         const double valueFt = qAbs(elevation.getAltitudeValue(CLengthUnit::ft()));
         return valueFt < 1.0;
     }
@@ -247,12 +274,24 @@ namespace swift::simplugin::xplane
 
     bool CSimulatorXPlane::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
     {
-        if (this->isShuttingDownOrDisconnected()) { return false; }
-        if (reference.isNull()) { return false; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        }
+        if (reference.isNull())
+        {
+            return false;
+        }
 
         // avoid requests for NON exising aircraft (based on LINUX crashes)
-        if (callsign.isEmpty()) { return false; }
-        if (!this->isAircraftInRange(callsign)) { return false; }
+        if (callsign.isEmpty())
+        {
+            return false;
+        }
+        if (!this->isAircraftInRange(callsign))
+        {
+            return false;
+        }
 
         const CLength d = this->getDistanceToOwnAircraft(reference);
         if (!d.isNull() && d > maxTerrainRequestDistance())
@@ -291,8 +330,14 @@ namespace swift::simplugin::xplane
     // convert xplane squawk mode to swift squawk mode
     CTransponder::TransponderMode xpdrMode(int xplaneMode, bool ident)
     {
-        if (ident) { return CTransponder::StateIdent; }
-        if (xplaneMode == 0 || xplaneMode == 1) { return CTransponder::StateStandby; }
+        if (ident)
+        {
+            return CTransponder::StateIdent;
+        }
+        if (xplaneMode == 0 || xplaneMode == 1)
+        {
+            return CTransponder::StateStandby;
+        }
         return CTransponder::ModeC;
     }
 
@@ -429,7 +474,10 @@ namespace swift::simplugin::xplane
                 if (!simulatedAircraft.hasCallsign())
                 {
                     // removed in provider
-                    if (!cs.isEmpty()) { invalid.insert(cs); }
+                    if (!cs.isEmpty())
+                    {
+                        invalid.insert(cs);
+                    }
                     continue;
                 }
                 xplaneAircraft.setSimulatedAircraft(simulatedAircraft);
@@ -437,12 +485,21 @@ namespace swift::simplugin::xplane
 
             // remove the invalid ones
             int i = 0;
-            if (this->isTestMode()) { invalid.clear(); } // skip this in test mode
-            for (const CCallsign &cs : invalid) { this->triggerRemoveAircraft(cs, ++i * 100); }
+            if (this->isTestMode())
+            {
+                invalid.clear();
+            } // skip this in test mode
+            for (const CCallsign &cs : invalid)
+            {
+                this->triggerRemoveAircraft(cs, ++i * 100);
+            }
 
             // KB: IMHO those data are pretty useless for XPlane
             // no need to request them all the times
-            if ((m_slowTimerCalls % 3u) == 0u) { this->requestRemoteAircraftDataFromXPlane(); }
+            if ((m_slowTimerCalls % 3u) == 0u)
+            {
+                this->requestRemoteAircraftDataFromXPlane();
+            }
 
             // FPS
             // reading FPS resets average, so we only monitor over some time
@@ -470,7 +527,10 @@ namespace swift::simplugin::xplane
 
     bool CSimulatorXPlane::connectTo()
     {
-        if (this->isConnected()) { return true; }
+        if (this->isConnected())
+        {
+            return true;
+        }
         const QString dBusServerAddress = m_xSwiftBusServerSettings.getThreadLocal().getDBusServerAddressQt();
 
         if (CDBusServer::isSessionOrSystemAddress(dBusServerAddress))
@@ -481,7 +541,10 @@ namespace swift::simplugin::xplane
         else if (CDBusServer::isQtDBusAddress(dBusServerAddress))
         {
             m_dBusConnection = QDBusConnection::connectToPeer(dBusServerAddress, "xswiftbus");
-            if (!m_dBusConnection.isConnected()) { return false; }
+            if (!m_dBusConnection.isConnected())
+            {
+                return false;
+            }
             m_dbusMode = P2P;
         }
 
@@ -513,7 +576,10 @@ namespace swift::simplugin::xplane
                 &CSimulatorXPlane::onRemoteAircraftAdded);
         connect(m_trafficProxy, &CXSwiftBusTrafficProxy::remoteAircraftAddingFailed, this,
                 &CSimulatorXPlane::onRemoteAircraftAddingFailed);
-        if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
+        if (m_watcher)
+        {
+            m_watcher->setConnection(m_dBusConnection);
+        }
         m_trafficProxy->removeAllPlanes();
 
         // send the settings
@@ -531,9 +597,15 @@ namespace swift::simplugin::xplane
 
     bool CSimulatorXPlane::disconnectFrom()
     {
-        if (!this->isConnected()) { return true; } // avoid emit if already disconnected
+        if (!this->isConnected())
+        {
+            return true;
+        } // avoid emit if already disconnected
         this->disconnectFromDBus();
-        if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
+        if (m_watcher)
+        {
+            m_watcher->setConnection(m_dBusConnection);
+        }
         delete m_serviceProxy;
         delete m_trafficProxy;
         m_serviceProxy = nullptr;
@@ -547,12 +619,21 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlane::onDBusServiceUnregistered()
     {
-        if (!m_serviceProxy) { return; }
+        if (!m_serviceProxy)
+        {
+            return;
+        }
         CLogMessage(this).info(u"XPlane xSwiftBus service unregistered");
 
-        if (m_dbusMode == P2P) { QDBusConnection::disconnectFromPeer(m_dBusConnection.name()); }
+        if (m_dbusMode == P2P)
+        {
+            QDBusConnection::disconnectFromPeer(m_dBusConnection.name());
+        }
         m_dBusConnection = QDBusConnection { "default" };
-        if (m_watcher) { m_watcher->setConnection(m_dBusConnection); }
+        if (m_watcher)
+        {
+            m_watcher->setConnection(m_dBusConnection);
+        }
         delete m_serviceProxy;
         delete m_trafficProxy;
         m_serviceProxy = nullptr;
@@ -567,7 +648,10 @@ namespace swift::simplugin::xplane
     {
         CAircraftModel model(modelString, CAircraftModel::TypeOwnSimulatorModel, CSimulatorInfo::XPLANE, name,
                              description, icao);
-        if (!livery.isEmpty()) { model.setModelString(model.getModelString() + " " + livery); }
+        if (!livery.isEmpty())
+        {
+            model.setModelString(model.getModelString() + " " + livery);
+        }
         model.setFileName(path + "/" + filename);
 
         this->reverseLookupAndUpdateOwnAircraftModel(model);
@@ -576,11 +660,17 @@ namespace swift::simplugin::xplane
     void CSimulatorXPlane::displayStatusMessage(const CStatusMessage &message) const
     {
         // No assert here, as status message may come in because of network problems
-        if (this->isShuttingDownOrDisconnected()) { return; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return;
+        }
 
         // avoid infinite recursion in case this function is called due to a message caused by this very function
         static bool isInFunction = false;
-        if (isInFunction) { return; }
+        if (isInFunction)
+        {
+            return;
+        }
         isInFunction = true;
 
         std::vector<int> msgBoxValues = m_xSwiftBusServerSettings.getThreadLocal().getMessageBoxValuesVector();
@@ -600,14 +690,29 @@ namespace swift::simplugin::xplane
     void CSimulatorXPlane::displayTextMessage(const network::CTextMessage &message) const
     {
         // avoid issues during shutdown
-        if (this->isShuttingDownOrDisconnected()) { return; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return;
+        }
 
         std::vector<int> msgBoxValues = m_xSwiftBusServerSettings.getThreadLocal().getMessageBoxValuesVector();
         QColor color;
-        if (message.isServerMessage()) { color = msgBoxValues[8]; }
-        else if (message.isSupervisorMessage()) { color = msgBoxValues[10]; }
-        else if (message.isPrivateMessage()) { color = msgBoxValues[7]; }
-        else { color = msgBoxValues[6]; }
+        if (message.isServerMessage())
+        {
+            color = msgBoxValues[8];
+        }
+        else if (message.isSupervisorMessage())
+        {
+            color = msgBoxValues[10];
+        }
+        else if (message.isPrivateMessage())
+        {
+            color = msgBoxValues[7];
+        }
+        else
+        {
+            color = msgBoxValues[6];
+        }
 
         m_serviceProxy->addTextMessage(message.getSenderCallsign().toQString() + ": " + message.getMessage(),
                                        color.redF(), color.greenF(), color.blueF());
@@ -621,8 +726,14 @@ namespace swift::simplugin::xplane
     bool CSimulatorXPlane::updateOwnSimulatorCockpit(const simulation::CSimulatedAircraft &aircraft,
                                                      const CIdentifier &originator)
     {
-        if (originator == this->identifier()) { return false; }
-        if (this->isShuttingDownOrDisconnected()) { return false; } // could happen during shutdown
+        if (originator == this->identifier())
+        {
+            return false;
+        }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        } // could happen during shutdown
 
         auto com1 = CComSystem::getCom1System({ m_xplaneData.com1ActiveKhz, CFrequencyUnit::kHz() },
                                               { m_xplaneData.com1StandbyKhz, CFrequencyUnit::kHz() });
@@ -658,8 +769,14 @@ namespace swift::simplugin::xplane
 
     bool CSimulatorXPlane::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
     {
-        if (originator == this->identifier()) { return false; }
-        if (this->isShuttingDownOrDisconnected()) { return false; } // could happen during shutdown
+        if (originator == this->identifier())
+        {
+            return false;
+        }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        } // could happen during shutdown
 
         //! \fixme KB 8/2017 use SELCAL??
         Q_UNUSED(selcal)
@@ -706,22 +823,34 @@ namespace swift::simplugin::xplane
         for (const auto &model : models)
         {
             const QString &modelFile = model.getFileName();
-            if (modelFile.isEmpty() || !QFile::exists(modelFile)) { continue; }
+            if (modelFile.isEmpty() || !QFile::exists(modelFile))
+            {
+                continue;
+            }
 
             // Check if this model's package was already found
             auto it = std::lower_bound(packages.begin(), packages.end(), modelFile, PrefixComparator());
-            if (it != packages.end() && it->isPrefixOf(modelFile)) { continue; }
+            if (it != packages.end() && it->isPrefixOf(modelFile))
+            {
+                continue;
+            }
 
             // This model's package was not already found, so find it and add it to the list
             QString package = findCslPackage(modelFile);
-            if (package.isEmpty()) { continue; }
+            if (package.isEmpty())
+            {
+                continue;
+            }
             packages.insert(it, package);
         }
 
         // comment KB 2019-06
         // a package is one xsb_aircraft.txt file BB has 9, X-CSL has 76
         CSetBuilder<QString> superpackages;
-        for (const Prefix &package : std::as_const(packages)) { superpackages.insert(package.parent()); }
+        for (const Prefix &package : std::as_const(packages))
+        {
+            superpackages.insert(package.parent());
+        }
         QStringList superpackagesList = superpackages;
 
         const QDir simDir = getSimulatorSettings().getSimulatorDirectoryOrDefault();
@@ -749,8 +878,12 @@ namespace swift::simplugin::xplane
         //! \todo KB 2018-02 KB when I have removed the CSL dir (acciedently) there was no warning here
         const QFileInfo info(modelFile);
         QDir dir = info.isDir() ? QDir(modelFile) : info.dir();
-        do {
-            if (dir.exists(QStringLiteral("xsb_aircraft.txt"))) { return dir.path(); }
+        do
+        {
+            if (dir.exists(QStringLiteral("xsb_aircraft.txt")))
+            {
+                return dir.path();
+            }
         }
         while (dir.cdUp());
         CLogMessage(this).warning(u"Failed to find CSL package for %1") << modelFile;
@@ -760,7 +893,10 @@ namespace swift::simplugin::xplane
     bool CSimulatorXPlane::physicallyAddRemoteAircraft(const CSimulatedAircraft &newRemoteAircraft)
     {
         // avoid issue in rapid shutdown
-        if (this->isShuttingDownOrDisconnected()) { return false; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        }
 
         // entry checks
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
@@ -818,11 +954,17 @@ namespace swift::simplugin::xplane
     bool CSimulatorXPlane::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
     {
         // avoid issue in rapid shutdown
-        if (this->isShuttingDownOrDisconnected()) { return false; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        }
 
         // only remove from sim
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "wrong thread");
-        if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
+        if (callsign.isEmpty())
+        {
+            return false;
+        } // can happen if an object is not an aircraft
 
         // really remove from simulator
         if (!this->isTestMode() && !m_xplaneAircraftObjects.contains(callsign) &&
@@ -857,7 +999,10 @@ namespace swift::simplugin::xplane
             // we are just about to add that aircraft
             QPointer<CSimulatorXPlane> myself(this);
             QTimer::singleShot(TimeoutAdding, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 m_addingInProgressAircraft.remove(callsign); // remove as "in progress"
                 this->physicallyRemoveRemoteAircraft(callsign); // and remove from sim. if it was added in the mean time
             });
@@ -874,7 +1019,10 @@ namespace swift::simplugin::xplane
 
     int CSimulatorXPlane::physicallyRemoveAllRemoteAircraft()
     {
-        if (this->isShuttingDownOrDisconnected()) { return 0; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return 0;
+        }
         m_pendingToBeAddedAircraft.clear();
         m_addingInProgressAircraft.clear();
         return CSimulatorPluginCommon::physicallyRemoveAllRemoteAircraft();
@@ -888,7 +1036,10 @@ namespace swift::simplugin::xplane
 
     bool CSimulatorXPlane::followAircraft(const CCallsign &callsign)
     {
-        if (!m_trafficProxy || !m_trafficProxy->isValid()) { return false; }
+        if (!m_trafficProxy || !m_trafficProxy->isValid())
+        {
+            return false;
+        }
         m_trafficProxy->setFollowedAircraft(callsign.toQString());
         return true;
     }
@@ -898,7 +1049,10 @@ namespace swift::simplugin::xplane
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
 
         const int remoteAircraftNo = this->getAircraftInRangeCount();
-        if (remoteAircraftNo < 1) { return; }
+        if (remoteAircraftNo < 1)
+        {
+            return;
+        }
 
         // values used for position and parts
         m_updateRemoteAircraftInProgress = true;
@@ -924,7 +1078,10 @@ namespace swift::simplugin::xplane
             }
 
             // skip no longer in range
-            if (!callsignsInRange.contains(callsign)) { continue; }
+            if (!callsignsInRange.contains(callsign))
+            {
+                continue;
+            }
 
             planesTransponders.callsigns.push_back(callsign.asString());
             planesTransponders.codes.push_back(xplaneAircraft.getAircraft().getTransponderCode());
@@ -978,7 +1135,10 @@ namespace swift::simplugin::xplane
 
         } // all callsigns
 
-        if (!planesTransponders.isEmpty()) { m_trafficProxy->setPlanesTransponders(planesTransponders); }
+        if (!planesTransponders.isEmpty())
+        {
+            m_trafficProxy->setPlanesTransponders(planesTransponders);
+        }
 
         if (!planesPositions.isEmpty())
         {
@@ -989,7 +1149,10 @@ namespace swift::simplugin::xplane
             m_trafficProxy->setPlanesPositions(planesPositions);
         }
 
-        if (!planesSurfaces.isEmpty()) { m_trafficProxy->setPlanesSurfaces(planesSurfaces); }
+        if (!planesSurfaces.isEmpty())
+        {
+            m_trafficProxy->setPlanesSurfaces(planesSurfaces);
+        }
 
         // stats
         this->finishUpdateRemoteAircraftAndSetStatistics(currentTimestamp);
@@ -997,7 +1160,10 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane()
     {
-        if (this->isShuttingDownOrDisconnected()) { return; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return;
+        }
 
         // It is not required to request all elevations and CGs, but only for aircraft "near ground relevant"
         // - we could use the elevation cache and CG cache to decide if we need to request
@@ -1006,20 +1172,32 @@ namespace swift::simplugin::xplane
         CCallsignSet callsigns = m_xplaneAircraftObjects.getAllCallsigns();
         const CCallsignSet remove = this->getLastSentCanLikelySkipNearGroundInterpolation().getCallsigns();
         callsigns.remove(remove);
-        if (!callsigns.isEmpty()) { this->requestRemoteAircraftDataFromXPlane(callsigns); }
+        if (!callsigns.isEmpty())
+        {
+            this->requestRemoteAircraftDataFromXPlane(callsigns);
+        }
     }
 
     void CSimulatorXPlane::requestRemoteAircraftDataFromXPlane(const CCallsignSet &callsigns)
     {
-        if (callsigns.isEmpty()) { return; }
-        if (!m_trafficProxy || this->isShuttingDown()) { return; }
+        if (callsigns.isEmpty())
+        {
+            return;
+        }
+        if (!m_trafficProxy || this->isShuttingDown())
+        {
+            return;
+        }
         const QStringList csStrings = callsigns.getCallsignStrings();
         QPointer<CSimulatorXPlane> myself(this);
         m_trafficProxy->getRemoteAircraftData(
             csStrings, [=, this](const QStringList &callsigns, const QDoubleList &latitudesDeg,
                                  const QDoubleList &longitudesDeg, const QDoubleList &elevationsMeters,
                                  const QBoolList &waterFlags, const QDoubleList &verticalOffsetsMeters) {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->updateRemoteAircraftFromSimulator(callsigns, latitudesDeg, longitudesDeg, elevationsMeters,
                                                         waterFlags, verticalOffsetsMeters);
             });
@@ -1027,10 +1205,16 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlane::triggerRequestRemoteAircraftDataFromXPlane(const CCallsignSet &callsigns)
     {
-        if (callsigns.isEmpty()) { return; }
+        if (callsigns.isEmpty())
+        {
+            return;
+        }
         QPointer<CSimulatorXPlane> myself(this);
         QTimer::singleShot(0, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->requestRemoteAircraftDataFromXPlane(callsigns);
         });
     }
@@ -1057,13 +1241,22 @@ namespace swift::simplugin::xplane
         {
             const bool emptyCs = callsigns[i].isEmpty();
             SWIFT_VERIFY_X(!emptyCs, Q_FUNC_INFO, "Need callsign");
-            if (emptyCs) { continue; }
+            if (emptyCs)
+            {
+                continue;
+            }
 
             const CCallsign cs(callsigns[i]);
-            if (!m_xplaneAircraftObjects.contains(cs)) { continue; }
+            if (!m_xplaneAircraftObjects.contains(cs))
+            {
+                continue;
+            }
             const CXPlaneMPAircraft xpAircraft = m_xplaneAircraftObjects[cs];
             SWIFT_VERIFY_X(xpAircraft.hasCallsign(), Q_FUNC_INFO, "Need callsign");
-            if (!xpAircraft.hasCallsign()) { continue; }
+            if (!xpAircraft.hasCallsign())
+            {
+                continue;
+            }
 
             CElevationPlane elevation = CElevationPlane::null();
             if (!std::isnan(elevationsMeters[i]))
@@ -1086,7 +1279,10 @@ namespace swift::simplugin::xplane
                                                   useElevation ? elevation : CElevationPlane::null(), cg);
 
             // loopback
-            if (logCallsigns.contains(cs)) { this->addLoopbackSituation(cs, elevation, cg); }
+            if (logCallsigns.contains(cs))
+            {
+                this->addLoopbackSituation(cs, elevation, cg);
+            }
         }
     }
 
@@ -1106,18 +1302,33 @@ namespace swift::simplugin::xplane
     {
         if (m_dBusConnection.isConnected())
         {
-            if (m_trafficProxy) { m_trafficProxy->cleanup(); }
+            if (m_trafficProxy)
+            {
+                m_trafficProxy->cleanup();
+            }
 
-            if (m_dbusMode == P2P) { QDBusConnection::disconnectFromPeer(m_dBusConnection.name()); }
-            else { QDBusConnection::disconnectFromBus(m_dBusConnection.name()); }
+            if (m_dbusMode == P2P)
+            {
+                QDBusConnection::disconnectFromPeer(m_dBusConnection.name());
+            }
+            else
+            {
+                QDBusConnection::disconnectFromBus(m_dBusConnection.name());
+            }
         }
         m_dBusConnection = QDBusConnection { "default" };
     }
 
     bool CSimulatorXPlane::sendXSwiftBusSettings()
     {
-        if (this->isShuttingDownOrDisconnected()) { return false; }
-        if (!m_serviceProxy) { return false; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        }
+        if (!m_serviceProxy)
+        {
+            return false;
+        }
         CXSwiftBusSettings s = m_xSwiftBusServerSettings.get();
         s.setCurrentUtcTime();
         m_serviceProxy->setSettingsJson(s.toXSwiftBusJsonStringQt());
@@ -1130,8 +1341,14 @@ namespace swift::simplugin::xplane
         ok = false;
         CXSwiftBusSettings s;
 
-        if (this->isShuttingDownOrDisconnected()) { return s; }
-        if (!m_serviceProxy) { return s; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return s;
+        }
+        if (!m_serviceProxy)
+        {
+            return s;
+        }
 
         const QString json = m_serviceProxy->getSettingsJson();
         s.parseXSwiftBusStringQt(json);
@@ -1157,7 +1374,10 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlane::setMinTerrainProbeDistance(const CLength &distance)
     {
-        if (distance.isNull()) { return; }
+        if (distance.isNull())
+        {
+            return;
+        }
         if (m_minSuspicousTerrainProbe.isNull() || distance < m_minSuspicousTerrainProbe)
         {
             m_minSuspicousTerrainProbe = distance;
@@ -1167,7 +1387,10 @@ namespace swift::simplugin::xplane
     void CSimulatorXPlane::onRemoteAircraftAdded(const QString &callsign)
     {
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
         const CCallsign cs(callsign);
         CSimulatedAircraft addedRemoteAircraft = this->getAircraftInRangeForCallsign(cs);
 
@@ -1215,7 +1438,10 @@ namespace swift::simplugin::xplane
     void CSimulatorXPlane::onRemoteAircraftAddingFailed(const QString &callsign)
     {
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
         const CCallsign cs(callsign);
         CSimulatedAircraft failedRemoteAircraft = this->getAircraftInRangeForCallsign(cs);
 
@@ -1243,13 +1469,19 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlane::addNextPendingAircraft()
     {
-        if (m_pendingToBeAddedAircraft.isEmpty()) { return; } // no more pending
+        if (m_pendingToBeAddedAircraft.isEmpty())
+        {
+            return;
+        } // no more pending
 
         // housekeeping
         this->detectTimeoutAdding();
 
         // check if can add
-        if (!this->canAddAircraft()) { return; }
+        if (!this->canAddAircraft())
+        {
+            return;
+        }
 
         // next add cycle
         const CSimulatedAircraft newRemoteAircraft = m_pendingToBeAddedAircraft.front();
@@ -1264,20 +1496,29 @@ namespace swift::simplugin::xplane
     {
         QPointer<CSimulatorXPlane> myself(this);
         QTimer::singleShot(100, this, [=, this] {
-            if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+            if (!myself || !sApp || sApp->isShuttingDown())
+            {
+                return;
+            }
             this->addNextPendingAircraft();
         });
     }
 
     int CSimulatorXPlane::detectTimeoutAdding()
     {
-        if (m_addingInProgressAircraft.isEmpty()) { return 0; }
+        if (m_addingInProgressAircraft.isEmpty())
+        {
+            return 0;
+        }
         const qint64 timeout = QDateTime::currentMSecsSinceEpoch() + TimeoutAdding;
         CCallsignSet timeoutCallsigns;
         const QList<CCallsign> addingCallsigns = m_addingInProgressAircraft.keys();
         for (const CCallsign &cs : addingCallsigns)
         {
-            if (m_addingInProgressAircraft.value(cs) < timeout) { continue; }
+            if (m_addingInProgressAircraft.value(cs) < timeout)
+            {
+                continue;
+            }
             timeoutCallsigns.push_back(cs);
         }
 
@@ -1294,7 +1535,10 @@ namespace swift::simplugin::xplane
     {
         QPointer<CSimulatorXPlane> myself(this);
         QTimer::singleShot(deferMs, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->physicallyRemoveRemoteAircraft(callsign);
         });
     }
@@ -1302,7 +1546,10 @@ namespace swift::simplugin::xplane
     QPair<qint64, qint64> CSimulatorXPlane::minMaxTimestampsAddInProgress() const
     {
         static const QPair<qint64, qint64> empty(-1, -1);
-        if (m_addingInProgressAircraft.isEmpty()) { return empty; }
+        if (m_addingInProgressAircraft.isEmpty())
+        {
+            return empty;
+        }
         const QList<qint64> ts = m_addingInProgressAircraft.values();
         const auto mm = std::minmax_element(ts.constBegin(), ts.constEnd());
         return { *mm.first, *mm.second };
@@ -1310,7 +1557,10 @@ namespace swift::simplugin::xplane
 
     bool CSimulatorXPlane::canAddAircraft() const
     {
-        if (m_addingInProgressAircraft.isEmpty()) { return true; }
+        if (m_addingInProgressAircraft.isEmpty())
+        {
+            return true;
+        }
 
         // check
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
@@ -1342,20 +1592,32 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlaneListener::checkImpl()
     {
-        if (!m_timer.isActive()) { return; }
-        if (this->isShuttingDown()) { return; }
+        if (!m_timer.isActive())
+        {
+            return;
+        }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
 
         m_timer.start(); // restart because we will check just now
         QPointer<CSimulatorXPlaneListener> myself(this);
         QTimer::singleShot(0, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             checkConnection();
         });
     }
 
     void CSimulatorXPlaneListener::checkConnection()
     {
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
         Q_ASSERT_X(!CThreadUtils::thisIsMainThread(), Q_FUNC_INFO, "Expect to run in background");
         QElapsedTimer t;
         t.start();
@@ -1407,7 +1669,10 @@ namespace swift::simplugin::xplane
         CXSwiftBusTrafficProxy traffic(m_DBusConnection);
 
         const bool result = service.isValid() && traffic.isValid();
-        if (!result) { return; }
+        if (!result)
+        {
+            return;
+        }
 
         const QString swiftVersion = CBuildConfig::getVersionString();
         const QString xswiftbusVersion = service.getVersionNumber();
@@ -1448,7 +1713,10 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlaneListener::serviceRegistered(const QString &serviceName)
     {
-        if (serviceName == xswiftbusServiceName()) { emit simulatorStarted(getPluginInfo()); }
+        if (serviceName == xswiftbusServiceName())
+        {
+            emit simulatorStarted(getPluginInfo());
+        }
         QDBusConnection::disconnectFromBus(m_DBusConnection.name());
     }
 

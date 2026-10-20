@@ -97,13 +97,28 @@ namespace swift::sound::wav
 
                 if (header.wave.audioFormat == 1 || header.wave.audioFormat == 0)
                 {
-                    if (bps == 8) { m_fileFormat.setSampleFormat(QAudioFormat::UInt8); }
-                    else if (bps == 16) { m_fileFormat.setSampleFormat(QAudioFormat::Int16); }
-                    else { m_fileFormat.setSampleFormat(QAudioFormat::Int32); }
+                    if (bps == 8)
+                    {
+                        m_fileFormat.setSampleFormat(QAudioFormat::UInt8);
+                    }
+                    else if (bps == 16)
+                    {
+                        m_fileFormat.setSampleFormat(QAudioFormat::Int16);
+                    }
+                    else
+                    {
+                        m_fileFormat.setSampleFormat(QAudioFormat::Int32);
+                    }
                 }
-                else { m_fileFormat.setSampleFormat(QAudioFormat::Float); }
+                else
+                {
+                    m_fileFormat.setSampleFormat(QAudioFormat::Float);
+                }
             }
-            else { result = false; }
+            else
+            {
+                result = false;
+            }
         }
         m_headerLength = pos();
 

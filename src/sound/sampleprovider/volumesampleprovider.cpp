@@ -24,7 +24,10 @@ namespace swift::sound::sample_provider
         const int samplesRead = m_sourceProvider->readSamples(samples, count);
         if (!qFuzzyCompare(m_gainRatio, 1.0))
         {
-            for (int n = 0; n < samplesRead; n++) { samples[n] = static_cast<float>(m_gainRatio * samples[n]); }
+            for (int n = 0; n < samplesRead; n++)
+            {
+                samples[n] = static_cast<float>(m_gainRatio * samples[n]);
+            }
         }
         return samplesRead;
     }
@@ -32,7 +35,10 @@ namespace swift::sound::sample_provider
     bool CVolumeSampleProvider::setGainRatio(double volume)
     {
         const bool changed = !qFuzzyCompare(m_gainRatio, volume);
-        if (changed) { m_gainRatio = volume; }
+        if (changed)
+        {
+            m_gainRatio = volume;
+        }
         return changed;
     }
 } // namespace swift::sound::sample_provider

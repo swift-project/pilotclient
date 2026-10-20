@@ -25,13 +25,19 @@ namespace XSwiftBus
     void CConfig::parse()
     {
         std::ifstream configFile(m_filePath);
-        if (!configFile.is_open()) { return; }
+        if (!configFile.is_open())
+        {
+            return;
+        }
 
         std::string line;
         for (int lineNo = 1; std::getline(configFile, line); ++lineNo)
         {
             line.erase(std::remove_if(line.begin(), line.end(), isspace), line.end());
-            if (line.empty() || line[0] == '#') { continue; }
+            if (line.empty() || line[0] == '#')
+            {
+                continue;
+            }
 
             auto delimiterPos = line.find("=");
             if (delimiterPos == std::string::npos)
@@ -50,11 +56,26 @@ namespace XSwiftBus
             }
 
             bool valid = true;
-            if (stringCompareCaseInsensitive(key, "dbusMode")) { valid = parseDBusMode(value); }
-            else if (stringCompareCaseInsensitive(key, "dbusAddress")) { valid = parseDBusAddress(value); }
-            else if (stringCompareCaseInsensitive(key, "dbusPort")) { valid = parseDBusPort(value); }
-            else if (stringCompareCaseInsensitive(key, "debug")) { valid = parseDebug(value); }
-            else if (stringCompareCaseInsensitive(key, "tcas")) { valid = parseTcas(value); }
+            if (stringCompareCaseInsensitive(key, "dbusMode"))
+            {
+                valid = parseDBusMode(value);
+            }
+            else if (stringCompareCaseInsensitive(key, "dbusAddress"))
+            {
+                valid = parseDBusAddress(value);
+            }
+            else if (stringCompareCaseInsensitive(key, "dbusPort"))
+            {
+                valid = parseDBusPort(value);
+            }
+            else if (stringCompareCaseInsensitive(key, "debug"))
+            {
+                valid = parseDebug(value);
+            }
+            else if (stringCompareCaseInsensitive(key, "tcas"))
+            {
+                valid = parseTcas(value);
+            }
             else
             {
                 WARNING_LOG("xswiftbus.conf line " + std::to_string(lineNo) + ": Unknown variable " + key + "!");
@@ -87,7 +108,10 @@ namespace XSwiftBus
     bool CConfig::writeConfigFile() const
     {
         std::ofstream configFile(m_filePath, std::ofstream::out | std::ofstream::trunc);
-        if (!configFile.is_open()) { return false; }
+        if (!configFile.is_open())
+        {
+            return false;
+        }
 
         // this code should be similar to CXSwiftBusConfigWriter
         configFile << "# DBus Mode - Options: p2p, session" << std::endl;
@@ -133,7 +157,10 @@ namespace XSwiftBus
             m_dbusMode = CConfig::DBusP2P;
             return true;
         }
-        else { return false; }
+        else
+        {
+            return false;
+        }
     }
 
     bool CConfig::parseDBusAddress(const std::string &value)
@@ -154,15 +181,24 @@ namespace XSwiftBus
             return false;
         }
 
-        if (port < 0 || port > 65535) { return false; }
+        if (port < 0 || port > 65535)
+        {
+            return false;
+        }
         m_dbusPort = port;
         return true;
     }
 
     bool CConfig::parseDebug(const std::string &value)
     {
-        if (stringCompareCaseInsensitive(value, "on")) { m_debug = true; }
-        else { m_debug = false; }
+        if (stringCompareCaseInsensitive(value, "on"))
+        {
+            m_debug = true;
+        }
+        else
+        {
+            m_debug = false;
+        }
         return true;
     }
 
@@ -184,7 +220,10 @@ namespace XSwiftBus
 
     std::string CConfig::boolToOnOff(bool on)
     {
-        if (on) { return "on"; }
+        if (on)
+        {
+            return "on";
+        }
         return "off";
     }
 } // namespace XSwiftBus

@@ -40,7 +40,10 @@ namespace swift::misc::geo
 
     CLength calculateGreatCircleDistance(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
     {
-        if (coordinate1.isNull() || coordinate2.isNull()) { return CLength::null(); }
+        if (coordinate1.isNull() || coordinate2.isNull())
+        {
+            return CLength::null();
+        }
         // if (coordinate1.equalNormalVectorDouble(coordinate2)) { return CLength(0, CLengthUnit::defaultUnit()); }
         constexpr float earthRadiusMeters = 6371000.8f;
 
@@ -67,7 +70,10 @@ namespace swift::misc::geo
 
     CAngle calculateBearing(const ICoordinateGeodetic &coordinate1, const ICoordinateGeodetic &coordinate2)
     {
-        if (coordinate1.isNull() || coordinate2.isNull()) { return CAngle::null(); }
+        if (coordinate1.isNull() || coordinate2.isNull())
+        {
+            return CAngle::null();
+        }
         // if (coordinate1.equalNormalVectorDouble(coordinate2)) { return CAngle(0, CAngleUnit::defaultUnit()); } //
         // null or 0?
         static const QVector3D northPole { 0, 0, 1 };
@@ -98,7 +104,10 @@ namespace swift::misc::geo
         for (unsigned int i = 0; i < otherVector.size(); i++)
         {
             const double d = thisVector[i] - otherVector[i];
-            if (qAbs(d) > epsilon) { return false; }
+            if (qAbs(d) > epsilon)
+            {
+                return false;
+            }
         }
         return true;
     }
@@ -115,9 +124,15 @@ namespace swift::misc::geo
 
     bool ICoordinateGeodetic::isWithinRange(const ICoordinateGeodetic &otherCoordinate, const CLength &range) const
     {
-        if (range.isNull()) { return false; }
+        if (range.isNull())
+        {
+            return false;
+        }
         const CLength distance = this->calculateGreatCircleDistance(otherCoordinate);
-        if (distance.isNull()) { return false; }
+        if (distance.isNull())
+        {
+            return false;
+        }
         return distance <= range;
     }
 
@@ -270,7 +285,10 @@ namespace swift::misc::geo
 
     QVariant CCoordinateGeodetic::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         return (ICoordinateGeodetic::canHandleIndex(index)) ? ICoordinateGeodetic::propertyByIndex(index) :
                                                               CValueObject::propertyByIndex(index);
     }
@@ -339,12 +357,18 @@ namespace swift::misc::geo
 
     CCoordinateGeodetic CCoordinateGeodetic::calculatePosition(const CLength &distance, const CAngle &relBearing) const
     {
-        if (this->isNull()) { return CCoordinateGeodetic::null(); }
+        if (this->isNull())
+        {
+            return CCoordinateGeodetic::null();
+        }
         if (distance.isNull() || distance.isNegativeWithEpsilonConsidered() || relBearing.isNull())
         {
             return CCoordinateGeodetic::null();
         }
-        if (distance.isZeroEpsilonConsidered()) { return *this; }
+        if (distance.isZeroEpsilonConsidered())
+        {
+            return *this;
+        }
 
         // http://www.movable-type.co.uk/scripts/latlong.html#destPoint
         // https://stackoverflow.com/a/879531/356726
@@ -454,7 +478,10 @@ namespace swift::misc::geo
 
     QVariant ICoordinateWithRelativePosition::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
+        if (ICoordinateGeodetic::canHandleIndex(index))
+        {
+            return ICoordinateGeodetic::propertyByIndex(index);
+        }
         if (!index.isMyself())
         {
             const auto i = index.frontCasted<ColumnIndex>();
@@ -472,7 +499,10 @@ namespace swift::misc::geo
 
     void ICoordinateWithRelativePosition::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
     {
-        if (ICoordinateGeodetic::canHandleIndex(index)) { return; }
+        if (ICoordinateGeodetic::canHandleIndex(index))
+        {
+            return;
+        }
         if (!index.isMyself())
         {
             const auto i = index.frontCasted<ColumnIndex>();
@@ -525,7 +555,10 @@ namespace swift::misc::geo
 
     bool ICoordinateWithRelativePosition::canHandleIndex(CPropertyIndexRef index)
     {
-        if (ICoordinateGeodetic::canHandleIndex(index)) { return true; }
+        if (ICoordinateGeodetic::canHandleIndex(index))
+        {
+            return true;
+        }
         const int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexRelativeDistance)) && (i <= static_cast<int>(IndexRelativeBearing));
     }

@@ -32,8 +32,14 @@ namespace swift::misc
 #ifdef Q_OS_WIN32
             QNtfsPermissionCheckGuard permissionGuard;
 #endif
-            if ((mode & CAtomicFile::ReadOnly) && !fileInfo.isReadable()) { ok = false; }
-            if ((mode & CAtomicFile::WriteOnly) && !fileInfo.isWritable()) { ok = false; }
+            if ((mode & CAtomicFile::ReadOnly) && !fileInfo.isReadable())
+            {
+                ok = false;
+            }
+            if ((mode & CAtomicFile::WriteOnly) && !fileInfo.isWritable())
+            {
+                ok = false;
+            }
         }
         return ok;
     }
@@ -49,27 +55,45 @@ namespace swift::misc
             return false;
         }
         setFileName(QFileInfo(fileInfo.dir(), ".tmp." + fileInfo.fileName() + "." + randomSuffix()).filePath());
-        if (exists()) { remove(); }
+        if (exists())
+        {
+            remove();
+        }
 
         bool ok = true;
         if (mode & ReadOnly)
         {
-            if (exists(m_originalFilename) && !copy(m_originalFilename, fileName())) { ok = false; }
+            if (exists(m_originalFilename) && !copy(m_originalFilename, fileName()))
+            {
+                ok = false;
+            }
         }
 
-        if (ok && !QFile::open(mode)) { ok = false; }
-        if (!ok) { setFileName(m_originalFilename); }
+        if (ok && !QFile::open(mode))
+        {
+            ok = false;
+        }
+        if (!ok)
+        {
+            setFileName(m_originalFilename);
+        }
         return ok;
     }
 
     CAtomicFile::~CAtomicFile()
     {
-        if (std::uncaught_exceptions() > 0) { QFile::close(); }
+        if (std::uncaught_exceptions() > 0)
+        {
+            QFile::close();
+        }
     }
 
     void CAtomicFile::close()
     {
-        if (!isOpen()) { return; }
+        if (!isOpen())
+        {
+            return;
+        }
 
 #ifdef Q_OS_WIN32
         FlushFileBuffers(reinterpret_cast<HANDLE>(_get_osfhandle(handle())));
@@ -77,7 +101,10 @@ namespace swift::misc
 
         QFile::close();
 
-        if (error() == NoError) { replaceOriginal(); }
+        if (error() == NoError)
+        {
+            replaceOriginal();
+        }
         setFileName(m_originalFilename);
     }
 
@@ -89,7 +116,10 @@ namespace swift::misc
 
     void CAtomicFile::abandon()
     {
-        if (!isOpen()) { return; }
+        if (!isOpen())
+        {
+            return;
+        }
 
         QFile::close();
         remove();
@@ -98,8 +128,14 @@ namespace swift::misc
 
     CAtomicFile::FileError CAtomicFile::error() const
     {
-        if (m_renameError) { return RenameError; }
-        if (m_permissionError) { return PermissionsError; }
+        if (m_renameError)
+        {
+            return RenameError;
+        }
+        if (m_permissionError)
+        {
+            return PermissionsError;
+        }
         return QFile::error();
     }
 
@@ -173,7 +209,10 @@ namespace swift::misc
 #else
     void CAtomicFile::replaceOriginal()
     {
-        if (exists(m_originalFilename)) { remove(m_originalFilename); }
+        if (exists(m_originalFilename))
+        {
+            remove(m_originalFilename);
+        }
         rename(m_originalFilename);
     }
 #endif

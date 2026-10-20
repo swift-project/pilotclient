@@ -58,14 +58,20 @@ namespace swift::misc::simulation
     {
         static const CAircraftSituationList empty;
         QReadLocker l(&m_lockSituations);
-        if (!m_situationsByCallsign.contains(callsign)) { return empty; }
+        if (!m_situationsByCallsign.contains(callsign))
+        {
+            return empty;
+        }
         return m_situationsByCallsign[callsign];
     }
 
     CAircraftSituation CRemoteAircraftProvider::remoteAircraftSituation(const CCallsign &callsign, int index) const
     {
         const CAircraftSituationList situations = this->remoteAircraftSituations(callsign);
-        if (index < 0 || index >= situations.size()) { return CAircraftSituation::null(); }
+        if (index < 0 || index >= situations.size())
+        {
+            return CAircraftSituation::null();
+        }
         return situations[index];
     }
 
@@ -95,7 +101,10 @@ namespace swift::misc::simulation
     int CRemoteAircraftProvider::remoteAircraftSituationsCount(const CCallsign &callsign) const
     {
         QReadLocker l(&m_lockSituations);
-        if (!m_situationsByCallsign.contains(callsign)) { return -1; }
+        if (!m_situationsByCallsign.contains(callsign))
+        {
+            return -1;
+        }
         return m_situationsByCallsign[callsign].size();
     }
 
@@ -103,14 +112,20 @@ namespace swift::misc::simulation
     {
         static const CAircraftPartsList empty;
         QReadLocker l(&m_lockParts);
-        if (!m_partsByCallsign.contains(callsign)) { return empty; }
+        if (!m_partsByCallsign.contains(callsign))
+        {
+            return empty;
+        }
         return m_partsByCallsign[callsign];
     }
 
     int CRemoteAircraftProvider::remoteAircraftPartsCount(const CCallsign &callsign) const
     {
         QReadLocker l(&m_lockParts);
-        if (!m_partsByCallsign.contains(callsign)) { return -1; }
+        if (!m_partsByCallsign.contains(callsign))
+        {
+            return -1;
+        }
         return m_partsByCallsign[callsign].size();
     }
 
@@ -191,7 +206,10 @@ namespace swift::misc::simulation
             m_dbCGPerCallsign.clear();
         }
 
-        for (const CCallsign &cs : callsigns) { emit this->removedAircraft(cs); }
+        for (const CCallsign &cs : callsigns)
+        {
+            emit this->removedAircraft(cs);
+        }
     }
 
     void CRemoteAircraftProvider::removeReverseLookupMessages(const CCallsign &callsign)
@@ -202,7 +220,10 @@ namespace swift::misc::simulation
 
     bool CRemoteAircraftProvider::addNewAircraftInRange(const CSimulatedAircraft &aircraft)
     {
-        if (this->isAircraftInRange(aircraft.getCallsign())) { return false; }
+        if (this->isAircraftInRange(aircraft.getCallsign()))
+        {
+            return false;
+        }
 
         // store
         {
@@ -221,10 +242,16 @@ namespace swift::misc::simulation
         int c = 0;
         {
             QWriteLocker l(&m_lockAircraft);
-            if (!m_aircraftInRange.contains(callsign)) { return 0; }
+            if (!m_aircraftInRange.contains(callsign))
+            {
+                return 0;
+            }
             c = m_aircraftInRange[callsign].apply(vm, skipEqualValues).size();
         }
-        if (c > 0) { emit this->changedAircraftInRange(); }
+        if (c > 0)
+        {
+            emit this->changedAircraftInRange();
+        }
         return c;
     }
 
@@ -235,11 +262,20 @@ namespace swift::misc::simulation
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
         {
             QWriteLocker l(&m_lockAircraft);
-            if (!m_aircraftInRange.contains(callsign)) { return false; }
+            if (!m_aircraftInRange.contains(callsign))
+            {
+                return false;
+            }
             CSimulatedAircraft &aircraft = m_aircraftInRange[callsign];
             aircraft.setSituation(situation);
-            if (!bearing.isNull()) { aircraft.setRelativeBearing(bearing); }
-            if (!distance.isNull()) { aircraft.setRelativeDistance(distance); }
+            if (!bearing.isNull())
+            {
+                aircraft.setRelativeBearing(bearing);
+            }
+            if (!distance.isNull())
+            {
+                aircraft.setRelativeDistance(distance);
+            }
         }
         return true;
     }
@@ -248,7 +284,10 @@ namespace swift::misc::simulation
                                                                        bool allowTestAltitudeOffset)
     {
         const CCallsign cs = situation.getCallsign();
-        if (cs.isEmpty()) { return situation; }
+        if (cs.isEmpty())
+        {
+            return situation;
+        }
 
         // testing
         if (CBuildConfig::isLocalDeveloperDebugBuild())
@@ -263,7 +302,10 @@ namespace swift::misc::simulation
 
         // CG, model
         const CAircraftModel aircraftModel = this->getAircraftInRangeModelForCallsign(cs);
-        if (situation.hasCG() && aircraftModel.getCG() != situation.getCG()) { this->updateCG(cs, situation.getCG()); }
+        if (situation.hasCG() && aircraftModel.getCG() != situation.getCG())
+        {
+            this->updateCG(cs, situation.getCG());
+        }
 
         // list from new to old
         CAircraftSituationList updatedSituations; // copy of updated situations
@@ -342,7 +384,10 @@ namespace swift::misc::simulation
                                                      bool removeOutdated)
     {
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
 
         // list sorted from new to old
         const qint64 ts = QDateTime::currentMSecsSinceEpoch();
@@ -356,7 +401,10 @@ namespace swift::misc::simulation
             partsList.setAdjustedSortHint(CAircraftPartsList::AdjustedTimestampLatestFirst);
 
             // remove outdated parts (but never remove the most recent one)
-            if (removeOutdated) { IRemoteAircraftProvider::removeOutdatedParts(partsList); }
+            if (removeOutdated)
+            {
+                IRemoteAircraftProvider::removeOutdatedParts(partsList);
+            }
             correctiveParts = partsList;
 
             // check sort order
@@ -370,7 +418,10 @@ namespace swift::misc::simulation
             QWriteLocker lock(&m_lockSituations);
             CAircraftSituationList &situationList = m_situationsByCallsign[callsign];
             const int c = situationList.adjustGroundFlag(parts);
-            if (c > 0) { m_situationsLastModified[callsign] = ts; }
+            if (c > 0)
+            {
+                m_situationsLastModified[callsign] = ts;
+            }
         }
 
         // update aircraft
@@ -402,12 +453,18 @@ namespace swift::misc::simulation
         const bool validCs = remoteAircraft.hasValidCallsign();
         if (!validCs)
         {
-            if (!isFull) { return; } // incremental parts broadcasting
+            if (!isFull)
+            {
+                return;
+            } // incremental parts broadcasting
             return; // suspicious
         }
 
         // If we are not yet synchronized, we throw away any incremental packet
-        if (!remoteAircraft.isPartsSynchronized() && !isFull) { return; }
+        if (!remoteAircraft.isPartsSynchronized() && !isFull)
+        {
+            return;
+        }
 
         CAircraftParts parts;
         try
@@ -429,7 +486,10 @@ namespace swift::misc::simulation
                         if (attributes < 3)
                         {
                             // EXPERIMENTAL
-                            if (attributes < 1) { return; }
+                            if (attributes < 1)
+                            {
+                                return;
+                            }
 
                             // treat as incremental
                             CLogMessage(this).warning(u"Treating %1 attributes as incremental") << attributes;
@@ -479,7 +539,10 @@ namespace swift::misc::simulation
                 CStatusMessageList &msgs = m_aircraftPartsMessages[callsign];
                 msgs.push_back(message);
             }
-            else { m_aircraftPartsMessages.insert(callsign, message); }
+            else
+            {
+                m_aircraftPartsMessages.insert(callsign, message);
+            }
         }
     }
 
@@ -496,8 +559,14 @@ namespace swift::misc::simulation
                                                                 const CAircraftSituationChange &change,
                                                                 const CAircraftModel &aircraftModel)
     {
-        if (aircraftModel.hasCG() && !situation.hasCG()) { situation.setCG(aircraftModel.getCG()); }
-        if (!situation.shouldGuessOnGround()) { return false; }
+        if (aircraftModel.hasCG() && !situation.hasCG())
+        {
+            situation.setCG(aircraftModel.getCG());
+        }
+        if (!situation.shouldGuessOnGround())
+        {
+            return false;
+        }
         return change.guessOnGround(situation, aircraftModel);
     }
 
@@ -510,19 +579,31 @@ namespace swift::misc::simulation
     bool CRemoteAircraftProvider::setAircraftEnabledFlag(const CCallsign &callsign, bool enabledForRendering)
     {
         QWriteLocker l(&m_lockAircraft);
-        if (!m_aircraftInRange.contains(callsign)) { return false; }
+        if (!m_aircraftInRange.contains(callsign))
+        {
+            return false;
+        }
         return m_aircraftInRange[callsign].setEnabled(enabledForRendering);
     }
 
     int CRemoteAircraftProvider::updateMultipleAircraftEnabled(const CCallsignSet &callsigns, bool enabledForRendering)
     {
-        if (callsigns.isEmpty()) { return 0; }
+        if (callsigns.isEmpty())
+        {
+            return 0;
+        }
         QWriteLocker l(&m_lockAircraft);
         int c = 0;
         for (const CCallsign &cs : callsigns)
         {
-            if (!m_aircraftInRange.contains(cs)) { continue; }
-            if (m_aircraftInRange[cs].setEnabled(enabledForRendering)) { c++; }
+            if (!m_aircraftInRange.contains(cs))
+            {
+                continue;
+            }
+            if (m_aircraftInRange[cs].setEnabled(enabledForRendering))
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -530,7 +611,10 @@ namespace swift::misc::simulation
     bool CRemoteAircraftProvider::updateAircraftModel(const CCallsign &callsign, const CAircraftModel &model,
                                                       const CIdentifier &originator)
     {
-        if (CIdentifiable::isMyIdentifier(originator)) { return false; }
+        if (CIdentifiable::isMyIdentifier(originator))
+        {
+            return false;
+        }
         const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexModel, CVariant::fromValue(model));
         const int c = this->updateAircraftInRange(callsign, vm);
         return c > 0;
@@ -539,7 +623,10 @@ namespace swift::misc::simulation
     bool CRemoteAircraftProvider::updateAircraftNetworkModel(const CCallsign &callsign, const CAircraftModel &model,
                                                              const CIdentifier &originator)
     {
-        if (CIdentifiable::isMyIdentifier(originator)) { return false; }
+        if (CIdentifiable::isMyIdentifier(originator))
+        {
+            return false;
+        }
         const CPropertyIndexVariantMap vm(CSimulatedAircraft::IndexNetworkModel, CVariant::fromValue(model));
         const int c = this->updateAircraftInRange(callsign, vm);
         return c > 0;
@@ -548,25 +635,40 @@ namespace swift::misc::simulation
     bool CRemoteAircraftProvider::updateFastPositionEnabled(const CCallsign &callsign, bool enableFastPositonUpdates)
     {
         QWriteLocker l(&m_lockAircraft);
-        if (!m_aircraftInRange.contains(callsign)) { return false; }
+        if (!m_aircraftInRange.contains(callsign))
+        {
+            return false;
+        }
         return m_aircraftInRange[callsign].setFastPositionUpdates(enableFastPositonUpdates);
     }
 
     bool CRemoteAircraftProvider::updateAircraftRendered(const CCallsign &callsign, bool rendered)
     {
         QWriteLocker l(&m_lockAircraft);
-        if (!m_aircraftInRange.contains(callsign)) { return false; }
+        if (!m_aircraftInRange.contains(callsign))
+        {
+            return false;
+        }
         return m_aircraftInRange[callsign].setRendered(rendered);
     }
 
     int CRemoteAircraftProvider::updateMultipleAircraftRendered(const CCallsignSet &callsigns, bool rendered)
     {
-        if (callsigns.isEmpty()) { return 0; }
+        if (callsigns.isEmpty())
+        {
+            return 0;
+        }
         int c = 0;
         for (const CCallsign &cs : callsigns)
         {
-            if (!m_aircraftInRange.contains(cs)) { continue; }
-            if (m_aircraftInRange[cs].setRendered(rendered)) { c++; }
+            if (!m_aircraftInRange.contains(cs))
+            {
+                continue;
+            }
+            if (m_aircraftInRange[cs].setRendered(rendered))
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -576,7 +678,10 @@ namespace swift::misc::simulation
                                                                CAircraftSituation::GndElevationInfo info,
                                                                bool *setForOnGroundPosition)
     {
-        if (!this->isAircraftInRange(callsign)) { return 0; }
+        if (!this->isAircraftInRange(callsign))
+        {
+            return 0;
+        }
 
         // update aircraft situation
         const qint64 now = QDateTime::currentMSecsSinceEpoch();
@@ -588,10 +693,16 @@ namespace swift::misc::simulation
         {
             QWriteLocker l(&m_lockSituations);
             CAircraftSituationList &situations = m_situationsByCallsign[callsign];
-            if (situations.isEmpty()) { return 0; }
+            if (situations.isEmpty())
+            {
+                return 0;
+            }
             updated = setGroundElevationCheckedAndGuessGround(situations, elevation, info, model, &change,
                                                               &setForOnGndPosition);
-            if (updated < 1) { return 0; }
+            if (updated < 1)
+            {
+                return 0;
+            }
             m_situationsLastModified[callsign] = now;
             const CAircraftSituation latestSituation = situations.front();
             if (info == CAircraftSituation::FromProvider && latestSituation.isOnGround())
@@ -601,7 +712,10 @@ namespace swift::misc::simulation
         }
 
         // update change
-        if (!change.isNull()) { this->storeChange(change); }
+        if (!change.isNull())
+        {
+            this->storeChange(change);
+        }
 
         // aircraft updates
         QWriteLocker l(&m_lockAircraft);
@@ -610,14 +724,20 @@ namespace swift::misc::simulation
             m_aircraftInRange[callsign].setGroundElevationChecked(elevation, info);
         }
 
-        if (setForOnGroundPosition) { *setForOnGroundPosition = setForOnGndPosition; }
+        if (setForOnGroundPosition)
+        {
+            *setForOnGroundPosition = setForOnGndPosition;
+        }
         return updated; // updated situations
     }
 
     bool CRemoteAircraftProvider::updateCG(const CCallsign &callsign, const CLength &cg)
     {
         QWriteLocker l(&m_lockAircraft);
-        if (!m_aircraftInRange.contains(callsign)) { return false; }
+        if (!m_aircraftInRange.contains(callsign))
+        {
+            return false;
+        }
         m_aircraftInRange[callsign].setCG(cg);
         return true;
     }
@@ -626,17 +746,29 @@ namespace swift::misc::simulation
                                                          const QString &modelString)
     {
         QWriteLocker l(&m_lockAircraft);
-        if (!m_aircraftInRange.contains(callsign)) { return false; }
+        if (!m_aircraftInRange.contains(callsign))
+        {
+            return false;
+        }
         CSimulatedAircraft &aircraft = m_aircraftInRange[callsign];
-        if (!cg.isNull()) { aircraft.setCG(cg); }
-        if (!modelString.isEmpty()) { aircraft.setModelString(modelString); }
+        if (!cg.isNull())
+        {
+            aircraft.setCG(cg);
+        }
+        if (!modelString.isEmpty())
+        {
+            aircraft.setModelString(modelString);
+        }
         return true;
     }
 
     CCallsignSet CRemoteAircraftProvider::updateCGForModel(const QString &modelString, const CLength &cg)
     {
         CCallsignSet callsigns;
-        if (modelString.isEmpty()) { return callsigns; }
+        if (modelString.isEmpty())
+        {
+            return callsigns;
+        }
 
         QWriteLocker l(&m_lockAircraft);
         for (CSimulatedAircraft &aircraft : m_aircraftInRange)
@@ -678,7 +810,10 @@ namespace swift::misc::simulation
     {
         const CCallsignSet callsigns = this->getAircraftInRangeCallsigns();
         QWriteLocker l(&m_lockAircraft);
-        for (const CCallsign &cs : callsigns) { m_aircraftInRange[cs].setRendered(false); }
+        for (const CCallsign &cs : callsigns)
+        {
+            m_aircraftInRange[cs].setRendered(false);
+        }
     }
 
     void CRemoteAircraftProvider::enableReverseLookupMessages(ReverseLookupLogging enable)
@@ -702,30 +837,54 @@ namespace swift::misc::simulation
     void CRemoteAircraftProvider::addReverseLookupMessages(const CCallsign &callsign,
                                                            const CStatusMessageList &messages)
     {
-        if (callsign.isEmpty()) { return; }
-        if (messages.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
+        if (messages.isEmpty())
+        {
+            return;
+        }
         QWriteLocker l(&m_lockMessages);
-        if (!m_enableReverseLookupMsgs) { return; }
+        if (!m_enableReverseLookupMsgs)
+        {
+            return;
+        }
         if (m_reverseLookupMessages.contains(callsign))
         {
             CStatusMessageList &msgs = m_reverseLookupMessages[callsign];
             msgs.push_back(messages);
         }
-        else { m_reverseLookupMessages.insert(callsign, messages); }
+        else
+        {
+            m_reverseLookupMessages.insert(callsign, messages);
+        }
     }
 
     void CRemoteAircraftProvider::addReverseLookupMessage(const CCallsign &callsign, const CStatusMessage &message)
     {
-        if (callsign.isEmpty()) { return; }
-        if (message.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
+        if (message.isEmpty())
+        {
+            return;
+        }
         this->addReverseLookupMessages(callsign, CStatusMessageList({ message }));
     }
 
     void CRemoteAircraftProvider::addReverseLookupMessage(const CCallsign &callsign, const QString &message,
                                                           CStatusMessage::StatusSeverity severity)
     {
-        if (callsign.isEmpty()) { return; }
-        if (message.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
+        if (message.isEmpty())
+        {
+            return;
+        }
         const CStatusMessage m = CCallsign::logMessage(callsign, message, getLogCategories(), severity);
         this->addReverseLookupMessage(callsign, m);
     }
@@ -734,7 +893,10 @@ namespace swift::misc::simulation
 
     bool CRemoteAircraftProvider::hasTestAltitudeOffset(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return false; }
+        if (callsign.isEmpty())
+        {
+            return false;
+        }
         QReadLocker l(&m_lockSituations);
         return m_testOffset.contains(callsign);
     }
@@ -750,12 +912,18 @@ namespace swift::misc::simulation
     {
         const CCallsign cs(situation.getCallsign());
         const bool globalOffset = this->hasTestAltitudeOffsetGlobalValue();
-        if (!globalOffset && !this->hasTestAltitudeOffset(cs)) { return situation; }
+        if (!globalOffset && !this->hasTestAltitudeOffset(cs))
+        {
+            return situation;
+        }
 
         QReadLocker l(&m_lockSituations);
         const CLength os =
             m_testOffset.contains(cs) ? m_testOffset.value(cs) : m_testOffset.value(testAltitudeOffsetCallsign());
-        if (os.isNull() || os.isZeroEpsilonConsidered()) { return situation; }
+        if (os.isNull() || os.isZeroEpsilonConsidered())
+        {
+            return situation;
+        }
         return situation.withAltitudeOffset(os);
     }
 
@@ -772,9 +940,18 @@ namespace swift::misc::simulation
                                                                          CAircraftSituationChange *changeOut,
                                                                          bool *setForOnGroundPosition)
     {
-        if (setForOnGroundPosition) { *setForOnGroundPosition = false; } // set a default
-        if (elevationPlane.isNull()) { return 0; }
-        if (situations.isEmpty()) { return 0; }
+        if (setForOnGroundPosition)
+        {
+            *setForOnGroundPosition = false;
+        } // set a default
+        if (elevationPlane.isNull())
+        {
+            return 0;
+        }
+        if (situations.isEmpty())
+        {
+            return 0;
+        }
 
         // the change has the timestamps of the latest situation
         // Q_ASSERT_X(situations.m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst ||
@@ -806,7 +983,10 @@ namespace swift::misc::simulation
             latest = false; // only first pos. is "the latest" one
         }
 
-        if (setForOnGroundPosition) { *setForOnGroundPosition = setForOnGndPosition; }
+        if (setForOnGroundPosition)
+        {
+            *setForOnGroundPosition = setForOnGndPosition;
+        }
         if (changeOut)
         {
             const CAircraftSituationChange change(situations, model.getCG(), model.isVtol(), true, true);
@@ -882,14 +1062,20 @@ namespace swift::misc::simulation
 
     bool CRemoteAircraftProvider::isAircraftInRange(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return false; }
+        if (callsign.isEmpty())
+        {
+            return false;
+        }
         QReadLocker l(&m_lockAircraft);
         return m_aircraftInRange.contains(callsign);
     }
 
     bool CRemoteAircraftProvider::isVtolAircraft(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return false; }
+        if (callsign.isEmpty())
+        {
+            return false;
+        }
         const CSimulatedAircraft aircraft = this->getAircraftInRangeForCallsign(callsign);
         return aircraft.isVtol();
     }
@@ -1190,7 +1376,10 @@ namespace swift::misc::simulation
     void IRemoteAircraftProvider::removeOutdatedParts(CAircraftPartsList &partsList)
     {
         // remove all outdated parts, but keep at least one
-        if (partsList.isEmpty()) { return; }
+        if (partsList.isEmpty())
+        {
+            return;
+        }
 
         // we expect the latest value at front
         // but to make sure we do the search

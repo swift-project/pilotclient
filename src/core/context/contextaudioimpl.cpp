@@ -26,7 +26,10 @@ namespace swift::core::context
 
     void CContextAudio::registerDevices(const CAudioDeviceInfoList &devices)
     {
-        if (devices.isEmpty()) { return; }
+        if (devices.isEmpty())
+        {
+            return;
+        }
         m_registeredDevices.registerDevices(devices);
     }
 

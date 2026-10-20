@@ -41,7 +41,10 @@ namespace swift::misc::simulation::fscommon
     {
         QStringList upper;
         upper.reserve(stringList.size());
-        for (const QString &s : stringList) { upper.append(s.toUpper()); }
+        for (const QString &s : stringList)
+        {
+            upper.append(s.toUpper());
+        }
         return upper;
     }
 
@@ -49,7 +52,10 @@ namespace swift::misc::simulation::fscommon
     {
         QStringList ms;
         ms.reserve(size());
-        for (const CVPilotModelRule &rule : (*this)) { ms.append(rule.getModelName()); }
+        for (const CVPilotModelRule &rule : (*this))
+        {
+            ms.append(rule.getModelName());
+        }
         ms.sort(Qt::CaseInsensitive);
         return ms;
     }
@@ -60,7 +66,10 @@ namespace swift::misc::simulation::fscommon
         for (const CVPilotModelRule &rule : (*this))
         {
             QString d(rule.getDistributor());
-            if (distributors.contains(d)) { continue; }
+            if (distributors.contains(d))
+            {
+                continue;
+            }
             distributors.append(d);
         }
         distributors.sort(Qt::CaseInsensitive);
@@ -70,7 +79,10 @@ namespace swift::misc::simulation::fscommon
     int CVPilotModelRuleSet::removeModels(const QStringList &modelsToBeRemoved)
     {
         QStringList knownModels(getSortedModelNames());
-        if (knownModels.isEmpty()) { return 0; }
+        if (knownModels.isEmpty())
+        {
+            return 0;
+        }
 
         QStringList remove(toUpper(modelsToBeRemoved));
         remove.sort();
@@ -88,7 +100,10 @@ namespace swift::misc::simulation::fscommon
     int CVPilotModelRuleSet::keepModels(const QStringList &modelsToBeKept)
     {
         QStringList knownModels(getSortedModelNames());
-        if (knownModels.isEmpty()) { return 0; }
+        if (knownModels.isEmpty())
+        {
+            return 0;
+        }
 
         QStringList keep(toUpper(modelsToBeKept));
         keep.sort();
@@ -96,7 +111,10 @@ namespace swift::misc::simulation::fscommon
         QSet<QString> removeSet(knownModels.begin(), knownModels.end());
         removeSet.subtract(QSet<QString>(keep.begin(), keep.end()));
         int c = 0;
-        for (const QString &model : removeSet) { c += this->removeIf(&CVPilotModelRule::getModelName, model); }
+        for (const QString &model : removeSet)
+        {
+            c += this->removeIf(&CVPilotModelRule::getModelName, model);
+        }
         return c;
     }
 
@@ -107,13 +125,19 @@ namespace swift::misc::simulation::fscommon
         for (const CVPilotModelRule &rule : *this)
         {
             QString m(rule.getModelName());
-            if (m.isEmpty()) { continue; }
+            if (m.isEmpty())
+            {
+                continue;
+            }
             if (modelNames.contains(m, Qt::CaseInsensitive))
             {
                 CAircraftModel model(rule.toAircraftModel());
                 for (CAircraftModel &exisitingModel : models)
                 {
-                    if (!exisitingModel.matchesModelString(m, Qt::CaseInsensitive)) { continue; }
+                    if (!exisitingModel.matchesModelString(m, Qt::CaseInsensitive))
+                    {
+                        continue;
+                    }
                     exisitingModel.updateMissingParts(model);
                     break;
                 }

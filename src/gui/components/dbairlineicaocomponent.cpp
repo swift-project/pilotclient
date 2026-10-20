@@ -56,8 +56,14 @@ namespace swift::gui::components
         Q_UNUSED(count)
         Q_UNUSED(url)
 
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
-        if (!entity.testFlag(CEntityFlags::AirlineIcaoEntity)) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
+        if (!entity.testFlag(CEntityFlags::AirlineIcaoEntity))
+        {
+            return;
+        }
 
         if (CEntityFlags::isFinishedReadState(readState))
         {
@@ -76,14 +82,20 @@ namespace swift::gui::components
                                                            qint64 current, qint64 max, const QUrl &url)
     {
         using namespace std::chrono_literals;
-        if (!entity.testFlag(CEntityFlags::AirlineIcaoEntity)) { return; }
+        if (!entity.testFlag(CEntityFlags::AirlineIcaoEntity))
+        {
+            return;
+        }
         this->showDownloadProgress(progress, current, max, url, 5s);
         Q_UNUSED(logId);
     }
 
     void CDbAirlineIcaoComponent::onReload()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AirlineIcaoEntity, QDateTime());
     }
 } // namespace swift::gui::components

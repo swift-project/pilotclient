@@ -98,7 +98,10 @@ namespace swift::misc
         template <typename T>
         QVariant Index<Derived>::myself() const
         {
-            if constexpr (std::is_default_constructible_v<T>) { return QVariant::fromValue(*derived()); }
+            if constexpr (std::is_default_constructible_v<T>)
+            {
+                return QVariant::fromValue(*derived());
+            }
             else
             {
                 qFatal("isMyself should have been handled before reaching here");
@@ -110,8 +113,14 @@ namespace swift::misc
         template <typename T>
         void Index<Derived>::myself(const QVariant &variant)
         {
-            if constexpr (std::is_default_constructible_v<T>) { *derived() = variant.value<T>(); }
-            else { qFatal("isMyself should have been handled before reaching here"); }
+            if constexpr (std::is_default_constructible_v<T>)
+            {
+                *derived() = variant.value<T>();
+            }
+            else
+            {
+                qFatal("isMyself should have been handled before reaching here");
+            }
         }
 
         template <class Derived>
@@ -157,14 +166,23 @@ namespace swift::misc
         template <class Derived>
         void Index<Derived>::setPropertyByIndex(CPropertyIndexRef index, const QVariant &variant)
         {
-            if (index.isMyself()) { myself<Derived>(variant); }
-            else { baseSetPropertyByIndex(static_cast<TIndexBaseOfT<Derived> *>(derived()), variant, index); }
+            if (index.isMyself())
+            {
+                myself<Derived>(variant);
+            }
+            else
+            {
+                baseSetPropertyByIndex(static_cast<TIndexBaseOfT<Derived> *>(derived()), variant, index);
+            }
         }
 
         template <class Derived>
         QVariant Index<Derived>::propertyByIndex(CPropertyIndexRef index) const
         {
-            if (index.isMyself()) { return myself<Derived>(); }
+            if (index.isMyself())
+            {
+                return myself<Derived>();
+            }
             const auto i = index.frontCasted<ColumnIndex>(); // keep that "auto", otherwise I won's compile
             switch (i)
             {
@@ -184,7 +202,10 @@ namespace swift::misc
         template <class Derived>
         int Index<Derived>::comparePropertyByIndex(CPropertyIndexRef index, const Derived &compareValue) const
         {
-            if (this == &compareValue) { return 0; }
+            if (this == &compareValue)
+            {
+                return 0;
+            }
             if (index.isMyself())
             {
                 // slow, only last resort

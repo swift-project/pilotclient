@@ -45,7 +45,10 @@ namespace swift::gui::components
             connect(sGui->getIContextSimulator(), &IContextSimulator::simulatorStatusChanged, this,
                     &CAircraftModelStringCompleter::onSimulatorConnected, Qt::QueuedConnection);
             CSimulatorInfo pluginSimulator = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator();
-            if (pluginSimulator.isSingleSimulator()) { simulator = pluginSimulator; }
+            if (pluginSimulator.isSingleSimulator())
+            {
+                simulator = pluginSimulator;
+            }
             else
             {
                 this->setSourceVisible(OwnModels, false); // hide own models
@@ -63,7 +66,10 @@ namespace swift::gui::components
 
     void CAircraftModelStringCompleter::setText(const QString &completersString)
     {
-        if (ui->le_modelString->text() == completersString) { return; }
+        if (ui->le_modelString->text() == completersString)
+        {
+            return;
+        }
         ui->le_modelString->setText(completersString);
     }
 
@@ -74,9 +80,18 @@ namespace swift::gui::components
 
     void CAircraftModelStringCompleter::setSourceVisible(CompleterSource source, bool visible)
     {
-        if (source.testFlag(DB)) { ui->rb_Db->setVisible(visible); }
-        if (source.testFlag(ModelSet)) { ui->rb_ModelSet->setVisible(visible); }
-        if (source.testFlag(OwnModels)) { ui->rb_OwnModels->setVisible(visible); }
+        if (source.testFlag(DB))
+        {
+            ui->rb_Db->setVisible(visible);
+        }
+        if (source.testFlag(ModelSet))
+        {
+            ui->rb_ModelSet->setVisible(visible);
+        }
+        if (source.testFlag(OwnModels))
+        {
+            ui->rb_OwnModels->setVisible(visible);
+        }
     }
 
     void CAircraftModelStringCompleter::selectSource(CAircraftModelStringCompleter::CompleterSourceFlag source)
@@ -92,12 +107,21 @@ namespace swift::gui::components
 
     bool CAircraftModelStringCompleter::setSimulator(const CSimulatorInfo &simulator)
     {
-        if (simulator.isSingleSimulator()) { return false; }
-        if (this->getSimulator() == simulator) { return false; }
+        if (simulator.isSingleSimulator())
+        {
+            return false;
+        }
+        if (this->getSimulator() == simulator)
+        {
+            return false;
+        }
         m_currentSimulator = simulator;
         QPointer<CAircraftModelStringCompleter> myself(this);
         QTimer::singleShot(100, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->setCompleter(true);
         });
         return true;
@@ -109,26 +133,38 @@ namespace swift::gui::components
 
     void CAircraftModelStringCompleter::setCompleter(bool simChanged)
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         QStringList modelStrings;
         CompleterSourceFlag dataSource = None;
         QString simInfo = m_currentSimulator.toQString();
         if (ui->rb_Db->isChecked())
         {
-            if (!simChanged && m_currentDataSource == DB) { return; }
+            if (!simChanged && m_currentDataSource == DB)
+            {
+                return;
+            }
             modelStrings = sGui->getWebDataServices()->getModelCompleterStrings();
             dataSource = DB;
             simInfo = QStringLiteral("DB models");
         }
         else if (ui->rb_ModelSet->isChecked() && sGui && sGui->getIContextSimulator())
         {
-            if (!simChanged && m_currentDataSource == ModelSet) { return; }
+            if (!simChanged && m_currentDataSource == ModelSet)
+            {
+                return;
+            }
             modelStrings = sGui->getIContextSimulator()->getModelSetCompleterStrings(true);
             dataSource = ModelSet;
         }
         else if (ui->rb_OwnModels->isChecked())
         {
-            if (!simChanged && m_currentDataSource == OwnModels) { return; }
+            if (!simChanged && m_currentDataSource == OwnModels)
+            {
+                return;
+            }
             modelStrings = m_modelCaches.getCachedModels(this->getSimulator()).toCompleterStrings();
             dataSource = OwnModels;
         }

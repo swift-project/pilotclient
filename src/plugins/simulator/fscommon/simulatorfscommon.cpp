@@ -46,7 +46,10 @@ namespace swift::simplugin::fscommon
 
     void CSimulatorFsCommon::registerHelp()
     {
-        if (CSimpleCommandParser::registered("swift::simplugin::fscommon::CSimulatorFsCommon")) { return; }
+        if (CSimpleCommandParser::registered("swift::simplugin::fscommon::CSimulatorFsCommon"))
+        {
+            return;
+        }
         CSimpleCommandParser::registerCommand({ ".drv", "alias: .driver .plugin" });
     }
 

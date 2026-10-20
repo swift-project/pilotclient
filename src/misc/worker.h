@@ -99,7 +99,10 @@ namespace swift::misc
             Q_ASSERT(context->thread() == QThread::currentThread());
             QMutexLocker lock(&m_finishedMutex);
             connect(this, &CWorkerBase::finished, context, functor);
-            if (m_finished) { private_ns::invokeSlot(functor, context); }
+            if (m_finished)
+            {
+                private_ns::invokeSlot(functor, context);
+            }
         }
 
         //! Connects to a functor which will be called when the task is finished.
@@ -109,7 +112,10 @@ namespace swift::misc
         {
             QMutexLocker lock(&m_finishedMutex);
             connect(this, &CWorkerBase::finished, functor);
-            if (m_finished) { functor(); }
+            if (m_finished)
+            {
+                functor();
+            }
         }
 
         //! Returns true if the task has finished.
@@ -126,7 +132,10 @@ namespace swift::misc
         void doIfFinished(F functor) const
         {
             QMutexLocker lock(&m_finishedMutex);
-            if (m_finished) { functor(); }
+            if (m_finished)
+            {
+                functor();
+            }
         }
 
         //! Executes some code (in the caller's thread) if the task has not finished.
@@ -135,7 +144,10 @@ namespace swift::misc
         void doIfNotFinished(F functor) const
         {
             QMutexLocker lock(&m_finishedMutex);
-            if (!m_finished) { functor(); }
+            if (!m_finished)
+            {
+                functor();
+            }
         }
 
         //! Executes some code (in the caller's thread) if the task has finished and some different code if it has not
@@ -144,8 +156,14 @@ namespace swift::misc
         void doIfFinishedElse(F1 ifFunctor, F2 elseFunctor) const
         {
             QMutexLocker lock(&m_finishedMutex);
-            if (m_finished) { ifFunctor(); }
-            else { elseFunctor(); }
+            if (m_finished)
+            {
+                ifFunctor();
+            }
+            else
+            {
+                elseFunctor();
+            }
         }
 
         //! Blocks until the task is finished.
@@ -232,7 +250,10 @@ namespace swift::misc
                     std::move(task)();
                     return QVariant();
                 }
-                else { return QVariant::fromValue(std::move(task)()); }
+                else
+                {
+                    return QVariant::fromValue(std::move(task)());
+                }
             });
         }
 

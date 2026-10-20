@@ -212,12 +212,18 @@ namespace swift::misc::aviation
                                                               const CAircraftSituation &newSituation,
                                                               const CLength &distance)
     {
-        if (oldSituation.isNull() || newSituation.isNull()) { return CElevationPlane::null(); }
+        if (oldSituation.isNull() || newSituation.isNull())
+        {
+            return CElevationPlane::null();
+        }
         if (!oldSituation.hasGroundElevation() || !newSituation.hasGroundElevation())
         {
             return CElevationPlane::null();
         }
-        if (oldSituation.equalNormalVectorDouble(newSituation)) { return newSituation.getGroundElevationPlane(); }
+        if (oldSituation.equalNormalVectorDouble(newSituation))
+        {
+            return newSituation.getGroundElevationPlane();
+        }
 
         const double newElvFt = newSituation.getGroundElevation().value(CLengthUnit::ft());
         const double oldElvFt = oldSituation.getGroundElevation().value(CLengthUnit::ft());
@@ -238,18 +244,30 @@ namespace swift::misc::aviation
 
             const double distanceSituationNewM =
                 situation.calculateGreatCircleDistance(newSituation).value(CLengthUnit::m());
-            if (distanceSituationNewM < 5.0) { return newSituation.getGroundElevationPlane(); }
+            if (distanceSituationNewM < 5.0)
+            {
+                return newSituation.getGroundElevationPlane();
+            }
 
             const double distanceOldNewM =
                 (distance.isNull() ? oldSituation.calculateGreatCircleDistance(newSituation) : distance)
                     .value(CLengthUnit::m());
-            if (distanceOldNewM < 5.0) { return oldSituation.getGroundElevationPlane(); }
+            if (distanceOldNewM < 5.0)
+            {
+                return oldSituation.getGroundElevationPlane();
+            }
 
             const double distRatio = distanceSituationNewM / distanceOldNewM;
 
             // very close to the situations we return their elevation
-            if (distRatio < 0.05) { return newSituation.getGroundElevationPlane(); }
-            if (distRatio > 0.95) { return oldSituation.getGroundElevationPlane(); }
+            if (distRatio < 0.05)
+            {
+                return newSituation.getGroundElevationPlane();
+            }
+            if (distRatio > 0.95)
+            {
+                return oldSituation.getGroundElevationPlane();
+            }
 
             const double situationElvFt = newElvFt - distRatio * deltaElvFt;
             return { situation, situationElvFt, CElevationPlane::singlePointRadius() };
@@ -264,12 +282,18 @@ namespace swift::misc::aviation
 
     QVariant CAircraftSituation::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         if (ITimestampWithOffsetBased::canHandleIndex(index))
         {
             return ITimestampWithOffsetBased::propertyByIndex(index);
         }
-        if (ICoordinateGeodetic::canHandleIndex(index)) { return ICoordinateGeodetic::propertyByIndex(index); }
+        if (ICoordinateGeodetic::canHandleIndex(index))
+        {
+            return ICoordinateGeodetic::propertyByIndex(index);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
@@ -364,7 +388,10 @@ namespace swift::misc::aviation
         {
             const int c = m_groundElevationPlane.comparePropertyByIndex(index.copyFrontRemoved(),
                                                                         compareValue.getGroundElevationPlane());
-            if (c != 0 || i == IndexGroundElevationPlane) { return c; }
+            if (c != 0 || i == IndexGroundElevationPlane)
+            {
+                return c;
+            }
             return Compare::compare(this->getGroundElevationInfo(), compareValue.getGroundElevationInfo());
         }
         case IndexCallsign:
@@ -375,7 +402,10 @@ namespace swift::misc::aviation
         case IndexGroundElevationInfoString:
         {
             const int c = Compare::compare(this->getGroundElevationInfo(), compareValue.getGroundElevationInfo());
-            if (c != 0) { return c; }
+            if (c != 0)
+            {
+                return c;
+            }
         }
             [[fallthrough]];
         case IndexGroundElevationInfoTransferred:
@@ -395,12 +425,21 @@ namespace swift::misc::aviation
     bool CAircraftSituation::isOtherElevationInfoBetter(CAircraftSituation::GndElevationInfo otherInfo,
                                                         bool transferred) const
     {
-        if (otherInfo == NoElevationInfo || otherInfo == Test) { return false; }
+        if (otherInfo == NoElevationInfo || otherInfo == Test)
+        {
+            return false;
+        }
         const int otherInfoInt = static_cast<int>(otherInfo);
-        if (otherInfoInt > m_elvInfo) { return true; }
+        if (otherInfoInt > m_elvInfo)
+        {
+            return true;
+        }
         if (otherInfoInt == m_elvInfo)
         {
-            if (m_isElvInfoTransferred == transferred) { return false; } // not better (equal)
+            if (m_isElvInfoTransferred == transferred)
+            {
+                return false;
+            } // not better (equal)
             return !transferred; // if not transferred it is better
         }
         return false;
@@ -419,14 +458,20 @@ namespace swift::misc::aviation
 
     bool CAircraftSituation::equalPbhVectorAltitude(const CAircraftSituation &other) const
     {
-        if (!this->equalPbhAndVector(other)) { return false; }
+        if (!this->equalPbhAndVector(other))
+        {
+            return false;
+        }
         const int c = this->getAltitude().compare(other.getAltitude());
         return c == 0;
     }
 
     bool CAircraftSituation::equalPbhVectorAltitudeElevation(const CAircraftSituation &other) const
     {
-        if (!this->equalPbhVectorAltitude(other)) { return false; }
+        if (!this->equalPbhVectorAltitude(other))
+        {
+            return false;
+        }
         const int c = this->getGroundElevation().compare(other.getGroundElevation());
         return c == 0;
     }
@@ -459,7 +504,10 @@ namespace swift::misc::aviation
 
     bool CAircraftSituation::isOnGroundInfoAvailable() const
     {
-        if (this->hasInboundGroundDetails()) { return true; }
+        if (this->hasInboundGroundDetails())
+        {
+            return true;
+        }
         return m_onGroundInfo.getOnGround() != COnGroundInfo::OnGroundSituationUnknown &&
                m_onGroundInfo.getGroundDetails() != COnGroundInfo::NotSetGroundDetails;
     }
@@ -468,7 +516,10 @@ namespace swift::misc::aviation
 
     CLength CAircraftSituation::getGroundDistance(const CLength &centerOfGravity) const
     {
-        if (centerOfGravity.isNull() || !this->hasGroundElevation()) { return CLength::null(); }
+        if (centerOfGravity.isNull() || !this->hasGroundElevation())
+        {
+            return CLength::null();
+        }
         const CAltitude groundPlusCG = this->getGroundElevation().withOffset(centerOfGravity);
         const CLength groundDistance = (this->getAltitude() - groundPlusCG);
         return groundDistance;
@@ -490,7 +541,10 @@ namespace swift::misc::aviation
 
     CAircraftSituation::GndElevationInfo CAircraftSituation::getGroundElevationInfo() const
     {
-        if (!this->hasGroundElevation()) { return NoElevationInfo; }
+        if (!this->hasGroundElevation())
+        {
+            return NoElevationInfo;
+        }
         return static_cast<GndElevationInfo>(m_elvInfo);
     }
 
@@ -503,7 +557,10 @@ namespace swift::misc::aviation
     QString CAircraftSituation::getGroundElevationAndInfo() const
     {
         static const QString n("null");
-        if (m_groundElevationPlane.isNull()) { return n; }
+        if (m_groundElevationPlane.isNull())
+        {
+            return n;
+        }
 
         return m_groundElevationPlane.getAltitude().toQString(true) % u" [" % this->getGroundElevationInfoAsString() %
                u']';
@@ -512,11 +569,17 @@ namespace swift::misc::aviation
     bool CAircraftSituation::canTransferGroundElevation(const CAircraftSituation &transferToSituation,
                                                         const CLength &radius) const
     {
-        if (!this->hasGroundElevation()) { return false; }
+        if (!this->hasGroundElevation())
+        {
+            return false;
+        }
 
         // decide if transfer makes sense
         // always transfer from provider, but do not override provider
-        if (transferToSituation.getGroundElevationInfo() == CAircraftSituation::FromProvider) { return false; }
+        if (transferToSituation.getGroundElevationInfo() == CAircraftSituation::FromProvider)
+        {
+            return false;
+        }
         if (this->getGroundElevationInfo() != CAircraftSituation::FromProvider &&
             transferToSituation.getGroundElevationInfo() == CAircraftSituation::FromCache)
         {
@@ -538,7 +601,10 @@ namespace swift::misc::aviation
     bool CAircraftSituation::transferGroundElevationToMe(const CAircraftSituation &fromSituation, const CLength &radius,
                                                          bool transferred)
     {
-        if (!fromSituation.canTransferGroundElevation(*this, radius)) { return false; }
+        if (!fromSituation.canTransferGroundElevation(*this, radius))
+        {
+            return false;
+        }
         return this->setGroundElevation(fromSituation.getGroundElevationPlane(), fromSituation.getGroundElevationInfo(),
                                         transferred);
     }
@@ -553,7 +619,10 @@ namespace swift::misc::aviation
                                                   const CAircraftSituation &newSituation)
     {
         const CElevationPlane ep = CAircraftSituation::interpolatedElevation(*this, oldSituation, newSituation);
-        if (ep.isNull()) { return false; }
+        if (ep.isNull())
+        {
+            return false;
+        }
         this->setGroundElevation(ep, Interpolated);
         return true;
     }
@@ -614,9 +683,15 @@ namespace swift::misc::aviation
     bool CAircraftSituation::setGroundElevationChecked(const CElevationPlane &elevationPlane, GndElevationInfo info,
                                                        bool transferred)
     {
-        if (elevationPlane.isNull()) { return false; }
+        if (elevationPlane.isNull())
+        {
+            return false;
+        }
         const CLength distance = this->calculateGreatCircleDistance(elevationPlane);
-        if (distance > elevationPlane.getRadiusOrMinimumRadius()) { return false; }
+        if (distance > elevationPlane.getRadiusOrMinimumRadius())
+        {
+            return false;
+        }
         if (m_groundElevationPlane.isNull() || this->isOtherElevationInfoBetter(info, transferred))
         {
             // better values
@@ -635,7 +710,10 @@ namespace swift::misc::aviation
 
     CLength CAircraftSituation::getHeightAboveGround() const
     {
-        if (this->getAltitude().isNull()) { return CLength::null(); }
+        if (this->getAltitude().isNull())
+        {
+            return CLength::null();
+        }
         if (this->getAltitude().getReferenceDatum() == CAltitude::AboveGround)
         {
             // we have a sure value explicitly set
@@ -643,7 +721,10 @@ namespace swift::misc::aviation
         }
 
         const CLength gh(this->getGroundElevation());
-        if (gh.isNull()) { return CLength::null(); }
+        if (gh.isNull())
+        {
+            return CLength::null();
+        }
 
         // sanity checks
         if (std::isnan(gh.value()))
@@ -668,7 +749,10 @@ namespace swift::misc::aviation
 
     CLengthUnit CAircraftSituation::getAltitudeOrDefaultUnit() const
     {
-        if (this->getAltitude().isNull()) { return CAltitude::defaultUnit(); }
+        if (this->getAltitude().isNull())
+        {
+            return CAltitude::defaultUnit();
+        }
         return m_position.geodeticHeight().getUnit();
     }
 
@@ -681,10 +765,16 @@ namespace swift::misc::aviation
     CAltitude CAircraftSituation::getCorrectedAltitude(const CLength &centerOfGravity, bool enableDragToGround,
                                                        AltitudeCorrection *correction) const
     {
-        if (correction) { *correction = UnknownCorrection; }
+        if (correction)
+        {
+            *correction = UnknownCorrection;
+        }
         if (!this->hasGroundElevation())
         {
-            if (correction) { *correction = NoElevation; }
+            if (correction)
+            {
+                *correction = NoElevation;
+            }
             return this->getAltitude();
         }
 
@@ -692,7 +782,10 @@ namespace swift::misc::aviation
         if (this->getAltitude().getReferenceDatum() == CAltitude::AboveGround)
         {
             SWIFT_VERIFY_X(false, Q_FUNC_INFO, "Unsupported");
-            if (correction) { *correction = AGL; }
+            if (correction)
+            {
+                *correction = AGL;
+            }
             return this->getAltitude();
         }
         else
@@ -701,20 +794,29 @@ namespace swift::misc::aviation
                 this->getGroundElevation().withOffset(centerOfGravity).switchedUnit(this->getAltitudeOrDefaultUnit());
             if (groundPlusCG.isNull())
             {
-                if (correction) { *correction = NoElevation; }
+                if (correction)
+                {
+                    *correction = NoElevation;
+                }
                 return this->getAltitude();
             }
             const CLength groundDistance = this->getAltitude() - groundPlusCG;
             const bool underflow = groundDistance.isNegativeWithEpsilonConsidered();
             if (underflow)
             {
-                if (correction) { *correction = Underflow; }
+                if (correction)
+                {
+                    *correction = Underflow;
+                }
                 return groundPlusCG;
             }
             const bool nearGround = groundDistance.abs() < deltaNearGround();
             if (nearGround)
             {
-                if (correction) { *correction = NoCorrection; }
+                if (correction)
+                {
+                    *correction = NoCorrection;
+                }
                 return groundPlusCG;
             }
             const bool forceDragToGround = (enableDragToGround && isOnGround()) &&
@@ -722,11 +824,17 @@ namespace swift::misc::aviation
                                             m_onGroundInfo.getGroundDetails() == COnGroundInfo::OnGroundByGuessing);
             if (forceDragToGround)
             {
-                if (correction) { *correction = DraggedToGround; }
+                if (correction)
+                {
+                    *correction = DraggedToGround;
+                }
                 return groundPlusCG;
             }
 
-            if (correction) { *correction = NoCorrection; }
+            if (correction)
+            {
+                *correction = NoCorrection;
+            }
             return this->getAltitude();
         }
     }
@@ -752,7 +860,10 @@ namespace swift::misc::aviation
 
     CAltitude CAircraftSituation::addAltitudeOffset(const CLength &offset)
     {
-        if (offset.isNull()) { return this->getAltitude(); }
+        if (offset.isNull())
+        {
+            return this->getAltitude();
+        }
         const CAltitude alt = this->getAltitude().withOffset(offset);
         this->setAltitude(alt);
         return alt;
@@ -760,7 +871,10 @@ namespace swift::misc::aviation
 
     CAircraftSituation CAircraftSituation::withAltitudeOffset(const CLength &offset) const
     {
-        if (offset.isNull()) { return *this; }
+        if (offset.isNull())
+        {
+            return *this;
+        }
         CAircraftSituation copy(*this);
         copy.addAltitudeOffset(offset);
         return copy;
@@ -810,21 +924,33 @@ namespace swift::misc::aviation
 
     bool CAircraftSituation::canLikelySkipNearGroundInterpolation() const
     {
-        if (this->isNull()) { return true; }
+        if (this->isNull())
+        {
+            return true;
+        }
 
         // those we can exclude, we are ON GROUND not guessed
-        if (this->isOnGround() && this->hasInboundGroundDetails()) { return false; }
+        if (this->isOnGround() && this->hasInboundGroundDetails())
+        {
+            return false;
+        }
 
         // cases where we can skip
         // Concorde had a take-off speed of 220 knots (250 mph) and
         // landing speed was 187 mph
-        if (this->getGroundSpeed().value(CSpeedUnit::kts()) > 225.0) { return true; }
+        if (this->getGroundSpeed().value(CSpeedUnit::kts()) > 225.0)
+        {
+            return true;
+        }
 
         if (this->hasGroundElevation())
         {
             static const CLength threshold(400, CLengthUnit::m());
             const CLength aboveGround = this->getHeightAboveGround();
-            if (!aboveGround.isNull() && aboveGround >= threshold) { return true; } // too high for ground
+            if (!aboveGround.isNull() && aboveGround >= threshold)
+            {
+                return true;
+            } // too high for ground
         }
         return false;
     }
@@ -833,13 +959,19 @@ namespace swift::misc::aviation
     {
         if (this->getGroundSpeed().isNull())
         {
-            if (!min.isNull()) { return min; }
+            if (!min.isNull())
+            {
+                return min;
+            }
             return { 0, CLengthUnit::nullUnit() };
         }
         const double seconds = ms.count() / 1000.0;
         const double gsMeterSecond = this->getGroundSpeed().value(CSpeedUnit::m_s());
         const CLength d(seconds * gsMeterSecond, CLengthUnit::m());
-        if (!min.isNull() && d < min) { return min; }
+        if (!min.isNull() && d < min)
+        {
+            return min;
+        }
         return d;
     }
 
@@ -862,16 +994,31 @@ namespace swift::misc::aviation
     {
         Q_ASSERT_X(timeDeviationFactor >= 0 && timeDeviationFactor <= 1.0, Q_FUNC_INFO, "Expect 0..1");
         static const qint64 Max = std::numeric_limits<qint64>::max();
-        if (differenceMs) { *differenceMs = Max; }
+        if (differenceMs)
+        {
+            *differenceMs = Max;
+        }
 
-        if (m_onGroundInfo.getGroundDetails() == COnGroundInfo::InFromNetwork) { return false; }
-        if (alwaysSetDetails) { m_onGroundInfo.setOnGroundDetails(COnGroundInfo::InFromParts); }
+        if (m_onGroundInfo.getGroundDetails() == COnGroundInfo::InFromNetwork)
+        {
+            return false;
+        }
+        if (alwaysSetDetails)
+        {
+            m_onGroundInfo.setOnGroundDetails(COnGroundInfo::InFromParts);
+        }
         const qint64 d = this->getAdjustedTimeDifferenceMs(parts.getAdjustedMSecsSinceEpoch());
         const bool adjust = (d >= 0) || qAbs(d) < (timeDeviationFactor *
                                                    parts.getTimeOffsetMs()); // future or past within deviation range
-        if (!adjust) { return false; }
+        if (!adjust)
+        {
+            return false;
+        }
 
-        if (differenceMs) { *differenceMs = d; }
+        if (differenceMs)
+        {
+            *differenceMs = d;
+        }
         m_onGroundInfo = COnGroundInfo(parts.isOnGround() ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround,
                                        COnGroundInfo::InFromParts);
         return true;
@@ -882,11 +1029,23 @@ namespace swift::misc::aviation
     {
         Q_ASSERT_X(timeDeviationFactor >= 0 && timeDeviationFactor <= 1.0, Q_FUNC_INFO, "Expect 0..1");
         static const qint64 Max = std::numeric_limits<qint64>::max();
-        if (differenceMs) { *differenceMs = Max; }
+        if (differenceMs)
+        {
+            *differenceMs = Max;
+        }
 
-        if (m_onGroundInfo.getGroundDetails() == COnGroundInfo::InFromNetwork) { return false; }
-        if (alwaysSetDetails) { m_onGroundInfo.setOnGroundDetails(COnGroundInfo::InFromParts); }
-        if (partsList.isEmpty()) { return false; }
+        if (m_onGroundInfo.getGroundDetails() == COnGroundInfo::InFromNetwork)
+        {
+            return false;
+        }
+        if (alwaysSetDetails)
+        {
+            m_onGroundInfo.setOnGroundDetails(COnGroundInfo::InFromParts);
+        }
+        if (partsList.isEmpty())
+        {
+            return false;
+        }
 
         CAircraftParts bestParts;
         bool adjust = false;
@@ -898,14 +1057,26 @@ namespace swift::misc::aviation
             const bool candidate =
                 (d >= 0) ||
                 posD < (timeDeviationFactor * parts.getTimeOffsetMs()); // future or past within deviation range
-            if (!candidate || bestDistance <= posD) { continue; }
+            if (!candidate || bestDistance <= posD)
+            {
+                continue;
+            }
             bestDistance = posD;
-            if (differenceMs) { *differenceMs = d; }
+            if (differenceMs)
+            {
+                *differenceMs = d;
+            }
             adjust = true;
             bestParts = parts;
-            if (bestDistance == 0) { break; }
+            if (bestDistance == 0)
+            {
+                break;
+            }
         }
-        if (!adjust) { return false; }
+        if (!adjust)
+        {
+            return false;
+        }
 
         const COnGroundInfo::IsOnGround og =
             bestParts.isOnGround() ? COnGroundInfo::OnGround : COnGroundInfo::NotOnGround;

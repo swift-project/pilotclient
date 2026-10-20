@@ -73,13 +73,22 @@ namespace swift::gui::components
 
     swift::misc::CCountry CDbCountrySelectorComponent::getCountry() const
     {
-        if (!sGui) { return {}; }
+        if (!sGui)
+        {
+            return {};
+        }
         const QString iso(ui->le_CountryIso->text().trimmed().toUpper());
         const QString name(ui->le_CountryName->text().trimmed());
-        if (CCountry::isValidIsoCode(iso)) { return sGui->getWebDataServices()->getCountryForIsoCode(iso); }
+        if (CCountry::isValidIsoCode(iso))
+        {
+            return sGui->getWebDataServices()->getCountryForIsoCode(iso);
+        }
         else
         {
-            if (name.isEmpty()) { return {}; }
+            if (name.isEmpty())
+            {
+                return {};
+            }
             return sGui->getWebDataServices()->getCountryForName(name);
         }
     }
@@ -104,39 +113,57 @@ namespace swift::gui::components
 
     void CDbCountrySelectorComponent::dragEnterEvent(QDragEnterEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         setBackgroundRole(QPalette::Highlight);
         event->acceptProposedAction();
     }
 
     void CDbCountrySelectorComponent::dragMoveEvent(QDragMoveEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         event->acceptProposedAction();
     }
 
     void CDbCountrySelectorComponent::dragLeaveEvent(QDragLeaveEvent *event)
     {
-        if (!event) { return; }
+        if (!event)
+        {
+            return;
+        }
         event->accept();
     }
 
     void CDbCountrySelectorComponent::dropEvent(QDropEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         const CVariant valueVariant(toCVariant(event->mimeData()));
         if (valueVariant.isValid())
         {
             if (valueVariant.canConvert<CCountry>())
             {
                 const auto country(valueVariant.value<CCountry>());
-                if (!country.hasIsoCode()) { return; }
+                if (!country.hasIsoCode())
+                {
+                    return;
+                }
                 this->setCountry(country);
             }
             else if (valueVariant.canConvert<CCountryList>())
             {
                 const auto countries(valueVariant.value<CCountryList>());
-                if (countries.isEmpty()) { return; }
+                if (countries.isEmpty())
+                {
+                    return;
+                }
                 this->setCountry(countries.front());
             }
         }
@@ -145,7 +172,10 @@ namespace swift::gui::components
     void CDbCountrySelectorComponent::onCountriesRead(CEntityFlags::Entity entity, CEntityFlags::ReadState readState,
                                                       int count)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         if (entity.testFlag(CEntityFlags::CountryEntity) && CEntityFlags::isFinishedReadState(readState))
         {
             if (count > 0)
@@ -160,13 +190,19 @@ namespace swift::gui::components
                 ui->le_CountryName->setCompleter(c);
                 m_completerCountryNames.reset(c); // deletes any old completer
             }
-            else { m_completerCountryNames.reset(nullptr); }
+            else
+            {
+                m_completerCountryNames.reset(nullptr);
+            }
         }
     }
 
     void CDbCountrySelectorComponent::onDataChanged()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         QObject *sender = this->sender();
         if (sender == ui->le_CountryIso)
         {
@@ -179,7 +215,10 @@ namespace swift::gui::components
         else if (sender == ui->le_CountryName)
         {
             QString name(ui->le_CountryName->text().trimmed());
-            if (!name.isEmpty()) { this->setCountry(sGui->getWebDataServices()->getCountryForName(name)); }
+            if (!name.isEmpty())
+            {
+                this->setCountry(sGui->getWebDataServices()->getCountryForName(name));
+            }
         }
     }
 

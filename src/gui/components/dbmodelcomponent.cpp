@@ -62,7 +62,10 @@ namespace swift::gui::components
 
     void CDbModelComponent::requestUpdatedData()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
 
         QDateTime ts;
         if (!ui->tvp_AircraftModel->isEmpty())
@@ -80,8 +83,14 @@ namespace swift::gui::components
         Q_UNUSED(count)
         Q_UNUSED(url)
 
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-        if (!entity.testFlag(CEntityFlags::ModelEntity)) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
+        if (!entity.testFlag(CEntityFlags::ModelEntity))
+        {
+            return;
+        }
 
         if (CEntityFlags::isFinishedReadState(readState))
         {
@@ -98,7 +107,10 @@ namespace swift::gui::components
 
     void CDbModelComponent::onReload()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::ModelEntity);
     }
 
@@ -111,7 +123,10 @@ namespace swift::gui::components
                                                      qint64 current, qint64 max, const QUrl &url)
     {
         using namespace std::chrono_literals;
-        if (!entity.testFlag(CEntityFlags::ModelEntity)) { return; }
+        if (!entity.testFlag(CEntityFlags::ModelEntity))
+        {
+            return;
+        }
         this->showDownloadProgress(progress, current, max, url, 5s);
         Q_UNUSED(logId)
     }

@@ -11,8 +11,14 @@ namespace swift::misc
 {
     QString CObfuscation::decode(const QString &inString, bool trimmed)
     {
-        if (!inString.startsWith(prefix())) { return trimmed ? inString.trimmed() : inString; }
-        if (inString.length() == prefix().length()) { return {}; }
+        if (!inString.startsWith(prefix()))
+        {
+            return trimmed ? inString.trimmed() : inString;
+        }
+        if (inString.length() == prefix().length())
+        {
+            return {};
+        }
         SimpleCrypt simpleCrypt(Key);
         const QString decoded = simpleCrypt.decryptToString(inString.mid(prefix().length()));
         return trimmed ? decoded.trimmed() : decoded;

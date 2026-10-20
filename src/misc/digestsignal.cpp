@@ -16,7 +16,10 @@ namespace swift::misc
             // call in correct thread
             const QPointer<CDigestSignal> myself(this);
             QTimer::singleShot(0, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->inputSignal();
             });
             return;
@@ -24,7 +27,10 @@ namespace swift::misc
 
         m_timer.start(); // start or restart
         m_inputsCount++;
-        if (m_inputsCount >= m_maxInputsPerDigest) { timerTimeout(); }
+        if (m_inputsCount >= m_maxInputsPerDigest)
+        {
+            timerTimeout();
+        }
     }
 
     void CDigestSignal::timerTimeout()

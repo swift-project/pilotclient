@@ -102,14 +102,20 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::setSimulator(ISimulator *simulator)
     {
-        if (simulator && simulator == m_simulator) { return; } // same
+        if (simulator && simulator == m_simulator)
+        {
+            return;
+        } // same
         if (m_simulator)
         {
             this->disconnect(m_simulator);
             m_simulator->disconnect(this);
         }
         m_simulator = simulator;
-        if (!simulator) { return; }
+        if (!simulator)
+        {
+            return;
+        }
         connect(m_simulator, &ISimulator::receivedRequestedElevation, this,
                 &CInterpolationLogDisplay::onElevationReceived, Qt::QueuedConnection);
         connect(m_simulator, &ISimulator::requestedElevation, this, &CInterpolationLogDisplay::onElevationRequested,
@@ -121,7 +127,10 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::setAirspaceMonitor(CAirspaceMonitor *airspaceMonitor)
     {
-        if (airspaceMonitor && airspaceMonitor == m_airspaceMonitor) { return; } // same
+        if (airspaceMonitor && airspaceMonitor == m_airspaceMonitor)
+        {
+            return;
+        } // same
         if (m_airspaceMonitor)
         {
             this->disconnect(m_airspaceMonitor);
@@ -182,19 +191,28 @@ namespace swift::gui::components
             this->displayElevationRequestReceive();
             this->displayLastInterpolation(sLog);
         }
-        else if (ui->tw_LogTabs->currentWidget() == ui->tb_Loopback) { this->displayLoopback(); }
+        else if (ui->tw_LogTabs->currentWidget() == ui->tb_Loopback)
+        {
+            this->displayLoopback();
+        }
     }
 
     void CInterpolationLogDisplay::getLogAmdDisplayLastInterpolation()
     {
-        if (!this->canLog()) { return; }
+        if (!this->canLog())
+        {
+            return;
+        }
         const SituationLog sLog = m_simulator->interpolationLogger().getLastSituationLog();
         this->displayLastInterpolation(sLog);
     }
 
     void CInterpolationLogDisplay::displayLastInterpolation(const SituationLog &sLog)
     {
-        if (!this->checkLogPrerequisites()) { return; }
+        if (!this->checkLogPrerequisites())
+        {
+            return;
+        }
 
         ui->te_LastInterpolatedSituation->setText(sLog.situationCurrent.toQString(true));
         ui->te_SituationChange->setText(sLog.change.toQString(true));
@@ -210,7 +228,10 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::displayLoopback()
     {
-        if (!m_simulator || m_callsign.isEmpty()) { return; }
+        if (!m_simulator || m_callsign.isEmpty())
+        {
+            return;
+        }
         ui->tvp_LoopbackAircraftSituations->updateContainerAsync(m_simulator->getLoopbackSituations(m_callsign));
         ui->tvp_InterpolatedAircraftSituations->updateContainerAsync(m_lastInterpolations);
     }
@@ -231,7 +252,10 @@ namespace swift::gui::components
         }
 
         const CCallsign cs = ui->comp_CallsignCompleter->getCallsign();
-        if (m_callsign == cs) { return; }
+        if (m_callsign == cs)
+        {
+            return;
+        }
 
         // empty callsign, just stop
         if (cs.isEmpty())
@@ -253,13 +277,19 @@ namespace swift::gui::components
         m_callsign = cs;
         m_simulator->setLogInterpolation(true, cs);
         ui->comp_Parts->setCallsign(cs);
-        if (!this->start()) { this->initPartsView(); }
+        if (!this->start())
+        {
+            this->initPartsView();
+        }
         CLogMessage(this).info(u"Starting logging (log.display) of '%1'") << m_callsign;
     }
 
     void CInterpolationLogDisplay::onPseudoElevationToggled(bool checked)
     {
-        if (!this->canLog()) { return; }
+        if (!this->canLog())
+        {
+            return;
+        }
         m_simulator->setTestEnablePseudoElevation(checked);
 
         CAltitude elvTest = CAltitude::null();
@@ -268,7 +298,10 @@ namespace swift::gui::components
             CLength l;
             const QString v = ui->le_ElevationTestValue->text();
             l.parseFromString(v);
-            if (!l.isNull()) { elvTest = CAltitude(l, CAltitude::MeanSeaLevel); }
+            if (!l.isNull())
+            {
+                elvTest = CAltitude(l, CAltitude::MeanSeaLevel);
+            }
         }
         m_simulator->setTestElevation(elvTest);
     }
@@ -277,7 +310,10 @@ namespace swift::gui::components
     {
         const bool running = m_updateTimer.isActive();
         m_callsign.clear(); // force update of data and log. start/stop
-        if (running) { this->stop(); }
+        if (running)
+        {
+            this->stop();
+        }
         else
         {
             // treat like a callsign was entered
@@ -287,14 +323,23 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::followInSimulator()
     {
-        if (m_callsign.isEmpty()) { return; }
-        if (!this->canLog()) { return; }
+        if (m_callsign.isEmpty())
+        {
+            return;
+        }
+        if (!this->canLog())
+        {
+            return;
+        }
         m_simulator->followAircraft(m_callsign);
     }
 
     bool CInterpolationLogDisplay::start()
     {
-        if (m_updateTimer.isActive()) { return false; }
+        if (m_updateTimer.isActive())
+        {
+            return false;
+        }
 
         const int interval = 1000 * ui->hs_UpdateTime->value();
         m_updateTimer.start(interval);
@@ -314,9 +359,18 @@ namespace swift::gui::components
 
     bool CInterpolationLogDisplay::logCallsign(const CCallsign &cs) const
     {
-        if (!sGui || sGui->isShuttingDown()) { return false; }
-        if (!m_airspaceMonitor || !m_simulator || m_callsign.isEmpty()) { return false; }
-        if (cs != m_callsign) { return false; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return false;
+        }
+        if (!m_airspaceMonitor || !m_simulator || m_callsign.isEmpty())
+        {
+            return false;
+        }
+        if (cs != m_callsign)
+        {
+            return false;
+        }
         return true;
     }
 
@@ -345,7 +399,10 @@ namespace swift::gui::components
         static const QString info("times: %1 offset %2");
 
         const CCallsign cs = situation.getCallsign();
-        if (!this->logCallsign(cs)) { return; }
+        if (!this->logCallsign(cs))
+        {
+            return;
+        }
         const CAircraftSituationList situations = m_airspaceMonitor->remoteAircraftSituations(cs);
         const MillisecondsMinMaxMean tsDiffMsMinMaxMean = situations.getTimestampDifferenceMinMaxMean();
         const MillisecondsMinMaxMean offsetMsMinMaxMean = situations.getOffsetMinMaxMean();
@@ -358,7 +415,10 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::onPartsAdded(const CCallsign &callsign, const CAircraftParts &parts)
     {
-        if (!this->logCallsign(callsign)) { return; }
+        if (!this->logCallsign(callsign))
+        {
+            return;
+        }
         Q_UNUSED(parts)
         const CAircraftPartsList partsList = m_airspaceMonitor->remoteAircraftParts(callsign);
         ui->tvp_InboundAircraftParts->updateContainerAsync(partsList);
@@ -378,7 +438,10 @@ namespace swift::gui::components
             m_elvHistoryModel->setData(index, history);
 
             const int c = m_elvHistoryModel->rowCount();
-            if (m_elvHistoryCount < c) { m_elvHistoryModel->removeRows(m_elvHistoryCount, c - m_elvHistoryCount); }
+            if (m_elvHistoryCount < c)
+            {
+                m_elvHistoryModel->removeRows(m_elvHistoryCount, c - m_elvHistoryCount);
+            }
         }
 
         // not for a real plane, but to get elevation at any position for testing
@@ -388,7 +451,10 @@ namespace swift::gui::components
             return;
         }
 
-        if (!this->logCallsign(callsign)) { return; }
+        if (!this->logCallsign(callsign))
+        {
+            return;
+        }
 
         // for logged callsign
         m_elvReceivedLoggedCs++;
@@ -400,7 +466,10 @@ namespace swift::gui::components
     void CInterpolationLogDisplay::onElevationRequested(const CCallsign &callsign)
     {
         m_elvRequested++;
-        if (!this->logCallsign(callsign)) { return; }
+        if (!this->logCallsign(callsign))
+        {
+            return;
+        }
 
         // for logged callsign
         m_elvRequestedLoggedCs++;
@@ -410,12 +479,21 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::onInjectElevation()
     {
-        if (!this->canLog()) { return; }
+        if (!this->canLog())
+        {
+            return;
+        }
         const QString elv = ui->le_InjectElevation->text().trimmed();
-        if (elv.isEmpty()) { return; }
+        if (elv.isEmpty())
+        {
+            return;
+        }
 
         const CAircraftSituationList situations = m_airspaceMonitor->remoteAircraftSituations(m_callsign);
-        if (situations.isEmpty()) { return; }
+        if (situations.isEmpty())
+        {
+            return;
+        }
 
         CAltitude alt;
         alt.parseFromString(elv, CPqString::SeparatorBestGuess);
@@ -433,19 +511,28 @@ namespace swift::gui::components
         {
             bool ok = false;
             const int cc = cs.toInt(&ok);
-            if (ok) { c = cc; }
+            if (ok)
+            {
+                c = cc;
+            }
         }
         m_elvHistoryCount = c;
     }
 
     void CInterpolationLogDisplay::resetStatistics()
     {
-        if (m_simulator) { m_simulator->resetAircraftStatistics(); }
+        if (m_simulator)
+        {
+            m_simulator->resetAircraftStatistics();
+        }
     }
 
     void CInterpolationLogDisplay::resetLastSentValues()
     {
-        if (m_simulator) { m_simulator->resetLastSentValues(); }
+        if (m_simulator)
+        {
+            m_simulator->resetLastSentValues();
+        }
     }
 
     void CInterpolationLogDisplay::clear()
@@ -471,13 +558,22 @@ namespace swift::gui::components
     void CInterpolationLogDisplay::clearElevationResults()
     {
         ui->pte_ElevationAtPosition->clear();
-        if (m_elvHistoryModel) { m_elvHistoryModel->removeRows(0, m_elvHistoryModel->rowCount()); }
+        if (m_elvHistoryModel)
+        {
+            m_elvHistoryModel->removeRows(0, m_elvHistoryModel->rowCount());
+        }
     }
 
     void CInterpolationLogDisplay::logPosCommand()
     {
-        if (m_callsign.isEmpty()) { return; }
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (m_callsign.isEmpty())
+        {
+            return;
+        }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
 
         const QString cmd = QStringLiteral(".drv logint clear") % m_callsign.asString();
         sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
@@ -485,7 +581,10 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::clearLogCommand()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
 
         const QString cmd = QStringLiteral(".drv logint clear");
         sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
@@ -493,7 +592,10 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::writeLogCommand()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
 
         const QString cmd = QStringLiteral(".drv logint write");
         sGui->getIContextSimulator()->parseCommandLine(cmd, this->identifier());
@@ -503,9 +605,16 @@ namespace swift::gui::components
     {
         using namespace std::chrono_literals;
         CStatusMessage m;
-        do {
-            if (!this->isVisible()) { return false; } // silently return
-            if (!sGui || sGui->isShuttingDown()) { break; } // stop and return
+        do
+        {
+            if (!this->isVisible())
+            {
+                return false;
+            } // silently return
+            if (!sGui || sGui->isShuttingDown())
+            {
+                break;
+            } // stop and return
             if (m_callsign.isEmpty())
             {
                 // static const CStatusMessage ms = CStatusMessage(this).validationError(u"No callsign for logging");
@@ -533,7 +642,10 @@ namespace swift::gui::components
         while (false);
 
         this->stop();
-        if (!m.isEmpty()) { this->showOverlayMessage(m, 5s); }
+        if (!m.isEmpty())
+        {
+            this->showOverlayMessage(m, 5s);
+        }
         return false;
     }
 
@@ -542,15 +654,24 @@ namespace swift::gui::components
         // it can take a while until we receive parts, so we init
         QPointer<CInterpolationLogDisplay> myself(this);
         QTimer::singleShot(250, this, [=, this] {
-            if (!myself) { return; }
-            if (m_callsign.isEmpty()) { return; }
+            if (!myself)
+            {
+                return;
+            }
+            if (m_callsign.isEmpty())
+            {
+                return;
+            }
             myself->onPartsAdded(m_callsign, CAircraftParts());
         });
     }
 
     void CInterpolationLogDisplay::displayElevationRequestReceive()
     {
-        if (!m_airspaceMonitor) { return; }
+        if (!m_airspaceMonitor)
+        {
+            return;
+        }
         static const QString info("req. %1, %2/rec. %3, %4 | found/missed: '%5' | times: %6");
         const QString foundMissed = m_airspaceMonitor->getElevationsFoundMissedInfo();
         const QString reqTimes = m_airspaceMonitor->getElevationRequestTimesInfo();
@@ -572,21 +693,33 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::requestElevationClicked()
     {
-        if (m_callsign.isEmpty()) { return; }
+        if (m_callsign.isEmpty())
+        {
+            return;
+        }
         const CAircraftSituationList situations = m_airspaceMonitor->remoteAircraftSituations(m_callsign);
-        if (situations.isEmpty()) { return; }
+        if (situations.isEmpty())
+        {
+            return;
+        }
         this->requestElevation(situations.latestAdjustedObject());
     }
 
     void CInterpolationLogDisplay::requestElevation(const CAircraftSituation &situation)
     {
-        if (!this->canLog()) { return; }
+        if (!this->canLog())
+        {
+            return;
+        }
         m_simulator->requestElevationBySituation(situation);
     }
 
     void CInterpolationLogDisplay::requestElevationAtPosition()
     {
-        if (!this->canLog()) { return; }
+        if (!this->canLog())
+        {
+            return;
+        }
         const CCoordinateGeodetic coordinate = ui->editor_ElevationCoordinate->getCoordinate();
         const bool ok = m_simulator->requestElevation(coordinate, CInterpolationLogDisplay::pseudoCallsignElevation());
         if (ok)
@@ -603,7 +736,10 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::requestRecalculateAll()
     {
-        if (!this->canLog()) { return; }
+        if (!this->canLog())
+        {
+            return;
+        }
         sApp->getIContextSimulator()->recalculateAllAircraft();
     }
 
@@ -620,8 +756,14 @@ namespace swift::gui::components
 
     void CInterpolationLogDisplay::linkWithAirspaceMonitor()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts()) { return; }
-        if (!sGui->getCoreFacade() || !sGui->getCoreFacade()->getCContextNetwork()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->supportsContexts())
+        {
+            return;
+        }
+        if (!sGui->getCoreFacade() || !sGui->getCoreFacade()->getCContextNetwork())
+        {
+            return;
+        }
         const CContextNetwork *cn = sGui->getCoreFacade()->getCContextNetwork();
         this->setAirspaceMonitor(cn->airspace());
     }

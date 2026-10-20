@@ -28,7 +28,10 @@ namespace swift::sound::sample_provider
 
     bool CResourceSound::load()
     {
-        if (!m_data || m_data->fileName.isEmpty()) { return false; }
+        if (!m_data || m_data->fileName.isEmpty())
+        {
+            return false;
+        }
 
         CWavFile wavFile;
         m_data->samples.clear();
@@ -39,7 +42,10 @@ namespace swift::sound::sample_provider
                 // Not implemented
                 // m_samples = convertFloatBytesTo16BitPCM(wavFile.audioData());
             }
-            else { m_data->samples = convertBytesTo32BitFloatPCM(wavFile.audioData()); }
+            else
+            {
+                m_data->samples = convertBytesTo32BitFloatPCM(wavFile.audioData());
+            }
         }
 
         m_data->isLoaded = true;
@@ -54,7 +60,10 @@ namespace swift::sound::sample_provider
 
     bool CResourceSound::isSameFileName(const QString &fn) const
     {
-        if (fn.isEmpty()) { return false; }
+        if (fn.isEmpty())
+        {
+            return false;
+        }
         return stringCompare(fn, m_data->fileName, CFileUtils::osFileNameCaseSensitivity());
     }
 } // namespace swift::sound::sample_provider

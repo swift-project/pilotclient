@@ -11,7 +11,10 @@ namespace swift::misc::shared_state::dbus
     {
         connect(this, &IDuplex::replyReceived, this, [this](const QString &, const CVariant &param, quint32 token) {
             const auto it = m_submittedRequests.find(token);
-            if (it == m_submittedRequests.end()) { return; }
+            if (it == m_submittedRequests.end())
+            {
+                return;
+            }
             it->setResult(param);
             m_submittedRequests.erase(it);
         });
@@ -36,7 +39,10 @@ namespace swift::misc::shared_state::dbus
     void IDuplex::reply(const swift::misc::CVariant &param, quint32 token)
     {
         const auto it = m_receivedRequests.find(token);
-        if (it == m_receivedRequests.end()) { return; }
+        if (it == m_receivedRequests.end())
+        {
+            return;
+        }
         it->setResult(param);
         m_receivedRequests.erase(it);
     }

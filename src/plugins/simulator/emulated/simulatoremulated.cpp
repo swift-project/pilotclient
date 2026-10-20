@@ -63,38 +63,56 @@ namespace swift::simplugin::emulated
     {
         const QPointer<CSimulatorEmulated> myself(this);
         QTimer::singleShot(1000, this, [=, this] {
-            if (myself.isNull() || !sGui || sGui->isShuttingDown()) { return; }
+            if (myself.isNull() || !sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             this->emitSimulatorCombinedStatus();
             m_monitorWidget->show();
             CGuiApplication::modalWindowToFront();
         });
 
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+        }
         return true;
     }
 
     bool CSimulatorEmulated::disconnectFrom()
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+        }
         m_renderedAircraft.clear();
         return CSimulatorPluginCommon::disconnectFrom();
     }
 
     void CSimulatorEmulated::unload()
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+        }
         CSimulatorPluginCommon::unload();
     }
 
     bool CSimulatorEmulated::logicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString()); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString());
+        }
         return ISimulator::logicallyAddRemoteAircraft(remoteAircraft);
     }
 
     bool CSimulatorEmulated::logicallyRemoveRemoteAircraft(const CCallsign &callsign)
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString()); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString());
+        }
         return ISimulator::logicallyRemoveRemoteAircraft(callsign);
     }
 
@@ -106,13 +124,19 @@ namespace swift::simplugin::emulated
 
     bool CSimulatorEmulated::changeRemoteAircraftModel(const CSimulatedAircraft &aircraft)
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString()); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString());
+        }
         return ISimulator::changeRemoteAircraftEnabled(aircraft);
     }
 
     bool CSimulatorEmulated::changeRemoteAircraftEnabled(const CSimulatedAircraft &aircraft)
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString()); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString());
+        }
         return ISimulator::changeRemoteAircraftEnabled(aircraft);
     }
 
@@ -123,7 +147,10 @@ namespace swift::simplugin::emulated
         {
             m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, aircraft.toQString(), originator.toQString());
         }
-        if (originator == identifier()) { return false; } // myself
+        if (originator == identifier())
+        {
+            return false;
+        } // myself
 
         CSimulatedAircraft a = aircraft;
 
@@ -144,9 +171,18 @@ namespace swift::simplugin::emulated
 
     bool CSimulatorEmulated::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, selcal.toQString(), originator.toQString()); }
-        if (originator == identifier()) { return false; } // myself
-        if (m_myAircraft.getSelcal() == selcal) { return false; }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, selcal.toQString(), originator.toQString());
+        }
+        if (originator == identifier())
+        {
+            return false;
+        } // myself
+        if (m_myAircraft.getSelcal() == selcal)
+        {
+            return false;
+        }
         m_myAircraft.setSelcal(selcal);
         emit this->internalAircraftChanged();
         return true;
@@ -154,14 +190,23 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulated::displayStatusMessage(const CStatusMessage &message) const
     {
-        if (!canDisplay()) { return; }
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, message.toQString()); }
+        if (!canDisplay())
+        {
+            return;
+        }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, message.toQString());
+        }
         m_monitorWidget->displayStatusMessage(message);
     }
 
     void CSimulatorEmulated::displayTextMessage(const CTextMessage &message) const
     {
-        if (!canDisplay()) { return; }
+        if (!canDisplay())
+        {
+            return;
+        }
         if (canLog()) m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, message.toQString());
         m_monitorWidget->displayTextMessage(message);
     }
@@ -174,14 +219,23 @@ namespace swift::simplugin::emulated
 
     CCallsignSet CSimulatorEmulated::physicallyRenderedAircraft() const
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+        }
         return m_renderedAircraft.getCallsigns();
     }
 
     CStatusMessageList CSimulatorEmulated::getInterpolationMessages(const CCallsign &callsign) const
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
-        if (!m_interpolators.contains(callsign)) { return {}; }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+        }
+        if (!m_interpolators.contains(callsign))
+        {
+            return {};
+        }
         const CInterpolationAndRenderingSetupPerCallsign setup =
             this->getInterpolationSetupPerCallsignOrDefault(callsign); // threadsafe copy
         return m_interpolators[callsign]->getInterpolationMessages(setup.getInterpolatorMode());
@@ -190,7 +244,10 @@ namespace swift::simplugin::emulated
     bool CSimulatorEmulated::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation,
                                                        const CAircraftParts &parts)
     {
-        if (!m_renderedAircraft.containsCallsign(callsign)) { return false; }
+        if (!m_renderedAircraft.containsCallsign(callsign))
+        {
+            return false;
+        }
         m_renderedAircraft.setAircraftSituation(callsign, situation);
         m_renderedAircraft.setAircraftPartsSynchronized(callsign, parts);
         return true;
@@ -199,7 +256,10 @@ namespace swift::simplugin::emulated
     bool CSimulatorEmulated::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
     {
         const bool hasRequested = CSimulatorPluginCommon::requestElevation(reference, callsign);
-        if (hasRequested || !m_enablePseudoElevation) { return hasRequested; }
+        if (hasRequested || !m_enablePseudoElevation)
+        {
+            return hasRequested;
+        }
 
         // For TESTING purposes ONLY
         // we could not request elevation, so we provide a random value or set value
@@ -210,11 +270,17 @@ namespace swift::simplugin::emulated
             const CAltitude alt(elvRnd, CLengthUnit::ft());
             elv.setGeodeticHeight(alt);
         }
-        else { elv.setGeodeticHeight(m_pseudoElevation); }
+        else
+        {
+            elv.setGeodeticHeight(m_pseudoElevation);
+        }
 
         QPointer<CSimulatorEmulated> myself(this);
         QTimer::singleShot(444, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
 
             // updates in providers and emits signal
             ISimulator::callbackReceivedRequestedElevation(elv, callsign, false);
@@ -226,13 +292,19 @@ namespace swift::simplugin::emulated
 
     bool CSimulatorEmulated::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, commandLine, originator.toQString()); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, commandLine, originator.toQString());
+        }
         return CSimulatorPluginCommon::parseCommandLine(commandLine, originator);
     }
 
     void CSimulatorEmulated::registerHelp()
     {
-        if (CSimpleCommandParser::registered("swift::simplugin::emulated::CSimulatorEmulated")) { return; }
+        if (CSimpleCommandParser::registered("swift::simplugin::emulated::CSimulatorEmulated"))
+        {
+            return;
+        }
         CSimpleCommandParser::registerCommand({ ".drv", "alias: .driver .plugin" });
         CSimpleCommandParser::registerCommand({ ".drv show", "show emulated driver window" });
         CSimpleCommandParser::registerCommand({ ".drv hide", "hide emulated driver window" });
@@ -254,35 +326,62 @@ namespace swift::simplugin::emulated
     bool CSimulatorEmulated::changeInternalCom(const CSimulatedAircraft &aircraft)
     {
         bool changed = false;
-        if (aircraft.getCom1System() != m_myAircraft.getCom1System()) { changed = true; }
-        if (aircraft.getCom2System() != m_myAircraft.getCom2System()) { changed = true; }
-        if (aircraft.getTransponder() != m_myAircraft.getTransponder()) { changed = true; }
-        if (aircraft.getSelcal() != m_myAircraft.getSelcal()) { changed = true; }
+        if (aircraft.getCom1System() != m_myAircraft.getCom1System())
+        {
+            changed = true;
+        }
+        if (aircraft.getCom2System() != m_myAircraft.getCom2System())
+        {
+            changed = true;
+        }
+        if (aircraft.getTransponder() != m_myAircraft.getTransponder())
+        {
+            changed = true;
+        }
+        if (aircraft.getSelcal() != m_myAircraft.getSelcal())
+        {
+            changed = true;
+        }
 
-        if (!changed) { return false; }
+        if (!changed)
+        {
+            return false;
+        }
         m_myAircraft.setCockpit(aircraft);
         return this->updateCockpit(aircraft, this->identifier());
     }
 
     bool CSimulatorEmulated::changeInternalCom(const CComSystem &comSystem, CComSystem::ComUnit unit)
     {
-        if (m_myAircraft.getComSystem(unit) == comSystem) { return false; }
+        if (m_myAircraft.getComSystem(unit) == comSystem)
+        {
+            return false;
+        }
         m_myAircraft.setComSystem(comSystem, unit);
         const bool c = this->updateCockpit(m_myAircraft, this->identifier());
-        if (c) { emit this->internalAircraftChanged(); }
+        if (c)
+        {
+            emit this->internalAircraftChanged();
+        }
         return c;
     }
 
     bool CSimulatorEmulated::changeInternalSelcal(const CSelcal &selcal)
     {
-        if (m_myAircraft.getSelcal() == selcal) { return false; }
+        if (m_myAircraft.getSelcal() == selcal)
+        {
+            return false;
+        }
         m_myAircraft.setSelcal(selcal);
         return this->updateSelcal(selcal, identifier());
     }
 
     bool CSimulatorEmulated::changeInternalSituation(const CAircraftSituation &situation)
     {
-        if (m_myAircraft.getSituation() == situation) { return false; }
+        if (m_myAircraft.getSituation() == situation)
+        {
+            return false;
+        }
         m_myAircraft.setSituation(situation);
 
         return this->updateOwnSituationAndGroundElevation(situation);
@@ -290,15 +389,24 @@ namespace swift::simplugin::emulated
 
     bool CSimulatorEmulated::changeInternalParts(const CAircraftParts &parts)
     {
-        if (m_myAircraft.getParts() == parts) { return false; }
+        if (m_myAircraft.getParts() == parts)
+        {
+            return false;
+        }
         m_myAircraft.setParts(parts);
         return this->updateOwnParts(parts);
     }
 
     bool CSimulatorEmulated::setInterpolatorFetchTime(int timeMs)
     {
-        if (timeMs < 1) { m_interpolatorFetchTimer.stop(); }
-        else { m_interpolatorFetchTimer.start(timeMs); }
+        if (timeMs < 1)
+        {
+            m_interpolatorFetchTimer.stop();
+        }
+        else
+        {
+            m_interpolatorFetchTimer.start(timeMs);
+        }
         return m_interpolatorFetchTimer.isActive();
     }
 
@@ -306,25 +414,37 @@ namespace swift::simplugin::emulated
 
     bool CSimulatorEmulated::isConnected() const
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+        }
         return m_connected;
     }
 
     bool CSimulatorEmulated::isPaused() const
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+        }
         return m_paused;
     }
 
     bool CSimulatorEmulated::isSimulating() const
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+        }
         return m_simulating;
     }
 
     bool CSimulatorEmulated::physicallyAddRemoteAircraft(const CSimulatedAircraft &remoteAircraft)
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString()); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, remoteAircraft.toQString());
+        }
         CSimulatedAircraft aircraft(remoteAircraft);
         aircraft.setRendered(true);
         const CCallsign cs = aircraft.getCallsign();
@@ -347,7 +467,10 @@ namespace swift::simplugin::emulated
 
     bool CSimulatorEmulated::physicallyRemoveRemoteAircraft(const CCallsign &callsign)
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString()); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO, callsign.toQString());
+        }
         m_interpolators.remove(callsign);
         const int c = m_renderedAircraft.removeByCallsign(callsign);
         this->updateAircraftRendered(callsign, false); // in provider
@@ -357,7 +480,10 @@ namespace swift::simplugin::emulated
 
     int CSimulatorEmulated::physicallyRemoveAllRemoteAircraft()
     {
-        if (canLog()) { m_monitorWidget->appendReceivingCall(Q_FUNC_INFO); }
+        if (canLog())
+        {
+            m_monitorWidget->appendReceivingCall(Q_FUNC_INFO);
+        }
         return ISimulator::physicallyRemoveAllRemoteAircraft();
     }
 
@@ -391,12 +517,18 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulated::closeMonitor()
     {
-        if (m_monitorWidget) { m_monitorWidget->close(); }
+        if (m_monitorWidget)
+        {
+            m_monitorWidget->close();
+        }
     }
 
     void CSimulatorEmulated::onSettingsChanged()
     {
-        if (!sApp || sApp->isShuttingDown()) { return; }
+        if (!sApp || sApp->isShuttingDown())
+        {
+            return;
+        }
         const CSwiftPluginSettings settings(m_pluginSettings.get());
         m_log = settings.isLoggingFunctionCalls();
 
@@ -432,7 +564,10 @@ namespace swift::simplugin::emulated
         this->setObjectName(simulator);
         m_interpolationLogger.setObjectName("Logger (emulated driver): " + simulator.toQString());
 
-        if (m_monitorWidget) { m_monitorWidget->updateWindowTitleAndUiValues(simulator); }
+        if (m_monitorWidget)
+        {
+            m_monitorWidget->updateWindowTitleAndUiValues(simulator);
+        }
     }
 
     void CSimulatorEmulated::connectOwnSignals()
@@ -509,7 +644,10 @@ namespace swift::simplugin::emulated
         for (const CSimulatedAircraft &aircraft : m_renderedAircraft)
         {
             const CCallsign callsign = aircraft.getCallsign();
-            if (!m_interpolators.contains(callsign)) { continue; }
+            if (!m_interpolators.contains(callsign))
+            {
+                continue;
+            }
             const CInterpolationAndRenderingSetupPerCallsign setup =
                 this->getInterpolationSetupConsolidated(callsign, updateAllAircraft);
             CInterpolatorMulti *im = m_interpolators[callsign];
@@ -531,10 +669,16 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulatedListener::startImpl()
     {
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
         const QPointer<CSimulatorEmulatedListener> myself(this);
         QTimer::singleShot(2000, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             Q_ASSERT_X(this->getPluginInfo().isValid(), Q_FUNC_INFO, "Invalid plugin");
             emit this->simulatorStarted(this->getPluginInfo());
         });

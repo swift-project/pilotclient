@@ -433,9 +433,18 @@ namespace MiscTest
             int pitch, bank, heading;
         };
         QVector<PBH> testData;
-        for (int pitch = -90; pitch < 90; pitch++) { testData.push_back({ pitch, 0, 0 }); }
-        for (int bank = -179; bank < 180; bank++) { testData.push_back({ 0, bank, 0 }); }
-        for (int heading = 0; heading < 360; heading++) { testData.push_back({ 0, 0, heading }); }
+        for (int pitch = -90; pitch < 90; pitch++)
+        {
+            testData.push_back({ pitch, 0, 0 });
+        }
+        for (int bank = -179; bank < 180; bank++)
+        {
+            testData.push_back({ 0, bank, 0 });
+        }
+        for (int heading = 0; heading < 360; heading++)
+        {
+            testData.push_back({ 0, 0, heading });
+        }
         for (const auto &input : testData)
         {
             std::uint32_t pbh = 0;
@@ -456,7 +465,10 @@ namespace MiscTest
             QCOMPARE(input.bank, bank2);
             QCOMPARE(true, onGround2);
 
-            if (input.heading < 0) { heading2 -= 360; }
+            if (input.heading < 0)
+            {
+                heading2 -= 360;
+            }
             QVERIFY(qAbs(input.heading - heading2) < 1);
         }
     }

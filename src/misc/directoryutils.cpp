@@ -25,7 +25,10 @@ namespace swift::misc
 {
     bool CDirectoryUtils::isInApplicationDirectory(const QString &path)
     {
-        if (path.isEmpty()) { return false; }
+        if (path.isEmpty())
+        {
+            return false;
+        }
         return path.contains(qApp->applicationDirPath(), CFileUtils::osFileNameCaseSensitivity());
     }
 
@@ -44,19 +47,31 @@ namespace swift::misc
     QStringList CDirectoryUtils::getRelativeSubDirectories(const QString &rootDir)
     {
         const QDir dir(rootDir);
-        if (!dir.exists()) { return {}; }
+        if (!dir.exists())
+        {
+            return {};
+        }
         return dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks);
     }
 
     bool CDirectoryUtils::containsFileInDir(const QString &dir, const QString &filter, bool recursively)
     {
         const QDir directory(dir);
-        if (!directory.exists()) { return false; }
+        if (!directory.exists())
+        {
+            return false;
+        }
 
         const QStringList nameFilter({ filter });
-        if (!directory.entryInfoList(nameFilter, QDir::Files | QDir::NoDot | QDir::NoDotDot).isEmpty()) { return true; }
+        if (!directory.entryInfoList(nameFilter, QDir::Files | QDir::NoDot | QDir::NoDotDot).isEmpty())
+        {
+            return true;
+        }
 
-        if (!recursively) { return false; }
+        if (!recursively)
+        {
+            return false;
+        }
         const QStringList relSubDirs = CDirectoryUtils::getRelativeSubDirectories(dir);
         return std::any_of(relSubDirs.cbegin(), relSubDirs.cend(), [&](const QString &relSubDir) {
             const QString absSubDir = CFileUtils::appendFilePaths(directory.absolutePath(), relSubDir);
@@ -66,16 +81,25 @@ namespace swift::misc
 
     bool CDirectoryUtils::existsUnemptyDirectory(const QString &testDir)
     {
-        if (testDir.isEmpty()) { return false; }
+        if (testDir.isEmpty())
+        {
+            return false;
+        }
         const QDir dir(testDir);
-        if (!CDirectoryUtils::isDirExisting(dir)) { return false; }
+        if (!CDirectoryUtils::isDirExisting(dir))
+        {
+            return false;
+        }
         return !dir.isEmpty();
     }
 
     bool CDirectoryUtils::mkPathIfNotExisting(const QString &dir)
     {
         const QDir d(dir);
-        if (d.exists()) { return true; }
+        if (d.exists())
+        {
+            return true;
+        }
         QDir mkDir;
         return mkDir.mkpath(dir);
     }
@@ -85,7 +109,10 @@ namespace swift::misc
         QStringList dirs;
         for (const QString &dir : directories)
         {
-            if (CDirectoryUtils::existsUnemptyDirectory(dir)) { dirs << dir; }
+            if (CDirectoryUtils::existsUnemptyDirectory(dir))
+            {
+                dirs << dir;
+            }
         }
         return dirs;
     }
@@ -95,7 +122,10 @@ namespace swift::misc
         if (CBuildConfig::isRunningOnWindowsNtPlatform() && CFileUtils::isWindowsUncPath(path))
         {
             const QString machine(CFileUtils::windowsUncMachine(path));
-            if (!canPingUncMachine(machine)) { return false; } // avoid long "hanging" if machine is switched off
+            if (!canPingUncMachine(machine))
+            {
+                return false;
+            } // avoid long "hanging" if machine is switched off
         }
         return QDir(path).exists();
     }
@@ -105,14 +135,23 @@ namespace swift::misc
         static QMap<QString, qint64> good;
         static QMap<QString, qint64> bad;
 
-        if (machine.isEmpty()) { return false; }
+        if (machine.isEmpty())
+        {
+            return false;
+        }
         const QString m = machine.toLower();
-        if (good.contains(m)) { return true; } // good ones we only test once
+        if (good.contains(m))
+        {
+            return true;
+        } // good ones we only test once
         if (bad.contains(m))
         {
             const qint64 ts = bad.value(m);
             const qint64 dt = QDateTime::currentSecsSinceEpoch() - ts;
-            if (dt < 1000 * 60) { return false; } // still bad
+            if (dt < 1000 * 60)
+            {
+                return false;
+            } // still bad
 
             // outdated, test again
         }
@@ -133,22 +172,34 @@ namespace swift::misc
 
     bool CDirectoryUtils::isDirExisting(const QDir &dir)
     {
-        if (!CFileUtils::isWindowsUncPath(dir.absolutePath())) { return dir.exists(); }
+        if (!CFileUtils::isWindowsUncPath(dir.absolutePath()))
+        {
+            return dir.exists();
+        }
         return CDirectoryUtils::isDirExisting(dir.absolutePath()); // check for UNC
     }
 
     bool CDirectoryUtils::isSameExistingDirectory(const QString &dir1, const QString &dir2)
     {
-        if (dir1.isEmpty() || dir2.isEmpty()) { return false; }
+        if (dir1.isEmpty() || dir2.isEmpty())
+        {
+            return false;
+        }
         const QDir d1(dir1);
         const QDir d2(dir2);
-        if (!d1.exists() || !d2.exists()) { return false; }
+        if (!d1.exists() || !d2.exists())
+        {
+            return false;
+        }
         return d1.absolutePath() == d2.absolutePath();
     }
 
     bool CDirectoryUtils::isSameOrSubDirectoryOf(const QString &testDir, const QString &dir2)
     {
-        if (testDir.isEmpty() || dir2.isEmpty()) { return false; }
+        if (testDir.isEmpty() || dir2.isEmpty())
+        {
+            return false;
+        }
         const QDir d2(dir2);
         return CDirectoryUtils::isSameOrSubDirectoryOf(testDir, d2);
     }
@@ -156,8 +207,12 @@ namespace swift::misc
     bool CDirectoryUtils::isSameOrSubDirectoryOf(const QString &dir1, const QDir &parentDir)
     {
         QDir d1(dir1);
-        do {
-            if (d1 == parentDir) { return true; }
+        do
+        {
+            if (d1 == parentDir)
+            {
+                return true;
+            }
         }
         while (d1.cdUp());
 
@@ -176,14 +231,20 @@ namespace swift::misc
     QSet<QString> CDirectoryUtils::fileNamesToQSet(const QFileInfoList &fileInfoList)
     {
         CSetBuilder<QString> sl;
-        for (const QFileInfo &info : fileInfoList) { sl.insert(info.fileName()); }
+        for (const QFileInfo &info : fileInfoList)
+        {
+            sl.insert(info.fileName());
+        }
         return sl;
     }
 
     QSet<QString> CDirectoryUtils::canonicalFileNamesToQSet(const QFileInfoList &fileInfoList)
     {
         CSetBuilder<QString> sl;
-        for (const QFileInfo &info : fileInfoList) { sl.insert(info.canonicalFilePath()); }
+        for (const QFileInfo &info : fileInfoList)
+        {
+            sl.insert(info.canonicalFilePath());
+        }
         return sl;
     }
 
@@ -196,7 +257,10 @@ namespace swift::misc
         {
             if (canonical.endsWith('/')) continue;
             const QString c = canonical.mid(1 + canonical.lastIndexOf('/'));
-            if (fileNames.contains(c)) { found.insert(canonical); }
+            if (fileNames.contains(c))
+            {
+                found.insert(canonical);
+            }
         }
         return found;
     }
@@ -205,7 +269,10 @@ namespace swift::misc
     {
         QDir dir(fromDir);
         const QStringList fromFiles = dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
-        if (!mkPathIfNotExisting(toDir)) { return -1; }
+        if (!mkPathIfNotExisting(toDir))
+        {
+            return -1;
+        }
 
         int count = 0;
         for (const QString &copyFile : fromFiles)
@@ -214,10 +281,19 @@ namespace swift::misc
             const QString to = CFileUtils::appendFilePaths(toDir, copyFile);
             if (QFile::exists(to))
             {
-                if (!replaceOnConflict) { continue; }
-                if (!QFile::remove(to)) { return -1; }
+                if (!replaceOnConflict)
+                {
+                    continue;
+                }
+                if (!QFile::remove(to))
+                {
+                    return -1;
+                }
             }
-            if (!QFile::copy(from, to)) { return -1; }
+            if (!QFile::copy(from, to))
+            {
+                return -1;
+            }
             count++;
         }
 
@@ -226,10 +302,16 @@ namespace swift::misc
         {
             const QString fromSubDir = CFileUtils::appendFilePaths(fromDir, copyDir);
             const QString toSubDir = CFileUtils::appendFilePaths(toDir, copyDir);
-            if (!mkPathIfNotExisting(toDir)) { return -1; }
+            if (!mkPathIfNotExisting(toDir))
+            {
+                return -1;
+            }
 
             const int c = copyDirectoryRecursively(fromSubDir, toSubDir, replaceOnConflict);
-            if (c < 0) { return -1; }
+            if (c < 0)
+            {
+                return -1;
+            }
             count += c;
         }
         return count;
@@ -244,8 +326,14 @@ namespace swift::misc
 
         QFileInfoList dSourceList;
         QFileInfoList dTargetList;
-        if (d1.exists()) { dSourceList = d1.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name); }
-        if (d2.exists()) { dTargetList = d2.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name); }
+        if (d1.exists())
+        {
+            dSourceList = d1.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
+        }
+        if (d2.exists())
+        {
+            dTargetList = d2.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Name);
+        }
 
         // only names
         const QSet<QString> sSourceFiles = CDirectoryUtils::fileNamesToQSet(dSourceList);
@@ -276,7 +364,10 @@ namespace swift::misc
             const QFileInfo source(sourceFile);
             const QFileInfo target(*targetIt);
             ++targetIt; // avoid cpp check warning
-            if (source.lastModified() == target.lastModified() && source.size() == target.size()) { continue; }
+            if (source.lastModified() == target.lastModified() && source.size() == target.size())
+            {
+                continue;
+            }
 
             if (source.lastModified() < target.lastModified())
             {

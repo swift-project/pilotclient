@@ -27,7 +27,10 @@ namespace swift::gui::components
 
     void CDbModelKeyCompleter::setSimulator(const swift::misc::simulation::CSimulatorInfo &simulator)
     {
-        if (m_simulator == simulator) { return; }
+        if (m_simulator == simulator)
+        {
+            return;
+        }
         m_simulator = simulator;
         this->initCompleter();
     }
@@ -42,7 +45,10 @@ namespace swift::gui::components
     void CDbModelKeyCompleter::initCompleter()
     {
         const QStringList models(sGui->getWebDataServices()->getModelCompleterStrings(true, m_simulator));
-        if (models.isEmpty()) { return; }
+        if (models.isEmpty())
+        {
+            return;
+        }
         this->setCompleter(new QCompleter(models, this));
     }
 } // namespace swift::gui::components
