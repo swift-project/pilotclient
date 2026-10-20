@@ -78,10 +78,11 @@ namespace swift::misc::simulation
             // default depending on algorithm
             ModeDefaultScore = ScoreIgnoreZeros | ScorePreferColorLiveries | ExcludeDefault | ReverseLookupDefault,
             ModeDefaultReduce = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType |
-                ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault | ByLivery,
+                                ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault |
+                                ExcludeDefault | ByLivery,
             ModeDefaultReducePlusScore = ModeByFLags | ByModelString | ByFamily | ByManufacturer | ByCombinedType |
-                ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault | ExcludeDefault |
-                ModeDefaultScore,
+                                         ByIcaoOrderAircraftFirst | ByAirlineGroupIfNoAirline | ReverseLookupDefault |
+                                         ExcludeDefault | ModeDefaultScore,
         };
         Q_DECLARE_FLAGS(MatchingMode, MatchingModeFlag)
 
