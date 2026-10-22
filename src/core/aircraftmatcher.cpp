@@ -1999,7 +1999,6 @@ namespace swift::core
             if (!milFlagReduced && mode.testFlag(CAircraftMatcherSetup::ByCivilian) && !remoteAircraft.isMilitary())
             {
                 matchedModels = ifPossibleReduceByMilitaryFlag(remoteAircraft, matchedModels, reduced, reduceLog);
-                milFlagReduced = true;
             }
 
             // combined code

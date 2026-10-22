@@ -47,7 +47,7 @@ PLUGIN_API int XPluginEnable()
 
 PLUGIN_API void XPluginDisable() { delete g_plugin; }
 
-PLUGIN_API void XPluginReceiveMessage(XPLMPluginID from, long msg, void *param)
+PLUGIN_API void XPluginReceiveMessage(XPLMPluginID from, long msg, const void *param)
 {
     if (from == XPLM_PLUGIN_XPLANE)
     {

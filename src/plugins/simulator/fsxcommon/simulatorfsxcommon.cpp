@@ -512,12 +512,12 @@ namespace swift::simplugin::fsxcommon
         if (!situation.isNull())
         {
             SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(situation, true);
-            const bool traceSendId = this->isTracingSendId();
+            const bool doTraceSendId = this->isTracingSendId();
             const HRESULT hr = this->logAndTraceSendId(
                 SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
                                               static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), 0, 0,
                                               sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
-                traceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+                doTraceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
             if (hr == S_OK)
             {
                 u++;
@@ -1855,7 +1855,7 @@ namespace swift::simplugin::fsxcommon
 
         // statistics
         const qint64 end = QDateTime::currentMSecsSinceEpoch();
-        m_dispatchTimeMs = end - start;
+        m_dispatchTimeMs = end - start; // cppcheck-suppress duplicateExpression
         if (m_dispatchMaxTimeMs < m_dispatchTimeMs)
         {
             m_dispatchMaxTimeMs = m_dispatchTimeMs;
@@ -2454,7 +2454,7 @@ namespace swift::simplugin::fsxcommon
         const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
 
         uint32_t simObjectNumber = 0;
-        const bool traceSendId = this->isTracingSendId();
+        const bool doTraceSendId = this->isTracingSendId();
         const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
         for (const CSimConnectObject &simObject : simObjects)
         {
@@ -2509,7 +2509,7 @@ namespace swift::simplugin::fsxcommon
                                                       CSimConnectDefinitions::DataRemoteAircraftSetPosition,
                                                       static_cast<SIMCONNECT_OBJECT_ID>(objectId), 0, 0,
                                                       sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
-                        traceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+                        doTraceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
                     if (isOk(hr))
                     {
                         this->rememberLastSent(result); // remember situation
@@ -3179,11 +3179,11 @@ namespace swift::simplugin::fsxcommon
                                        functionDetails);
     }
 
-    HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject,
+    HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, bool doTraceSendId, const CSimConnectObject &simObject,
                                                    const QString &warningMsg, const QString &functionName,
                                                    const QString &functionDetails)
     {
-        if (traceSendId)
+        if (doTraceSendId)
         {
             this->traceSendId(simObject, functionName, functionDetails);
         }

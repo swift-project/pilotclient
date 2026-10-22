@@ -86,7 +86,7 @@ namespace XSwiftBus
         void close();
 
         //! Get the last error
-        CDBusError lastError() const { return m_lastError; }
+        const CDBusError &lastError() const { return m_lastError; }
 
     protected:
         // cppcheck-suppress virtualCallInConstructor

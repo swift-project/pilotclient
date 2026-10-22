@@ -1269,7 +1269,7 @@ namespace swift::core::fsd
     void CFSDClient::handleAtcDataUpdate(const QStringList &tokens)
     {
         const AtcDataUpdate atcDataUpdate = AtcDataUpdate::fromTokens(tokens);
-        const QString senderCs = atcDataUpdate.sender();
+        const QString senderCs = atcDataUpdate.getSender();
         const CCallsign cs(senderCs, CCallsign::Atc);
 
         // Filter non-ATC like OBS stations, like pilots logging in as shared cockpit co-pilots.
@@ -1339,7 +1339,7 @@ namespace swift::core::fsd
     void CFSDClient::handleDeletePilot(const QStringList &tokens)
     {
         const DeletePilot deletePilot = DeletePilot::fromTokens(tokens);
-        const CCallsign cs(deletePilot.sender(), CCallsign::Aircraft);
+        const CCallsign cs(deletePilot.getSender(), CCallsign::Aircraft);
         clearState(cs);
         emit deletePilotReceived(deletePilot.m_cid);
     }
@@ -1348,8 +1348,8 @@ namespace swift::core::fsd
     {
         const TextMessage textMessage = TextMessage::fromTokens(tokens);
 
-        const CCallsign sender(textMessage.sender());
-        const CCallsign receiver(textMessage.receiver());
+        const CCallsign sender(textMessage.getSender());
+        const CCallsign receiver(textMessage.getReceiver());
 
         if (textMessage.m_type == TextMessage::PrivateMessage)
         {
@@ -1357,7 +1357,7 @@ namespace swift::core::fsd
             // * non-VATSIM server. VATSIM has a specific ATIS message
             // * Receiver callsign must be owner callsign and not any type of broadcast.
             // * We have requested the ATIS of this controller before.
-            if (m_server.getEcosystem() != CEcosystem::vatsim() && m_ownCallsign.asString() == textMessage.receiver() &&
+            if (m_server.getEcosystem() != CEcosystem::vatsim() && m_ownCallsign.asString() == textMessage.getReceiver() &&
                 m_pendingAtisQueries.contains(sender))
             {
                 maybeHandleAtisReply(sender, receiver, textMessage.m_message);
@@ -1387,7 +1387,7 @@ namespace swift::core::fsd
             {
                 return;
             }
-            CTextMessageList messages(textMessage.m_message, frequencies, CCallsign(textMessage.sender()));
+            CTextMessageList messages(textMessage.m_message, frequencies, CCallsign(textMessage.getSender()));
             messages.setCurrentUtcTime();
             emit textMessagesReceived(messages);
         }
@@ -1396,7 +1396,7 @@ namespace swift::core::fsd
     void CFSDClient::handlePilotDataUpdate(const QStringList &tokens)
     {
         const PilotDataUpdate dataUpdate = PilotDataUpdate::fromTokens(tokens);
-        const CCallsign callsign(dataUpdate.sender(), CCallsign::Aircraft);
+        const CCallsign callsign(dataUpdate.getSender(), CCallsign::Aircraft);
 
         CAircraftSituation situation(
             callsign, CCoordinateGeodetic(dataUpdate.m_latitude, dataUpdate.m_longitude, dataUpdate.m_altitudeTrue),
@@ -1441,7 +1441,7 @@ namespace swift::core::fsd
     {
         const EuroscopeSimData data = EuroscopeSimData::fromTokens(tokens);
 
-        CAircraftSituation situation(CCallsign(data.sender(), CCallsign::Aircraft),
+        CAircraftSituation situation(CCallsign(data.getSender(), CCallsign::Aircraft),
                                      CCoordinateGeodetic(data.m_latitude, data.m_longitude, data.m_altitude),
                                      CHeading(data.m_heading, CAngleUnit::deg()),
                                      CAngle(-data.m_pitch, CAngleUnit::deg()), CAngle(-data.m_bank, CAngleUnit::deg()),
@@ -1462,7 +1462,7 @@ namespace swift::core::fsd
         parts.setGearDown(data.m_gearPercent);
         parts.setOnGround(data.m_onGround);
 
-        emit euroscopeSimDataUpdatedReceived(situation, parts, currentOffsetTime(data.sender()), data.m_model,
+        emit euroscopeSimDataUpdatedReceived(situation, parts, currentOffsetTime(data.getSender()), data.m_model,
                                              data.m_livery);
     }
 
@@ -1477,7 +1477,7 @@ namespace swift::core::fsd
         case MessageType::VisualPilotDataStopped: dataUpdate = VisualPilotDataStopped::fromTokens(tokens).toUpdate(); break;
         default: qFatal("Precondition violated"); break;
         }
-        const CCallsign callsign(dataUpdate.sender(), CCallsign::Aircraft);
+        const CCallsign callsign(dataUpdate.getSender(), CCallsign::Aircraft);
 
         CAircraftSituation situation(
             callsign,
@@ -1509,7 +1509,7 @@ namespace swift::core::fsd
     void CFSDClient::handlePing(const QStringList &tokens)
     {
         const Ping ping = Ping::fromTokens(tokens);
-        sendPong(ping.sender(), ping.m_timestamp);
+        sendPong(ping.getSender(), ping.m_timestamp);
     }
 
     void CFSDClient::handlePong(const QStringList &tokens)
@@ -1517,7 +1517,7 @@ namespace swift::core::fsd
         const Pong pong = Pong::fromTokens(tokens);
         const qint64 msecSinceEpoch = QDateTime::currentMSecsSinceEpoch();
         const qint64 elapsedTime = msecSinceEpoch - pong.m_timestamp.toLongLong();
-        emit pongReceived(pong.sender(), static_cast<double>(elapsedTime));
+        emit pongReceived(pong.getSender(), static_cast<double>(elapsedTime));
     }
 
     void CFSDClient::handleKillRequest(const QStringList &tokens)
@@ -1576,7 +1576,7 @@ namespace swift::core::fsd
         const QString depTimePlanned = QStringLiteral("0000").append(QString::number(fp.m_estimatedDepTime)).right(4);
         const QString depTimeActual = QStringLiteral("0000").append(QString::number(fp.m_actualDepTime)).right(4);
 
-        const CCallsign callsign(fp.sender(), CCallsign::Aircraft);
+        const CCallsign callsign(fp.getSender(), CCallsign::Aircraft);
         const CFlightPlan flightPlan(
             callsign, CFlightPlanAircraftInfo(fp.m_aircraftIcaoType), fp.m_depAirport, fp.m_destAirport,
             fp.m_altAirport, fromStringUtc(depTimePlanned, "hhmm"), fromStringUtc(depTimeActual, "hhmm"),
@@ -1601,19 +1601,19 @@ namespace swift::core::fsd
         }
         else if (clientQuery.m_queryType == ClientQueryType::Capabilities)
         {
-            sendClientResponse(ClientQueryType::Capabilities, clientQuery.sender());
+            sendClientResponse(ClientQueryType::Capabilities, clientQuery.getSender());
         }
         else if (clientQuery.m_queryType == ClientQueryType::Com1Freq)
         {
-            sendClientResponse(ClientQueryType::Com1Freq, clientQuery.sender());
+            sendClientResponse(ClientQueryType::Com1Freq, clientQuery.getSender());
         }
         else if (clientQuery.m_queryType == ClientQueryType::RealName)
         {
-            sendClientResponse(ClientQueryType::RealName, clientQuery.sender());
+            sendClientResponse(ClientQueryType::RealName, clientQuery.getSender());
         }
         else if (clientQuery.m_queryType == ClientQueryType::Server)
         {
-            sendClientResponse(ClientQueryType::Server, clientQuery.sender());
+            sendClientResponse(ClientQueryType::Server, clientQuery.getSender());
         }
         else if (clientQuery.m_queryType == ClientQueryType::ATIS)
         {
@@ -1625,7 +1625,7 @@ namespace swift::core::fsd
         }
         else if (clientQuery.m_queryType == ClientQueryType::INF)
         {
-            sendClientResponse(ClientQueryType::INF, clientQuery.sender());
+            sendClientResponse(ClientQueryType::INF, clientQuery.getSender());
         }
         else if (clientQuery.m_queryType == ClientQueryType::FP)
         {
@@ -1636,7 +1636,7 @@ namespace swift::core::fsd
             QStringList aircraftConfigTokens = tokens.mid(3);
             QString aircraftConfigJson = aircraftConfigTokens.join(":");
 
-            const CCallsign callsign(clientQuery.sender(), CCallsign::Aircraft);
+            const CCallsign callsign(clientQuery.getSender(), CCallsign::Aircraft);
 
             QJsonParseError parserError;
             const QByteArray json = aircraftConfigJson.toUtf8();
@@ -1658,7 +1658,7 @@ namespace swift::core::fsd
                 config.insert(CAircraftParts::attributeNameIsFullJson(), true);
                 QString data = QJsonDocument(QJsonObject { { "config", config } }).toJson(QJsonDocument::Compact);
                 data = convertToUnicodeEscaped(data);
-                sendAircraftConfiguration(clientQuery.sender(), data);
+                sendAircraftConfiguration(clientQuery.getSender(), data);
                 return;
             }
 
@@ -1678,7 +1678,7 @@ namespace swift::core::fsd
             }
 
             const qint64 offsetTimeMs = currentOffsetTime(callsign);
-            emit aircraftConfigReceived(clientQuery.sender(), config, offsetTimeMs);
+            emit aircraftConfigReceived(clientQuery.getSender(), config, offsetTimeMs);
         }
         // NOLINTEND(bugprone-branch-clone)
     }
@@ -1690,7 +1690,6 @@ namespace swift::core::fsd
         {
             return;
         }
-        const QString sender = clientResponse.sender();
 
         QString responseData1;
         QString responseData2;
@@ -1755,7 +1754,7 @@ namespace swift::core::fsd
                 caps |= CClient::FsdWithAircraftConfig;
             }
 
-            emit capabilityResponseReceived(clientResponse.sender(), caps);
+            emit capabilityResponseReceived(clientResponse.getSender(), caps);
         }
         else if (clientResponse.m_queryType == ClientQueryType::Com1Freq)
         {
@@ -1769,20 +1768,20 @@ namespace swift::core::fsd
             {
                 return;
             }
-            emit com1FrequencyResponseReceived(clientResponse.sender(), CFrequency(freqMHz, CFrequencyUnit::MHz()));
+            emit com1FrequencyResponseReceived(clientResponse.getSender(), CFrequency(freqMHz, CFrequencyUnit::MHz()));
         }
         else if (clientResponse.m_queryType == ClientQueryType::RealName)
         {
             // The response also includes sector name and pilot rating, but we ignore them here.
-            emit realNameResponseReceived(clientResponse.sender(), responseData1);
+            emit realNameResponseReceived(clientResponse.getSender(), responseData1);
         }
         else if (clientResponse.m_queryType == ClientQueryType::Server)
         {
-            emit serverResponseReceived(clientResponse.sender(), responseData1);
+            emit serverResponseReceived(clientResponse.getSender(), responseData1);
         }
         else if (clientResponse.m_queryType == ClientQueryType::ATIS)
         {
-            updateAtisMap(clientResponse.sender(), fromQString<AtisLineType>(responseData1), responseData2);
+            updateAtisMap(clientResponse.getSender(), fromQString<AtisLineType>(responseData1), responseData2);
         }
         else if (clientResponse.m_queryType == ClientQueryType::PublicIP)
         {
@@ -1901,7 +1900,7 @@ namespace swift::core::fsd
     void CFSDClient::handleMute(const QStringList &tokens)
     {
         const Mute mute = Mute::fromTokens(tokens);
-        if (mute.receiver() != m_ownCallsign.asString())
+        if (mute.getReceiver() != m_ownCallsign.asString())
         {
             return;
         }
@@ -1971,7 +1970,7 @@ namespace swift::core::fsd
             const QString acTypeICAO = myAircraft.getAircraftIcaoCode().getDesignator();
             const QString livery = this->getConfiguredLiveryString(myAircraft);
 
-            sendPlaneInformation(planeInfoRequest.sender(), acTypeICAO, airlineIcao, livery);
+            sendPlaneInformation(planeInfoRequest.getSender(), acTypeICAO, airlineIcao, livery);
         }
         else if (subType == "PI")
         {
@@ -1982,7 +1981,7 @@ namespace swift::core::fsd
             else if (tokens.size() > 4 && tokens.at(3) == "GEN")
             {
                 const PlaneInformation planeInformation = PlaneInformation::fromTokens(tokens);
-                emit planeInformationReceived(planeInformation.sender(), planeInformation.m_aircraft,
+                emit planeInformationReceived(planeInformation.getSender(), planeInformation.m_aircraft,
                                               planeInformation.m_airline, planeInformation.m_livery);
             }
         }
@@ -1999,7 +1998,7 @@ namespace swift::core::fsd
             }
 
             const InterimPilotDataUpdate interimPilotDataUpdate = InterimPilotDataUpdate::fromTokens(tokens);
-            const CCallsign callsign(interimPilotDataUpdate.sender(), CCallsign::Aircraft);
+            const CCallsign callsign(interimPilotDataUpdate.getSender(), CCallsign::Aircraft);
 
             CAircraftSituation situation(callsign,
                                          CCoordinateGeodetic(interimPilotDataUpdate.m_latitude,
@@ -2026,7 +2025,7 @@ namespace swift::core::fsd
         else if (subType == "FSIPI")
         {
             const PlaneInformationFsinn planeInformationFsinn = PlaneInformationFsinn::fromTokens(tokens);
-            emit planeInformationFsinnReceived(planeInformationFsinn.sender(), planeInformationFsinn.m_airlineIcao,
+            emit planeInformationFsinnReceived(planeInformationFsinn.getSender(), planeInformationFsinn.m_airlineIcao,
                                                planeInformationFsinn.m_aircraftIcao,
                                                planeInformationFsinn.m_aircraftIcaoCombinedType,
                                                planeInformationFsinn.m_sendMModelString);
@@ -2034,8 +2033,8 @@ namespace swift::core::fsd
         else if (subType == "FSIPIR")
         {
             const PlaneInfoRequestFsinn planeInfoRequestFsinn = PlaneInfoRequestFsinn::fromTokens(tokens);
-            sendPlaneInformationFsinn(planeInfoRequestFsinn.sender());
-            emit planeInformationFsinnReceived(planeInfoRequestFsinn.sender(), planeInfoRequestFsinn.m_airlineIcao,
+            sendPlaneInformationFsinn(planeInfoRequestFsinn.getSender());
+            emit planeInformationFsinnReceived(planeInfoRequestFsinn.getSender(), planeInfoRequestFsinn.m_airlineIcao,
                                                planeInfoRequestFsinn.m_aircraftIcao,
                                                planeInfoRequestFsinn.m_aircraftIcaoCombinedType,
                                                planeInfoRequestFsinn.m_sendMModelString);

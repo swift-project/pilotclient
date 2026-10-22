@@ -114,15 +114,6 @@ namespace swift::misc::aviation
                           u' ' % ICoordinateWithRelativePosition::convertToQString(i18n);
 
         return s;
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("Aviation", "ATC station");
-        (void)QT_TRANSLATE_NOOP("Aviation", "online");
-        (void)QT_TRANSLATE_NOOP("Aviation", "offline");
-        (void)QT_TRANSLATE_NOOP("Aviation", "from(UTC)");
-        (void)QT_TRANSLATE_NOOP("Aviation", "until(UTC)");
-        (void)QT_TRANSLATE_NOOP("Aviation", "range");
-        (void)QT_TRANSLATE_NOOP("Aviation", "distance");
     }
 
     void CAtcStation::setFrequency(const CFrequency &frequency)

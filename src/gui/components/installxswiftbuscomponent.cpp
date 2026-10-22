@@ -108,7 +108,7 @@ namespace swift::gui::components
     void CInstallXSwiftBusComponent::installXSwiftBus()
     {
         const CRemoteFile rf = this->getRemoteFileSelected();
-        const QString downloadFileName = CFileUtils::appendFilePathsAndFixUnc(this->downloadDir(), rf.getBaseName());
+        const QString downloadFileName = CFileUtils::appendFilePathsAndFixUnc(this->getDownloadDir(), rf.getBaseName());
         QPointer<CInstallXSwiftBusComponent> myself(this);
         QFile downloadFile(downloadFileName);
 
@@ -121,7 +121,7 @@ namespace swift::gui::components
             return;
         }
 
-        const QString xSwiftBusDirectory = this->xSwiftBusDir();
+        const QString xSwiftBusDirectory = this->GetXSwiftBusDir();
         if (xSwiftBusDirectory.isEmpty())
         {
             const CStatusMessage msg =
@@ -338,25 +338,25 @@ namespace swift::gui::components
         return remoteFiles.findFirstByMatchingBaseNameOrDefault(baseNameAndSize);
     }
 
-    QString CInstallXSwiftBusComponent::downloadDir() const
+    QString CInstallXSwiftBusComponent::getDownloadDir() const
     {
         return CFileUtils::fixWindowsUncPath(ui->le_DownloadDir->text().trimmed());
     }
 
-    QString CInstallXSwiftBusComponent::xSwiftBusDir() const
+    QString CInstallXSwiftBusComponent::GetXSwiftBusDir() const
     {
         return CFileUtils::fixWindowsUncPath(ui->le_XSwiftBusPluginDir->text().trimmed());
     }
 
     bool CInstallXSwiftBusComponent::existsDownloadDir() const
     {
-        const QDir dir(this->downloadDir());
+        const QDir dir(this->getDownloadDir());
         return dir.exists() && dir.isReadable();
     }
 
     bool CInstallXSwiftBusComponent::existsXSwiftBusPluginDir() const
     {
-        const QDir dir(this->xSwiftBusDir());
+        const QDir dir(this->GetXSwiftBusDir());
         return dir.exists() && dir.isReadable();
     }
 

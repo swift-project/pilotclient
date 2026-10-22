@@ -125,9 +125,6 @@ namespace swift::misc::aviation
         return (i18n ? liveryI18n : livery) % u" cc: '" % m_combinedCode % u"' airline: '" % m_airline.toQString(i18n) %
                u"' desc.: '" % m_description % u"' F: '" % m_colorFuselage.hex() % u"' T: '" % m_colorTail.hex() %
                u"' Mil: " % boolToYesNo(this->isMilitary());
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("Aviation", "Livery");
     }
 
     bool CLivery::hasCompleteData() const { return !m_description.isEmpty() && !m_combinedCode.isEmpty(); }

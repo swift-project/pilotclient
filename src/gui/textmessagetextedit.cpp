@@ -154,7 +154,7 @@ namespace swift::gui
 
     void CTextMessageTextEdit::keepLastNMessages()
     {
-        QObject *sender = QObject::sender();
+        const QObject *sender = QObject::sender();
         if (sender == m_actionAll)
         {
             m_keepMaxMessages = -1;

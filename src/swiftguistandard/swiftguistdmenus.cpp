@@ -36,7 +36,7 @@ using namespace swift::misc::simulation;
 void SwiftGuiStd::onMenuClicked()
 {
     using namespace std::chrono_literals;
-    QObject *sender = QObject::sender();
+    const QObject *sender = QObject::sender();
     if (sender == ui->menu_TestLocationsEDRY)
     {
         this->setTestPosition("N 049° 18' 17", "E 008° 27' 05",

@@ -52,7 +52,7 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const AtcDataUpdate &lhs, const AtcDataUpdate &rhs)
     {
-        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() &&
                lhs.m_frequencykHz == rhs.m_frequencykHz && lhs.m_facility == rhs.m_facility &&
                lhs.m_visibleRange == rhs.m_visibleRange && lhs.m_rating == rhs.m_rating &&
                qFuzzyCompare(1 + lhs.m_latitude, 1 + rhs.m_latitude) &&

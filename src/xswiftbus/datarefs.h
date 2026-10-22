@@ -208,7 +208,7 @@ namespace XSwiftBus
         {
             static_assert(DataRefTraits::writable, "read-only dataref");
             assert((s.size() + 1) <= (DataRefTraits::size - offset));
-            XPLMSetDatab(m_ref, (void *)s.c_str(), (int)offset, (int)s.size() + 1);
+            XPLMSetDatab(m_ref, static_cast<void*>(s.c_str()), (int)offset, (int)s.size() + 1);
         }
 
         //! Get the value of part of the string

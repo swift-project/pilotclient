@@ -30,10 +30,10 @@ namespace swift::input
         ~CJoystickDevice() override;
 
         //! Get device name
-        QString getName() const { return m_name; }
+        const QString &getName() const { return m_name; }
 
         //! Get device path, e.g. /dev/input/js0
-        QString getPath() const { return m_path; }
+        const QString &getPath() const { return m_path; }
 
         //! Is joystick device still attached?
         bool isAttached() const { return m_fd->exists(); }

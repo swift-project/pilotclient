@@ -20,13 +20,6 @@ namespace swift::gui::models
     CUserListModel::CUserListModel(UserMode userMode, QObject *parent) : CListModelBase("ModelUserList", parent)
     {
         this->setUserMode(userMode);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ModelUserList", "callsign");
-        (void)QT_TRANSLATE_NOOP("ModelUserList", "realname");
-        (void)QT_TRANSLATE_NOOP("ModelUserList", "homebase");
-        (void)QT_TRANSLATE_NOOP("ModelUserList", "userid");
-        (void)QT_TRANSLATE_NOOP("ModelUserList", "email");
     }
 
     void CUserListModel::setUserMode(CUserListModel::UserMode userMode)

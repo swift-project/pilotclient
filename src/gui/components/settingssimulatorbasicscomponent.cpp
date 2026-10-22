@@ -321,14 +321,14 @@ namespace swift::gui::components
         return this->removeDirectories(QStringList({ d }), existingDirs);
     }
 
-    QStringList CSettingsSimulatorBasicsComponent::removeDirectories(const QStringList &removeDirectories,
+    QStringList CSettingsSimulatorBasicsComponent::removeDirectories(const QStringList &directories,
                                                                      const QStringList &existingDirs)
     {
-        if (existingDirs.isEmpty() || removeDirectories.isEmpty())
+        if (existingDirs.isEmpty() || directories.isEmpty())
         {
             return existingDirs;
         }
-        const QStringList rDirs = CFileUtils::fixWindowsUncPaths(removeDirectories);
+        const QStringList rDirs = CFileUtils::fixWindowsUncPaths(directories);
         const QStringList eDirs = CFileUtils::fixWindowsUncPaths(existingDirs);
         QStringList dirs;
         for (const QString &dir : eDirs)

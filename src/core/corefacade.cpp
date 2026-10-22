@@ -211,7 +211,7 @@ namespace swift::core
         // audio can be empty depending on whre it runs
         if (this->getIContextAudio() && !this->getIContextAudio()->isEmptyObject())
         {
-            handled = handled || this->getIContextAudio()->parseCommandLine(commandLine, originator);
+            handled = this->getIContextAudio()->parseCommandLine(commandLine, originator);
         }
         if (this->getIContextNetwork())
         {

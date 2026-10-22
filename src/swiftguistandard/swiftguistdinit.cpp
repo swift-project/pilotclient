@@ -332,10 +332,6 @@ void SwiftGuiStd::initGuiSignals()
 
     // on top
     connect(sGui, &CGuiApplication::alwaysOnTop, this, &SwiftGuiStd::onToggledWindowsOnTop, Qt::QueuedConnection);
-
-    // main info area
-    connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedWholeInfoAreaFloating, this,
-            &SwiftGuiStd::onChangedMainInfoAreaFloating, Qt::QueuedConnection);
 }
 
 void SwiftGuiStd::initialContextDataReads()

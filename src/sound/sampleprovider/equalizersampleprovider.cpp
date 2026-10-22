@@ -54,7 +54,7 @@ namespace swift::sound::sample_provider
         }
     }
 
-    double CEqualizerSampleProvider::outputGain() const { return m_outputGain; }
+    double CEqualizerSampleProvider::getOutputGain() const { return m_outputGain; }
 
     void CEqualizerSampleProvider::setOutputGain(double outputGain) { m_outputGain = outputGain; }
 } // namespace swift::sound::sample_provider

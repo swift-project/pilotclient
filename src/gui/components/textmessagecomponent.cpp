@@ -933,7 +933,6 @@ namespace swift::gui::components
         }
 
         const int index = ui->tw_TextMessages->currentIndex();
-        QString cmd(".msg ");
         if (index < 0 || index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesAll))
         {
             CLogMessage(this).validationError(u"Incorrect message channel");
@@ -947,6 +946,7 @@ namespace swift::gui::components
         }
         else
         {
+            QString cmd(".msg ");
             if (index == ui->tw_TextMessages->indexOf(ui->tb_TextMessagesCOM1))
             {
                 cmd.append(QString::number(this->getOwnAircraft().getCom1System().getFrequencyActive().valueRounded(

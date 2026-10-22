@@ -74,6 +74,7 @@ namespace swift::gui::components
         // void
     }
 
+    // cppcheck-suppress constParameterCallback
     void CApplicationCloseDialog::buttonClicked(QAbstractButton *button)
     {
         if (button == ui->bb_ApplicationCloseDialog->button(QDialogButtonBox::Discard))

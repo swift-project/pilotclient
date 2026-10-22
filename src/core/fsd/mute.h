@@ -35,7 +35,7 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const Mute &lhs, const Mute &rhs)
     {
-        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.m_mute == rhs.m_mute;
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() && lhs.m_mute == rhs.m_mute;
     }
 
     //! Not equal to operator

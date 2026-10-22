@@ -28,12 +28,6 @@ namespace swift::gui::menus
 {
     void IAircraftModelViewMenu::anchor() {}
 
-    const QStringList &IAircraftModelViewMenu::getLogCategories()
-    {
-        static const QStringList cats { CLogCategories::guiComponent() };
-        return cats;
-    }
-
     CAircraftModelView *IAircraftModelViewMenu::modelView() const
     {
         auto *mv = qobject_cast<CAircraftModelView *>(parent());
@@ -65,12 +59,6 @@ namespace swift::gui::menus
     CShowSimulatorFileMenu::CShowSimulatorFileMenu(CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame)
         : IAircraftModelViewMenu(modelView), m_messageFrame(messageFrame)
     {}
-
-    const QStringList &CShowSimulatorFileMenu::getLogCategories()
-    {
-        static const QStringList cats { CLogCategories::guiComponent() };
-        return cats;
-    }
 
     void CShowSimulatorFileMenu::customMenu(CMenuActions &menuActions)
     {

@@ -340,7 +340,7 @@ bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
 
         CLogMessage(CLogCategories::driver()).info(u"Loaded and resolved P3D symbols from SimConnect.dll: '%1'")
             << simConnectFileName;
-        return resolvedCommon && resolvedP3DSimConnectSymbols;
+        return true;
     }
     else
     {

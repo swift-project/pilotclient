@@ -167,7 +167,7 @@ void CSwiftLauncher::installerMode()
     }
     while (false);
 
-    bool startWizard = true;
+    bool shouldStartWizard = true;
     ui->fr_SwiftLauncherMain->closeOverlay();
 
     if (runDialog)
@@ -178,11 +178,11 @@ void CSwiftLauncher::installerMode()
                                      "Do you want to use that one?"));
         if (ret != QMessageBox::No)
         {
-            startWizard = false;
+            shouldStartWizard = false;
         }
     }
 
-    if (startWizard)
+    if (shouldStartWizard)
     {
         this->startWizard();
     }
@@ -351,11 +351,10 @@ bool CSwiftLauncher::setSwiftCoreExecutable()
     return true;
 }
 
-bool CSwiftLauncher::setSwiftDataExecutable()
+void CSwiftLauncher::setSwiftDataExecutable()
 {
     m_executable = CSwiftDirectories::executableFilePath(CBuildConfig::swiftDataExecutableName());
     m_executableArgs = sGui->argumentsJoined();
-    return true;
 }
 
 bool CSwiftLauncher::setSwiftGuiExecutable()
@@ -515,16 +514,14 @@ void CSwiftLauncher::startButtonPressed()
     {
         ui->tb_SwiftMappingTool->setEnabled(false);
         m_startMappingToolWaitCycles = 2;
-        if (this->setSwiftDataExecutable())
+        this->setSwiftDataExecutable();
+        if (shift)
         {
-            if (shift)
-            {
-                this->popupExecutableArgs();
-            }
-            else
-            {
-                close();
-            }
+            this->popupExecutableArgs();
+        }
+        else
+        {
+            close();
         }
     }
     else if (sender == ui->tb_SwiftCore)

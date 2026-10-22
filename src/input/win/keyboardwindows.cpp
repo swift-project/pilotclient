@@ -224,7 +224,7 @@ namespace swift::input
     {
         if (nCode == HC_ACTION)
         {
-            KBDLLHOOKSTRUCT *keyboardEvent = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
+            const KBDLLHOOKSTRUCT *keyboardEvent = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
             DWORD vkCode = keyboardEvent->vkCode;
             g_keyboardWindows->processKeyEvent(vkCode, wParam);
         }

@@ -413,7 +413,7 @@ namespace swift::input
             {
                 if (wParam == DBT_DEVICEARRIVAL)
                 {
-                    DEV_BROADCAST_HDR *dbh = reinterpret_cast<DEV_BROADCAST_HDR *>(lParam);
+                    const DEV_BROADCAST_HDR *dbh = reinterpret_cast<DEV_BROADCAST_HDR *>(lParam);
                     // DEV_BROADCAST_HDR *dbh = (DEV_BROADCAST_HDR *) lParam;
                     if (dbh && dbh->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
                     {

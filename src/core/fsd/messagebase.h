@@ -67,19 +67,19 @@ namespace swift::core::fsd
         void setCallsign(const QString &sender) { m_sender = sender; }
 
         //! get message sender
-        QString sender() const { return m_sender; }
+        const QString &getSender() const { return m_sender; }
 
         //! Set message receiver
         void setReceiver(const QString &receiver) { m_receiver = receiver; }
 
         //! Get message receiver
-        QString receiver() const { return m_receiver; }
+        const QString &getReceiver() const { return m_receiver; }
 
         //! Is message valid?
         bool isValid() const { return m_isValid; }
 
         //! set message valid
-        void setValid(bool isValid) { m_isValid = isValid; }
+        void setValid(bool valid) { m_isValid = valid; }
 
     protected:
         QString m_sender; //!< message sender

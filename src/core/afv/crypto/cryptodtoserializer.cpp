@@ -17,7 +17,7 @@ namespace swift::core::afv::crypto
         QBuffer buffer(&data);
         buffer.open(QIODevice::ReadOnly);
 
-        buffer.read((char *)&m_headerLength, sizeof(m_headerLength));
+        buffer.read(reinterpret_cast<char *>(&m_headerLength), sizeof(m_headerLength));
 
         QByteArray headerBuffer = buffer.read(m_headerLength);
 
@@ -70,10 +70,10 @@ namespace swift::core::afv::crypto
 
                 QBuffer decryptedPayloadBuffer(&decryptedPayload);
                 decryptedPayloadBuffer.open(QIODevice::ReadOnly);
-                decryptedPayloadBuffer.read((char *)&m_dtoNameLength, sizeof(m_dtoNameLength));
+                decryptedPayloadBuffer.read(reinterpret_cast<char *>(&m_dtoNameLength), sizeof(m_dtoNameLength));
                 m_dtoNameBuffer = decryptedPayloadBuffer.read(m_dtoNameLength);
 
-                decryptedPayloadBuffer.read((char *)&m_dataLength, sizeof(m_dataLength));
+                decryptedPayloadBuffer.read(reinterpret_cast<char *>(&m_dataLength), sizeof(m_dataLength));
                 m_dataBuffer = decryptedPayloadBuffer.read(m_dataLength);
                 m_verified = true;
             }

@@ -288,8 +288,6 @@ namespace swift::misc::physical_quantities
                 constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute, second")), constQLatin1("DMS"),
                 SubdivisionConverter2<DegreesToDegrees, InEachHundred<60>>(), 4);
             return deg;
-            (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2 %L3");
-            (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2 %L3");
         }
 
         //! Sexagesimal degree (degrees, minutes, decimal minutes)
@@ -299,8 +297,6 @@ namespace swift::misc::physical_quantities
                 constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "degree, minute")), constQLatin1("MinDec"),
                 SubdivisionConverter<DegreesToDegrees, InEachHundred<60>>(), 4);
             return deg;
-            (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1 %L2");
-            (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1 %L2");
         }
 
         //! All units
@@ -987,8 +983,6 @@ namespace swift::misc::physical_quantities
                 constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute, second")), constQLatin1("hms"),
                 SubdivisionConverter2<HoursToSeconds, InEachHundred<60>>(), 4);
             return hms;
-            (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m%L3s");
-            (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%-L1h%L2m%L3s");
         }
 
         //! Hours, minutes
@@ -998,8 +992,6 @@ namespace swift::misc::physical_quantities
                 constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "hour, minute")), constQLatin1("hm"),
                 SubdivisionConverter<HoursToSeconds, InEachHundred<60>>(), 3);
             return hrmin;
-            (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1h%L2m");
-            (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1h%L2m");
         }
 
         //! Minutes, seconds
@@ -1009,8 +1001,6 @@ namespace swift::misc::physical_quantities
                 constQLatin1(QT_TRANSLATE_NOOP("CMeasurementUnit", "minute, second")), constQLatin1("minsec"),
                 SubdivisionConverter<MinutesToSeconds, InEachHundred<60>>(), 2);
             return minsec;
-            (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "%L1m%L2s");
-            (void)QT_TRANSLATE_NOOP("CMeasurementUnit", "-%L1m%L2s");
         }
 
         //! All units

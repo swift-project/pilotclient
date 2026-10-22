@@ -30,12 +30,5 @@ namespace swift::gui::models
         // default sort order
         this->setSortColumnByPropertyIndex(CCountry::IndexIsoCode);
         m_sortOrder = Qt::AscendingOrder;
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ModelCountryList", "cty.");
-        (void)QT_TRANSLATE_NOOP("ModelCountryList", "country");
-        (void)QT_TRANSLATE_NOOP("ModelCountryList", "ISO2");
-        (void)QT_TRANSLATE_NOOP("ModelCountryList", "ISO3");
-        (void)QT_TRANSLATE_NOOP("ModelCountryList", "name");
     }
 } // namespace swift::gui::models
