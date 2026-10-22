@@ -34,7 +34,10 @@ namespace swift::core
         }
 
         QDirIterator it(pluginDir, QDirIterator::FollowSymlinks);
-        while (it.hasNext()) { tryLoad(it.next()); }
+        while (it.hasNext())
+        {
+            tryLoad(it.next());
+        }
     }
 
     QString IPluginManager::getPluginConfigId(const QString &identifier)
@@ -46,10 +49,16 @@ namespace swift::core
 
     bool IPluginManager::isValid(const QJsonObject &metadata) const
     {
-        if (!metadata["MetaData"].isObject()) { return false; }
+        if (!metadata["MetaData"].isObject())
+        {
+            return false;
+        }
 
         QJsonObject data = metadata["MetaData"].toObject();
-        if (!data.contains("identifier") || !data["identifier"].isString()) { return false; }
+        if (!data.contains("identifier") || !data["identifier"].isString())
+        {
+            return false;
+        }
 
         auto iids = acceptedIids();
         return std::any_of(iids.cbegin(), iids.cend(),
@@ -69,7 +78,10 @@ namespace swift::core
 
     bool IPluginManager::tryLoad(const QString &path)
     {
-        if (!QLibrary::isLibrary(path)) { return false; }
+        if (!QLibrary::isLibrary(path))
+        {
+            return false;
+        }
 
         CLogMessage(this).debug() << "Try loading plugin:" << path;
         QPluginLoader loader(path);
@@ -87,7 +99,10 @@ namespace swift::core
         if (json.value("MetaData").toObject().contains("config"))
         {
             const QString configId = json.value("MetaData").toObject().value("config").toString();
-            if (!configId.isEmpty()) { m_configs.insert(identifier, configId); }
+            if (!configId.isEmpty())
+            {
+                m_configs.insert(identifier, configId);
+            }
         }
 
         return true;
@@ -95,7 +110,10 @@ namespace swift::core
 
     QObject *IPluginManager::getPluginByIdImpl(const QString &identifier)
     {
-        if (m_instances.contains(identifier)) { return m_instances.value(identifier); }
+        if (m_instances.contains(identifier))
+        {
+            return m_instances.value(identifier);
+        }
 
         if (!m_paths.contains(identifier))
         {

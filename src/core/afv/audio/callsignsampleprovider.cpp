@@ -77,7 +77,10 @@ namespace swift::core::afv::audio
 
         if (m_inUse && !m_underflow && m_audioInput->getBufferedBytes() == 0)
         {
-            if (verbose()) { CLogMessage(this).debug(u"[%1] [Delay++]") << m_callsign; }
+            if (verbose())
+            {
+                CLogMessage(this).debug(u"[%1] [Delay++]") << m_callsign;
+            }
             CallsignDelayCache::instance().underflow(m_callsign);
             m_underflow = true;
         }
@@ -105,7 +108,10 @@ namespace swift::core::afv::audio
         m_underflow = false;
 
         const int delayMs = CallsignDelayCache::instance().get(callsign);
-        if (verbose()) { CLogMessage(this).debug(u"[%1] [Delay %2ms]") << m_callsign << delayMs; }
+        if (verbose())
+        {
+            CLogMessage(this).debug(u"[%1] [Delay %2ms]") << m_callsign << delayMs;
+        }
         if (delayMs > 0)
         {
             const int phaseDelayLength = (m_audioFormat.sampleRate() / 1000) * delayMs;
@@ -139,9 +145,15 @@ namespace swift::core::afv::audio
         const QVector<qint16> audio = decodeOpus(audioDto.audio);
         m_audioInput->addSamples(swift::sound::convertFromShortToFloat(audio));
         m_lastPacketLatch = audioDto.lastPacket;
-        if (audioDto.lastPacket && !m_underflow) { CallsignDelayCache::instance().success(m_callsign); }
+        if (audioDto.lastPacket && !m_underflow)
+        {
+            CallsignDelayCache::instance().success(m_callsign);
+        }
         m_lastSamplesAddedUtc = QDateTime::currentDateTimeUtc();
-        if (!m_timer->isActive()) { m_timer->start(); }
+        if (!m_timer->isActive())
+        {
+            m_timer->start();
+        }
     }
 
     void CCallsignSampleProvider::addSilentSamples(const IAudioDto &audioDto)
@@ -153,7 +165,10 @@ namespace swift::core::afv::audio
         m_lastPacketLatch = audioDto.lastPacket;
 
         m_lastSamplesAddedUtc = QDateTime::currentDateTimeUtc();
-        if (!m_timer->isActive()) { m_timer->start(); }
+        if (!m_timer->isActive())
+        {
+            m_timer->start();
+        }
     }
 
     void CCallsignSampleProvider::idle()

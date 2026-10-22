@@ -123,7 +123,10 @@ namespace swift::gui::components
         for (int idx = 0; idx < ui->gl_Filters->count(); idx++)
         {
             QLayoutItem *const item = ui->gl_Filters->itemAt(idx);
-            if (item->widget()) { item->widget()->setVisible(expand); }
+            if (item->widget())
+            {
+                item->widget()->setVisible(expand);
+            }
         }
     }
 
@@ -145,7 +148,10 @@ namespace swift::gui::components
         for (int idx = 0; idx < ui->gl_WriteToFile->count(); idx++)
         {
             QLayoutItem *const item = ui->gl_WriteToFile->itemAt(idx);
-            if (item->widget()) { item->widget()->setVisible(expand); }
+            if (item->widget())
+            {
+                item->widget()->setVisible(expand);
+            }
         }
     }
 
@@ -176,8 +182,14 @@ namespace swift::gui::components
     void CRawFsdMessagesComponent::filterDisplayedMessages()
     {
         CRawFsdMessageList filtered = m_buffer;
-        if (!m_filterString.isEmpty()) { filtered = filtered.findByContainsString(m_filterString); }
-        if (!m_filterPacketType.isEmpty()) { filtered = filtered.findByPacketType(m_filterPacketType); }
+        if (!m_filterString.isEmpty())
+        {
+            filtered = filtered.findByContainsString(m_filterString);
+        }
+        if (!m_filterPacketType.isEmpty())
+        {
+            filtered = filtered.findByPacketType(m_filterPacketType);
+        }
         ui->pte_RawFsdMessages->clear();
         // Append only the last messages up to maximum display size. Erase everything before.
         filtered.erase(filtered.begin(), filtered.end() - std::min(filtered.size(), m_maxDisplayedMessages));
@@ -191,7 +203,10 @@ namespace swift::gui::components
     {
         QString fileDir = ui->le_FileDir->text();
         fileDir = QFileDialog::getExistingDirectory(this, tr("Select File Directory"), fileDir);
-        if (fileDir.isEmpty()) { return; }
+        if (fileDir.isEmpty())
+        {
+            return;
+        }
         ui->le_FileDir->setText(fileDir);
         m_setting.setProperty(vatsim::CRawFsdMessageSettings::IndexFileDir, CVariant::fromValue(fileDir));
     }
@@ -204,11 +219,20 @@ namespace swift::gui::components
 
     void CRawFsdMessagesComponent::addFsdMessage(const CRawFsdMessage &rawFsdMessage)
     {
-        if (m_buffer.size() == m_maxDisplayedMessages) { m_buffer.pop_front(); }
+        if (m_buffer.size() == m_maxDisplayedMessages)
+        {
+            m_buffer.pop_front();
+        }
         m_buffer.push_backMaxElements(rawFsdMessage, m_maxDisplayedMessages);
 
-        if (!m_filterPacketType.isEmpty() && !rawFsdMessage.isPacketType(m_filterPacketType)) { return; }
-        if (!m_filterString.isEmpty() && !rawFsdMessage.containsString(m_filterString)) { return; }
+        if (!m_filterPacketType.isEmpty() && !rawFsdMessage.isPacketType(m_filterPacketType))
+        {
+            return;
+        }
+        if (!m_filterString.isEmpty() && !rawFsdMessage.containsString(m_filterString))
+        {
+            return;
+        }
         ui->pte_RawFsdMessages->appendPlainText(rawFsdMessageToString(rawFsdMessage));
     }
 

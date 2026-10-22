@@ -41,7 +41,10 @@ namespace swift::gui::views
     {
         const QString file = CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrixFile(
             m_models, CGuiApplication::getTemporaryDirectory());
-        if (file.isEmpty()) { return; }
+        if (file.isEmpty())
+        {
+            return;
+        }
         QDesktopServices::openUrl(QUrl::fromLocalFile(file));
     }
 } // namespace swift::gui::views

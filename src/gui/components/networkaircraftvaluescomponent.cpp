@@ -23,8 +23,14 @@ namespace swift::gui::components
 
     void CNetworkAircraftValuesComponent::showValues()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
-        if (!sGui->getIContextOwnAircraft() || !sGui->getIContextNetwork()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
+        if (!sGui->getIContextOwnAircraft() || !sGui->getIContextNetwork())
+        {
+            return;
+        }
 
         ui->le_SimModel->setText(sGui->getIContextOwnAircraft()->getOwnAircraft().getModelString());
         const QStringList values = sGui->getIContextNetwork()->getNetworkPresetValues();

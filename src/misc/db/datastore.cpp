@@ -19,7 +19,10 @@ namespace swift::misc::db
     {
         // we check 2 formats, the DB format and the backend object format
         QString timestampString(json.value(prefix % u"lastupdated").toString());
-        if (timestampString.isEmpty()) { timestampString = json.value(prefix % u"tsLastUpdated").toString(); }
+        if (timestampString.isEmpty())
+        {
+            timestampString = json.value(prefix % u"tsLastUpdated").toString();
+        }
         const QDateTime ts(CDatastoreUtility::parseTimestamp(timestampString));
         this->setUtcTimestamp(ts);
 
@@ -29,13 +32,19 @@ namespace swift::misc::db
 
     QString IDatastoreObjectWithIntegerKey::getDbKeyAsString() const
     {
-        if (m_dbKey < 0) { return {}; }
+        if (m_dbKey < 0)
+        {
+            return {};
+        }
         return QString::number(m_dbKey);
     }
 
     QString IDatastoreObjectWithIntegerKey::getDbKeyAsStringInParentheses(const QString &prefix) const
     {
-        if (m_dbKey < 0) { return {}; }
+        if (m_dbKey < 0)
+        {
+            return {};
+        }
         return prefix % u'(' % QString::number(m_dbKey) % u')';
     }
 
@@ -50,7 +59,10 @@ namespace swift::misc::db
 
     bool IDatastoreObjectWithIntegerKey::matchesDbKeyState(db::DbKeyStateFilter filter) const
     {
-        if (filter == All) { return true; }
+        if (filter == All)
+        {
+            return true;
+        }
         const bool validKey = this->hasValidDbKey();
         return (validKey && filter.testFlag(Valid)) || (!validKey && filter.testFlag(Invalid));
     }
@@ -58,13 +70,19 @@ namespace swift::misc::db
     const CIcon &IDatastoreObjectWithIntegerKey::toDatabaseIcon() const
     {
         static const CIcon empty;
-        if (this->hasValidDbKey()) { return CIcon::iconByIndex(CIcons::StandardIconDatabaseKey16); }
+        if (this->hasValidDbKey())
+        {
+            return CIcon::iconByIndex(CIcons::StandardIconDatabaseKey16);
+        }
         return empty;
     }
 
     int IDatastoreObjectWithIntegerKey::stringToDbKey(const QString &candidate)
     {
-        if (candidate.isEmpty()) { return invalidDbKey(); }
+        if (candidate.isEmpty())
+        {
+            return invalidDbKey();
+        }
         bool ok {};
         int k = candidate.toInt(&ok);
         return ok ? k : invalidDbKey();
@@ -72,7 +90,10 @@ namespace swift::misc::db
 
     QJsonValue IDatastoreObjectWithIntegerKey::getDbKeyAsJsonValue() const
     {
-        if (this->hasValidDbKey()) { return { m_dbKey }; }
+        if (this->hasValidDbKey())
+        {
+            return { m_dbKey };
+        }
         return {};
     }
 
@@ -93,7 +114,10 @@ namespace swift::misc::db
 
     QVariant IDatastoreObjectWithIntegerKey::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -146,34 +170,49 @@ namespace swift::misc::db
 
     bool IDatastoreObjectWithIntegerKey::canHandleIndex(swift::misc::CPropertyIndexRef index)
     {
-        if (ITimestampBased::canHandleIndex(index)) { return true; }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return true;
+        }
         const int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexDbIntegerKey)) && (i < static_cast<int>(IndexEndMarker));
     }
 
     QJsonValue IDatastoreObjectWithStringKey::getDbKeyAsJsonValue() const
     {
-        if (this->hasValidDbKey()) { return { m_dbKey }; }
+        if (this->hasValidDbKey())
+        {
+            return { m_dbKey };
+        }
         static const QJsonValue null;
         return null;
     }
 
     QString IDatastoreObjectWithStringKey::getDbKeyAsStringInParentheses(const QString &prefix) const
     {
-        if (m_dbKey.isEmpty()) { return {}; }
+        if (m_dbKey.isEmpty())
+        {
+            return {};
+        }
         return prefix % '(' % m_dbKey % ')';
     }
 
     bool IDatastoreObjectWithStringKey::matchesDbKeyState(db::DbKeyStateFilter filter) const
     {
-        if (filter == All) { return true; }
+        if (filter == All)
+        {
+            return true;
+        }
         return this->hasValidDbKey() && filter.testFlag(Valid);
     }
 
     const CIcon &IDatastoreObjectWithStringKey::toDatabaseIcon() const
     {
         static const CIcon empty;
-        if (this->hasValidDbKey()) { return CIcon::iconByIndex(CIcons::StandardIconDatabaseKey16); }
+        if (this->hasValidDbKey())
+        {
+            return CIcon::iconByIndex(CIcons::StandardIconDatabaseKey16);
+        }
         return empty;
     }
 
@@ -193,7 +232,10 @@ namespace swift::misc::db
 
     QVariant IDatastoreObjectWithStringKey::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -247,8 +289,14 @@ namespace swift::misc::db
 
     bool IDatastoreObjectWithStringKey::canHandleIndex(CPropertyIndexRef index)
     {
-        if (index.isEmpty()) { return false; }
-        if (ITimestampBased::canHandleIndex(index)) { return true; }
+        if (index.isEmpty())
+        {
+            return false;
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return true;
+        }
         const int i = index.frontCasted<int>();
         return (i >= static_cast<int>(IndexDbStringKey)) && (i < static_cast<int>(IndexEndMarker));
     }

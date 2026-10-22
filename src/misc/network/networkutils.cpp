@@ -40,7 +40,10 @@ namespace swift::misc::network
         const QList<QHostAddress> allAddresses = QNetworkInterface::allAddresses();
         for (const QHostAddress &address : allAddresses)
         {
-            if (address.isNull()) { continue; }
+            if (address.isNull())
+            {
+                continue;
+            }
             if (address.protocol() == QAbstractSocket::IPv4Protocol)
             {
                 const QString a = address.toString();
@@ -53,7 +56,10 @@ namespace swift::misc::network
 
     bool CNetworkUtils::canConnect(const QString &hostAddress, int port, QString &message, int timeoutMs)
     {
-        if (timeoutMs < 0) { timeoutMs = getTimeoutMs(); } // external functions might call with -1
+        if (timeoutMs < 0)
+        {
+            timeoutMs = getTimeoutMs();
+        } // external functions might call with -1
         QTcpSocket socket;
         QSignalMapper mapper;
         QObject::connect(&socket, &QTcpSocket::connected, &mapper, qOverload<>(&QSignalMapper::map));
@@ -111,7 +117,10 @@ namespace swift::misc::network
         const QString host(url.host());
         const QString scheme(url.scheme().toLower());
         int p = url.port();
-        if (p < 0) { p = scheme.contains("https") ? 443 : 80; }
+        if (p < 0)
+        {
+            p = scheme.contains("https") ? 443 : 80;
+        }
         return canConnect(host, p, message, timeoutMs);
     }
 
@@ -149,7 +158,10 @@ namespace swift::misc::network
         Q_ASSERT_X(!serviceUrl.isEmpty(), Q_FUNC_INFO, "missing service URL");
 
         QString url(server);
-        if (!baseUrl.isEmpty()) { url.append("/").append(baseUrl); }
+        if (!baseUrl.isEmpty())
+        {
+            url.append("/").append(baseUrl);
+        }
         url.append("/").append(serviceUrl);
         url.replace("//", "/");
         return protocol + "://" + url;
@@ -217,7 +229,10 @@ namespace swift::misc::network
 
     qint64 CNetworkUtils::requestDuration(const QNetworkReply *nwReply)
     {
-        if (!nwReply) { return -1; }
+        if (!nwReply)
+        {
+            return -1;
+        }
         const QVariant started = nwReply->property("started");
         if (started.isValid() && started.canConvert<qint64>())
         {
@@ -230,33 +245,54 @@ namespace swift::misc::network
 
     int CNetworkUtils::getHttpStatusCode(QNetworkReply *nwReply)
     {
-        if (!nwReply) { return -1; }
+        if (!nwReply)
+        {
+            return -1;
+        }
         const QVariant statusCode = nwReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-        if (!statusCode.isValid()) { return -1; }
+        if (!statusCode.isValid())
+        {
+            return -1;
+        }
         const int status = statusCode.toInt();
         return status;
     }
 
     bool CNetworkUtils::isHttpStatusRedirect(QNetworkReply *nwReply)
     {
-        if (!nwReply) { return false; }
+        if (!nwReply)
+        {
+            return false;
+        }
         const int code = CNetworkUtils::getHttpStatusCode(nwReply);
         return code == 301 || code == 302 || code == 303 || code == 307;
     }
 
     QUrl CNetworkUtils::getHttpRedirectUrl(QNetworkReply *nwReply)
     {
-        if (!nwReply) { return {}; }
+        if (!nwReply)
+        {
+            return {};
+        }
         const QVariant possibleRedirectUrl = nwReply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-        if (!possibleRedirectUrl.isValid()) { return {}; }
+        if (!possibleRedirectUrl.isValid())
+        {
+            return {};
+        }
         QUrl redirectUrl = possibleRedirectUrl.toUrl();
-        if (redirectUrl.isRelative()) { redirectUrl = nwReply->url().resolved(redirectUrl); }
+        if (redirectUrl.isRelative())
+        {
+            redirectUrl = nwReply->url().resolved(redirectUrl);
+        }
         return redirectUrl;
     }
 
     QString CNetworkUtils::removeHtmlPartsFromPhpErrorMessage(const QString &errorMessage)
     {
-        if (errorMessage.isEmpty()) { return errorMessage; }
+        if (errorMessage.isEmpty())
+        {
+            return errorMessage;
+        }
         QString phpError(errorMessage);
         thread_local const QRegularExpression regEx("<[^>]*>");
         return phpError.remove(regEx);
@@ -264,7 +300,10 @@ namespace swift::misc::network
 
     bool CNetworkUtils::looksLikePhpErrorMessage(const QString &errorMessage)
     {
-        if (errorMessage.length() < 50) { return false; }
+        if (errorMessage.length() < 50)
+        {
+            return false;
+        }
         return errorMessage.contains("xdebug", Qt::CaseInsensitive);
     }
 

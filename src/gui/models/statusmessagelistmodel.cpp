@@ -22,13 +22,6 @@ namespace swift::gui::models
         m_sortTieBreakers.push_front(CStatusMessage::IndexMessage);
         m_sortTieBreakers.push_front(CStatusMessage::IndexSeverity);
         this->setMode(Detailed);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "time");
-        (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "severity");
-        (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "type");
-        (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "message");
-        (void)QT_TRANSLATE_NOOP("ViewStatusMessageList", "all categories");
     }
 
     void CStatusMessageListModel::setMode(CStatusMessageListModel::Mode mode, const CStatusMessageList &messages)
@@ -55,7 +48,10 @@ namespace swift::gui::models
 
     bool CStatusMessageListModel::sortedByTimestampOrOrder(const CPropertyIndex &p)
     {
-        if (p.isEmpty()) { return false; }
+        if (p.isEmpty())
+        {
+            return false;
+        }
         const int last = p.indexList().last();
         return IOrderable::isAnyOrderIndex(last) || ITimestampBased::isAnyTimestampIndex(last);
     }
@@ -102,7 +98,10 @@ namespace swift::gui::models
             {
                 this->setSorting(CStatusMessage::IndexOrder, oldOrder);
             }
-            else { this->setSorting(CStatusMessage::IndexUtcTimestamp, oldOrder); }
+            else
+            {
+                this->setSorting(CStatusMessage::IndexUtcTimestamp, oldOrder);
+            }
         }
         else
         {

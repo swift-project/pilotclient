@@ -16,10 +16,16 @@ namespace swift::misc::simulation
     bool CAircraftModelUtilities::mergeWithVPilotData(CAircraftModelList &modelToBeModified,
                                                       const CAircraftModelList &vPilotModels, bool force)
     {
-        if (vPilotModels.isEmpty() || modelToBeModified.isEmpty()) { return false; }
+        if (vPilotModels.isEmpty() || modelToBeModified.isEmpty())
+        {
+            return false;
+        }
         for (CAircraftModel &simModel : modelToBeModified)
         {
-            if (!force && simModel.hasValidAircraftAndAirlineDesignator()) { continue; } // already done
+            if (!force && simModel.hasValidAircraftAndAirlineDesignator())
+            {
+                continue;
+            } // already done
             const CAircraftModel vPilotModel(vPilotModels.findFirstByModelStringOrDefault(simModel.getModelString()));
             if (!vPilotModel.hasValidDbKey())
             {
@@ -32,7 +38,10 @@ namespace swift::misc::simulation
 
     QString CAircraftModelUtilities::createIcaoAirlineAircraftHtmlMatrix(const CAircraftModelList &models)
     {
-        if (models.isEmpty()) { return {}; }
+        if (models.isEmpty())
+        {
+            return {};
+        }
         static const QString emptyDesignator = "----";
         static const QString colorLiveryDesignator = "-C-";
 
@@ -55,8 +64,14 @@ namespace swift::misc::simulation
             const QString airlineIcao(model.getLivery().isColorLivery() ? colorLiveryDesignator :
                                       model.hasAirlineDesignator()      ? model.getAirlineIcaoCodeDesignator() :
                                                                           emptyDesignator);
-            if (airlineModels.contains(airlineIcao)) { airlineModels[airlineIcao].push_back(model); }
-            else { airlineModels.insert(airlineIcao, CAircraftModelList({ model })); }
+            if (airlineModels.contains(airlineIcao))
+            {
+                airlineModels[airlineIcao].push_back(model);
+            }
+            else
+            {
+                airlineModels.insert(airlineIcao, CAircraftModelList({ model }));
+            }
         }
 
         // to HTML
@@ -102,7 +117,10 @@ namespace swift::misc::simulation
                     html += "</div>"
                             "</td>\n";
                 }
-                else { html += "  <td></td>\n"; }
+                else
+                {
+                    html += "  <td></td>\n";
+                }
             }
             html += "</tr>\n";
         }
@@ -115,13 +133,22 @@ namespace swift::misc::simulation
                                                                              const QString &tempDir)
     {
         Q_ASSERT_X(!tempDir.isEmpty(), Q_FUNC_INFO, "Need directory");
-        if (models.isEmpty()) { return {}; }
+        if (models.isEmpty())
+        {
+            return {};
+        }
         const QString html = createIcaoAirlineAircraftHtmlMatrix(models);
-        if (html.isEmpty()) { return {}; }
+        if (html.isEmpty())
+        {
+            return {};
+        }
 
         QDir dir(tempDir);
         SWIFT_VERIFY_X(dir.exists(), Q_FUNC_INFO, "Directory does not exist");
-        if (!dir.exists()) { return {}; }
+        if (!dir.exists())
+        {
+            return {};
+        }
 
         const QString htmlTemplate = CFileUtils::readFileToString(CSwiftDirectories::htmlTemplateFilePath());
         const QString fn("airlineAircraftMatrix.html");

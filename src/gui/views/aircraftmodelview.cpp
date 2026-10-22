@@ -79,28 +79,40 @@ namespace swift::gui::views
 
     int CAircraftModelView::applyToSelected(const CLivery &livery)
     {
-        if (!hasSelection()) { return 0; }
+        if (!hasSelection())
+        {
+            return 0;
+        }
         const int c = this->updateSelected(CVariant::fromValue(livery), CAircraftModel::IndexLivery);
         return c;
     }
 
     int CAircraftModelView::applyToSelected(const CAircraftIcaoCode &icao)
     {
-        if (!hasSelection()) { return 0; }
+        if (!hasSelection())
+        {
+            return 0;
+        }
         const int c = this->updateSelected(CVariant::fromValue(icao), CAircraftModel::IndexAircraftIcaoCode);
         return c;
     }
 
     int CAircraftModelView::applyToSelected(const CDistributor &distributor)
     {
-        if (!hasSelection()) { return 0; }
+        if (!hasSelection())
+        {
+            return 0;
+        }
         const int c = this->updateSelected(CVariant::fromValue(distributor), CAircraftModel::IndexDistributor);
         return c;
     }
 
     int CAircraftModelView::applyToSelected(const CPropertyIndexVariantMap &vm)
     {
-        if (!hasSelection()) { return 0; }
+        if (!hasSelection())
+        {
+            return 0;
+        }
         const int c = this->updateSelected(vm);
         return c;
     }
@@ -137,10 +149,16 @@ namespace swift::gui::views
     int CAircraftModelView::removeModelsWithModelString(const QStringList &modelStrings,
                                                         Qt::CaseSensitivity sensitivity)
     {
-        if (modelStrings.isEmpty()) { return 0; }
+        if (modelStrings.isEmpty())
+        {
+            return 0;
+        }
         CAircraftModelList copy(this->container());
         const int delta = copy.removeModelsWithString(modelStrings, sensitivity);
-        if (delta > 0) { this->updateContainerMaybeAsync(copy); }
+        if (delta > 0)
+        {
+            this->updateContainerMaybeAsync(copy);
+        }
         return delta;
     }
 
@@ -153,17 +171,23 @@ namespace swift::gui::views
     int CAircraftModelView::replaceOrAddModelsWithString(const CAircraftModelList &models,
                                                          Qt::CaseSensitivity sensitivity)
     {
-        if (models.isEmpty()) { return 0; }
+        if (models.isEmpty())
+        {
+            return 0;
+        }
         CAircraftModelList copy(this->container());
         int c = copy.replaceOrAddModelsWithString(models, sensitivity);
-        if (c == 0) { return 0; }
+        if (c == 0)
+        {
+            return 0;
+        }
         this->updateContainerMaybeAsync(copy);
         return c;
     }
 
-    void CAircraftModelView::setHighlightModelStrings(const QStringList &highlightModels)
+    void CAircraftModelView::setHighlightModelStrings(const QStringList &highlightModelsStrings)
     {
-        this->derivedModel()->setHighlightModelStrings(highlightModels);
+        this->derivedModel()->setHighlightModelStrings(highlightModelsStrings);
     }
 
     void CAircraftModelView::setHighlightModelsForInvalidModels()
@@ -183,9 +207,9 @@ namespace swift::gui::views
         }
     }
 
-    void CAircraftModelView::setHighlightModels(const CAircraftModelList &highlightModels)
+    void CAircraftModelView::setHighlightModels(const CAircraftModelList &highlightModelsList)
     {
-        this->derivedModel()->setHighlightModels(highlightModels);
+        this->derivedModel()->setHighlightModels(highlightModelsList);
     }
 
     void CAircraftModelView::setHighlight(bool highlight) { this->derivedModel()->setHighlight(highlight); }
@@ -210,10 +234,19 @@ namespace swift::gui::views
             COrderableViewWithDbObjects::dropEvent(event);
             return;
         }
-        if (!this->isDropAllowed()) { return; }
-        if (!event) { return; }
+        if (!this->isDropAllowed())
+        {
+            return;
+        }
+        if (!event)
+        {
+            return;
+        }
         const QMimeData *mime = event->mimeData();
-        if (!mime) { return; }
+        if (!mime)
+        {
+            return;
+        }
 
         if (CGuiUtility::hasSwiftVariantMimeType(mime))
         {
@@ -223,7 +256,10 @@ namespace swift::gui::views
                 if (valueVariant.canConvert<CAircraftModel>())
                 {
                     const auto model = valueVariant.value<CAircraftModel>();
-                    if (!model.hasModelString()) { return; }
+                    if (!model.hasModelString())
+                    {
+                        return;
+                    }
                     const CAircraftModelList models({ model });
                     this->derivedModel()->replaceOrAddByModelString(models);
                     return;
@@ -231,74 +267,119 @@ namespace swift::gui::views
                 else if (valueVariant.canConvert<CAircraftModelList>())
                 {
                     const auto models(valueVariant.value<CAircraftModelList>());
-                    if (models.isEmpty()) { return; }
+                    if (models.isEmpty())
+                    {
+                        return;
+                    }
                     this->derivedModel()->replaceOrAddByModelString(models);
                     return;
                 }
 
                 // only for selected members
-                if (!this->hasSelection()) { return; }
+                if (!this->hasSelection())
+                {
+                    return;
+                }
                 if (valueVariant.canConvert<CAircraftIcaoCode>())
                 {
                     const auto icao = valueVariant.value<CAircraftIcaoCode>();
-                    if (icao.validate().hasErrorMessages()) { return; }
+                    if (icao.validate().hasErrorMessages())
+                    {
+                        return;
+                    }
                     this->applyToSelected(icao);
                 }
                 else if (valueVariant.canConvert<CAircraftIcaoCodeList>())
                 {
                     const auto icaos(valueVariant.value<CAircraftIcaoCodeList>());
-                    if (icaos.size() != 1) { return; }
+                    if (icaos.size() != 1)
+                    {
+                        return;
+                    }
                     const CAircraftIcaoCode icao = icaos.front();
-                    if (icao.validate().hasErrorMessages()) { return; }
+                    if (icao.validate().hasErrorMessages())
+                    {
+                        return;
+                    }
                     this->applyToSelected(icao);
                 }
                 else if (valueVariant.canConvert<CLivery>())
                 {
                     const auto livery = valueVariant.value<CLivery>();
-                    if (livery.validate().hasErrorMessages()) { return; }
+                    if (livery.validate().hasErrorMessages())
+                    {
+                        return;
+                    }
                     this->applyToSelected(livery);
                 }
                 else if (valueVariant.canConvert<CLiveryList>())
                 {
                     const auto liveries(valueVariant.value<CLiveryList>());
-                    if (liveries.size() != 1) { return; }
+                    if (liveries.size() != 1)
+                    {
+                        return;
+                    }
                     const CLivery livery = liveries.front();
-                    if (livery.validate().hasErrorMessages()) { return; }
+                    if (livery.validate().hasErrorMessages())
+                    {
+                        return;
+                    }
                     this->applyToSelected(livery);
                 }
                 else if (valueVariant.canConvert<CDistributor>())
                 {
                     const auto distributor = valueVariant.value<CDistributor>();
-                    if (distributor.validate().hasErrorMessages()) { return; }
+                    if (distributor.validate().hasErrorMessages())
+                    {
+                        return;
+                    }
                     this->applyToSelected(distributor);
                 }
                 else if (valueVariant.canConvert<CDistributorList>())
                 {
                     const auto distributors(valueVariant.value<CDistributorList>());
-                    if (distributors.size() != 1) { return; }
+                    if (distributors.size() != 1)
+                    {
+                        return;
+                    }
                     const CDistributor distributor = distributors.front();
-                    if (distributor.validate().hasErrorMessages()) { return; }
+                    if (distributor.validate().hasErrorMessages())
+                    {
+                        return;
+                    }
                     this->applyToSelected(distributor);
                 }
                 else if (valueVariant.canConvert<CAirlineIcaoCode>())
                 {
                     const auto airline = valueVariant.value<CAirlineIcaoCode>();
-                    if (airline.validate().hasErrorMessages()) { return; }
+                    if (airline.validate().hasErrorMessages())
+                    {
+                        return;
+                    }
                     emit requestHandlingOfStashDrop(
                         airline); // I need to convert to stanard livery, which I can`t do here
                 }
                 else if (valueVariant.canConvert<CAirlineIcaoCodeList>())
                 {
                     const auto airlines(valueVariant.value<CAirlineIcaoCodeList>());
-                    if (airlines.size() != 1) { return; }
+                    if (airlines.size() != 1)
+                    {
+                        return;
+                    }
                     const CAirlineIcaoCode airline = airlines.front();
-                    if (airline.validate().hasErrorMessages()) { return; }
+                    if (airline.validate().hasErrorMessages())
+                    {
+                        return;
+                    }
                     emit requestHandlingOfStashDrop(
                         airline); // I need to convert to stanard livery, which I can`t do here
                 }
             }
         }
-        else { CViewBase::dropEvent(event); }
+        else
+        {
+            CViewBase::dropEvent(event);
+        }
     }
 
     void CAircraftModelView::customMenu(CMenuActions &menuActions)
@@ -381,7 +462,10 @@ namespace swift::gui::views
             menuActions.addActions(initMenuActions(CViewBaseNonTemplate::MenuDisableModelsTemp));
         }
 
-        if (addStashMenu) { menuActions.addMenuStash(); }
+        if (addStashMenu)
+        {
+            menuActions.addMenuStash();
+        }
 
         // base class menus
         COrderableViewWithDbObjects::customMenu(menuActions);
@@ -389,12 +473,21 @@ namespace swift::gui::views
 
     CStatusMessage CAircraftModelView::modifyLoadedJsonData(CAircraftModelList &models) const
     {
-        if (m_correspondingSimulator.isNoSimulator()) { return {}; }
-        if (models.isEmpty()) { return { this, CStatusMessage::SeverityDebug, u"Empty models", true }; }
+        if (m_correspondingSimulator.isNoSimulator())
+        {
+            return {};
+        }
+        if (models.isEmpty())
+        {
+            return { this, CStatusMessage::SeverityDebug, u"Empty models", true };
+        }
 
         // multiple sims with same count
         const int removed = models.removeIfNotMatchingSimulator(m_correspondingSimulator);
-        if (removed < 1) { return {}; }
+        if (removed < 1)
+        {
+            return {};
+        }
         return CStatusMessage(this, CStatusMessage::SeverityWarning, u"Reduced by %1 model(s) to only use %2 models",
                               true)
                << removed << m_correspondingSimulator.toQString(true);
@@ -402,7 +495,10 @@ namespace swift::gui::views
 
     CStatusMessage CAircraftModelView::validateLoadedJsonData(const CAircraftModelList &models) const
     {
-        if (models.isEmpty()) { return COrderableViewWithDbObjects::validateLoadedJsonData(models); }
+        if (models.isEmpty())
+        {
+            return COrderableViewWithDbObjects::validateLoadedJsonData(models);
+        }
         if (m_correspondingSimulator.isNoSimulator())
         {
             return COrderableViewWithDbObjects::validateLoadedJsonData(models);
@@ -418,8 +514,14 @@ namespace swift::gui::views
 
     void CAircraftModelView::jsonLoadedAndModelUpdated(const CAircraftModelList &models)
     {
-        if (models.isEmpty()) { emit this->jsonModelsForSimulatorLoaded(CSimulatorInfo()); }
-        else { emit this->jsonModelsForSimulatorLoaded(models.simulatorsWithMaxEntries()); }
+        if (models.isEmpty())
+        {
+            emit this->jsonModelsForSimulatorLoaded(CSimulatorInfo());
+        }
+        else
+        {
+            emit this->jsonModelsForSimulatorLoaded(models.simulatorsWithMaxEntries());
+        }
     }
 
     void CAircraftModelView::toggleHighlightStashedModels()
@@ -439,20 +541,38 @@ namespace swift::gui::views
 
     void CAircraftModelView::requestedStash()
     {
-        if (!m_menus.testFlag(MenuCanStashModels)) { return; }
-        if (!this->hasSelection()) { return; }
+        if (!m_menus.testFlag(MenuCanStashModels))
+        {
+            return;
+        }
+        if (!this->hasSelection())
+        {
+            return;
+        }
         const CAircraftModelList models(this->selectedObjects());
         emit this->requestStash(models);
-        if (m_stashingClearsSelection) { this->clearSelection(); }
+        if (m_stashingClearsSelection)
+        {
+            this->clearSelection();
+        }
         sGui->displayInStatusBar(
             CStatusMessage(CStatusMessage::SeverityInfo, u"Stashed " % models.getModelStringList(true).join(" ")));
     }
 
     void CAircraftModelView::requestTempDisable()
     {
-        if (!m_menus.testFlag(MenuDisableModelsTemp)) { return; }
-        if (!sGui || sGui->isShuttingDown()) { return; }
-        if (!this->hasSelection()) { return; }
+        if (!m_menus.testFlag(MenuDisableModelsTemp))
+        {
+            return;
+        }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
+        if (!this->hasSelection())
+        {
+            return;
+        }
 
         const CAircraftModelList selectedModels(this->selectedObjects());
         sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo,
@@ -462,14 +582,20 @@ namespace swift::gui::views
 
     void CAircraftModelView::displayModelStatisticsDialog()
     {
-        if (!m_statisticsDialog) { m_statisticsDialog = new CAircraftModelStatisticsDialog(this); }
+        if (!m_statisticsDialog)
+        {
+            m_statisticsDialog = new CAircraftModelStatisticsDialog(this);
+        }
         m_statisticsDialog->analyzeModels(this->container());
         m_statisticsDialog->exec();
     }
 
     void CAircraftModelView::displayModelValidationDialog()
     {
-        if (!m_fileValidationDialog) { m_fileValidationDialog = new CAircraftModelValidationDialog(this); }
+        if (!m_fileValidationDialog)
+        {
+            m_fileValidationDialog = new CAircraftModelValidationDialog(this);
+        }
         m_fileValidationDialog->setModels(this->selectedObjects(), m_correspondingSimulator,
                                           m_correspondingSimulatorDir);
         m_fileValidationDialog->triggerValidation(1000);

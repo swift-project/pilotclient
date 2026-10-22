@@ -48,12 +48,5 @@ namespace swift::gui::models
         // default sort order
         this->setSortColumnByPropertyIndex(CAirlineIcaoCode::IndexAirlineDesignator);
         m_sortOrder = Qt::AscendingOrder;
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ModelAirlineIcaoList", "ICAO");
-        (void)QT_TRANSLATE_NOOP("ModelAirlineIcaoList", "operating");
-        (void)QT_TRANSLATE_NOOP("ModelAirlineIcaoList", "name");
-        (void)QT_TRANSLATE_NOOP("ModelAirlineIcaoList", "country");
-        (void)QT_TRANSLATE_NOOP("ModelAirlineIcaoList", "changed");
     }
 } // namespace swift::gui::models

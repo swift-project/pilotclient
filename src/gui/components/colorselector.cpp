@@ -55,7 +55,10 @@ namespace swift::gui::components
 
     void CColorSelector::setColor(const swift::misc::CRgbColor &color)
     {
-        if (color == m_lastColor) { return; }
+        if (color == m_lastColor)
+        {
+            return;
+        }
         if (!color.isValid())
         {
             this->clear();
@@ -93,14 +96,20 @@ namespace swift::gui::components
 
     void CColorSelector::dragEnterEvent(QDragEnterEvent *event)
     {
-        if (!event) { return; }
+        if (!event)
+        {
+            return;
+        }
         setBackgroundRole(QPalette::Highlight);
         event->acceptProposedAction();
     }
 
     void CColorSelector::dragMoveEvent(QDragMoveEvent *event)
     {
-        if (!event) { return; }
+        if (!event)
+        {
+            return;
+        }
         event->acceptProposedAction();
     }
 
@@ -108,14 +117,23 @@ namespace swift::gui::components
 
     void CColorSelector::dropEvent(QDropEvent *event)
     {
-        if (!event) { return; }
+        if (!event)
+        {
+            return;
+        }
         const QMimeData *mime = event->mimeData();
-        if (!mime) { return; }
+        if (!mime)
+        {
+            return;
+        }
 
         if (mime->hasColor())
         {
             const auto color = qvariant_cast<QColor>(event->mimeData()->colorData());
-            if (!color.isValid()) { return; }
+            if (!color.isValid())
+            {
+                return;
+            }
             this->setColor(color);
         }
         else if (CGuiUtility::hasSwiftVariantMimeType(mime))
@@ -126,13 +144,19 @@ namespace swift::gui::components
                 if (valueVariant.canConvert<CRgbColor>())
                 {
                     const auto rgb(valueVariant.value<CRgbColor>());
-                    if (!rgb.isValid()) { return; }
+                    if (!rgb.isValid())
+                    {
+                        return;
+                    }
                     this->setColor(rgb);
                 }
                 else if (valueVariant.canConvert<QColor>())
                 {
                     const auto qColor(valueVariant.value<QColor>());
-                    if (!qColor.isValid()) { return; }
+                    if (!qColor.isValid())
+                    {
+                        return;
+                    }
                     this->setColor(qColor);
                 }
             }
@@ -140,12 +164,18 @@ namespace swift::gui::components
         else if (mime->hasText())
         {
             const QString t = mime->text();
-            if (t.isEmpty()) { return; }
+            if (t.isEmpty())
+            {
+                return;
+            }
             if (!t.contains("{"))
             {
                 // we assume a color string, not an object (because there are no {})
                 const CRgbColor c(t);
-                if (!c.isValid()) { return; }
+                if (!c.isValid())
+                {
+                    return;
+                }
                 this->setColor(c);
             }
         }
@@ -153,9 +183,15 @@ namespace swift::gui::components
 
     void CColorSelector::mousePressEvent(QMouseEvent *event)
     {
-        if (!event || event->button() != Qt::LeftButton) { QFrame::mousePressEvent(event); }
+        if (!event || event->button() != Qt::LeftButton)
+        {
+            QFrame::mousePressEvent(event);
+        }
         const CRgbColor c(this->getColor());
-        if (!c.isValid()) { return; }
+        if (!c.isValid())
+        {
+            return;
+        }
 
         auto *drag = new QDrag(this);
         auto *mimeData = new QMimeData;
@@ -171,28 +207,46 @@ namespace swift::gui::components
     void CColorSelector::colorDialog()
     {
         QColor q = this->getColor().toQColor();
-        if (!q.isValid()) { q = m_lastColor.toQColor(); }
+        if (!q.isValid())
+        {
+            q = m_lastColor.toQColor();
+        }
         QColor newColor = QColorDialog::getColor(q, this, "Color picker");
-        if (!newColor.isValid()) { return; }
+        if (!newColor.isValid())
+        {
+            return;
+        }
         this->setColor(newColor);
     }
 
     void CColorSelector::onReturnPressed()
     {
         const CRgbColor color = this->getColor();
-        if (color.isValid()) { this->setColor(color); }
+        if (color.isValid())
+        {
+            this->setColor(color);
+        }
     }
 
     void CColorSelector::setColorByName(const QString &colorName)
     {
-        if (colorName.isEmpty()) { return; }
+        if (colorName.isEmpty())
+        {
+            return;
+        }
         const CRgbColor c(colorName, true);
-        if (c.isValid()) { this->setColor(c); }
+        if (c.isValid())
+        {
+            this->setColor(c);
+        }
     }
 
     void CColorSelector::resetToLastValidColor()
     {
-        if (!m_lastColor.isValid()) { return; }
+        if (!m_lastColor.isValid())
+        {
+            return;
+        }
         this->setColor(m_lastColor);
     }
 } // namespace swift::gui::components

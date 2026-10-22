@@ -24,14 +24,5 @@ namespace swift::gui::models
         this->m_columns.addColumn(CColumn("same p.", "same process", CIdentifier::IndexIsFromSameProcess,
                                           new CBoolIconFormatter("same process", "other process")));
         this->m_columns.addColumn(CColumn::standardString("m.id", "machine id", CIdentifier::IndexMachineIdBase64));
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ModelIdentifierList", "name");
-        (void)QT_TRANSLATE_NOOP("ModelIdentifierList", "machine");
-        (void)QT_TRANSLATE_NOOP("ModelIdentifierList", "process");
-        (void)QT_TRANSLATE_NOOP("ModelIdentifierList", "p.id");
-        (void)QT_TRANSLATE_NOOP("ModelIdentifierList", "m.id");
-        (void)QT_TRANSLATE_NOOP("ModelIdentifierList", "lcl m.");
-        (void)QT_TRANSLATE_NOOP("ModelIdentifierList", "same p.");
     }
 } // namespace swift::gui::models

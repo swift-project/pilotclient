@@ -101,14 +101,20 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::setFilterWidgetImpl(QWidget *filterWidget)
     {
-        if (filterWidget == m_filterWidget) { return; }
+        if (filterWidget == m_filterWidget)
+        {
+            return;
+        }
 
         // dialog or filter widget
         if (m_filterWidget)
         {
             disconnect(m_filterWidget);
             this->menuRemoveItems(MenuFilter);
-            if (m_filterWidget->parent() == this) { m_filterWidget->deleteLater(); }
+            if (m_filterWidget->parent() == this)
+            {
+                m_filterWidget->deleteLater();
+            }
             m_filterWidget = nullptr;
         }
 
@@ -121,7 +127,10 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::setFilterDialog(CFilterDialog *filterDialog)
     {
-        if (filterDialog == m_filterWidget) { return; }
+        if (filterDialog == m_filterWidget)
+        {
+            return;
+        }
         this->setFilterWidgetImpl(filterDialog);
         if (filterDialog)
         {
@@ -134,7 +143,10 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::setFilterWidget(CFilterWidget *filterWidget)
     {
-        if (filterWidget == m_filterWidget) { return; }
+        if (filterWidget == m_filterWidget)
+        {
+            return;
+        }
         this->setFilterWidgetImpl(filterWidget);
         if (filterWidget)
         {
@@ -157,7 +169,10 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::setSelectionModel(QItemSelectionModel *model)
     {
-        if (this->selectionModel()) { disconnect(this->selectionModel()); }
+        if (this->selectionModel())
+        {
+            disconnect(this->selectionModel());
+        }
         QTableView::setSelectionModel(model);
         if (this->selectionModel())
         {
@@ -206,7 +221,10 @@ namespace swift::gui::views
 
     CMenuActions CViewBaseNonTemplate::initMenuActions(CViewBaseNonTemplate::MenuFlag menu)
     {
-        if (m_menuFlagActions.contains(menu)) { return m_menuFlagActions.value(menu); }
+        if (m_menuFlagActions.contains(menu))
+        {
+            return m_menuFlagActions.value(menu);
+        }
 
         CMenuActions ma;
         switch (menu)
@@ -319,7 +337,10 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::settingsChanged()
     {
-        if (!this->allowsMultipleSelectedRows()) { return; }
+        if (!this->allowsMultipleSelectedRows())
+        {
+            return;
+        }
         const CGeneralGuiSettings settings = m_guiSettings.getThreadLocal();
         m_originalSelectionMode = settings.getPreferredSelection();
         if (this->isCurrentlyAllowingMultipleRowSelections())
@@ -330,10 +351,16 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::rememberLastJsonDirectory(const QString &selectedFileOrDir)
     {
-        if (selectedFileOrDir.isEmpty()) { return; }
+        if (selectedFileOrDir.isEmpty())
+        {
+            return;
+        }
         const QString dir = CDirectories::fileNameToDirectory(selectedFileOrDir);
         QDir d(dir);
-        if (!d.exists()) { return; }
+        if (!d.exists())
+        {
+            return;
+        }
 
         // existing dir
         CDirectories directories = m_dirSettings.get();
@@ -350,20 +377,35 @@ namespace swift::gui::views
 
     components::CTextEditDialog *CViewBaseNonTemplate::textEditDialog()
     {
-        if (!m_textEditDialog) { m_textEditDialog = new CTextEditDialog(this); }
+        if (!m_textEditDialog)
+        {
+            m_textEditDialog = new CTextEditDialog(this);
+        }
         return m_textEditDialog;
     }
 
     void CViewBaseNonTemplate::customMenu(CMenuActions &menuActions)
     {
         // delegate?
-        if (m_menu) { m_menu->customMenu(menuActions); }
+        if (m_menu)
+        {
+            m_menu->customMenu(menuActions);
+        }
 
         // standard view menus
-        if (m_menus.testFlag(MenuRefresh)) { menuActions.addActions(this->initMenuActions(MenuRefresh)); }
-        if (m_menus.testFlag(MenuBackend)) { menuActions.addActions(this->initMenuActions(MenuBackend)); }
+        if (m_menus.testFlag(MenuRefresh))
+        {
+            menuActions.addActions(this->initMenuActions(MenuRefresh));
+        }
+        if (m_menus.testFlag(MenuBackend))
+        {
+            menuActions.addActions(this->initMenuActions(MenuBackend));
+        }
 
-        if (m_menus.testFlag(MenuClear)) { menuActions.addActions(this->initMenuActions(MenuClear)); }
+        if (m_menus.testFlag(MenuClear))
+        {
+            menuActions.addActions(this->initMenuActions(MenuClear));
+        }
         if (m_menus.testFlag(MenuDisplayAutomatically))
         {
             // here I expect only one action
@@ -372,12 +414,24 @@ namespace swift::gui::views
         }
         if (m_menus.testFlag(MenuRemoveSelectedRows))
         {
-            if (this->hasSelection()) { menuActions.addActions(this->initMenuActions(MenuRemoveSelectedRows)); }
+            if (this->hasSelection())
+            {
+                menuActions.addActions(this->initMenuActions(MenuRemoveSelectedRows));
+            }
         }
 
-        if (m_menus.testFlag(MenuCopy)) { menuActions.addActions(this->initMenuActions(MenuCopy)); }
-        if (m_menus.testFlag(MenuCut)) { menuActions.addActions(this->initMenuActions(MenuCut)); }
-        if (m_menus.testFlag(MenuPaste)) { menuActions.addActions(this->initMenuActions(MenuPaste)); }
+        if (m_menus.testFlag(MenuCopy))
+        {
+            menuActions.addActions(this->initMenuActions(MenuCopy));
+        }
+        if (m_menus.testFlag(MenuCut))
+        {
+            menuActions.addActions(this->initMenuActions(MenuCut));
+        }
+        if (m_menus.testFlag(MenuPaste))
+        {
+            menuActions.addActions(this->initMenuActions(MenuPaste));
+        }
         if (m_menus.testFlag(MenuFont) && m_fontMenu)
         {
             menuActions.addActions(m_fontMenu->getActions(), CMenuAction::pathFont());
@@ -428,8 +482,14 @@ namespace swift::gui::views
         }
 
         // load/save
-        if (m_menus.testFlag(MenuLoad)) { menuActions.addActions(this->initMenuActions(MenuLoad)); }
-        if (m_menus.testFlag(MenuSave) && !isEmpty()) { menuActions.addActions(this->initMenuActions(MenuSave)); }
+        if (m_menus.testFlag(MenuLoad))
+        {
+            menuActions.addActions(this->initMenuActions(MenuLoad));
+        }
+        if (m_menus.testFlag(MenuSave) && !isEmpty())
+        {
+            menuActions.addActions(this->initMenuActions(MenuSave));
+        }
 
         // resizing
         menuActions.addAction(
@@ -529,7 +589,10 @@ namespace swift::gui::views
         for (int r = 0; r < rows; r++)
         {
             const QModelIndex mi = this->model()->index(r, 0);
-            if (selected.contains(mi)) { continue; }
+            if (selected.contains(mi))
+            {
+                continue;
+            }
             unselected.push_back(mi);
         }
         return unselected;
@@ -537,20 +600,29 @@ namespace swift::gui::views
 
     int CViewBaseNonTemplate::selectRows(const QSet<int> &rows)
     {
-        if (!this->selectionModel()) { return 0; }
+        if (!this->selectionModel())
+        {
+            return 0;
+        }
 
         // multiple times faster than multiple this->selectRow()
         this->clearSelection();
         QItemSelection selectedItems;
         const int columns = this->model()->columnCount() - 1;
-        for (int r : rows) { selectedItems.select(this->model()->index(r, 0), this->model()->index(r, columns)); }
+        for (int r : rows)
+        {
+            selectedItems.select(this->model()->index(r, 0), this->model()->index(r, columns));
+        }
         this->selectionModel()->select(selectedItems, QItemSelectionModel::Select);
         return selectedItems.size();
     }
 
     int CViewBaseNonTemplate::selectedRowCount() const
     {
-        if (!this->hasSelection()) { return 0; }
+        if (!this->hasSelection())
+        {
+            return 0;
+        }
         return this->selectedRows().count();
     }
 
@@ -590,7 +662,10 @@ namespace swift::gui::views
         // from the UI builder
         const QPointer<CViewBaseNonTemplate> guard(this);
         QTimer::singleShot(500, this, [=, this]() {
-            if (!guard) { return; }
+            if (!guard)
+            {
+                return;
+            }
             CViewBaseNonTemplate::settingsChanged();
         });
     }
@@ -610,10 +685,19 @@ namespace swift::gui::views
         if (name.isEmpty())
         {
             // create a name
-            if (this->getDockWidgetInfoArea()) { name = this->getDockWidgetInfoArea()->windowTitle(); }
-            else { name = this->metaObject()->className(); }
+            if (this->getDockWidgetInfoArea())
+            {
+                name = this->getDockWidgetInfoArea()->windowTitle();
+            }
+            else
+            {
+                name = this->metaObject()->className();
+            }
         }
-        if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive)) { name += CFileUtils::jsonAppendix(); }
+        if (!name.endsWith(CFileUtils::jsonAppendix(), Qt::CaseInsensitive))
+        {
+            name += CFileUtils::jsonAppendix();
+        }
         return CFileUtils::appendFilePaths(dir, name);
     }
 
@@ -622,37 +706,70 @@ namespace swift::gui::views
     void CViewBaseNonTemplate::menuAddItems(Menu menusToAdd)
     {
         m_menus |= menusToAdd;
-        if (menusToAdd.testFlag(MenuRemoveSelectedRows)) { m_enableDeleteSelectedRows = true; }
+        if (menusToAdd.testFlag(MenuRemoveSelectedRows))
+        {
+            m_enableDeleteSelectedRows = true;
+        }
     }
 
     void CViewBaseNonTemplate::displayFilterDialog()
     {
-        if (!m_menus.testFlag(MenuFilter)) { return; }
-        if (!m_filterWidget) { return; }
+        if (!m_menus.testFlag(MenuFilter))
+        {
+            return;
+        }
+        if (!m_filterWidget)
+        {
+            return;
+        }
         m_filterWidget->show();
     }
 
     void CViewBaseNonTemplate::loadJsonAction()
     {
-        if (!m_menus.testFlag(MenuLoad)) { return; }
+        if (!m_menus.testFlag(MenuLoad))
+        {
+            return;
+        }
         const CStatusMessage m = this->loadJson();
-        if (!m.isEmpty()) { CLogMessage::preformatted(m); }
+        if (!m.isEmpty())
+        {
+            CLogMessage::preformatted(m);
+        }
     }
 
     void CViewBaseNonTemplate::saveJsonAction()
     {
-        if (this->isEmpty()) { return; }
-        if (!m_menus.testFlag(MenuSave)) { return; }
+        if (this->isEmpty())
+        {
+            return;
+        }
+        if (!m_menus.testFlag(MenuSave))
+        {
+            return;
+        }
         const CStatusMessage m = this->saveJson(false);
-        if (!m.isEmpty()) { CLogMessage::preformatted(m); }
+        if (!m.isEmpty())
+        {
+            CLogMessage::preformatted(m);
+        }
     }
 
     void CViewBaseNonTemplate::saveSelectedJsonAction()
     {
-        if (this->isEmpty()) { return; }
-        if (!m_menus.testFlag(MenuSave)) { return; }
+        if (this->isEmpty())
+        {
+            return;
+        }
+        if (!m_menus.testFlag(MenuSave))
+        {
+            return;
+        }
         const CStatusMessage m = this->saveJson(true);
-        if (!m.isEmpty()) { CLogMessage::preformatted(m); }
+        if (!m.isEmpty())
+        {
+            CLogMessage::preformatted(m);
+        }
     }
 
     void CViewBaseNonTemplate::triggerReload()
@@ -698,26 +815,44 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::rowsResizeModeBasedOnThreshold(int elements)
     {
-        if (elements > ResizeRowsToContentThreshold) { this->rowsResizeModeToInteractive(); }
-        else { this->rowsResizeModeToContent(); }
+        if (elements > ResizeRowsToContentThreshold)
+        {
+            this->rowsResizeModeToInteractive();
+        }
+        else
+        {
+            this->rowsResizeModeToContent();
+        }
     }
 
     int CViewBaseNonTemplate::showLoadIndicator(int containerSizeDependent, std::chrono::milliseconds timeout,
                                                 bool processEvents)
     {
         using namespace std::chrono_literals;
-        if (!m_enabledLoadIndicator) { return -1; }
-        if (m_showingLoadIndicator) { return -1; }
+        if (!m_enabledLoadIndicator)
+        {
+            return -1;
+        }
+        if (m_showingLoadIndicator)
+        {
+            return -1;
+        }
 
         if (this->hasDockWidgetArea())
         {
-            if (!this->isVisibleWidget()) { return -1; }
+            if (!this->isVisibleWidget())
+            {
+                return -1;
+            }
         }
 
         if (containerSizeDependent >= 0)
         {
             // really with indicator?
-            if (containerSizeDependent < ResizeSubsetThreshold) { return -1; }
+            if (containerSizeDependent < ResizeSubsetThreshold)
+            {
+                return -1;
+            }
         }
         m_showingLoadIndicator = true;
         emit this->loadIndicatorVisibilityChanged(m_showingLoadIndicator);
@@ -738,30 +873,57 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::centerLoadIndicator()
     {
-        if (!m_loadIndicator) { return; }
+        if (!m_loadIndicator)
+        {
+            return;
+        }
         const QPoint middle = this->viewport()->geometry().center();
         m_loadIndicator->centerLoadIndicator(middle);
     }
 
     void CViewBaseNonTemplate::hideLoadIndicator(int loadingId)
     {
-        if (!m_showingLoadIndicator) { return; }
+        if (!m_showingLoadIndicator)
+        {
+            return;
+        }
         m_showingLoadIndicator = false;
         emit this->loadIndicatorVisibilityChanged(m_showingLoadIndicator);
-        if (!m_loadIndicator) { return; }
+        if (!m_loadIndicator)
+        {
+            return;
+        }
         m_loadIndicator->stopAnimation(loadingId);
     }
 
     bool CViewBaseNonTemplate::isResizeConditionMet(int containerSize) const
     {
-        if (m_resizeMode == ResizingAlways) { return true; }
-        if (m_resizeMode == PresizeSubset) { return false; }
-        if (m_resizeMode == ResizingOff) { return false; }
-        if (m_resizeMode == ResizingOnce) { return m_resizeCount < 1; }
+        if (m_resizeMode == ResizingAlways)
+        {
+            return true;
+        }
+        if (m_resizeMode == PresizeSubset)
+        {
+            return false;
+        }
+        if (m_resizeMode == ResizingOff)
+        {
+            return false;
+        }
+        if (m_resizeMode == ResizingOnce)
+        {
+            return m_resizeCount < 1;
+        }
         if (m_resizeMode == ResizingAuto)
         {
-            if (reachedResizeThreshold(containerSize)) { return false; }
-            if (m_resizeAutoNthTime < 2) { return true; }
+            if (reachedResizeThreshold(containerSize))
+            {
+                return false;
+            }
+            if (m_resizeAutoNthTime < 2)
+            {
+                return true;
+            }
             return (m_resizeCount % m_resizeAutoNthTime) == 0;
         }
         return false;
@@ -820,14 +982,20 @@ namespace swift::gui::views
         QMenu menu;
         CMenuActions menuActions;
         this->customMenu(menuActions);
-        if (menuActions.isEmpty()) { return; }
+        if (menuActions.isEmpty())
+        {
+            return;
+        }
         menuActions.toQMenu(menu, true);
 
         // Nested dock widget menu
         const CDockWidgetInfoArea *dockWidget = this->getDockWidgetInfoArea();
         if (dockWidget)
         {
-            if (!menu.isEmpty()) { menu.addSeparator(); }
+            if (!menu.isEmpty())
+            {
+                menu.addSeparator();
+            }
             const QString mm = QStringLiteral("Dock widget '%1'").arg(dockWidget->windowTitleOrBackup());
             QMenu *dockWidgetSubMenu = menu.addMenu(CIcons::text16(), mm);
             dockWidget->addToContextMenu(dockWidgetSubMenu);
@@ -847,12 +1015,18 @@ namespace swift::gui::views
             // make sure not use this one here
             this->rowsResizeModeToInteractive();
         }
-        else { this->showVerticalHeader(); }
+        else
+        {
+            this->showVerticalHeader();
+        }
     }
 
     void CViewBaseNonTemplate::toggleWordWrap(bool checked)
     {
-        if (this->wordWrap() == checked) { return; }
+        if (this->wordWrap() == checked)
+        {
+            return;
+        }
         if (checked)
         {
             // menuAddItems()
@@ -864,7 +1038,10 @@ namespace swift::gui::views
     void CViewBaseNonTemplate::toggleAutoDisplay()
     {
         const auto *a = qobject_cast<const QAction *>(QObject::sender());
-        if (!a) { return; }
+        if (!a)
+        {
+            return;
+        }
         Q_ASSERT_X(a->isCheckable(), Q_FUNC_INFO, "object not checkable");
         m_displayAutomatically = a->isChecked();
     }
@@ -885,42 +1062,63 @@ namespace swift::gui::views
 
     void CViewBaseNonTemplate::setExtendedSelection()
     {
-        if (this->allowsMultipleSelectedRows()) { this->setSelectionMode(ExtendedSelection); }
+        if (this->allowsMultipleSelectedRows())
+        {
+            this->setSelectionMode(ExtendedSelection);
+        }
     }
 
     void CViewBaseNonTemplate::setMultiSelection()
     {
-        if (this->allowsMultipleSelectedRows()) { this->setSelectionMode(MultiSelection); }
+        if (this->allowsMultipleSelectedRows())
+        {
+            this->setSelectionMode(MultiSelection);
+        }
     }
 
     void CViewBaseNonTemplate::removeSelectedRowsChecked()
     {
-        if (!m_enableDeleteSelectedRows) { return; }
+        if (!m_enableDeleteSelectedRows)
+        {
+            return;
+        }
         this->removeSelectedRows();
     }
 
     void CViewBaseNonTemplate::dragEnterEvent(QDragEnterEvent *event)
     {
-        if (!event || !this->acceptDrop(event->mimeData())) { return; }
+        if (!event || !this->acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         this->setBackgroundRole(QPalette::Highlight);
         event->acceptProposedAction();
     }
 
     void CViewBaseNonTemplate::dragMoveEvent(QDragMoveEvent *event)
     {
-        if (!event || !this->acceptDrop(event->mimeData())) { return; }
+        if (!event || !this->acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         event->acceptProposedAction();
     }
 
     void CViewBaseNonTemplate::dragLeaveEvent(QDragLeaveEvent *event)
     {
-        if (!event) { return; }
+        if (!event)
+        {
+            return;
+        }
         event->accept();
     }
 
     void CViewBaseNonTemplate::dropEvent(QDropEvent *event)
     {
-        if (!event) { return; }
+        if (!event)
+        {
+            return;
+        }
         QTableView::dropEvent(event);
     }
 

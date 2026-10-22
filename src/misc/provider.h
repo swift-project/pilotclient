@@ -56,8 +56,14 @@ namespace swift::misc
         //! \remark use individual names to disambiguate
         void setProvider(PROVIDER *provider)
         {
-            if (m_provider == provider) { return; }
-            if (m_provider) { m_lastProviderConnections.disconnectAll(); }
+            if (m_provider == provider)
+            {
+                return;
+            }
+            if (m_provider)
+            {
+                m_lastProviderConnections.disconnectAll();
+            }
             m_provider = provider; // new provider
             auto iProvider = dynamic_cast<IProvider *>(provider);
             if (iProvider && iProvider->asQObject())
@@ -82,9 +88,15 @@ namespace swift::misc
         //! Provider was deleted
         virtual void onProviderDestroyed(QObject *obj)
         {
-            if (!m_provider) { return; } // already cleaned relationship
+            if (!m_provider)
+            {
+                return;
+            } // already cleaned relationship
             PROVIDER *provider = qobject_cast<PROVIDER *>(obj); // provider is implemented by a QObject
-            if (provider != m_provider) { return; } // not our business
+            if (provider != m_provider)
+            {
+                return;
+            } // not our business
             m_provider = nullptr;
         }
     };

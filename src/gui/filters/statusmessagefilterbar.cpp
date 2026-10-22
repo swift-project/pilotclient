@@ -79,8 +79,14 @@ namespace swift::gui::filters
 
     CStatusMessage::StatusSeverity CStatusMessageFilterBar::getSelectedSeverity() const
     {
-        if (ui->rb_Error->isChecked()) { return CStatusMessage::SeverityError; }
-        if (ui->rb_Warning->isChecked()) { return CStatusMessage::SeverityWarning; }
+        if (ui->rb_Error->isChecked())
+        {
+            return CStatusMessage::SeverityError;
+        }
+        if (ui->rb_Warning->isChecked())
+        {
+            return CStatusMessage::SeverityWarning;
+        }
         return CStatusMessage::SeverityInfo;
     }
 } // namespace swift::gui::filters

@@ -51,7 +51,10 @@ namespace swift::gui::models
 
     int CActionItem::getRow() const
     {
-        if (m_parentItem) { return m_parentItem->m_childItems.indexOf(const_cast<CActionItem *>(this)); }
+        if (m_parentItem)
+        {
+            return m_parentItem->m_childItems.indexOf(const_cast<CActionItem *>(this));
+        }
         return 0;
     }
 } // namespace swift::gui::models

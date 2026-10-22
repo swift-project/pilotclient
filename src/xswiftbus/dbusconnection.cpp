@@ -27,8 +27,14 @@ namespace XSwiftBus
     CDBusConnection::~CDBusConnection()
     {
         close();
-        if (m_connection) { dispatch(); } // dispatch is virtual, but safe to call in dtor, as it's declared final
-        if (m_dispatcher) { m_dispatcher->remove(this); }
+        if (m_connection)
+        {
+            dispatch();
+        } // dispatch is virtual, but safe to call in dtor, as it's declared final
+        if (m_dispatcher)
+        {
+            m_dispatcher->remove(this);
+        }
     }
 
     bool CDBusConnection::connect(BusType type)
@@ -92,7 +98,10 @@ namespace XSwiftBus
     void CDBusConnection::unregisterDisconnectedCallback(CDBusObject *obj)
     {
         auto it = m_disconnectedCallbacks.find(obj);
-        if (it == m_disconnectedCallbacks.end()) { return; }
+        if (it == m_disconnectedCallbacks.end())
+        {
+            return;
+        }
         m_disconnectedCallbacks.erase(it);
     }
 
@@ -101,7 +110,10 @@ namespace XSwiftBus
                                              const DBusObjectPathVTable &dbusObjectPathVTable)
     {
         (void)interfaceName;
-        if (!m_connection) { return; }
+        if (!m_connection)
+        {
+            return;
+        }
 
         dbus_connection_try_register_object_path(m_connection.get(), objectPath.c_str(), &dbusObjectPathVTable, object,
                                                  nullptr);
@@ -109,14 +121,20 @@ namespace XSwiftBus
 
     void CDBusConnection::sendMessage(const CDBusMessage &message)
     {
-        if (!isConnected()) { return; }
+        if (!isConnected())
+        {
+            return;
+        }
         dbus_uint32_t serial = message.getSerial();
         dbus_connection_send(m_connection.get(), message.m_message, &serial);
     }
 
     void CDBusConnection::close()
     {
-        if (m_connection) { dbus_connection_close(m_connection.get()); }
+        if (m_connection)
+        {
+            dbus_connection_close(m_connection.get());
+        }
     }
 
     void CDBusConnection::dispatch()
@@ -124,14 +142,20 @@ namespace XSwiftBus
         dbus_connection_ref(m_connection.get());
         if (dbus_connection_get_dispatch_status(m_connection.get()) == DBUS_DISPATCH_DATA_REMAINS)
         {
-            while (dbus_connection_dispatch(m_connection.get()) == DBUS_DISPATCH_DATA_REMAINS) {}
+            while (dbus_connection_dispatch(m_connection.get()) == DBUS_DISPATCH_DATA_REMAINS)
+            {
+            }
         }
         dbus_connection_unref(m_connection.get());
     }
 
+    // cppcheck-suppress functionStatic
     void CDBusConnection::setDispatchStatus(DBusConnection *connection, DBusDispatchStatus status)
     {
-        if (dbus_connection_get_is_connected(connection) == FALSE) { return; }
+        if (dbus_connection_get_is_connected(connection) == FALSE)
+        {
+            return;
+        }
 
         switch (status)
         {

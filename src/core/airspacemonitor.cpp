@@ -127,11 +127,20 @@ namespace swift::core
             // thread safe update of m_network
             const QPointer<CAirspaceMonitor> myself(this);
             QTimer::singleShot(0, m_fsdClient, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 if (m_fsdClient)
                 {
-                    if (enableFastPositonUpdates) { m_fsdClient->addInterimPositionReceiver(callsign); }
-                    else { m_fsdClient->removeInterimPositionReceiver(callsign); }
+                    if (enableFastPositonUpdates)
+                    {
+                        m_fsdClient->addInterimPositionReceiver(callsign);
+                    }
+                    else
+                    {
+                        m_fsdClient->removeInterimPositionReceiver(callsign);
+                    }
                 }
             });
         }
@@ -156,7 +165,10 @@ namespace swift::core
         QPointer<CAirspaceMonitor> myself(this);
 
         // use cache, but not for own callsign (always reload)
-        if (m_flightPlanCache.contains(callsign)) { plan = m_flightPlanCache[callsign]; }
+        if (m_flightPlanCache.contains(callsign))
+        {
+            plan = m_flightPlanCache[callsign];
+        }
         const bool ownAircraft = this->getOwnCallsign() == callsign;
         if (ownAircraft || !plan.wasSentOrLoaded() || plan.timeDiffSentOrLoadedMs() > 30 * 1000)
         {
@@ -176,7 +188,10 @@ namespace swift::core
                 {
                     return {};
                 }
-                if (m_flightPlanCache.contains(callsign)) { plan = m_flightPlanCache[callsign]; }
+                if (m_flightPlanCache.contains(callsign))
+                {
+                    plan = m_flightPlanCache[callsign];
+                }
             }
         }
         return plan;
@@ -184,10 +199,16 @@ namespace swift::core
 
     CFlightPlanRemarks CAirspaceMonitor::tryToGetFlightPlanRemarks(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return {}; }
+        if (callsign.isEmpty())
+        {
+            return {};
+        }
 
         // full flight plan's remarks
-        if (m_flightPlanCache.contains(callsign)) { return m_flightPlanCache[callsign].getFlightPlanRemarks(); }
+        if (m_flightPlanCache.contains(callsign))
+        {
+            return m_flightPlanCache[callsign].getFlightPlanRemarks();
+        }
 
         // remarks only
         if (this->supportsVatsimDataFile())
@@ -211,13 +232,19 @@ namespace swift::core
         for (const CAtcStation &station : m_atcStationsOnline)
         {
             CUser user = station.getController();
-            if (!user.hasCallsign()) { user.setCallsign(station.getCallsign()); }
+            if (!user.hasCallsign())
+            {
+                user.setCallsign(station.getCallsign());
+            }
             users.push_back(user);
         }
         for (const CSimulatedAircraft &aircraft : this->getAircraftInRange())
         {
             CUser user = aircraft.getPilot();
-            if (!user.hasCallsign()) { user.setCallsign(aircraft.getCallsign()); }
+            if (!user.hasCallsign())
+            {
+                user.setCallsign(aircraft.getCallsign());
+            }
             users.push_back(user);
         }
         return users;
@@ -226,7 +253,10 @@ namespace swift::core
     CUserList CAirspaceMonitor::getUsersForCallsigns(const CCallsignSet &callsigns) const
     {
         CUserList users;
-        if (callsigns.isEmpty()) { return users; }
+        if (callsigns.isEmpty())
+        {
+            return users;
+        }
         CCallsignSet searchList(callsigns);
 
         // myself, which is not in the lists below
@@ -240,7 +270,10 @@ namespace swift::core
         // do aircraft first, this will handle most callsigns
         for (const CSimulatedAircraft &aircraft : this->getAircraftInRange())
         {
-            if (searchList.isEmpty()) { break; }
+            if (searchList.isEmpty())
+            {
+                break;
+            }
             const CCallsign callsign = aircraft.getCallsign();
             if (searchList.contains(callsign))
             {
@@ -252,7 +285,10 @@ namespace swift::core
 
         for (const CAtcStation &station : m_atcStationsOnline)
         {
-            if (searchList.isEmpty()) { break; }
+            if (searchList.isEmpty())
+            {
+                break;
+            }
             const CCallsign callsign = station.getCallsign();
             if (searchList.contains(callsign))
             {
@@ -272,7 +308,10 @@ namespace swift::core
                 const CUser user(callsign);
                 users.push_back(user);
             }
-            else { users.push_back(usersByCallsign[0]); }
+            else
+            {
+                users.push_back(usersByCallsign[0]);
+            }
         }
         return users;
     }
@@ -280,37 +319,55 @@ namespace swift::core
     CAtcStation CAirspaceMonitor::getAtcStationForComUnit(const CComSystem &comSystem) const
     {
         CAtcStationList stations = m_atcStationsOnline.findIfComUnitTunedInChannelSpacing(comSystem);
-        if (stations.isEmpty()) { return {}; }
+        if (stations.isEmpty())
+        {
+            return {};
+        }
         stations.sortByDistanceToReferencePosition();
         return stations.front();
     }
 
     void CAirspaceMonitor::requestAircraftDataUpdates()
     {
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
         const CSimulatedAircraftList aircraftInRange(this->getAircraftInRange());
         for (const CSimulatedAircraft &aircraft : aircraftInRange)
         {
             // staggered version
             const CCallsign cs(aircraft.getCallsign());
-            if (!m_queryPilot.contains(cs)) { m_queryPilot.enqueue(aircraft.getCallsign()); }
+            if (!m_queryPilot.contains(cs))
+            {
+                m_queryPilot.enqueue(aircraft.getCallsign());
+            }
         }
     }
 
     void CAirspaceMonitor::requestAtisUpdates()
     {
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
         const CAtcStationList stations(this->getAtcStationsOnline());
         for (const CAtcStation &station : stations)
         {
             const CCallsign cs = station.getCallsign();
-            if (!m_queryAtis.contains(cs)) { m_queryAtis.enqueue(cs); }
+            if (!m_queryAtis.contains(cs))
+            {
+                m_queryAtis.enqueue(cs);
+            }
         }
     }
 
     void CAirspaceMonitor::testCreateDummyOnlineAtcStations(int number)
     {
-        if (number < 1) { return; }
+        if (number < 1)
+        {
+            return;
+        }
         m_atcStationsOnline.push_back(CTesting::createAtcStations(number));
         emit this->changedAtcStationsOnline();
     }
@@ -344,25 +401,49 @@ namespace swift::core
     QString CAirspaceMonitor::enumToString(MatchingReadiness r)
     {
         QStringList s;
-        if (r.testFlag(NotReady)) { s << enumFlagToString(NotReady); }
-        if (r.testFlag(ReceivedIcaoCodes)) { s << enumFlagToString(ReceivedIcaoCodes); }
-        if (r.testFlag(ReceivedFsInnPacket)) { s << enumFlagToString(ReceivedFsInnPacket); }
-        if (r.testFlag(ReadyForMatchingSent)) { s << enumFlagToString(ReadyForMatchingSent); }
-        if (r.testFlag(RecursiveCall)) { s << enumFlagToString(RecursiveCall); }
+        if (r.testFlag(NotReady))
+        {
+            s << enumFlagToString(NotReady);
+        }
+        if (r.testFlag(ReceivedIcaoCodes))
+        {
+            s << enumFlagToString(ReceivedIcaoCodes);
+        }
+        if (r.testFlag(ReceivedFsInnPacket))
+        {
+            s << enumFlagToString(ReceivedFsInnPacket);
+        }
+        if (r.testFlag(ReadyForMatchingSent))
+        {
+            s << enumFlagToString(ReadyForMatchingSent);
+        }
+        if (r.testFlag(RecursiveCall))
+        {
+            s << enumFlagToString(RecursiveCall);
+        }
         return s.join(", ");
     }
 
     bool CAirspaceMonitor::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
-        Q_UNUSED(originator;)
-        if (commandLine.isEmpty()) { return false; }
+        Q_UNUSED(originator);
+        if (commandLine.isEmpty())
+        {
+            return false;
+        }
         static const QStringList cmds({ ".fsd" });
         CSimpleCommandParser parser(cmds);
         parser.parse(commandLine);
-        if (!parser.isKnownCommand()) { return false; }
+        if (!parser.isKnownCommand())
+        {
+            return false;
+        }
         if (parser.matchesCommand(".fsd"))
         {
-            if (parser.countParts() < 2) { return false; }
+            if (parser.countParts() < 2)
+            {
+                return false;
+            }
             if (parser.matchesPart(1, "range") && parser.countParts() > 2)
             {
                 const QString r = parser.part(2);
@@ -375,16 +456,25 @@ namespace swift::core
 
     void CAirspaceMonitor::fastProcessing()
     {
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
 
         // only send one query
         const bool send = this->sendNextStaggeredAtisQuery();
-        if (!send) { this->sendNextStaggeredPilotDataQuery(); }
+        if (!send)
+        {
+            this->sendNextStaggeredPilotDataQuery();
+        }
     }
 
     void CAirspaceMonitor::slowProcessing()
     {
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
         this->queryAllOnlineAtcStations();
     }
 
@@ -430,8 +520,14 @@ namespace swift::core
 
     void CAirspaceMonitor::onRealNameReplyReceived(const CCallsign &callsign, const QString &realname)
     {
-        if (!this->isConnectedAndNotShuttingDown() || realname.isEmpty()) { return; }
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
+        if (!this->isConnectedAndNotShuttingDown() || realname.isEmpty())
+        {
+            return;
+        }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices())
+        {
+            return;
+        }
 
         bool wasAtc = false;
         const QString rn = CUser::beautifyRealName(realname);
@@ -461,7 +557,10 @@ namespace swift::core
 
     void CAirspaceMonitor::onCapabilitiesReplyReceived(const CCallsign &callsign, CClient::Capabilities clientCaps)
     {
-        if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) { return; }
+        if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty())
+        {
+            return;
+        }
         const CVoiceCapabilities voiceCaps = sApp->getWebDataServices()->getVoiceCapabilityForCallsign(callsign);
         CPropertyIndexVariantMap vm(CClient::IndexCapabilities, CVariant::fromValue(clientCaps));
         vm.addValue({ CClient::IndexVoiceCapabilities }, voiceCaps);
@@ -476,14 +575,20 @@ namespace swift::core
 
     void CAirspaceMonitor::onServerReplyReceived(const CCallsign &callsign, const QString &server)
     {
-        if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty() || server.isEmpty()) { return; }
+        if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty() || server.isEmpty())
+        {
+            return;
+        }
         const CPropertyIndexVariantMap vm(CClient::IndexServer, server);
         this->updateOrAddClient(callsign, vm);
     }
 
     void CAirspaceMonitor::onFlightPlanReceived(const CCallsign &callsign, const CFlightPlan &flightPlan)
     {
-        if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty()) { return; }
+        if (!this->isConnectedAndNotShuttingDown() || callsign.isEmpty())
+        {
+            return;
+        }
         CFlightPlan plan(flightPlan);
         plan.setWhenLastSentOrLoaded(QDateTime::currentDateTimeUtc());
         m_flightPlanCache.insert(callsign, plan);
@@ -507,7 +612,10 @@ namespace swift::core
 
     void CAirspaceMonitor::removeFromAircraftCachesAndLogs(const CCallsign &callsign)
     {
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
         m_flightPlanCache.remove(callsign);
         m_readiness.remove(callsign);
         this->removeReverseLookupMessages(callsign);
@@ -516,19 +624,31 @@ namespace swift::core
     void CAirspaceMonitor::onReceivedVatsimDataFile()
     {
         Q_ASSERT(CThreadUtils::isInThisThread(this));
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices())
+        {
+            return;
+        }
         CClientList clients(this->getClients()); // copy
         bool changed = false;
         for (auto &client : clients)
         {
-            if (client.hasSpecifiedVoiceCapabilities()) { continue; } // we already have voice caps
+            if (client.hasSpecifiedVoiceCapabilities())
+            {
+                continue;
+            } // we already have voice caps
             const CVoiceCapabilities vc =
                 sApp->getWebDataServices()->getVoiceCapabilityForCallsign(client.getCallsign());
-            if (vc.isUnknown()) { continue; }
+            if (vc.isUnknown())
+            {
+                continue;
+            }
             changed = true;
             client.setVoiceCapabilities(vc);
         }
-        if (!changed) { return; }
+        if (!changed)
+        {
+            return;
+        }
         this->setClients(clients);
     }
 
@@ -541,7 +661,10 @@ namespace swift::core
 
     void CAirspaceMonitor::sendReadyForModelMatching(const CCallsign &callsign, MatchingReadinessFlag rf)
     {
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "missing callsign");
 
         // set flag and init ts
@@ -549,7 +672,10 @@ namespace swift::core
 
         // skip if already sent in the last x seconds
         const qint64 ageMs = readiness.getAgeMs();
-        if (readiness.wasMatchingSent() && readiness.getAgeMs() < MMMaxAgeThresholdMs) { return; }
+        if (readiness.wasMatchingSent() && readiness.getAgeMs() < MMMaxAgeThresholdMs)
+        {
+            return;
+        }
 
         // checking for min. situations ensures the aircraft is stable, can be interpolated ...
         const CSimulatedAircraft remoteAircraft = this->getAircraftInRangeForCallsign(callsign);
@@ -577,7 +703,10 @@ namespace swift::core
 
             const QPointer<CAirspaceMonitor> myself(this);
             QTimer::singleShot(MMCheckAgainMs, this, [=, this]() {
-                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                if (!myself || !sApp || sApp->isShuttingDown())
+                {
+                    return;
+                }
                 if (!this->isAircraftInRange(callsign))
                 {
                     const CStatusMessage m =
@@ -588,7 +717,10 @@ namespace swift::core
                 if (rf != ReceivedFsInnPacket)
                 {
                     // here we call recursively like an FsInn packet was received
-                    if (this->recallFsInnPacket(callsign)) { return; }
+                    if (this->recallFsInnPacket(callsign))
+                    {
+                        return;
+                    }
                 }
 
                 // check again
@@ -628,11 +760,17 @@ namespace swift::core
 
     void CAirspaceMonitor::verifyReceivedIcaoData(const CCallsign &callsign)
     {
-        if (callsign.isEmpty() || !this->isAircraftInRange(callsign)) { return; }
+        if (callsign.isEmpty() || !this->isAircraftInRange(callsign))
+        {
+            return;
+        }
 
         // set flag and init ts
         Readiness &readiness = m_readiness[callsign];
-        if (readiness.wasMatchingSent()) { return; }
+        if (readiness.wasMatchingSent())
+        {
+            return;
+        }
         if (readiness.wasVerified())
         {
             CLogMessage(this).warning(u"Verfied ICAO data of '%1' again, using it as it is! Most likely incomplete "
@@ -655,7 +793,10 @@ namespace swift::core
             const QPointer<CAirspaceMonitor> myself(this);
             QTimer::singleShot(MMVerifyMs, this, [=, this]() {
                 // makes sure we have ICAO data
-                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                if (!myself || !sApp || sApp->isShuttingDown())
+                {
+                    return;
+                }
                 this->verifyReceivedIcaoData(callsign);
             });
             return;
@@ -671,7 +812,10 @@ namespace swift::core
                                                const swift::misc::physical_quantities::CLength &range)
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "wrong thread");
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
 
         const CAtcStationList stationsWithCallsign = m_atcStationsOnline.findByCallsign(callsign);
         if (stationsWithCallsign.isEmpty())
@@ -709,14 +853,20 @@ namespace swift::core
             vm.addValue(CAtcStation::IndexPosition, position);
             vm.addValue(CAtcStation::IndexRange, range);
             const int changed = m_atcStationsOnline.applyIfCallsign(callsign, vm, true);
-            if (changed > 0) { emit this->changedAtcStationsOnline(); }
+            if (changed > 0)
+            {
+                emit this->changedAtcStationsOnline();
+            }
         }
     }
 
     void CAirspaceMonitor::onAtcControllerDisconnected(const CCallsign &callsign)
     {
         Q_ASSERT(CThreadUtils::isInThisThread(this));
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
 
         this->removeClient(callsign);
         if (m_atcStationsOnline.containsCallsign(callsign))
@@ -735,13 +885,19 @@ namespace swift::core
         const bool changedAtis = m_atcStationsOnline.updateIfMessageChanged(atisMessage, callsign, true);
 
         // signal
-        if (changedAtis) { emit this->changedAtisReceived(callsign); }
+        if (changedAtis)
+        {
+            emit this->changedAtisReceived(callsign);
+        }
     }
 
     void CAirspaceMonitor::onAtisLogoffTimeReceived(const CCallsign &callsign, const QString &zuluTime)
     {
         Q_ASSERT(CThreadUtils::isInThisThread(this));
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
 
         if (zuluTime.length() == 5) // for example 2000z
         {
@@ -753,9 +909,15 @@ namespace swift::core
 
             bool ok {};
             const int h = zuluTimeView.left(2).toInt(&ok);
-            if (!ok) { return; }
+            if (!ok)
+            {
+                return;
+            }
             const int m = zuluTimeView.right(2).toInt(&ok);
-            if (!ok) { return; }
+            if (!ok)
+            {
+                return;
+            }
             QDateTime logoffDateTime = QDateTime::currentDateTimeUtc();
             logoffDateTime.setTime(QTime(h, m));
 
@@ -773,8 +935,14 @@ namespace swift::core
         // 1) checking if they are already in the list checks again ATC position which is safe
         // 2) the ATC alike callsign check is guessing
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "not in main thread");
-        if (!callsign.isValid()) { return; } // aircraft OBS, other invalid callsigns
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!callsign.isValid())
+        {
+            return;
+        } // aircraft OBS, other invalid callsigns
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
 
         const bool isAircraft = this->isAircraftInRange(callsign);
         const bool isAtc = m_atcStationsOnline.containsCallsign(callsign);
@@ -842,13 +1010,22 @@ namespace swift::core
                                                const QString &airlineIcaoDesignator, const QString &livery)
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "not in main thread");
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
             SWIFT_VERIFY_X(callsign.isValid(), Q_FUNC_INFO, "invalid callsign");
         }
-        if (!callsign.isValid()) { return; }
-        if (!this->isAircraftInRange(callsign)) { return; } // FSD overload issue, do not do anything if unknown
+        if (!callsign.isValid())
+        {
+            return;
+        }
+        if (!this->isAircraftInRange(callsign))
+        {
+            return;
+        } // FSD overload issue, do not do anything if unknown
 
         const ReverseLookupLogging reverseLookupEnabled = this->isReverseLookupMessagesEnabled();
         CStatusMessageList reverseLookupMessages;
@@ -881,18 +1058,25 @@ namespace swift::core
 
         const DBTripleIds ids = CAircraftModel::parseNetworkLiveryString(liveryString);
         const bool hasAnyId = ids.hasAnyId();
-        if (hasAnyId) { this->markAsSwiftClient(callsign); }
+        if (hasAnyId)
+        {
+            this->markAsSwiftClient(callsign);
+        }
 
         CAircraftModel lookupModel; // result
         const CAircraftModelList modelSet = m_modelSetProvider->getModelSet();
         const CAircraftMatcherSetup setup = m_matchingSettings.get();
-        do {
+        do
+        {
             // directly check model string
             if (!modelString.isEmpty())
             {
                 lookupModel = CAircraftMatcher::reverseLookupModelStringInDB(modelString, callsign,
                                                                              setup.isReverseLookupModelString(), log);
-                if (lookupModel.hasValidDbKey()) { break; } // found by model string
+                if (lookupModel.hasValidDbKey())
+                {
+                    break;
+                } // found by model string
             }
 
             CLivery livery;
@@ -909,11 +1093,17 @@ namespace swift::core
                 if (ids.model >= 0)
                 {
                     lookupModel = CAircraftMatcher::reverseLookupModelId(ids.model, callsign, log);
-                    if (lookupModel.hasValidDbKey()) { break; } // found by model id from livery string
+                    if (lookupModel.hasValidDbKey())
+                    {
+                        break;
+                    } // found by model id from livery string
                 }
 
                 CAircraftMatcher::reverseLookupByIds(ids, aircraftIcao, livery, callsign, log);
-                if (livery.hasValidDbKey()) { airlineIcao = livery.getAirlineIcaoCode(); }
+                if (livery.hasValidDbKey())
+                {
+                    airlineIcao = livery.getAirlineIcaoCode();
+                }
 
                 if (aircraftIcao.hasValidDbKey() && livery.hasValidDbKey())
                 {
@@ -945,7 +1135,10 @@ namespace swift::core
                             .arg(aircraftIcaoString));
                     const CAircraftIcaoCode foundIcao =
                         CAircraftMatcher::searchAmongAirlineAircraft(aircraftIcaoString, airlineIcao, callsign, log);
-                    if (foundIcao.isLoadedFromDb()) { aircraftIcao = foundIcao; }
+                    if (foundIcao.isLoadedFromDb())
+                    {
+                        aircraftIcao = foundIcao;
+                    }
                 }
             }
 
@@ -1018,8 +1211,14 @@ namespace swift::core
                         airlineIcao.setDesignator(airlineIcaoString.isEmpty() ? callsign.getAirlinePrefix() :
                                                                                 airlineIcaoString);
                     }
-                    if (!airlineNameLookup.isEmpty()) { airlineIcao.setName(airlineNameLookup); }
-                    if (!telephonyLookup.isEmpty()) { airlineIcao.setTelephonyDesignator(telephonyLookup); }
+                    if (!airlineNameLookup.isEmpty())
+                    {
+                        airlineIcao.setName(airlineNameLookup);
+                    }
+                    if (!telephonyLookup.isEmpty())
+                    {
+                        airlineIcao.setTelephonyDesignator(telephonyLookup);
+                    }
 
                     // already try to resolve at this stage by a smart lookup with all the filled data from above
                     airlineIcao = CAircraftMatcher::reverseLookupAirlineIcao(airlineIcao, callsign, log);
@@ -1064,7 +1263,10 @@ namespace swift::core
                                                CAirspaceMonitor::getLogCategories());
             }
         }
-        else { CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("No reverse lookup script used")); }
+        else
+        {
+            CCallsign::addLogDetailsToList(log, callsign, QStringLiteral("No reverse lookup script used"));
+        }
 
         // done
         lookupModel.setCallsign(callsign); // set again just in case modified by script
@@ -1076,7 +1278,10 @@ namespace swift::core
         const CCallsign callsign = aircraft.getCallsign();
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign");
 
-        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices()) { return false; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getWebDataServices())
+        {
+            return false;
+        }
 
         CSimulatedAircraft newAircraft(aircraft);
         newAircraft.setRendered(false); // reset rendering
@@ -1093,7 +1298,10 @@ namespace swift::core
             const QPointer<CAirspaceMonitor> myself(this);
             QTimer::singleShot(MMVerifyMs, this, [=, this]() {
                 // makes sure we have ICAO data
-                if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+                if (!myself || !sApp || sApp->isShuttingDown())
+                {
+                    return;
+                }
                 this->verifyReceivedIcaoData(callsign);
             });
 
@@ -1114,17 +1322,29 @@ namespace swift::core
     void CAirspaceMonitor::asyncReInitializeAllAircraft(const CSimulatedAircraftList &aircraft,
                                                         bool readyForModelMatching)
     {
-        if (aircraft.isEmpty()) { return; }
-        if (!sApp || sApp->isShuttingDown()) { return; }
+        if (aircraft.isEmpty())
+        {
+            return;
+        }
+        if (!sApp || sApp->isShuttingDown())
+        {
+            return;
+        }
 
         int c = 1;
         QPointer<CAirspaceMonitor> myself(this);
         for (const CSimulatedAircraft &ac : aircraft)
         {
             QTimer::singleShot(c++ * 25, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 myself->addNewAircraftInRange(ac);
-                if (!readyForModelMatching) { return; }
+                if (!readyForModelMatching)
+                {
+                    return;
+                }
                 const CCallsign cs = ac.getCallsign();
 
                 m_readiness.remove(cs); // cleanup
@@ -1138,14 +1358,23 @@ namespace swift::core
                                               bool skipEqualValues, bool sendSignal)
     {
         const int c = m_atcStationsOnline.applyIfCallsign(callsign, vm, skipEqualValues);
-        if (c > 0 && sendSignal) { emit this->changedAtcStationsOnline(); }
+        if (c > 0 && sendSignal)
+        {
+            emit this->changedAtcStationsOnline();
+        }
         return c;
     }
 
     bool CAirspaceMonitor::handleMaxRange(const CAircraftSituation &situation)
     {
-        if (situation.isNull()) { return false; }
-        if (m_maxDistanceNM < 0) { return true; }
+        if (situation.isNull())
+        {
+            return false;
+        }
+        if (m_maxDistanceNM < 0)
+        {
+            return true;
+        }
         const int distanceNM =
             this->getOwnAircraft().calculateGreatCircleDistance(situation).valueInteger(CLengthUnit::NM());
         if (distanceNM > m_maxDistanceNMHysteresis)
@@ -1158,7 +1387,10 @@ namespace swift::core
 
     bool CAirspaceMonitor::recallFsInnPacket(const CCallsign &callsign)
     {
-        if (!m_tempFsInnPackets.contains(callsign)) { return false; }
+        if (!m_tempFsInnPackets.contains(callsign))
+        {
+            return false;
+        }
         const FsInnPacket packet = m_tempFsInnPackets[callsign];
         m_tempFsInnPackets.remove(callsign);
         this->onCustomFSInnPacketReceived(callsign, packet.airlineIcaoDesignator, packet.aircraftIcaoDesignator,
@@ -1199,7 +1431,10 @@ namespace swift::core
     bool CAirspaceMonitor::extrapolateElevation(CAircraftSituationList &situations,
                                                 const CAircraftSituationChange &change)
     {
-        if (situations.size() < 3) { return false; }
+        if (situations.size() < 3)
+        {
+            return false;
+        }
         // Q_ASSERT_X(situations.m_tsAdjustedSortHint == CAircraftSituationList::AdjustedTimestampLatestFirst,
         // Q_FUNC_INFO, "Need latest first");
         const CAircraftSituation old = situations[1];
@@ -1212,7 +1447,10 @@ namespace swift::core
                                                 const CAircraftSituation &olderSituation,
                                                 const CAircraftSituationChange &oldChange)
     {
-        if (situationToBeUpdated.hasGroundElevation()) { return false; }
+        if (situationToBeUpdated.hasGroundElevation())
+        {
+            return false;
+        }
 
         // if acceptable transfer
         if (oldSituation.transferGroundElevationFromMe(situationToBeUpdated))
@@ -1221,9 +1459,15 @@ namespace swift::core
             // situationToBeUpdated.setGroundElevationInfo(Extrapolated);
             return true;
         }
-        if (oldSituation.isNull() || olderSituation.isNull()) { return false; }
+        if (oldSituation.isNull() || olderSituation.isNull())
+        {
+            return false;
+        }
 
-        if (oldChange.isNull()) { return false; }
+        if (oldChange.isNull())
+        {
+            return false;
+        }
         if (oldChange.isConstOnGround() && oldChange.hasAltitudeDevWithinAllowedRange() &&
             oldChange.hasElevationDevWithinAllowedRange())
         {
@@ -1246,17 +1490,26 @@ namespace swift::core
                                                     const CTransponder &transponder)
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Called in different thread");
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
 
         const CCallsign callsign(situation.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
-        if (this->isCopilotAircraft(callsign)) { return; }
+        if (this->isCopilotAircraft(callsign))
+        {
+            return;
+        }
 
         // range (FSD overload issue)
         const bool validMaxRange = this->handleMaxRange(situation);
         const bool existsInRange = this->isAircraftInRange(callsign); // AFTER valid max.range check!
-        if (!validMaxRange && !existsInRange) { return; } // not valid at all
+        if (!validMaxRange && !existsInRange)
+        {
+            return;
+        } // not valid at all
 
         // update client info
         this->autoAdjustCientGndCapability(situation);
@@ -1296,15 +1549,24 @@ namespace swift::core
     void CAirspaceMonitor::onAircraftInterimUpdateReceived(const CAircraftSituation &situation)
     {
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Called in different thread");
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
 
         const CCallsign callsign(situation.getCallsign());
 
         // checks
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
-        if (isCopilotAircraft(callsign)) { return; }
-        if (!this->isAircraftInRange(callsign)) { return; }
+        if (isCopilotAircraft(callsign))
+        {
+            return;
+        }
+        if (!this->isAircraftInRange(callsign))
+        {
+            return;
+        }
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
@@ -1317,7 +1579,10 @@ namespace swift::core
         // If there is no full position available yet, throw this interim position away.
         CAircraftSituation interimSituation(situation);
         CAircraftSituationList history = this->remoteAircraftSituations(callsign);
-        if (history.isEmpty()) { return; } // we need one full situation at least
+        if (history.isEmpty())
+        {
+            return;
+        } // we need one full situation at least
         const CAircraftSituation lastSituation = history.latestObject();
 
         // changed position, continue and copy values
@@ -1328,7 +1593,10 @@ namespace swift::core
         this->storeAircraftSituation(interimSituation);
 
         const bool samePosition = lastSituation.equalNormalVectorDouble(interimSituation);
-        if (samePosition) { return; } // nothing to update
+        if (samePosition)
+        {
+            return;
+        } // nothing to update
 
         // update aircraft
         this->updateAircraftInRangeDistanceBearing(callsign, interimSituation,
@@ -1340,15 +1608,24 @@ namespace swift::core
     {
         //! \fixme This method is almost identical to onAircraftInterimUpdateReceived. Refactor common parts?
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Called in different thread");
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
 
         const CCallsign callsign(situation.getCallsign());
 
         // checks
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Empty callsign");
 
-        if (isCopilotAircraft(callsign)) { return; }
-        if (!this->isAircraftInRange(callsign)) { return; }
+        if (isCopilotAircraft(callsign))
+        {
+            return;
+        }
+        if (!this->isAircraftInRange(callsign))
+        {
+            return;
+        }
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
@@ -1362,7 +1639,10 @@ namespace swift::core
         //! \todo Also use the onGround flag of the last known situation?
         CAircraftSituation visualSituation(situation);
         CAircraftSituationList history = this->remoteAircraftSituations(callsign);
-        if (history.empty()) { return; } // we need one full situation at least
+        if (history.empty())
+        {
+            return;
+        } // we need one full situation at least
         const CAircraftSituation lastSituation = history.latestObject();
 
         // changed position, continue and copy values
@@ -1373,7 +1653,10 @@ namespace swift::core
         this->storeAircraftSituation(visualSituation);
 
         const bool samePosition = lastSituation.equalNormalVectorDouble(visualSituation);
-        if (samePosition) { return; } // nothing to update
+        if (samePosition)
+        {
+            return;
+        } // nothing to update
 
         // update aircraft
         this->updateAircraftInRangeDistanceBearing(callsign, visualSituation,
@@ -1410,7 +1693,10 @@ namespace swift::core
             this->setMaxRange(maxRange);
         }
 
-        if (newStatus.isDisconnected()) { this->clear(); }
+        if (newStatus.isDisconnected())
+        {
+            this->clear();
+        }
     }
 
     void CAirspaceMonitor::onPilotDisconnected(const CCallsign &callsign)
@@ -1421,7 +1707,10 @@ namespace swift::core
         this->removeFromAircraftCachesAndLogs(callsign);
         const bool removed = CRemoteAircraftProvider::removeAircraft(callsign);
         this->removeClient(callsign);
-        if (removed) { emit this->removedAircraft(callsign); }
+        if (removed)
+        {
+            emit this->removedAircraft(callsign);
+        }
     }
 
     void CAirspaceMonitor::onFrequencyReceived(const CCallsign &callsign, const CFrequency &frequency)
@@ -1439,7 +1728,10 @@ namespace swift::core
     {
         Q_ASSERT(CThreadUtils::isInThisThread(this));
         SWIFT_AUDIT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Need callsign");
-        if (callsign.isEmpty()) { return; }
+        if (callsign.isEmpty())
+        {
+            return;
+        }
 
         // store parts
         this->storeAircraftParts(callsign, jsonObject, currentOffsetMs);
@@ -1447,7 +1739,10 @@ namespace swift::core
         // update client capability
         CClient client = this->getClientOrDefaultForCallsign(callsign);
         client.setUserCallsign(callsign); // make valid by setting a callsign
-        if (client.hasCapability(CClient::FsdWithAircraftConfig)) { return; }
+        if (client.hasCapability(CClient::FsdWithAircraftConfig))
+        {
+            return;
+        }
         client.addCapability(CClient::FsdWithAircraftConfig);
         this->setOtherClient(client);
     }
@@ -1457,20 +1752,27 @@ namespace swift::core
     {
         const CCallsign callsign(situation.getCallsign());
         SWIFT_VERIFY_X(!callsign.isEmpty(), Q_FUNC_INFO, "empty callsign");
-        if (callsign.isEmpty()) { return situation; }
+        if (callsign.isEmpty())
+        {
+            return situation;
+        }
 
         CAircraftSituation correctedSituation(allowTestOffset ? this->addTestAltitudeOffsetToSituation(situation) :
                                                                 situation);
         bool needToRequestElevation = false;
         bool canLikelySkipNearGround = correctedSituation.canLikelySkipNearGroundInterpolation();
-        do {
+        do
+        {
             // Check if we can bail out and ignore all elevation handling
             //
             // rational:
             // a) elevation handling is expensive, and might even requests elevation from sim.
             // b) elevations not needed pollute the cache with "useless" values
             //
-            if (canLikelySkipNearGround || correctedSituation.hasGroundElevation()) { break; }
+            if (canLikelySkipNearGround || correctedSituation.hasGroundElevation())
+            {
+                break;
+            }
 
             // set a defined state
             correctedSituation.resetGroundElevation();
@@ -1478,12 +1780,18 @@ namespace swift::core
             // Guessing gives better values, also for smaller planes
             // and avoids unnecessary elevation fetching for low flying smaller GA aircraft
             const CAircraftIcaoCode icao = this->getAircraftInRangeModelForCallsign(callsign).getAircraftIcaoCode();
-            if (!icao.hasDesignator()) { break; } // what is that?
+            if (!icao.hasDesignator())
+            {
+                break;
+            } // what is that?
             if (icao.isVtol())
             {
                 // VTOLs over 60kts likely not on ground
                 // it could be that a low flying helicopter near ground
-                if (situation.getGroundSpeed().value(CSpeedUnit::kts()) > 60) { break; }
+                if (situation.getGroundSpeed().value(CSpeedUnit::kts()) > 60)
+                {
+                    break;
+                }
             }
             else
             {
@@ -1494,7 +1802,10 @@ namespace swift::core
                 if (!rotateSpeed.isNull())
                 {
                     rotateSpeed *= 1.25; // some margin
-                    if (situation.getGroundSpeed() > rotateSpeed) { break; }
+                    if (situation.getGroundSpeed() > rotateSpeed)
+                    {
+                        break;
+                    }
                 }
             }
 
@@ -1505,7 +1816,10 @@ namespace swift::core
             if (!changesBeforeStoring.isNull())
             {
                 canLikelySkipNearGround = changesBeforeStoring.isConstAscending();
-                if (canLikelySkipNearGround) { break; }
+                if (canLikelySkipNearGround)
+                {
+                    break;
+                }
             }
 
             // we NEED elevation
@@ -1564,8 +1878,14 @@ namespace swift::core
                 if (!averagePlane.isNull())
                 {
                     correctedSituation.setGroundElevation(averagePlane, CAircraftSituation::Average);
-                    if (fromNonMoving) { m_foundInNonMovingAircraft++; }
-                    else { m_foundInElevationsOnGnd++; }
+                    if (fromNonMoving)
+                    {
+                        m_foundInNonMovingAircraft++;
+                    }
+                    else
+                    {
+                        m_foundInElevationsOnGnd++;
+                    }
                     fromWhere = 10;
                 }
                 else
@@ -1621,7 +1941,10 @@ namespace swift::core
             else if (client.hasCapability(CClient::FsdWithAircraftConfig))
             {
                 const CAircraftPartsList parts = this->remoteAircraftParts(callsign);
-                if (!parts.isEmpty()) { correctedSituation.adjustGroundFlag(parts, true); }
+                if (!parts.isEmpty())
+                {
+                    correctedSituation.adjustGroundFlag(parts, true);
+                }
             }
         }
 
@@ -1630,7 +1953,10 @@ namespace swift::core
             callsign,
             this->getCGFromDB(
                 callsign)); // always x-check against simulator to override guessed values and reflect changed CGs
-        if (!cg.isNull()) { correctedSituation.setCG(cg); }
+        if (!cg.isNull())
+        {
+            correctedSituation.setCG(cg);
+        }
 
         // store corrected situation
         correctedSituation = CRemoteAircraftProvider::storeAircraftSituation(correctedSituation,
@@ -1655,7 +1981,10 @@ namespace swift::core
 
     void CAirspaceMonitor::sendInitialAtcQueries(const CCallsign &callsign)
     {
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
         m_fsdClient->sendClientQueryRealName(callsign);
         m_fsdClient->sendClientQueryAtis(callsign); // request ATIS and voice rooms
         m_fsdClient->sendClientQueryCapabilities(callsign);
@@ -1664,32 +1993,56 @@ namespace swift::core
 
     void CAirspaceMonitor::queryAllOnlineAtcStations()
     {
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
         const CAtcStationList onlineStations = this->getAtcStationsOnlineRecalculated();
         for (const CAtcStation &station : onlineStations)
         {
             const CCallsign cs = station.getCallsign();
-            if (cs.isEmpty()) { continue; }
+            if (cs.isEmpty())
+            {
+                continue;
+            }
             m_fsdClient->sendClientQueryRealName(cs);
         }
     }
 
     bool CAirspaceMonitor::sendNextStaggeredAtisQuery()
     {
-        if (m_queryAtis.isEmpty()) { return false; }
-        if (!this->isConnectedAndNotShuttingDown()) { return false; }
+        if (m_queryAtis.isEmpty())
+        {
+            return false;
+        }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return false;
+        }
         const CCallsign cs = m_queryAtis.dequeue();
-        if (!m_atcStationsOnline.containsCallsign(cs)) { return false; }
+        if (!m_atcStationsOnline.containsCallsign(cs))
+        {
+            return false;
+        }
         m_fsdClient->sendClientQueryAtis(cs);
         return true;
     }
 
     void CAirspaceMonitor::sendInitialPilotQueries(const CCallsign &callsign, bool withIcaoQuery, bool withFsInn)
     {
-        if (!this->isConnectedAndNotShuttingDown()) { return; }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return;
+        }
 
-        if (withIcaoQuery) { m_fsdClient->sendPlaneInfoRequest(callsign); }
-        if (withFsInn) { m_fsdClient->sendPlaneInfoRequestFsinn(callsign); }
+        if (withIcaoQuery)
+        {
+            m_fsdClient->sendPlaneInfoRequest(callsign);
+        }
+        if (withFsInn)
+        {
+            m_fsdClient->sendPlaneInfoRequestFsinn(callsign);
+        }
 
         m_fsdClient->sendClientQueryCom1Freq(callsign);
         m_fsdClient->sendClientQueryRealName(callsign);
@@ -1699,16 +2052,28 @@ namespace swift::core
 
     bool CAirspaceMonitor::sendNextStaggeredPilotDataQuery()
     {
-        if (m_queryPilot.isEmpty()) { return false; }
-        if (!this->isConnectedAndNotShuttingDown()) { return false; }
+        if (m_queryPilot.isEmpty())
+        {
+            return false;
+        }
+        if (!this->isConnectedAndNotShuttingDown())
+        {
+            return false;
+        }
         const CCallsign cs = m_queryPilot.dequeue();
-        if (!this->isAircraftInRange(cs)) { return false; }
+        if (!this->isAircraftInRange(cs))
+        {
+            return false;
+        }
         m_fsdClient->sendClientQueryCom1Freq(cs);
 
         // we only query ICAO if we have none yet
         // it happens sometimes with some FSD servers (e.g our testserver) a first query is skipped
         // Important: this is only a workaround and must not replace a sendInitialPilotQueries
-        if (!this->getAircraftInRangeForCallsign(cs).hasAircraftDesignator()) { m_fsdClient->sendPlaneInfoRequest(cs); }
+        if (!this->getAircraftInRangeForCallsign(cs).hasAircraftDesignator())
+        {
+            m_fsdClient->sendPlaneInfoRequest(cs);
+        }
         return true;
     }
 
@@ -1719,14 +2084,20 @@ namespace swift::core
 
     bool CAirspaceMonitor::isConnectedAndNotShuttingDown() const
     {
-        if (!sApp || sApp->isShuttingDown()) { return false; }
+        if (!sApp || sApp->isShuttingDown())
+        {
+            return false;
+        }
         return this->isConnected();
     }
 
     const CServer &CAirspaceMonitor::getConnectedServer() const
     {
         static const CServer empty;
-        if (!this->isConnected()) { return empty; }
+        if (!this->isConnected())
+        {
+            return empty;
+        }
         return m_fsdClient->getServer();
     }
 
@@ -1758,10 +2129,16 @@ namespace swift::core
 
     bool CAirspaceMonitor::isCopilotAircraft(const CCallsign &callsign) const
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->getIContextNetwork()) { return false; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->getIContextNetwork())
+        {
+            return false;
+        }
 
         // It is only relevant if we are logged in as observer
-        if (sApp->getIContextNetwork()->getLoginMode() != swift::misc::network::CLoginMode::Observer) { return false; }
+        if (sApp->getIContextNetwork()->getLoginMode() != swift::misc::network::CLoginMode::Observer)
+        {
+            return false;
+        }
 
         const CCallsign ownCallsign = this->getOwnAircraft().getCallsign();
         return ownCallsign.isMaybeCopilotCallsign(callsign);

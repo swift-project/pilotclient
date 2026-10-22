@@ -47,7 +47,10 @@ namespace swift::simplugin::fsxcommon
 
         QPointer<CFsxSettingsComponent> myself(this);
         QTimer::singleShot(2000, this, [=] {
-            if (!sGui || !myself || sGui->isShuttingDown()) { return; }
+            if (!sGui || !myself || sGui->isShuttingDown())
+            {
+                return;
+            }
             this->refresh();
         });
     }
@@ -82,28 +85,40 @@ namespace swift::simplugin::fsxcommon
     void CFsxSettingsComponent::onSimConnectTraceChanged()
     {
         CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
-        if (!fsxOrP3D) { return; }
+        if (!fsxOrP3D)
+        {
+            return;
+        }
         fsxOrP3D->setTractingSendId(ui->cb_TraceSimConnectCalls->isChecked());
     }
 
     void CFsxSettingsComponent::onSimulatedObjectChanged()
     {
         CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
-        if (!fsxOrP3D) { return; }
+        if (!fsxOrP3D)
+        {
+            return;
+        }
         fsxOrP3D->setAddingAsSimulatedObjectEnabled(ui->cb_AddingAsSimulatedObject->isChecked());
     }
 
     void CFsxSettingsComponent::onEnableTerrainProbeChanged()
     {
         CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
-        if (!fsxOrP3D) { return; }
+        if (!fsxOrP3D)
+        {
+            return;
+        }
         fsxOrP3D->setUsingFsxTerrainProbe(ui->cb_EnableTerrainProbe->isChecked());
     }
 
     void CFsxSettingsComponent::onSBOffsetsChanged()
     {
         CSimulatorFsxCommon *fsxOrP3D = this->getFsxOrP3DSimulator();
-        if (!fsxOrP3D) { return; }
+        if (!fsxOrP3D)
+        {
+            return;
+        }
         fsxOrP3D->setUsingSbOffsetValues(ui->cb_SBOffsets->isChecked());
     }
 
@@ -121,17 +136,35 @@ namespace swift::simplugin::fsxcommon
 
     CSimulatorFsxCommon *CFsxSettingsComponent::getFsxOrP3DSimulator() const
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return nullptr; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return nullptr;
+        }
         const CSimulatorPluginInfo plugin = sGui->getIContextSimulator()->getSimulatorPluginInfo();
-        if (plugin.isEmulatedPlugin()) { return nullptr; } // cast would fail
+        if (plugin.isEmulatedPlugin())
+        {
+            return nullptr;
+        } // cast would fail
 
         // ISimulator can only be obtained in local environment, not distributed UI
-        if (!sGui->hasSimulator()) { return nullptr; }
+        if (!sGui->hasSimulator())
+        {
+            return nullptr;
+        }
 
         ISimulator *simulator = sGui->getISimulator().data();
-        if (!simulator || simulator->isEmulatedDriver()) { return nullptr; }
-        if (!simulator->getSimulatorInfo().isFsxP3DFamily()) { return nullptr; }
-        if (simulator->getSimulatorInfo() != m_simulator) { return nullptr; }
+        if (!simulator || simulator->isEmulatedDriver())
+        {
+            return nullptr;
+        }
+        if (!simulator->getSimulatorInfo().isFsxP3DFamily())
+        {
+            return nullptr;
+        }
+        if (simulator->getSimulatorInfo() != m_simulator)
+        {
+            return nullptr;
+        }
 
         //! \todo KB 11/18 wonder why qobject_cast does not work here
         CSimulatorFsxCommon *fsx = static_cast<CSimulatorFsxCommon *>(simulator);

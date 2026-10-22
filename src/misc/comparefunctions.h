@@ -17,8 +17,14 @@ namespace swift::misc::Compare
     template <typename T, std::enable_if_t<std::is_arithmetic_v<T>, int> = 0>
     int compare(T a, T b)
     {
-        if (a < b) { return -1; }
-        if (b < a) { return 1; }
+        if (a < b)
+        {
+            return -1;
+        }
+        if (b < a)
+        {
+            return 1;
+        }
         return 0;
     }
 

@@ -90,7 +90,10 @@ namespace swift::gui::components
             m_simulator = simulator;
             this->setUiSimulatorString(simulator);
             const bool success = this->initModelLoader(simulator, IAircraftModelLoader::CacheOnly);
-            if (!success) { CLogMessage(this).error(u"Init of model loader failed in component"); }
+            if (!success)
+            {
+                CLogMessage(this).error(u"Init of model loader failed in component");
+            }
         }
 
         // menu
@@ -112,7 +115,10 @@ namespace swift::gui::components
     bool CDbOwnModelsComponent::requestModelsInBackground(const CSimulatorInfo &simulator, bool onlyIfNotEmpty)
     {
         this->setSimulator(simulator);
-        if (onlyIfNotEmpty && this->getOwnModelsCount() > 0) { return false; }
+        if (onlyIfNotEmpty && this->getOwnModelsCount() > 0)
+        {
+            return false;
+        }
         const IAircraftModelLoader::LoadMode mode =
             onlyIfNotEmpty ? IAircraftModelLoader::InBackgroundNoCache : IAircraftModelLoader::LoadInBackground;
         this->requestSimulatorModels(simulator, mode);
@@ -132,7 +138,10 @@ namespace swift::gui::components
     CAircraftModelList CDbOwnModelsComponent::getOwnCachedModels(const CSimulatorInfo &simulator) const
     {
         static const CAircraftModelList empty;
-        if (!m_modelLoader) { return empty; }
+        if (!m_modelLoader)
+        {
+            return empty;
+        }
         return m_modelLoader->getCachedModels(simulator);
     }
 
@@ -152,8 +161,14 @@ namespace swift::gui::components
 
         const bool simUnchanged = (m_simulator == simulator);
 
-        if (!simUnchanged) { emit this->ownModelsSimulatorChanged(simulator); }
-        if (!forced && simUnchanged) { return false; }
+        if (!simUnchanged)
+        {
+            emit this->ownModelsSimulatorChanged(simulator);
+        }
+        if (!forced && simUnchanged)
+        {
+            return false;
+        }
 
         // changed simulator
         m_simulator = simulator;
@@ -178,26 +193,38 @@ namespace swift::gui::components
 
     int CDbOwnModelsComponent::getOwnModelsCount() const
     {
-        if (!m_modelLoader) { return 0; }
+        if (!m_modelLoader)
+        {
+            return 0;
+        }
         return m_modelLoader->getCachedModelsCount(this->getOwnModelsSimulator());
     }
 
     QString CDbOwnModelsComponent::getInfoString() const
     {
-        if (!m_modelLoader) { return {}; }
+        if (!m_modelLoader)
+        {
+            return {};
+        }
         return m_modelLoader->getInfoString();
     }
 
     QString CDbOwnModelsComponent::getInfoStringFsFamily() const
     {
-        if (!m_modelLoader) { return {}; }
+        if (!m_modelLoader)
+        {
+            return {};
+        }
         return m_modelLoader->getInfoStringFsFamily();
     }
 
     CStatusMessage CDbOwnModelsComponent::updateViewAndCache(const CAircraftModelList &models)
     {
         const CStatusMessage m = m_modelLoader->setCachedModels(models, this->getOwnModelsSimulator());
-        if (m.isSuccess()) { ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models); }
+        if (m.isSuccess())
+        {
+            ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(models);
+        }
         return m;
     }
 
@@ -210,7 +237,10 @@ namespace swift::gui::components
 
     void CDbOwnModelsComponent::setModelsForSimulator(const CAircraftModelList &models, const CSimulatorInfo &simulator)
     {
-        if (!m_modelLoader) { return; }
+        if (!m_modelLoader)
+        {
+            return;
+        }
         m_modelLoader->setCachedModels(models, simulator);
         ui->tvp_OwnAircraftModels->replaceOrAddModelsWithString(models);
     }
@@ -218,7 +248,10 @@ namespace swift::gui::components
     int CDbOwnModelsComponent::updateModelsForSimulator(const CAircraftModelList &models,
                                                         const CSimulatorInfo &simulator)
     {
-        if (!m_modelLoader) { return 0; }
+        if (!m_modelLoader)
+        {
+            return 0;
+        }
         const int c = m_modelLoader->updateModelsForSimulator(models, simulator);
         const CAircraftModelList allModels(m_modelLoader->getCachedModels(simulator));
         ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(allModels);
@@ -234,7 +267,10 @@ namespace swift::gui::components
         if (!m_modelLoader || !m_modelLoader->supportsSimulator(simulator))
         {
             m_modelLoader = CMultiAircraftModelLoaderProvider::multiModelLoaderInstance().loaderInstance(simulator);
-            if (m_modelLoader) { m_modelLoader->startLoading(load); }
+            if (m_modelLoader)
+            {
+                m_modelLoader->startLoading(load);
+            }
         }
         this->setSaveFileName(simulator);
         return m_modelLoader && m_modelLoader->supportsSimulator(simulator);
@@ -280,7 +316,10 @@ namespace swift::gui::components
                            QMessageBox::Yes | QMessageBox::No, this);
         msgBox.setDefaultButton(QMessageBox::Cancel);
         const auto reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
-        if (reply != QMessageBox::Yes) { return; }
+        if (reply != QMessageBox::Yes)
+        {
+            return;
+        }
 
         this->requestSimulatorModels(simulator, IAircraftModelLoader::InBackgroundNoCache);
     }
@@ -297,7 +336,10 @@ namespace swift::gui::components
 
     void CDbOwnModelsComponent::CLoadModelsMenu::customMenu(CMenuActions &menuActions)
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         // for the moment I use all sims, I could restrict to CSimulatorInfo::getLocallyInstalledSimulators();
         const CSimulatorInfo sims = CSimulatorInfo::allSimulators();
@@ -315,7 +357,10 @@ namespace swift::gui::components
                 {
                     m_csl2xsbAction = new QAction(CIcons::appTerminal16(), "XPlane: run CSL2XSB on all models", this);
                     connect(m_csl2xsbAction, &QAction::triggered, ownModelsComp, [ownModelsComp](bool checked) {
-                        if (!ownModelsComp) { return; }
+                        if (!ownModelsComp)
+                        {
+                            return;
+                        }
                         Q_UNUSED(checked)
                         ownModelsComp->runScriptCSL2XSB();
                     });
@@ -328,7 +373,10 @@ namespace swift::gui::components
 
     void CDbOwnModelsComponent::requestOwnModelsUpdate()
     {
-        if (!m_modelLoader) { return; }
+        if (!m_modelLoader)
+        {
+            return;
+        }
         ui->tvp_OwnAircraftModels->updateContainerMaybeAsync(this->getOwnModels());
     }
 
@@ -336,7 +384,10 @@ namespace swift::gui::components
                                                     IAircraftModelLoader::LoadMode mode,
                                                     const QStringList &modelDirectories)
     {
-        if (!m_modelLoader) { return; }
+        if (!m_modelLoader)
+        {
+            return;
+        }
 
         // here m_modelLoader is still the "current" loader
         if (m_modelLoader->isLoadingInProgress())
@@ -470,16 +521,25 @@ namespace swift::gui::components
                 const QString confirmMessage =
                     QStringLiteral("Do you want to see the %1 detailled messages?").arg(statusMessages.size());
                 this->showOverlayMessagesWithConfirmation(summaryMsg, false, confirmMessage, [=] {
-                    if (!myself) { return; }
+                    if (!myself)
+                    {
+                        return;
+                    }
                     myself->showOverlayMessagesOrHTMLMessage(statusMessages);
                 });
             }
         }
 
-        if (hideIndicator) { ui->tvp_OwnAircraftModels->hideLoadIndicatorForced(); }
+        if (hideIndicator)
+        {
+            ui->tvp_OwnAircraftModels->hideLoadIndicatorForced();
+        }
 
         // cache loads may occur in background, do not adjust UI settings
-        if (info == IAircraftModelLoader::CacheLoaded) { return; }
+        if (info == IAircraftModelLoader::CacheLoaded)
+        {
+            return;
+        }
 
         // parsed loads normally explicit displaying this simulator
         this->setSimulator(simulator);
@@ -487,7 +547,10 @@ namespace swift::gui::components
 
     void CDbOwnModelsComponent::onViewDiskLoadingFinished(const CStatusMessage &status)
     {
-        if (status.isFailure()) { return; }
+        if (status.isFailure())
+        {
+            return;
+        }
         QMessageBox msgBox(
             QMessageBox::Question, "Loaded models from disk",
             "Loaded models from disk file.\nSave to cache or just temporarily keep them?\n\nHint: Saving them will "
@@ -495,9 +558,15 @@ namespace swift::gui::components
             QMessageBox::Save | QMessageBox::Cancel, this);
         msgBox.setDefaultButton(QMessageBox::Cancel);
         const auto reply = static_cast<QMessageBox::StandardButton>(msgBox.exec());
-        if (reply != QMessageBox::Cancel) { return; }
+        if (reply != QMessageBox::Cancel)
+        {
+            return;
+        }
         const CAircraftModelList models = ui->tvp_OwnAircraftModels->container();
-        if (models.isEmpty()) { return; }
+        if (models.isEmpty())
+        {
+            return;
+        }
         const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
         m_modelLoader->setModelsForSimulator(models, simulator);
     }
@@ -522,7 +591,10 @@ namespace swift::gui::components
 
     void CDbOwnModelsComponent::clearSimulatorCache(const CSimulatorInfo &simulator)
     {
-        if (!m_modelLoader) { return; }
+        if (!m_modelLoader)
+        {
+            return;
+        }
         m_modelLoader->clearCachedModels(simulator);
     }
 } // namespace swift::gui::components

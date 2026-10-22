@@ -29,7 +29,10 @@ namespace swift::gui::views
 
     void CAircraftCategoryTreeView::updateContainer(const CAircraftCategoryList &categories)
     {
-        if (!this->categoryModel()) { return; }
+        if (!this->categoryModel())
+        {
+            return;
+        }
         this->categoryModel()->updateContainer(categories);
 
         //! \fixme 2019-02 workaround for HEAP: Free Heap block 000001AB439BFFF0 modified at 000001AB439C00BC after it
@@ -41,7 +44,10 @@ namespace swift::gui::views
 
     void CAircraftCategoryTreeView::clear()
     {
-        if (!this->categoryModel()) { return; }
+        if (!this->categoryModel())
+        {
+            return;
+        }
         this->categoryModel()->clear();
     }
 
@@ -49,14 +55,23 @@ namespace swift::gui::views
 
     void CAircraftCategoryTreeView::setColumns(const CColumns &columns)
     {
-        if (this->categoryModel()) { this->categoryModel()->setColumns(columns); }
+        if (this->categoryModel())
+        {
+            this->categoryModel()->setColumns(columns);
+        }
     }
 
     void CAircraftCategoryTreeView::fullResizeToContentsImpl()
     {
-        if (this->isEmpty()) { return; }
+        if (this->isEmpty())
+        {
+            return;
+        }
         const int cc = this->categoryModel()->columnCount();
-        for (int c = 0; c < cc; c++) { this->resizeColumnToContents(c); }
+        for (int c = 0; c < cc; c++)
+        {
+            this->resizeColumnToContents(c);
+        }
     }
 
     bool CAircraftCategoryTreeView::isEmpty() const { return this->categoryModel()->rowCount() < 1; }
@@ -74,7 +89,10 @@ namespace swift::gui::views
     CAircraftCategory CAircraftCategoryTreeView::selectedObject() const
     {
         const CAircraftCategoryTreeModel *model = this->categoryModel();
-        if (!model) { return {}; }
+        if (!model)
+        {
+            return {};
+        }
         return model->container().frontOrDefault();
     }
 
@@ -86,8 +104,14 @@ namespace swift::gui::views
 
     void CAircraftCategoryTreeView::customMenu(const QPoint &point)
     {
-        if (!this->categoryModel()) { return; }
-        if (this->categoryModel()->container().isEmpty()) { return; }
+        if (!this->categoryModel())
+        {
+            return;
+        }
+        if (this->categoryModel()->container().isEmpty())
+        {
+            return;
+        }
 
         auto *menu = new QMenu(this); // menu
         auto *resize = new QAction(CIcons::resize16(), "Resize", this);

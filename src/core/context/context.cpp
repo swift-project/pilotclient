@@ -52,7 +52,10 @@ namespace swift::core::context
 
     void IContext::setDebugEnabled(bool debug)
     {
-        if (m_debugEnabled == debug) { return; }
+        if (m_debugEnabled == debug)
+        {
+            return;
+        }
         emit this->changedLogOrDebugSettings();
     }
 
@@ -73,7 +76,10 @@ namespace swift::core::context
 
     void IContext::registerWithDBus(const QString &objectPath, CDBusServer *server)
     {
-        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer) { return; }
+        if (!server || getMode() != CCoreFacadeConfig::LocalInDBusServer)
+        {
+            return;
+        }
 
         // remark that registers all SIGNALS, not only the interface ons
         server->addObject(objectPath, this);

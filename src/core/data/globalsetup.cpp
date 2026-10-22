@@ -71,7 +71,10 @@ namespace swift::core::data
 
     bool CGlobalSetup::isSwiftVersionMinimumMappingVersion() const
     {
-        if (m_mappingMinimumVersion.isEmpty()) { return false; }
+        if (m_mappingMinimumVersion.isEmpty())
+        {
+            return false;
+        }
         const QVersionNumber min = QVersionNumber::fromString(this->getMappingMinimumVersionString());
         return CBuildConfig::getVersion() >= min;
     }
@@ -105,7 +108,10 @@ namespace swift::core::data
 
     QVariant CGlobalSetup::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return CVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return CVariant::fromValue(*this);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)

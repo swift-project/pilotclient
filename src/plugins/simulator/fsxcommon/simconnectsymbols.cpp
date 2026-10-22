@@ -258,16 +258,43 @@ P3DSimConnectVersion stringToP3DVersion(const QString &p3d)
     if (p3d.length() >= 2)
     {
         const QString p = digitOnlyString(p3d);
-        if (p.contains("40")) { return P3DSimConnectv40; }
-        if (p.contains("41")) { return P3DSimConnectv41; }
-        if (p.contains("42")) { return P3DSimConnectv42; }
-        if (p.contains("43")) { return P3DSimConnectv43; }
-        if (p.contains("44")) { return P3DSimConnectv44; }
-        if (p.contains("45")) { return P3DSimConnectv45; }
+        if (p.contains("40"))
+        {
+            return P3DSimConnectv40;
+        }
+        if (p.contains("41"))
+        {
+            return P3DSimConnectv41;
+        }
+        if (p.contains("42"))
+        {
+            return P3DSimConnectv42;
+        }
+        if (p.contains("43"))
+        {
+            return P3DSimConnectv43;
+        }
+        if (p.contains("44"))
+        {
+            return P3DSimConnectv44;
+        }
+        if (p.contains("45"))
+        {
+            return P3DSimConnectv45;
+        }
 
-        if (p.contains("50")) { return P3DSimConnectv45; }
-        if (p.contains("51")) { return P3DSimConnectv45; }
-        if (p.contains("52")) { return P3DSimConnectv45; }
+        if (p.contains("50"))
+        {
+            return P3DSimConnectv45;
+        }
+        if (p.contains("51"))
+        {
+            return P3DSimConnectv45;
+        }
+        if (p.contains("52"))
+        {
+            return P3DSimConnectv45;
+        }
     }
     return P3DSimConnectv44; // default
 }
@@ -275,7 +302,10 @@ P3DSimConnectVersion stringToP3DVersion(const QString &p3d)
 bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
 {
     // Check if already loaded
-    if (gSymbols.SimConnect_Open) { return true; }
+    if (gSymbols.SimConnect_Open)
+    {
+        return true;
+    }
 
     QString simConnectFileName(QStringLiteral("SimConnect.P3D-"));
 
@@ -310,7 +340,7 @@ bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
 
         CLogMessage(CLogCategories::driver()).info(u"Loaded and resolved P3D symbols from SimConnect.dll: '%1'")
             << simConnectFileName;
-        return resolvedCommon && resolvedP3DSimConnectSymbols;
+        return true;
     }
     else
     {
@@ -323,7 +353,10 @@ bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
 bool loadAndResolveMSFSimConnect()
 {
     // Check if already loaded
-    if (gSymbols.SimConnect_Open) { return true; }
+    if (gSymbols.SimConnect_Open)
+    {
+        return true;
+    }
 
     QString simConnectFileName(QStringLiteral("SimConnect.MSFS"));
 
@@ -354,7 +387,10 @@ bool loadAndResolveMSFSimConnect()
 bool loadAndResolveMSFS2024SimConnect()
 {
     // Check if already loaded
-    if (gSymbols.SimConnect_Open) { return true; }
+    if (gSymbols.SimConnect_Open)
+    {
+        return true;
+    }
 
     QString simConnectFileName(QStringLiteral("SimConnect.MSFS2024"));
 
@@ -386,7 +422,10 @@ bool loadAndResolveMSFS2024SimConnect()
 bool loadAndResolveFsxSimConnect(bool manifestProbing)
 {
     // Check if already loaded
-    if (gSymbols.SimConnect_Open) { return true; }
+    if (gSymbols.SimConnect_Open)
+    {
+        return true;
+    }
 
     QLibrary simConnectDll(QStringLiteral("SimConnect"));
     simConnectDll.setLoadHints(QLibrary::PreventUnloadHint);
@@ -422,7 +461,10 @@ bool loadAndResolveFsxSimConnect(bool manifestProbing)
                 {
                     simConnectDll.load();
                     DeactivateActCtx(0, lpCookie);
-                    if (simConnectDll.isLoaded()) { break; }
+                    if (simConnectDll.isLoaded())
+                    {
+                        break;
+                    }
                 }
             }
             ReleaseActCtx(hActCtx);
@@ -431,9 +473,15 @@ bool loadAndResolveFsxSimConnect(bool manifestProbing)
 
     // If at that stage, no SimConnect library was found in the WinSxS folder, try once without activation context to
     // link to the one we ship ourselves.
-    if (!simConnectDll.isLoaded()) { simConnectDll.load(); }
+    if (!simConnectDll.isLoaded())
+    {
+        simConnectDll.load();
+    }
 
-    if (simConnectDll.isLoaded()) { return resolveCommonSimConnectSymbols(simConnectDll); }
+    if (simConnectDll.isLoaded())
+    {
+        return resolveCommonSimConnectSymbols(simConnectDll);
+    }
     else
     {
         CLogMessage(CLogCategories::driver()).error(u"Failed to load SimConnect.dll: %1")

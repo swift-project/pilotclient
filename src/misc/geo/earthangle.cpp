@@ -64,7 +64,10 @@ namespace swift::misc::geo
     LATorLON CEarthAngle<LATorLON>::fromWgs84(const QString &wgsCoordinate)
     {
         const QString wgs = wgsCoordinate.simplified().trimmed();
-        if (wgs.isEmpty()) { return LATorLON(); }
+        if (wgs.isEmpty())
+        {
+            return LATorLON();
+        }
 
         // support for 5deg, 1.2rad
         if (CAngleUnit::deg().endsStringWithNameOrSymbol(wgs) || CAngleUnit::rad().endsStringWithNameOrSymbol(wgs))
@@ -165,7 +168,10 @@ namespace swift::misc::geo
         const QChar pn = v.sign < 0 ? neg : pos;
 
         static const QString vs("%1° %2' %3\" %4");
-        if (fractionalDigits < 1) { return vs.arg(v.deg).arg(v.min).arg(v.sec).arg(pn); }
+        if (fractionalDigits < 1)
+        {
+            return vs.arg(v.deg).arg(v.min).arg(v.sec).arg(pn);
+        }
 
         static const QString vsf("%1° %2' %3.%4\" %5");
         return vsf.arg(v.deg).arg(v.min).arg(v.sec).arg(v.fractionalSecAsString(fractionalDigits)).arg(pn);

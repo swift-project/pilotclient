@@ -243,9 +243,6 @@ namespace swift::core
         //! DBus address from CMD line, otherwise ""
         QString getCmdDBusAddressValue() const;
 
-        //! Add the network options
-        void addNetworkOptions();
-
         //! Add the audio options
         void addAudioOptions();
 

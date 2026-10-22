@@ -21,7 +21,10 @@
                                                                                                                        \
     QStringList args;                                                                                                  \
     args.reserve(argc);                                                                                                \
-    for (int i = 0; i < argc; ++i) { args.append(argv[i]); }                                                           \
+    for (int i = 0; i < argc; ++i)                                                                                     \
+    {                                                                                                                  \
+        args.append(argv[i]);                                                                                          \
+    }                                                                                                                  \
                                                                                                                        \
     /* Output to stdout */                                                                                             \
     args.append({ "-o", "-,txt" });                                                                                    \

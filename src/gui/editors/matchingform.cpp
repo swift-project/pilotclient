@@ -100,7 +100,10 @@ namespace swift::gui::editors
 
         const bool nag = !mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupSameAsAirline) &&
                          !mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupIfNoAirline);
-        if (nag) { ui->rb_AirlineGroupNo->setChecked(nag); }
+        if (nag)
+        {
+            ui->rb_AirlineGroupNo->setChecked(nag);
+        }
         else
         {
             ui->rb_AirlineGroupAsAirline->setChecked(mode.testFlag(CAircraftMatcherSetup::ByAirlineGroupSameAsAirline));
@@ -174,9 +177,18 @@ namespace swift::gui::editors
                                           fn.isEmpty() ? swiftDirs.getMatchingScriptDirectoryOrDefault() : fn,
                                           "Matching script (*.js)");
         const QFileInfo fi(fn);
-        if (!fi.exists()) { return; }
-        if (nw) { ui->le_MsReverseLookup->setText(fi.absoluteFilePath()); }
-        else { ui->le_MsMatching->setText(fi.absoluteFilePath()); }
+        if (!fi.exists())
+        {
+            return;
+        }
+        if (nw)
+        {
+            ui->le_MsReverseLookup->setText(fi.absoluteFilePath());
+        }
+        else
+        {
+            ui->le_MsMatching->setText(fi.absoluteFilePath());
+        }
 
         swiftDirs.setMatchingScriptDirectory(fi.absolutePath());
         m_directories.setAndSave(swiftDirs);
@@ -184,8 +196,14 @@ namespace swift::gui::editors
 
     CAircraftMatcherSetup::MatchingAlgorithm CMatchingForm::algorithm() const
     {
-        if (ui->rb_Reduction->isChecked()) { return CAircraftMatcherSetup::MatchingStepwiseReduce; }
-        if (ui->rb_ScoreOnly->isChecked()) { return CAircraftMatcherSetup::MatchingScoreBased; }
+        if (ui->rb_Reduction->isChecked())
+        {
+            return CAircraftMatcherSetup::MatchingStepwiseReduce;
+        }
+        if (ui->rb_ScoreOnly->isChecked())
+        {
+            return CAircraftMatcherSetup::MatchingScoreBased;
+        }
         return CAircraftMatcherSetup::MatchingStepwiseReducePlusScoreBased;
     }
 
@@ -206,8 +224,14 @@ namespace swift::gui::editors
 
     CAircraftMatcherSetup::PickSimilarStrategy CMatchingForm::pickStrategy() const
     {
-        if (ui->rb_PickRandom->isChecked()) { return CAircraftMatcherSetup::PickRandom; }
-        if (ui->rb_PickByOrder->isChecked()) { return CAircraftMatcherSetup::PickByOrder; }
+        if (ui->rb_PickRandom->isChecked())
+        {
+            return CAircraftMatcherSetup::PickRandom;
+        }
+        if (ui->rb_PickByOrder->isChecked())
+        {
+            return CAircraftMatcherSetup::PickByOrder;
+        }
         return CAircraftMatcherSetup::PickFirst;
     }
 

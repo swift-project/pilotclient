@@ -47,7 +47,10 @@ namespace swift::gui
         this->setEnabled(true);
 
         QPointer<CLoadIndicator> myself(this);
-        if (m_timerId == -1) { m_timerId = startTimer(m_delayMs); }
+        if (m_timerId == -1)
+        {
+            m_timerId = startTimer(m_delayMs);
+        }
         if (processEvents && sGui)
         {
             sGui->processEventsToRefreshGui();
@@ -61,7 +64,10 @@ namespace swift::gui
         if (timeout > 0ms)
         {
             QTimer::singleShot(timeout, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
 
                 // only timeout myself id
                 this->stopAnimation(stopId);
@@ -78,7 +84,10 @@ namespace swift::gui
         {
             m_pendingIds.removeOne(indicatorId);
             // if others pending do not stop
-            if (!m_pendingIds.isEmpty()) { return; }
+            if (!m_pendingIds.isEmpty())
+            {
+                return;
+            }
         }
         m_pendingIds.clear();
         if (m_timerId != -1)
@@ -129,15 +138,27 @@ namespace swift::gui
 
     bool CLoadIndicator::isParentVisible() const
     {
-        if (this->parentWidget()) { return parentWidget()->isVisible(); }
+        if (this->parentWidget())
+        {
+            return parentWidget()->isVisible();
+        }
         return false;
     }
 
     void CLoadIndicator::paint(QPainter &painter) const
     {
-        if (!m_displayedWhenStopped && !isAnimated()) { return; }
-        if (!this->isVisible() || !this->isEnabled()) { return; }
-        if (!isParentVisible()) { return; }
+        if (!m_displayedWhenStopped && !isAnimated())
+        {
+            return;
+        }
+        if (!this->isVisible() || !this->isEnabled())
+        {
+            return;
+        }
+        if (!isParentVisible())
+        {
+            return;
+        }
 
         int width = qMin(this->width(), this->height());
         painter.setRenderHint(QPainter::Antialiasing);
@@ -202,12 +223,18 @@ namespace swift::gui
 
     void CLoadIndicatorEnabled::hideLoading()
     {
-        if (m_loadIndicator) { m_loadIndicator->stopAnimation(); }
+        if (m_loadIndicator)
+        {
+            m_loadIndicator->stopAnimation();
+        }
     }
 
     void CLoadIndicatorEnabled::centerLoadIndicator()
     {
-        if (!m_loadIndicator) { return; }
+        if (!m_loadIndicator)
+        {
+            return;
+        }
         const QPoint middle = m_usingWidget->visibleRegion().boundingRect().center();
         m_loadIndicator->centerLoadIndicator(middle);
     }

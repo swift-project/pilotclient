@@ -42,13 +42,19 @@ namespace swift::gui::components
     {
         const CSwiftPluginSettings settings(this->getSettings());
         const CStatusMessage msg = m_settings.setAndSave(settings);
-        if (!msg.isEmpty()) { CLogMessage::preformatted(msg); }
+        if (!msg.isEmpty())
+        {
+            CLogMessage::preformatted(msg);
+        }
     }
 
     CSwiftPluginSettings CSettingsSwiftPlugin::getSettings() const
     {
         CAircraftModel model = ui->lep_OwnModel->getAircraftModel();
-        if (!model.hasModelString()) { model.setModelString(ui->lep_OwnModel->text()); }
+        if (!model.hasModelString())
+        {
+            model.setModelString(ui->lep_OwnModel->text());
+        }
 
         CSwiftPluginSettings settings;
         settings.setEmulatedSimulator(ui->comp_EmulatedSimulatorSelector->getValue());

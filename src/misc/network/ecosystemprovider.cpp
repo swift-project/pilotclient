@@ -33,7 +33,10 @@ namespace swift::misc::network
 
     bool IEcosystemProvider::setCurrentEcosystem(const CEcosystem &ecosystem)
     {
-        if (this->isCurrentEcosystem(ecosystem)) { return false; }
+        if (this->isCurrentEcosystem(ecosystem))
+        {
+            return false;
+        }
         QReadLocker l(&m_lockSystem);
         m_currentEcoSystem = ecosystem;
         return true;
@@ -41,7 +44,10 @@ namespace swift::misc::network
 
     bool IEcosystemProvider::setLastEcosystem(const CEcosystem &ecosystem)
     {
-        if (this->isLastEcosystem(ecosystem)) { return false; }
+        if (this->isLastEcosystem(ecosystem))
+        {
+            return false;
+        }
         QReadLocker l(&m_lockSystem);
         m_lastEcoSystem = ecosystem;
         return true;
@@ -52,19 +58,28 @@ namespace swift::misc::network
 
     CEcosystem CEcosystemAware::getCurrentEcosystem() const
     {
-        if (!this->hasProvider()) { return CEcosystem::unspecified(); }
+        if (!this->hasProvider())
+        {
+            return CEcosystem::unspecified();
+        }
         return this->provider()->getCurrentEcosystem();
     }
 
     CEcosystem CEcosystemAware::getLastEcosystem() const
     {
-        if (!this->hasProvider()) { return CEcosystem::unspecified(); }
+        if (!this->hasProvider())
+        {
+            return CEcosystem::unspecified();
+        }
         return this->provider()->getLastEcosystem();
     }
 
     bool CEcosystemAware::isCurrentEcosystem(const CEcosystem &system) const
     {
-        if (!this->hasProvider()) { return this->getCurrentEcosystem() == system; }
+        if (!this->hasProvider())
+        {
+            return this->getCurrentEcosystem() == system;
+        }
         return this->provider()->isCurrentEcosystem(system);
     }
 
@@ -72,14 +87,23 @@ namespace swift::misc::network
 
     bool CEcosystemAware::isNotVATSIMEcosystem() const
     {
-        if (!this->hasProvider()) { return false; }
-        if (this->isCurrentEcosystemVATSIM()) { return false; }
+        if (!this->hasProvider())
+        {
+            return false;
+        }
+        if (this->isCurrentEcosystemVATSIM())
+        {
+            return false;
+        }
         return !this->getCurrentEcosystem().isUnspecified(); // other know system which is specified
     }
 
     bool CEcosystemAware::isLastEcosystem(const CEcosystem &system) const
     {
-        if (!this->hasProvider()) { return this->getLastEcosystem() == system; }
+        if (!this->hasProvider())
+        {
+            return this->getLastEcosystem() == system;
+        }
         return this->provider()->isLastEcosystem(system);
     }
 

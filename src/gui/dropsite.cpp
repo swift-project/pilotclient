@@ -53,30 +53,45 @@ namespace swift::gui
 
     void CDropSite::dragEnterEvent(QDragEnterEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         setBackgroundRole(QPalette::Highlight);
         event->acceptProposedAction();
     }
 
     void CDropSite::dragMoveEvent(QDragMoveEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         setBackgroundRole(QPalette::Highlight);
         event->acceptProposedAction();
     }
 
     void CDropSite::dragLeaveEvent(QDragLeaveEvent *event)
     {
-        if (!event || !m_allowDrop) { return; }
+        if (!event || !m_allowDrop)
+        {
+            return;
+        }
         resetText();
         event->accept();
     }
 
     void CDropSite::dropEvent(QDropEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         CVariant valueVariant(toCVariant(event->mimeData()));
-        if (valueVariant.isValid()) { emit droppedValueObject(valueVariant); }
+        if (valueVariant.isValid())
+        {
+            emit droppedValueObject(valueVariant);
+        }
         this->resetText();
     }
 

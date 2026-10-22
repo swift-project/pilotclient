@@ -46,9 +46,15 @@ namespace swift::gui::components
 
     void CModelMatcherLogComponent::callsignEntered()
     {
-        if (!this->hasContexts()) { return; }
+        if (!this->hasContexts())
+        {
+            return;
+        }
         const CCallsign cs(ui->comp_CallsignCompleter->getCallsign());
-        if (cs.isEmpty()) { return; }
+        if (cs.isEmpty())
+        {
+            return;
+        }
         const CStatusMessageList reverseLookupMessages = sGui->getIContextNetwork()->getReverseLookupMessages(cs);
         const CStatusMessageList matchingMessages = sGui->getIContextSimulator()->getMatchingMessages(cs);
 

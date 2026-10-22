@@ -39,7 +39,10 @@ namespace swift::gui::editors
 
         QPointer<COwnModelSetForm> myself(this);
         QTimer::singleShot(1250, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->onSimulatorChanged(ui->comp_SimulatorSelector->getValue());
         });
     }
@@ -107,8 +110,14 @@ namespace swift::gui::editors
 
     void COwnModelSetForm::initDistributorDisplay()
     {
-        if (this->hasDistributorPreferences()) { ui->rb_DisplayPreferencesDistributors->setChecked(true); }
-        else { ui->rb_DisplayAllDistributors->setChecked(true); }
+        if (this->hasDistributorPreferences())
+        {
+            ui->rb_DisplayPreferencesDistributors->setChecked(true);
+        }
+        else
+        {
+            ui->rb_DisplayAllDistributors->setChecked(true);
+        }
         this->changeDistributorDisplay();
     }
 
@@ -139,9 +148,18 @@ namespace swift::gui::editors
 
     CDistributorList COwnModelSetForm::getDistributorsBasedOnOptions() const
     {
-        if (ui->rb_DistributorsAll->isChecked()) { return this->getAllDistributors(); }
-        if (ui->rb_DistributorsSelected->isChecked()) { return this->getSelectedDistributors(); }
-        if (ui->rb_DistributorsFromBelow->isChecked()) { return this->getShownDistributors(); }
+        if (ui->rb_DistributorsAll->isChecked())
+        {
+            return this->getAllDistributors();
+        }
+        if (ui->rb_DistributorsSelected->isChecked())
+        {
+            return this->getSelectedDistributors();
+        }
+        if (ui->rb_DistributorsFromBelow->isChecked())
+        {
+            return this->getShownDistributors();
+        }
         Q_ASSERT_X(false, Q_FUNC_INFO, "Wrong option");
         return {};
     }
@@ -161,7 +179,10 @@ namespace swift::gui::editors
     void COwnModelSetForm::setSimulator(const CSimulatorInfo &simulator)
     {
         // Ref T663, avoid ASSERT in some weird cases
-        if (simulator.isSingleSimulator()) { m_simulator = simulator; }
+        if (simulator.isSingleSimulator())
+        {
+            m_simulator = simulator;
+        }
         else
         {
             const CSimulatorInfo resetSim =

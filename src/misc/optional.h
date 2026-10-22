@@ -38,14 +38,20 @@ namespace swift::misc
         //! Copy constructor.
         Optional(const Optional &other) noexcept(std::is_nothrow_copy_constructible_v<T>)
         {
-            if (other.m_isValid) { new (m_data.bytes) T(*other); }
+            if (other.m_isValid)
+            {
+                new (m_data.bytes) T(*other);
+            }
             m_isValid = other.m_isValid;
         }
 
         //! Move constructor.
         Optional(Optional &&other) noexcept(std::is_nothrow_move_constructible_v<T>)
         {
-            if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
+            if (other.m_isValid)
+            {
+                new (m_data.bytes) T(std::move(*other));
+            }
             m_isValid = other.m_isValid;
         }
 
@@ -60,7 +66,10 @@ namespace swift::misc
         Optional &operator=(const Optional &other) noexcept(std::is_nothrow_copy_constructible_v<T>)
         {
             reset();
-            if (other.m_isValid) { new (m_data.bytes) T(*other); }
+            if (other.m_isValid)
+            {
+                new (m_data.bytes) T(*other);
+            }
             m_isValid = other.m_isValid;
             return *this;
         }
@@ -69,7 +78,10 @@ namespace swift::misc
         Optional &operator=(Optional &&other) noexcept(std::is_nothrow_move_constructible_v<T>)
         {
             reset();
-            if (other.m_isValid) { new (m_data.bytes) T(std::move(*other)); }
+            if (other.m_isValid)
+            {
+                new (m_data.bytes) T(std::move(*other));
+            }
             m_isValid = other.m_isValid;
             return *this;
         }
@@ -77,7 +89,10 @@ namespace swift::misc
         //! Destructor.
         ~Optional()
         {
-            if (m_isValid) { (*this)->~T(); }
+            if (m_isValid)
+            {
+                (*this)->~T();
+            }
         }
 
         //! Explicit cast to bool, true if this Optional contains a value.
@@ -86,7 +101,10 @@ namespace swift::misc
         //! If object is valid, destroy to make it invalid.
         void reset() noexcept
         {
-            if (m_isValid) { (*this)->~T(); }
+            if (m_isValid)
+            {
+                (*this)->~T();
+            }
             m_isValid = false;
         }
 

@@ -28,12 +28,6 @@ namespace swift::gui::menus
 {
     void IAircraftModelViewMenu::anchor() {}
 
-    const QStringList &IAircraftModelViewMenu::getLogCategories()
-    {
-        static const QStringList cats { CLogCategories::guiComponent() };
-        return cats;
-    }
-
     CAircraftModelView *IAircraftModelViewMenu::modelView() const
     {
         auto *mv = qobject_cast<CAircraftModelView *>(parent());
@@ -66,12 +60,6 @@ namespace swift::gui::menus
         : IAircraftModelViewMenu(modelView), m_messageFrame(messageFrame)
     {}
 
-    const QStringList &CShowSimulatorFileMenu::getLogCategories()
-    {
-        static const QStringList cats { CLogCategories::guiComponent() };
-        return cats;
-    }
-
     void CShowSimulatorFileMenu::customMenu(CMenuActions &menuActions)
     {
         CAircraftModelView *mv = modelView();
@@ -96,7 +84,10 @@ namespace swift::gui::menus
                 }
             }
 
-            if (added) { menuActions.addSeparator(CMenuAction::pathSimulator()); }
+            if (added)
+            {
+                menuActions.addSeparator(CMenuAction::pathSimulator());
+            }
         }
         this->nestedCustomMenu(menuActions);
     }
@@ -104,9 +95,15 @@ namespace swift::gui::menus
     void CShowSimulatorFileMenu::showSimulatorFile()
     {
         const CAircraftModelView *mv = modelView();
-        if (!mv->hasSingleSelectedRow()) { return; }
+        if (!mv->hasSingleSelectedRow())
+        {
+            return;
+        }
         const CAircraftModel model(mv->selectedObject());
-        if (!model.hasFileName()) { return; }
+        if (!model.hasFileName())
+        {
+            return;
+        }
         if (QFile::exists(model.getFileName()))
         {
             const QUrl url = QUrl::fromLocalFile(model.getFileName());
@@ -117,16 +114,25 @@ namespace swift::gui::menus
             const CStatusMessage m =
                 CStatusMessage(this, CStatusMessage::SeverityError,
                                QStringLiteral("No file for model '&1'").arg(model.getFileName()), true);
-            if (m_messageFrame) { m_messageFrame->showOverlayHTMLMessage(m); }
+            if (m_messageFrame)
+            {
+                m_messageFrame->showOverlayHTMLMessage(m);
+            }
             CLogMessage::preformatted(m);
         }
     }
 
     void CShowSimulatorFileMenu::startModelConverterX()
     {
-        if (!CModelConverterX::supportsModelConverterX()) { return; }
+        if (!CModelConverterX::supportsModelConverterX())
+        {
+            return;
+        }
         const CAircraftModelView *mv = modelView();
-        if (!mv->hasSingleSelectedRow()) { return; }
+        if (!mv->hasSingleSelectedRow())
+        {
+            return;
+        }
         const CAircraftModel model(mv->selectedObject());
         CModelConverterX::startModelConverterX(model, sApp);
     }
@@ -181,7 +187,10 @@ namespace swift::gui::menus
 
     void CConsolidateWithDbDataMenu::consolidateData()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         const CAircraftModelList dbModels(sGui->getWebDataServices()->getModels());
         if (dbModels.isEmpty())
         {
@@ -222,17 +231,26 @@ namespace swift::gui::menus
     void CConsolidateWithDbDataMenu::consolidateSelectedData()
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
-        if (!sGui->hasWebDataServices()) { return; }
+        if (!sGui->hasWebDataServices())
+        {
+            return;
+        }
 
         CAircraftModelList models(this->getSelectedAircraftModels());
-        if (models.isEmpty()) { return; }
+        if (models.isEmpty())
+        {
+            return;
+        }
         if (!this->modelsTargetUpdatable())
         {
             CLogMessage(this).warning(u"No updatable target");
             return;
         }
         const int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
-        if (c > 0 && this->modelsTargetUpdatable()) { this->modelsTargetUpdatable()->updateModels(models); }
+        if (c > 0 && this->modelsTargetUpdatable())
+        {
+            this->modelsTargetUpdatable()->updateModels(models);
+        }
     }
 
     IModelsSetable *CConsolidateWithDbDataMenu::modelsTargetSetable() const
@@ -315,18 +333,30 @@ namespace swift::gui::menus
 
         bool filtered = false;
         const CAircraftModelList models(this->getAllOrAllFilteredAircraftModels(&filtered));
-        if (models.isEmpty()) { return; }
+        if (models.isEmpty())
+        {
+            return;
+        }
         QStringList removedModelStrings;
         const int i = this->modelView()->showLoadIndicator();
         const CAircraftModelList consolidated = CDatabaseUtils::consolidateModelsWithSimulatorModelsAllowsGuiRefresh(
             models, this->getSimulatorModels(), removedModelStrings, true);
         const CSimulatorInfo sim(this->getSimulator());
 
-        if (!filtered) { this->modelsTargetSetable()->setModelsForSimulator(consolidated, sim); }
+        if (!filtered)
+        {
+            this->modelsTargetSetable()->setModelsForSimulator(consolidated, sim);
+        }
         else
         {
-            if (!this->modelsTargetUpdatable()) { CLogMessage(this).warning(u"No updatable target"); }
-            else { this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim); }
+            if (!this->modelsTargetUpdatable())
+            {
+                CLogMessage(this).warning(u"No updatable target");
+            }
+            else
+            {
+                this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
+            }
         }
         this->modelView()->hideLoadIndicator(i);
         if (!removedModelStrings.isEmpty() && this->getMappingComponent())
@@ -342,7 +372,10 @@ namespace swift::gui::menus
 
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         const CAircraftModelList models(this->getSelectedAircraftModels());
-        if (models.isEmpty()) { return; }
+        if (models.isEmpty())
+        {
+            return;
+        }
         if (!this->modelsTargetUpdatable())
         {
             CLogMessage(this).warning(u"No updatable target");
@@ -370,18 +403,30 @@ namespace swift::gui::menus
 
         bool filtered = false;
         const CAircraftModelList models(this->getAllOrAllFilteredAircraftModels(&filtered));
-        if (models.isEmpty()) { return; }
+        if (models.isEmpty())
+        {
+            return;
+        }
         QStringList removedModelStrings;
         const int i = this->modelView()->showLoadIndicator();
         const CAircraftModelList consolidated = CDatabaseUtils::updateModelsDirectoriesAllowsGuiRefresh(
             models, this->getSimulatorModels(), removedModelStrings, true);
         const CSimulatorInfo sim(this->getSimulator());
 
-        if (!filtered) { this->modelsTargetSetable()->setModelsForSimulator(consolidated, sim); }
+        if (!filtered)
+        {
+            this->modelsTargetSetable()->setModelsForSimulator(consolidated, sim);
+        }
         else
         {
-            if (!this->modelsTargetUpdatable()) { CLogMessage(this).warning(u"No updatable target"); }
-            else { this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim); }
+            if (!this->modelsTargetUpdatable())
+            {
+                CLogMessage(this).warning(u"No updatable target");
+            }
+            else
+            {
+                this->modelsTargetUpdatable()->updateModelsForSimulator(consolidated, sim);
+            }
         }
         this->modelView()->hideLoadIndicator(i);
         if (!removedModelStrings.isEmpty() && this->getMappingComponent())
@@ -397,7 +442,10 @@ namespace swift::gui::menus
 
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
         const CAircraftModelList models(this->getSelectedAircraftModels());
-        if (models.isEmpty()) { return; }
+        if (models.isEmpty())
+        {
+            return;
+        }
         if (!this->modelsTargetUpdatable())
         {
             CLogMessage(this).warning(u"No updatable target");
@@ -457,8 +505,14 @@ namespace swift::gui::menus
         // try to cast target
         CDbMappingComponent *mc = nullptr;
         CDbMappingComponentAware *mca = qobject_cast<CDbMappingComponentAware *>(m_modelsTarget);
-        if (mca) { mc = mca->getMappingComponent(); }
-        if (!mc) { mc = qobject_cast<CDbMappingComponent *>(m_modelsTarget); }
+        if (mca)
+        {
+            mc = mca->getMappingComponent();
+        }
+        if (!mc)
+        {
+            mc = qobject_cast<CDbMappingComponent *>(m_modelsTarget);
+        }
         return mc;
     }
 } // namespace swift::gui::menus

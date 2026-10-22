@@ -44,7 +44,10 @@ namespace swift::misc
                 else
                 {
                     result += percent;
-                    if (latin < 0x10) { result += '0'; }
+                    if (latin < 0x10)
+                    {
+                        result += '0';
+                    }
                     result += QByteArray::number(static_cast<int>(latin), 16);
                 }
             }
@@ -53,9 +56,18 @@ namespace swift::misc
                 result += percent;
                 result += 'x';
                 const ushort unicode = c.unicode();
-                if (unicode < 0x0010) { result += '0'; }
-                if (unicode < 0x0100) { result += '0'; }
-                if (unicode < 0x1000) { result += '0'; }
+                if (unicode < 0x0010)
+                {
+                    result += '0';
+                }
+                if (unicode < 0x0100)
+                {
+                    result += '0';
+                }
+                if (unicode < 0x1000)
+                {
+                    result += '0';
+                }
                 result += QByteArray::number(unicode, 16);
             }
         }
@@ -84,7 +96,10 @@ namespace swift::misc
                     ++i;
                 }
             }
-            else { result += ba[i]; }
+            else
+            {
+                result += ba[i];
+            }
         }
         return result;
     }
@@ -127,18 +142,36 @@ namespace swift::misc
     bool stringToBool(const QString &string)
     {
         QString s(string.trimmed().toLower());
-        if (s.isEmpty()) { return false; }
+        if (s.isEmpty())
+        {
+            return false;
+        }
 
         // 1 char values
         const QChar c = s.at(0);
-        if (c == '1' || c == 't' || c == 'y' || c == 'x') { return true; }
-        if (c == '0' || c == 'f' || c == 'n' || c == '_') { return false; }
+        if (c == '1' || c == 't' || c == 'y' || c == 'x')
+        {
+            return true;
+        }
+        if (c == '0' || c == 'f' || c == 'n' || c == '_')
+        {
+            return false;
+        }
 
-        if (c == 'e') { return true; } // enabled
-        if (c == 'd') { return false; } // disabled
+        if (c == 'e')
+        {
+            return true;
+        } // enabled
+        if (c == 'd')
+        {
+            return false;
+        } // disabled
 
         // full words
-        if (s == "on") { return true; }
+        if (s == "on")
+        {
+            return true;
+        }
         return false;
     }
 
@@ -147,12 +180,21 @@ namespace swift::misc
         // same
         if (cs == Qt::CaseInsensitive)
         {
-            if (caseInsensitiveStringCompare(str1, str2)) { return 100; }
+            if (caseInsensitiveStringCompare(str1, str2))
+            {
+                return 100;
+            }
         }
-        else if (str1 == str2) { return 100; }
+        else if (str1 == str2)
+        {
+            return 100;
+        }
 
         // one string is empty
-        if (str1.isEmpty() || str2.isEmpty()) { return 0; }
+        if (str1.isEmpty() || str2.isEmpty())
+        {
+            return 0;
+        }
 
         // make sure aStr is not shorter
         const QString aStr = str1.length() >= str2.length() ? str1 : str2;
@@ -161,11 +203,20 @@ namespace swift::misc
         // starts/ends with
         const auto s1 = static_cast<double>(aStr.length());
         const auto s2 = static_cast<double>(bStr.length());
-        if (aStr.endsWith(bStr, cs)) { return qRound(s1 / s2 * 100); }
-        if (aStr.startsWith(bStr, cs)) { return qRound(s1 / s2 * 100); }
+        if (aStr.endsWith(bStr, cs))
+        {
+            return qRound(s1 / s2 * 100);
+        }
+        if (aStr.startsWith(bStr, cs))
+        {
+            return qRound(s1 / s2 * 100);
+        }
 
         // contains
-        if (aStr.contains(bStr, cs)) { return qRound(s1 / s2 * 100); }
+        if (aStr.contains(bStr, cs))
+        {
+            return qRound(s1 / s2 * 100);
+        }
 
         // char by char
         double points = 0;
@@ -200,7 +251,10 @@ namespace swift::misc
     {
         const QString hex(QString::number(value, 16).toUpper());
         const qsizetype l = hex.length();
-        if (l >= digits) { return hex.right(digits); }
+        if (l >= digits)
+        {
+            return hex.right(digits);
+        }
         const qsizetype d = digits - l;
         return QString(d, '0') + hex;
     }
@@ -208,7 +262,10 @@ namespace swift::misc
     QString stripDesignatorFromCompleterString(const QString &candidate)
     {
         const QString s(candidate.trimmed().toUpper());
-        if (s.isEmpty()) { return {}; }
+        if (s.isEmpty())
+        {
+            return {};
+        }
         return s.contains(' ') ? s.left(s.indexOf(' ')) : s;
     }
 
@@ -229,7 +286,10 @@ namespace swift::misc
         for (const QChar c : candidate)
         {
             const qsizetype dIndex = diacriticLetters.indexOf(c);
-            if (dIndex < 0) { output.append(c); }
+            if (dIndex < 0)
+            {
+                output.append(c);
+            }
             else
             {
                 const QString replacement = noDiacriticLetters[dIndex];
@@ -246,12 +306,18 @@ namespace swift::misc
         // https://discordapp.com/channels/539048679160676382/539925070550794240/686321311076581440
         for (const QChar &c : s)
         {
-            if (c.decompositionTag() == QChar::NoDecomposition) { result.push_back(c); }
+            if (c.decompositionTag() == QChar::NoDecomposition)
+            {
+                result.push_back(c);
+            }
             else
             {
                 for (const QChar &dc : c.decomposition())
                 {
-                    if (!dc.isMark()) { result.push_back(dc); }
+                    if (!dc.isMark())
+                    {
+                        result.push_back(dc);
+                    }
                 }
             }
         }
@@ -270,41 +336,74 @@ namespace swift::misc
 
     QDateTime fromStringUtc(const QString &dateTimeString, const QString &format)
     {
-        if (dateTimeString.isEmpty() || format.isEmpty()) { return {}; }
+        if (dateTimeString.isEmpty() || format.isEmpty())
+        {
+            return {};
+        }
         QDateTime dt = QDateTime::fromString(dateTimeString, format);
-        if (!dt.isValid()) { return dt; }
+        if (!dt.isValid())
+        {
+            return dt;
+        }
         dt.setTimeZone(QTimeZone::utc()); // must only be applied to valid timestamps
         return dt;
     }
 
     QDateTime fromStringUtc(const QString &dateTimeString, Qt::DateFormat format)
     {
-        if (dateTimeString.isEmpty()) { return {}; }
+        if (dateTimeString.isEmpty())
+        {
+            return {};
+        }
         QDateTime dt = QDateTime::fromString(dateTimeString, format);
-        if (!dt.isValid()) { return dt; }
+        if (!dt.isValid())
+        {
+            return dt;
+        }
         dt.setTimeZone(QTimeZone::utc()); // must only be applied to valid timestamps
         return dt;
     }
 
     QDateTime fromStringUtc(const QString &dateTimeString, const QLocale &locale, QLocale::FormatType format)
     {
-        if (dateTimeString.isEmpty()) { return {}; }
+        if (dateTimeString.isEmpty())
+        {
+            return {};
+        }
         QDateTime dt = locale.toDateTime(dateTimeString, format);
-        if (!dt.isValid()) { return dt; }
+        if (!dt.isValid())
+        {
+            return dt;
+        }
         dt.setTimeZone(QTimeZone::utc()); // must only be applied to valid timestamps
         return dt;
     }
 
     QDateTime parseMultipleDateTimeFormats(const QString &dateTimeString)
     {
-        if (dateTimeString.isEmpty()) { return {}; }
+        if (dateTimeString.isEmpty())
+        {
+            return {};
+        }
         if (isDigitsOnlyString(dateTimeString))
         {
             // 2017 0301 124421 321
-            if (dateTimeString.length() == 17) { return fromStringUtc(dateTimeString, "yyyyMMddHHmmsszzz"); }
-            if (dateTimeString.length() == 14) { return fromStringUtc(dateTimeString, "yyyyMMddHHmmss"); }
-            if (dateTimeString.length() == 12) { return fromStringUtc(dateTimeString, "yyyyMMddHHmm"); }
-            if (dateTimeString.length() == 8) { return fromStringUtc(dateTimeString, "yyyyMMdd"); }
+            if (dateTimeString.length() == 17)
+            {
+                return fromStringUtc(dateTimeString, "yyyyMMddHHmmsszzz");
+            }
+            if (dateTimeString.length() == 14)
+            {
+                return fromStringUtc(dateTimeString, "yyyyMMddHHmmss");
+            }
+            if (dateTimeString.length() == 12)
+            {
+                return fromStringUtc(dateTimeString, "yyyyMMddHHmm");
+            }
+            if (dateTimeString.length() == 8)
+            {
+                return fromStringUtc(dateTimeString, "yyyyMMdd");
+            }
             return {};
         }
 
@@ -338,7 +437,10 @@ namespace swift::misc
 
     QDateTime parseDateTimeStringOptimized(const QString &dateTimeString)
     {
-        if (dateTimeString.length() < 8) { return {}; }
+        if (dateTimeString.length() < 8)
+        {
+            return {};
+        }
 
         // yyyyMMddHHmmsszzz
         // 01234567890123456
@@ -350,7 +452,10 @@ namespace swift::misc
         QDateTime dt;
         dt.setTimeZone(QTimeZone::utc());
         dt.setDate(date);
-        if (dateTimeString.length() < 12) { return dt; }
+        if (dateTimeString.length() < 12)
+        {
+            return dt;
+        }
 
         QTime t;
         const int hour(QStringView { dateTimeString }.mid(8, 2).toInt());
@@ -373,48 +478,75 @@ namespace swift::misc
 
     bool stringCompare(const QString &c1, const QString &c2, Qt::CaseSensitivity cs)
     {
-        if (cs == Qt::CaseSensitive) { return c1 == c2; }
+        if (cs == Qt::CaseSensitive)
+        {
+            return c1 == c2;
+        }
         return caseInsensitiveStringCompare(c1, c2);
     }
 
     QString inApostrophes(const QString &in, bool ignoreEmpty)
     {
-        if (in.isEmpty()) { return ignoreEmpty ? QString() : QStringLiteral("''"); }
+        if (in.isEmpty())
+        {
+            return ignoreEmpty ? QString() : QStringLiteral("''");
+        }
         return u'\'' % in % u'\'';
     }
 
     QString inQuotes(const QString &in, bool ignoreEmpty)
     {
-        if (in.isEmpty()) { return ignoreEmpty ? QString() : QStringLiteral("\"\""); }
+        if (in.isEmpty())
+        {
+            return ignoreEmpty ? QString() : QStringLiteral("\"\"");
+        }
         return u'"' % in % u'"';
     }
 
     QString withQuestionMark(const QString &question)
     {
-        if (question.endsWith("?")) { return question; }
+        if (question.endsWith("?"))
+        {
+            return question;
+        }
         return question % u'?';
     }
 
     qsizetype nthIndexOf(const QString &string, QChar ch, int nth, Qt::CaseSensitivity cs)
     {
-        if (nth < 1 || string.isEmpty() || nth > string.length()) { return -1; }
+        if (nth < 1 || string.isEmpty() || nth > string.length())
+        {
+            return -1;
+        }
 
         qsizetype from = 0;
         qsizetype ci = -1;
         for (int t = 0; t < nth; ++t)
         {
             ci = string.indexOf(ch, from, cs);
-            if (ci < 0) { return -1; }
+            if (ci < 0)
+            {
+                return -1;
+            }
             from = ci + 1;
-            if (from >= string.length()) { return -1; }
+            if (from >= string.length())
+            {
+                return -1;
+            }
         }
         return ci;
     }
 
     QString joinStringSet(const QSet<QString> &set, const QString &separator)
     {
-        if (set.isEmpty()) { return {}; }
-        if (set.size() == 1) { return *set.begin(); }
+        if (set.isEmpty())
+        {
+            return {};
+        }
+        if (set.size() == 1)
+        {
+            return *set.begin();
+        }
         return set.values().join(separator);
     }
 
@@ -424,13 +556,22 @@ namespace swift::misc
         QList<QStringView> lines = splitLinesRefs(data);
         for (const QStringView l : lines)
         {
-            if (l.isEmpty()) { continue; }
+            if (l.isEmpty())
+            {
+                continue;
+            }
             const qsizetype i = l.indexOf('=');
-            if (i < 0 || i >= l.length() + 1) { continue; }
+            if (i < 0 || i >= l.length() + 1)
+            {
+                continue;
+            }
 
             const QString key = l.left(i).trimmed().toString();
             const QString value = l.mid(i + 1).toString();
-            if (value.isEmpty()) { continue; }
+            if (value.isEmpty())
+            {
+                continue;
+            }
             map.insert(key, value);
         }
         return map;
@@ -438,15 +579,27 @@ namespace swift::misc
 
     QString removeSurroundingApostrophes(const QString &in)
     {
-        if (in.size() < 2) { return in; }
-        if (in.startsWith("'") && in.endsWith("'")) { return in.mid(1, in.length() - 2); }
+        if (in.size() < 2)
+        {
+            return in;
+        }
+        if (in.startsWith("'") && in.endsWith("'"))
+        {
+            return in.mid(1, in.length() - 2);
+        }
         return in;
     }
 
     QString removeSurroundingQuotes(const QString &in)
     {
-        if (in.size() < 2) { return in; }
-        if (in.startsWith("\"") && in.endsWith("\"")) { return in.mid(1, in.length() - 2); }
+        if (in.size() < 2)
+        {
+            return in;
+        }
+        if (in.startsWith("\"") && in.endsWith("\""))
+        {
+            return in.mid(1, in.length() - 2);
+        }
         return in;
     }
 
@@ -455,49 +608,79 @@ namespace swift::misc
         QString copy(in);
 
         thread_local const QRegularExpression re1(R"(\/\*(.|\n)*?\*\/)");
-        if (removeSlashStar) { copy.remove(re1); }
+        if (removeSlashStar)
+        {
+            copy.remove(re1);
+        }
 
         thread_local const QRegularExpression re2("\\/\\/.*");
-        if (removeDoubleSlash) { copy.remove(re2); }
+        if (removeDoubleSlash)
+        {
+            copy.remove(re2);
+        }
 
         return copy;
     }
 
     bool containsAny(const QString &testString, const QStringList &any, Qt::CaseSensitivity cs)
     {
-        if (testString.isEmpty() || any.isEmpty()) { return false; }
+        if (testString.isEmpty() || any.isEmpty())
+        {
+            return false;
+        }
         return std::any_of(any.begin(), any.end(), [&](const QString &a) { return testString.contains(a, cs); });
     }
 
     bool hasBalancedQuotes(const QString &in, char quote)
     {
-        if (in.isEmpty()) { return true; }
+        if (in.isEmpty())
+        {
+            return true;
+        }
         const qsizetype c = in.count(quote);
         return (c % 2) == 0;
     }
 
     double parseFraction(const QString &fraction, double failDefault)
     {
-        if (fraction.isEmpty()) { return failDefault; }
+        if (fraction.isEmpty())
+        {
+            return failDefault;
+        }
         bool ok {};
 
         double r = failDefault;
         if (fraction.contains('/'))
         {
             const QStringList parts = fraction.split('/');
-            if (parts.size() != 2) { return failDefault; }
+            if (parts.size() != 2)
+            {
+                return failDefault;
+            }
             const double c = parts.front().trimmed().toDouble(&ok);
-            if (!ok) { return failDefault; }
+            if (!ok)
+            {
+                return failDefault;
+            }
 
             const double d = parts.last().trimmed().toDouble(&ok);
-            if (!ok) { return failDefault; }
-            if (qFuzzyCompare(0.0, d)) { return failDefault; }
+            if (!ok)
+            {
+                return failDefault;
+            }
+            if (qFuzzyCompare(0.0, d))
+            {
+                return failDefault;
+            }
             r = c / d;
         }
         else
         {
             r = fraction.trimmed().toDouble(&ok);
-            if (!ok) { return failDefault; }
+            if (!ok)
+            {
+                return failDefault;
+            }
         }
         return r;
     }
@@ -505,10 +688,16 @@ namespace swift::misc
     QString cleanNumber(const QString &number)
     {
         QString n = number.trimmed();
-        if (n.isEmpty()) { return {}; }
+        if (n.isEmpty())
+        {
+            return {};
+        }
 
         qsizetype dp = n.indexOf('.');
-        if (dp < 0) { dp = n.indexOf(','); }
+        if (dp < 0)
+        {
+            dp = n.indexOf(',');
+        }
 
         // clean all trailing stuff
         while (dp >= 0 && !n.isEmpty())
@@ -519,11 +708,17 @@ namespace swift::misc
                 n.chop(1);
                 continue;
             }
-            if (l == '.' || l == ',') { n.chop(1); }
+            if (l == '.' || l == ',')
+            {
+                n.chop(1);
+            }
             break;
         }
 
-        while (n.startsWith("00")) { n.remove(0, 1); }
+        while (n.startsWith("00"))
+        {
+            n.remove(0, 1);
+        }
 
         return n;
     }

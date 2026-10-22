@@ -78,7 +78,10 @@ namespace swift::misc
         //! Copy assignment operator.
         CStrongStringView &operator=(const CStrongStringView &other)
         {
-            if (other.isOwning()) { m_view = m_string = other.m_string; }
+            if (other.isOwning())
+            {
+                m_view = m_string = other.m_string;
+            }
             else
             {
                 m_view = other.m_view;
@@ -352,17 +355,26 @@ namespace swift::misc
         //! Add category if not already existing
         void addIfNotExisting(const CLogCategory &category)
         {
-            if (this->m_categories.contains(category)) { return; }
+            if (this->m_categories.contains(category))
+            {
+                return;
+            }
             this->m_categories.push_back(category);
         }
 
         //! Add categories if not already existing
         void addIfNotExisting(const CLogCategoryList &categories)
         {
-            if (this->m_categories.isEmpty()) { this->m_categories.push_back(categories); }
+            if (this->m_categories.isEmpty())
+            {
+                this->m_categories.push_back(categories);
+            }
             else
             {
-                for (const CLogCategory &cat : categories) { this->addIfNotExisting(cat); }
+                for (const CLogCategory &cat : categories)
+                {
+                    this->addIfNotExisting(cat);
+                }
             }
         }
 

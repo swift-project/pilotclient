@@ -10,12 +10,18 @@ namespace swift::misc::aviation
     CComNavEquipment::CComNavEquipment(ComNavEquipment comNavEquipment, CpdlcSatcomEquipment cpdlcSatcomEquipment)
         : m_equipment(comNavEquipment), m_cpdlcSatcomEquipment(cpdlcSatcomEquipment)
     {
-        if (m_equipment == ComNavEquipment()) { m_equipment = NoEquip; }
+        if (m_equipment == ComNavEquipment())
+        {
+            m_equipment = NoEquip;
+        }
     }
 
     CComNavEquipment::CComNavEquipment(QString equipment)
     {
-        if (equipment.isEmpty()) { return; }
+        if (equipment.isEmpty())
+        {
+            return;
+        }
 
         m_equipment = {}; // Clear default flag
 

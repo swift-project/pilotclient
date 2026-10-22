@@ -129,7 +129,10 @@ namespace swift::gui::components
 
         QPointer<CLoginComponent> myself(this);
         QTimer::singleShot(5000, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->updateGui();
         });
     }
@@ -138,7 +141,10 @@ namespace swift::gui::components
 
     void CLoginComponent::mainInfoAreaChanged(const QWidget *currentWidget)
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         if (currentWidget != this && currentWidget != this->parentWidget())
         {
             // m_logoffCountdownTimer.stop();
@@ -170,8 +176,14 @@ namespace swift::gui::components
 
     void CLoginComponent::toggleNetworkConnection()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
-        if (!sGui->getIContextNetwork() || !sGui->getIContextAudio()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
+        if (!sGui->getIContextNetwork() || !sGui->getIContextAudio())
+        {
+            return;
+        }
 
         m_networkConnected = sGui && sGui->getIContextNetwork()->isConnected();
         const bool vatsimLogin = this->isVatsimNetworkTabSelected();
@@ -212,7 +224,10 @@ namespace swift::gui::components
 
             // Login mode
             const CLoginMode mode = ui->comp_NetworkDetails->getLoginMode();
-            if (mode.isObserver()) { CLogMessage(this).info(u"Login in observer mode"); }
+            if (mode.isObserver())
+            {
+                CLogMessage(this).info(u"Login in observer mode");
+            }
 
             // Server
             currentServer = this->getCurrentServer();
@@ -265,9 +280,15 @@ namespace swift::gui::components
                 m_lastAircraftModel.set(ownModel);
                 ui->le_LoginCallsign->setText(ownAircraft.getCallsignAsString());
                 ui->le_LoginHomeBase->setText(currentServer.getUser().getHomeBase().asString());
-                if (vatsimLogin) { m_networkSetup.setLastVatsimServer(currentServer); }
+                if (vatsimLogin)
+                {
+                    m_networkSetup.setLastVatsimServer(currentServer);
+                }
             }
-            else { sGui->setExtraWindowTitle(""); }
+            else
+            {
+                sGui->setExtraWindowTitle("");
+            }
         }
         else
         {
@@ -284,7 +305,10 @@ namespace swift::gui::components
             this->setGuiLoginAsValues(ownAircraft);
             emit this->loginOrLogoffSuccessful();
         }
-        else { emit this->loginOrLogoffCancelled(); }
+        else
+        {
+            emit this->loginOrLogoffCancelled();
+        }
     }
 
     void CLoginComponent::loadRememberedUserData()
@@ -297,7 +321,10 @@ namespace swift::gui::components
 
     void CLoginComponent::onSelectedServerChanged(const CServer &server)
     {
-        if (!m_updatePilotOnServerChanges) { return; }
+        if (!m_updatePilotOnServerChanges)
+        {
+            return;
+        }
         const bool vatsim = this->isVatsimNetworkTabSelected();
         const CUser user = server.getEcosystem() != CEcosystem::privateFsd() ?
                                this->getCurrentVatsimServer().getUser() :
@@ -310,7 +337,10 @@ namespace swift::gui::components
     void CLoginComponent::onSimulatorStatusChanged(int status)
     {
         auto s = static_cast<ISimulator::SimulatorStatus>(status);
-        if (!this->hasValidContexts()) { return; }
+        if (!this->hasValidContexts())
+        {
+            return;
+        }
         m_simulatorConnected = s.testFlag(ISimulator::Connected);
         this->updateUiConnectState();
         if (sGui->getIContextNetwork()->isConnected())
@@ -326,7 +356,10 @@ namespace swift::gui::components
     void CLoginComponent::onNetworkStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         Q_UNUSED(from)
-        if (to != CConnectionStatus::Connected) { return; }
+        if (to != CConnectionStatus::Connected)
+        {
+            return;
+        }
 
         m_networkConnected = true;
         this->updateUiConnectState();
@@ -336,7 +369,10 @@ namespace swift::gui::components
     void CLoginComponent::onServerTabWidgetChanged(int index)
     {
         Q_UNUSED(index)
-        if (!m_updatePilotOnServerChanges) { return; }
+        if (!m_updatePilotOnServerChanges)
+        {
+            return;
+        }
         const bool vatsim = this->isVatsimNetworkTabSelected();
         const CServer server = vatsim ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
         ui->form_Pilot->setUser(server.getUser());
@@ -344,11 +380,26 @@ namespace swift::gui::components
 
     bool CLoginComponent::hasValidContexts() const
     {
-        if (!sGui || !sGui->supportsContexts()) { return false; }
-        if (sGui->isShuttingDown()) { return false; }
-        if (!sGui->getIContextSimulator()) { return false; }
-        if (!sGui->getIContextNetwork()) { return false; }
-        if (!sGui->getIContextOwnAircraft()) { return false; }
+        if (!sGui || !sGui->supportsContexts())
+        {
+            return false;
+        }
+        if (sGui->isShuttingDown())
+        {
+            return false;
+        }
+        if (!sGui->getIContextSimulator())
+        {
+            return false;
+        }
+        if (!sGui->getIContextNetwork())
+        {
+            return false;
+        }
+        if (!sGui->getIContextOwnAircraft())
+        {
+            return false;
+        }
         return true;
     }
 
@@ -403,7 +454,10 @@ namespace swift::gui::components
     {
         int v = ui->pb_LogoffTimeout->value();
         v -= 1;
-        if (v < 0) { v = 0; }
+        if (v < 0)
+        {
+            v = 0;
+        }
         ui->pb_LogoffTimeout->setValue(v);
         if (v <= 0)
         {
@@ -415,8 +469,14 @@ namespace swift::gui::components
     void CLoginComponent::autoLogoffDetection()
     {
         using namespace std::chrono_literals;
-        if (!this->hasValidContexts()) { return; }
-        if (!sGui->getIContextNetwork()->isConnected()) { return; } // nothing to logoff
+        if (!this->hasValidContexts())
+        {
+            return;
+        }
+        if (!sGui->getIContextNetwork()->isConnected())
+        {
+            return;
+        } // nothing to logoff
 
         const CStatusMessage m =
             CStatusMessage(this, CStatusMessage::SeverityInfo,
@@ -433,8 +493,14 @@ namespace swift::gui::components
     {
         using namespace std::chrono_literals;
         //! \fixme code duplication with function above
-        if (!this->hasValidContexts()) { return; }
-        if (!sGui->getIContextNetwork()->isConnected()) { return; }
+        if (!this->hasValidContexts())
+        {
+            return;
+        }
+        if (!sGui->getIContextNetwork()->isConnected())
+        {
+            return;
+        }
 
         const auto msg = fatal ? CStatusMessage(this, CStatusMessage::SeverityError,
                                                 u"Sim frame rate too low to maintain constant simulation rate. "
@@ -455,16 +521,25 @@ namespace swift::gui::components
 
     void CLoginComponent::onSimulatorModelChanged(const CAircraftModel &model)
     {
-        if (!sGui || !sGui->getIContextNetwork() || sApp->isShuttingDown()) { return; }
+        if (!sGui || !sGui->getIContextNetwork() || sApp->isShuttingDown())
+        {
+            return;
+        }
         const bool isNetworkConnected = sGui && sGui->getIContextNetwork()->isConnected();
-        if (isNetworkConnected) { return; }
+        if (isNetworkConnected)
+        {
+            return;
+        }
 
         // update with latest DB data
         CAircraftModel reverseModel(model);
         if (sGui->hasWebDataServices())
         {
             reverseModel = sGui->getWebDataServices()->getModelForModelString(model.getModelString());
-            if (!reverseModel.isLoadedFromDb()) { reverseModel = model; } // reset if not found
+            if (!reverseModel.isLoadedFromDb())
+            {
+                reverseModel = model;
+            } // reset if not found
         }
 
         const QString modelStr(reverseModel.hasModelString() ? reverseModel.getModelString() : "<unknown>");
@@ -506,20 +581,32 @@ namespace swift::gui::components
         const QString s = m_networkConnected ? QStringLiteral("disconnect") : QStringLiteral("connect");
         ui->pb_Ok->setText(s);
 
-        if (m_networkConnected) { ui->pb_Ok->setDisabled(false); }
-        else { ui->pb_Ok->setDisabled(!m_simulatorConnected); }
+        if (m_networkConnected)
+        {
+            ui->pb_Ok->setDisabled(false);
+        }
+        else
+        {
+            ui->pb_Ok->setDisabled(!m_simulatorConnected);
+        }
     }
 
     void CLoginComponent::blinkConnectButton()
     {
-        if (!ui->pb_Ok->isEnabled()) { return; }
+        if (!ui->pb_Ok->isEnabled())
+        {
+            return;
+        }
         ui->pb_Ok->setProperty("blinkOn", true);
         static constexpr int blinkLength = 100;
         static constexpr int blinkTimes = 10;
 
         auto timer = new QTimer(this);
         connect(timer, &QTimer::timeout, this, [this, timer, count = std::make_shared<int>(0)] {
-            if (++*count <= blinkTimes) { ui->pb_Ok->setProperty("blinkOn", !ui->pb_Ok->property("blinkOn").toBool()); }
+            if (++*count <= blinkTimes)
+            {
+                ui->pb_Ok->setProperty("blinkOn", !ui->pb_Ok->property("blinkOn").toBool());
+            }
             else
             {
                 ui->pb_Ok->setProperty("blinkOn", false);
@@ -541,13 +628,19 @@ namespace swift::gui::components
     CAircraftModel CLoginComponent::getPrefillModel() const
     {
         const CAircraftModel model = m_lastAircraftModel.get();
-        if (model.hasAircraftDesignator()) { return model; }
+        if (model.hasAircraftDesignator())
+        {
+            return model;
+        }
         return IContextOwnAircraft::getDefaultOwnAircraftModel();
     }
 
     bool CLoginComponent::updateOwnAircraftCallsignAndPilotFromGuiValues()
     {
-        if (!this->hasValidContexts()) { return false; }
+        if (!this->hasValidContexts())
+        {
+            return false;
+        }
         CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
         const CCallsign cs = ui->comp_OwnAircraft->getCallsignFromGui();
         bool changedCallsign = false;
@@ -574,9 +667,18 @@ namespace swift::gui::components
 
     void CLoginComponent::updateGui()
     {
-        if (!m_networkConnected) { return; }
-        if (!this->hasValidContexts()) { return; }
-        if (!sGui->getIContextNetwork()) { return; }
+        if (!m_networkConnected)
+        {
+            return;
+        }
+        if (!this->hasValidContexts())
+        {
+            return;
+        }
+        if (!sGui->getIContextNetwork())
+        {
+            return;
+        }
         const IContextNetwork *nwc = sGui->getIContextNetwork();
         const CSimulatedAircraft ownAircraft = sGui->getIContextOwnAircraft()->getOwnAircraft();
         this->setGuiLoginAsValues(ownAircraft);

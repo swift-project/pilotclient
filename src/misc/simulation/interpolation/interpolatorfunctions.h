@@ -17,8 +17,14 @@ namespace swift::misc::simulation
     //! Clamp time fraction [0,1]
     inline double clampValidTimeFraction(double timeFraction)
     {
-        if (timeFraction > 1.0) { return 1.0; }
-        if (timeFraction < 0.0) { return 0.0; }
+        if (timeFraction > 1.0)
+        {
+            return 1.0;
+        }
+        if (timeFraction < 0.0)
+        {
+            return 0.0;
+        }
         return timeFraction;
     }
 } // namespace swift::misc::simulation

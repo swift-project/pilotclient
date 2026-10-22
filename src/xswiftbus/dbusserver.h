@@ -54,7 +54,7 @@ namespace XSwiftBus
         void close();
 
         //! Get the last error
-        CDBusError lastError() const { return m_lastError; }
+        const CDBusError &lastError() const { return m_lastError; }
 
         //! Set the function to be used for handling new connections.
         void setNewConnectionFunc(const NewConnectionFunc &func) { m_newConnectionFunc = func; }

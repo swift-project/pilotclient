@@ -87,8 +87,14 @@ namespace swift::misc::simulation
 
     bool CSimulatedAircraft::isValidForLogin() const
     {
-        if (m_callsign.isEmpty()) { return false; }
-        if (m_pilot.isNull()) { return false; }
+        if (m_callsign.isEmpty())
+        {
+            return false;
+        }
+        if (m_pilot.isNull())
+        {
+            return false;
+        }
         return true;
     }
 
@@ -96,7 +102,10 @@ namespace swift::misc::simulation
     {
         CAircraftVelocity velocity = m_situation.getVelocity();
         m_situation = situation;
-        if (m_situation.getVelocity() == CAircraftVelocity {}) { m_situation.setVelocity(velocity); }
+        if (m_situation.getVelocity() == CAircraftVelocity {})
+        {
+            m_situation.setVelocity(velocity);
+        }
 
         m_situation.setCallsign(this->getCallsign());
         this->setSupportingGndFlag(situation.hasInboundGroundDetails());
@@ -115,20 +124,29 @@ namespace swift::misc::simulation
 
     bool CSimulatedAircraft::isEnabled() const
     {
-        if (!this->hasModelString()) { return false; }
+        if (!this->hasModelString())
+        {
+            return false;
+        }
         return m_enabled;
     }
 
     bool CSimulatedAircraft::setEnabled(bool enabled)
     {
-        if (m_enabled == enabled) { return false; }
+        if (m_enabled == enabled)
+        {
+            return false;
+        }
         m_enabled = enabled;
         return true;
     }
 
     bool CSimulatedAircraft::setFastPositionUpdates(bool useFastPositions)
     {
-        if (m_fastPositionUpdates == useFastPositions) { return false; }
+        if (m_fastPositionUpdates == useFastPositions)
+        {
+            return false;
+        }
         m_fastPositionUpdates = useFastPositions;
         return true;
     }
@@ -140,7 +158,10 @@ namespace swift::misc::simulation
 
     bool CSimulatedAircraft::setRendered(bool rendered)
     {
-        if (m_rendered == rendered) { return false; }
+        if (m_rendered == rendered)
+        {
+            return false;
+        }
         m_rendered = rendered;
         return true;
     }
@@ -156,7 +177,10 @@ namespace swift::misc::simulation
         {
             return this->getAircraftIcaoCodeDesignator() % u'/' % this->getAirlineIcaoCodeDesignator();
         }
-        if (this->hasAirlineDesignator()) { return this->getAirlineIcaoCodeDesignator(); }
+        if (this->hasAirlineDesignator())
+        {
+            return this->getAirlineIcaoCodeDesignator();
+        }
         return this->getAircraftIcaoCodeDesignator();
     }
 
@@ -230,21 +254,30 @@ namespace swift::misc::simulation
 
     bool CSimulatedAircraft::setCom1ActiveFrequency(const CFrequency &frequency)
     {
-        if (!CComSystem::isValidComFrequency(frequency)) { return false; }
+        if (!CComSystem::isValidComFrequency(frequency))
+        {
+            return false;
+        }
         m_com1system.setFrequencyActive(frequency);
         return true;
     }
 
     bool CSimulatedAircraft::setCom2ActiveFrequency(const CFrequency &frequency)
     {
-        if (!CComSystem::isValidComFrequency(frequency)) { return false; }
+        if (!CComSystem::isValidComFrequency(frequency))
+        {
+            return false;
+        }
         m_com2system.setFrequencyActive(frequency);
         return true;
     }
 
     bool CSimulatedAircraft::setComActiveFrequency(const CFrequency &frequency, CComSystem::ComUnit unit)
     {
-        if (!CComSystem::isValidComFrequency(frequency)) { return false; }
+        if (!CComSystem::isValidComFrequency(frequency))
+        {
+            return false;
+        }
         switch (unit)
         {
         case CComSystem::Com1: return this->setCom1ActiveFrequency(frequency);
@@ -308,7 +341,10 @@ namespace swift::misc::simulation
             }
         }
 
-        if (!this->hasAircraftDesignator()) { return model.getLivery().getCombinedCode(); }
+        if (!this->hasAircraftDesignator())
+        {
+            return model.getLivery().getCombinedCode();
+        }
         else if (model.getLivery().hasCombinedCode())
         {
             static const QString s("%1 (%2)");
@@ -320,7 +356,10 @@ namespace swift::misc::simulation
 
     QVariant CSimulatedAircraft::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -389,7 +428,10 @@ namespace swift::misc::simulation
             {
                 ICoordinateWithRelativePosition::setPropertyByIndex(index, variant);
             }
-            else { CValueObject::setPropertyByIndex(index, variant); }
+            else
+            {
+                CValueObject::setPropertyByIndex(index, variant);
+            }
             break;
         }
     }
@@ -472,13 +514,25 @@ namespace swift::misc::simulation
     QString CSimulatedAircraft::getNetworkModelAircraftIcaoDifference() const
     {
         const CAircraftIcaoCode icaoNw(this->getNetworkModel().getAircraftIcaoCode());
-        if (!icaoNw.hasDesignator()) { return QStringLiteral("[x] no nw. ICAO"); }
+        if (!icaoNw.hasDesignator())
+        {
+            return QStringLiteral("[x] no nw. ICAO");
+        }
 
         const CAircraftIcaoCode icaoModel(this->getModel().getAircraftIcaoCode());
-        if (!icaoModel.hasDesignator()) { return QStringLiteral("[x] no sim. ICAO"); }
+        if (!icaoModel.hasDesignator())
+        {
+            return QStringLiteral("[x] no sim. ICAO");
+        }
 
-        if (icaoModel.isDbEqual(icaoNw) || icaoModel == icaoNw) { return u"[==] " % icaoModel.getDesignatorDbKey(); }
-        if (icaoModel.getDesignator() == icaoNw.getDesignator()) { return u"[=] " % icaoModel.getDesignator(); }
+        if (icaoModel.isDbEqual(icaoNw) || icaoModel == icaoNw)
+        {
+            return u"[==] " % icaoModel.getDesignatorDbKey();
+        }
+        if (icaoModel.getDesignator() == icaoNw.getDesignator())
+        {
+            return u"[=] " % icaoModel.getDesignator();
+        }
         return QStringLiteral("%1 -> %2").arg(icaoNw.getDesignator(), icaoModel.getDesignator());
     }
 
@@ -502,8 +556,14 @@ namespace swift::misc::simulation
 
         const CAirlineIcaoCode icao(this->getModel().getAirlineIcaoCode());
         const CAirlineIcaoCode icaoNw(this->getNetworkModel().getAirlineIcaoCode());
-        if (icao.isDbEqual(icaoNw) || icao == icaoNw) { return u"[==] " % icao.getDesignatorDbKey(); }
-        if (icao.getDesignator() == icaoNw.getDesignator()) { return u"[=] " % icao.getDesignatorDbKey(); }
+        if (icao.isDbEqual(icaoNw) || icao == icaoNw)
+        {
+            return u"[==] " % icao.getDesignatorDbKey();
+        }
+        if (icao.getDesignator() == icaoNw.getDesignator())
+        {
+            return u"[=] " % icao.getDesignatorDbKey();
+        }
         return diff.arg(icaoNw.getDesignator(), icao.getDesignator());
     }
 
@@ -556,7 +616,10 @@ namespace swift::misc::simulation
 
     bool CSimulatedAircraft::setCG(const CLength &cg)
     {
-        if (cg.isNull()) { return false; }
+        if (cg.isNull())
+        {
+            return false;
+        }
         // ???? set to both models, or only the matched model ????
         const int c = m_models.setCG(cg);
         return c > 0;

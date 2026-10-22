@@ -63,15 +63,24 @@ namespace swift::gui::views
     template <class T>
     int CViewWithDbObjects<T>::selectDbKeys(const QSet<KeyType> &keys)
     {
-        if (keys.isEmpty()) { return 0; }
+        if (keys.isEmpty())
+        {
+            return 0;
+        }
         this->clearSelection();
         int r = -1;
         QSet<int> rows;
         for (const ObjectType &obj : CViewBase<ModelClass>::containerOrFilteredContainer())
         {
             r++;
-            if (!obj.hasValidDbKey()) { continue; }
-            if (keys.contains(obj.getDbKey())) { rows.insert(r); }
+            if (!obj.hasValidDbKey())
+            {
+                continue;
+            }
+            if (keys.contains(obj.getDbKey()))
+            {
+                rows.insert(r);
+            }
         }
         return this->selectRows(rows);
     }
@@ -79,7 +88,10 @@ namespace swift::gui::views
     template <class T>
     QSet<typename CViewWithDbObjects<T>::KeyType> CViewWithDbObjects<T>::selectedDbKeys() const
     {
-        if (!this->hasSelection()) { return QSet<KeyType>(); }
+        if (!this->hasSelection())
+        {
+            return QSet<KeyType>();
+        }
         const ContainerType selected(this->selectedObjects());
         return selected.toDbKeySet();
     }
@@ -87,22 +99,37 @@ namespace swift::gui::views
     template <class T>
     int CViewWithDbObjects<T>::removeDbKeys(const QSet<KeyType> &keys)
     {
-        if (keys.isEmpty()) { return 0; }
-        if (this->isEmpty()) { return 0; }
+        if (keys.isEmpty())
+        {
+            return 0;
+        }
+        if (this->isEmpty())
+        {
+            return 0;
+        }
 
         ContainerType newObjects(this->container());
         int delta = newObjects.removeObjectsWithKeys(keys);
-        if (delta > 0) { this->updateContainerMaybeAsync(newObjects); }
+        if (delta > 0)
+        {
+            this->updateContainerMaybeAsync(newObjects);
+        }
         return delta;
     }
 
     template <class T>
     int CViewWithDbObjects<T>::replaceOrAddObjectsByKey(const ContainerType &container)
     {
-        if (container.isEmpty()) { return 0; }
+        if (container.isEmpty())
+        {
+            return 0;
+        }
         ContainerType copy(this->container());
         int c = copy.replaceOrAddObjectsByKey(container);
-        if (c == 0) { return 0; }
+        if (c == 0)
+        {
+            return 0;
+        }
         this->updateContainerMaybeAsync(copy);
         return c;
     }
@@ -110,7 +137,10 @@ namespace swift::gui::views
     template <class T>
     void CViewWithDbObjects<T>::selectObjects(const ContainerType &selectedObjects)
     {
-        if (selectedObjects.isEmpty()) { return; }
+        if (selectedObjects.isEmpty())
+        {
+            return;
+        }
         this->selectDbKeys(selectedObjects.toDbKeySet());
     }
 
@@ -184,16 +214,25 @@ namespace swift::gui::views
     template <class T>
     void COrderableViewWithDbObjects<T>::selectObjects(const ContainerType &selectedObjects)
     {
-        if (selectedObjects.isEmpty()) { return; }
+        if (selectedObjects.isEmpty())
+        {
+            return;
+        }
         this->selectDbKeys(selectedObjects.toDbKeySet());
     }
 
     template <class T>
     void COrderableViewWithDbObjects<T>::moveSelectedItems(int order)
     {
-        if (this->isEmpty()) { return; }
+        if (this->isEmpty())
+        {
+            return;
+        }
         const ContainerType objs(this->selectedObjects());
-        if (objs.isEmpty()) { return; }
+        if (objs.isEmpty())
+        {
+            return;
+        }
         this->m_model->moveItems(objs, order);
     }
 
@@ -207,15 +246,24 @@ namespace swift::gui::views
     void COrderableViewWithDbObjects<T>::orderToBottom()
     {
         int c = this->model()->rowCount() - 1;
-        if (c >= 0) { this->moveSelectedItems(c); }
+        if (c >= 0)
+        {
+            this->moveSelectedItems(c);
+        }
     }
 
     template <class T>
     void COrderableViewWithDbObjects<T>::orderToLineEdit()
     {
-        if (this->isEmpty()) { return; }
+        if (this->isEmpty())
+        {
+            return;
+        }
         auto *le = qobject_cast<QLineEdit *>(QObject::sender());
-        if (!le || le->text().isEmpty()) { return; }
+        if (!le || le->text().isEmpty())
+        {
+            return;
+        }
         const int order = le->text().toInt();
         this->moveSelectedItems(order);
     }

@@ -66,7 +66,10 @@ namespace XSwiftBus
         XPLMUnregisterFlightLoopCallback(flightLoopCallback, this);
         m_dbusConnection->close();
         m_shouldStop = true;
-        if (m_dbusThread.joinable()) { m_dbusThread.join(); }
+        if (m_dbusThread.joinable())
+        {
+            m_dbusThread.join();
+        }
     }
 
     void CPlugin::readConfig()
@@ -150,12 +153,18 @@ namespace XSwiftBus
 
     void CPlugin::onAircraftRepositioned()
     {
-        if (m_service) { m_service->resetFrameTotals(); }
+        if (m_service)
+        {
+            m_service->resetFrameTotals();
+        }
     }
 
     void CPlugin::onSceneryLoaded()
     {
-        if (m_service) { m_service->onSceneryLoaded(); }
+        if (m_service)
+        {
+            m_service->onSceneryLoaded();
+        }
     }
 
     float CPlugin::startServerDeferred(float, float, int, void *refcon)
@@ -175,8 +184,14 @@ namespace XSwiftBus
         auto *plugin = static_cast<CPlugin *>(refcon);
 
         plugin->m_dbusDispatcher.runOnce();
-        if (plugin->m_service) { plugin->m_service->process(); }
-        if (plugin->m_traffic) { plugin->m_traffic->process(); }
+        if (plugin->m_service)
+        {
+            plugin->m_service->process();
+        }
+        if (plugin->m_traffic)
+        {
+            plugin->m_traffic->process();
+        }
         return -1;
     }
 } // namespace XSwiftBus

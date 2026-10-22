@@ -42,7 +42,10 @@ namespace swift::gui::views
     void CUserView::requestTextMessage()
     {
         const CUser user(this->selectedObject());
-        if (!user.hasCallsign()) { return; }
+        if (!user.hasCallsign())
+        {
+            return;
+        }
         emit this->requestTextMessageWidget(user.getCallsign());
     }
 } // namespace swift::gui::views

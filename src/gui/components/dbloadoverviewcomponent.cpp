@@ -77,7 +77,10 @@ namespace swift::gui::components
                     &CDbLoadOverviewComponent::dataLoaded);
             QPointer<CDbLoadOverviewComponent> myself(this);
             QTimer::singleShot(10 * 1000, this, [=, this] {
-                if (!myself || !sGui || sGui->isShuttingDown()) { return; }
+                if (!myself || !sGui || sGui->isShuttingDown())
+                {
+                    return;
+                }
                 this->loadInfoObjects();
                 this->adjustTextWidth();
             });
@@ -146,20 +149,35 @@ namespace swift::gui::components
 
     void CDbLoadOverviewComponent::loadAllFromResourceFiles()
     {
-        if (m_loadInProgress) { return; }
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+        if (m_loadInProgress)
+        {
+            return;
+        }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
         const QMessageBox::StandardButton reply = QMessageBox::warning(
             this, "Load DB data",
             "You should only load DB from disk resources if loading from network does not work. Really load?",
             QMessageBox::Yes | QMessageBox::No);
-        if (reply != QMessageBox::Yes) { return; }
+        if (reply != QMessageBox::Yes)
+        {
+            return;
+        }
         sGui->getWebDataServices()->initDbCachesFromLocalResourceFiles(true);
     }
 
     void CDbLoadOverviewComponent::setGuiValues()
     {
-        if (!sGui) { return; }
-        if (!sGui->hasWebDataServices()) { return; }
+        if (!sGui)
+        {
+            return;
+        }
+        if (!sGui->hasWebDataServices())
+        {
+            return;
+        }
 
         ui->le_AircraftIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AircraftIcaoEntity));
         ui->le_AirlinesIcaoCacheCount->setText(cacheCountForEntity(CEntityFlags::AirlineIcaoEntity));
@@ -230,8 +248,14 @@ namespace swift::gui::components
 
     void CDbLoadOverviewComponent::setSharedUrlValues()
     {
-        if (m_sharedValueCheckInProgress) { return; }
-        if ((QDateTime::currentMSecsSinceEpoch() - m_sharedLastCheck) < 5000) { return; } // do not check too often
+        if (m_sharedValueCheckInProgress)
+        {
+            return;
+        }
+        if ((QDateTime::currentMSecsSinceEpoch() - m_sharedLastCheck) < 5000)
+        {
+            return;
+        } // do not check too often
 
         m_sharedValueCheckInProgress = true; // avoid processEvent (canConnect) calling this again before done
 
@@ -266,7 +290,10 @@ namespace swift::gui::components
 
     QString CDbLoadOverviewComponent::formattedTimestamp(const QDateTime &dateTime)
     {
-        if (!dateTime.isValid()) { return "-"; }
+        if (!dateTime.isValid())
+        {
+            return "-";
+        }
         return dateTime.toUTC().toString("yy-MM-dd hh:mm:ss");
     }
 
@@ -309,13 +336,19 @@ namespace swift::gui::components
     void CDbLoadOverviewComponent::admitCaches()
     {
         // remark admit only triggers, it does not wait like synchronize
-        if (!sGui->hasWebDataServices()) { return; }
+        if (!sGui->hasWebDataServices())
+        {
+            return;
+        }
         sGui->getWebDataServices()->admitDbCaches(CEntityFlags::AllDbEntities);
     }
 
     void CDbLoadOverviewComponent::refreshDbPressed()
     {
-        if (m_loadInProgress) { return; }
+        if (m_loadInProgress)
+        {
+            return;
+        }
         const QObject *sender = QObject::sender();
         const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(sender->objectName());
         this->triggerLoadingFromDb(entity);
@@ -324,12 +357,18 @@ namespace swift::gui::components
     void CDbLoadOverviewComponent::triggerLoadingFromDb(CEntityFlags::Entity entities)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Missing sGui");
-        if (m_loadInProgress) { return; }
+        if (m_loadInProgress)
+        {
+            return;
+        }
 
         // DB entities
         const CEntityFlags::Entity triggeredEntities =
             sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(entities);
-        if (triggeredEntities == CEntityFlags::NoEntity) { return; }
+        if (triggeredEntities == CEntityFlags::NoEntity)
+        {
+            return;
+        }
         m_loadInProgress = true;
         this->showLoading();
 
@@ -340,7 +379,10 @@ namespace swift::gui::components
 
     void CDbLoadOverviewComponent::refreshSharedPressed()
     {
-        if (m_loadInProgress) { return; }
+        if (m_loadInProgress)
+        {
+            return;
+        }
         const QObject *sender = QObject::sender();
         const CEntityFlags::Entity entity = CEntityFlags::singleEntityByName(sender->objectName());
         this->triggerLoadingFromSharedFiles(entity);
@@ -348,12 +390,18 @@ namespace swift::gui::components
 
     void CDbLoadOverviewComponent::triggerLoadingFromSharedFiles(CEntityFlags::Entity entities)
     {
-        if (m_loadInProgress) { return; }
+        if (m_loadInProgress)
+        {
+            return;
+        }
 
         // DB entities
         const CEntityFlags::Entity triggeredEntities =
             sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(entities, true);
-        if (triggeredEntities == CEntityFlags::NoEntity) { return; }
+        if (triggeredEntities == CEntityFlags::NoEntity)
+        {
+            return;
+        }
         m_loadInProgress = true;
         this->showLoading();
 
@@ -379,9 +427,18 @@ namespace swift::gui::components
 
     void CDbLoadOverviewComponent::loadInfoObjects()
     {
-        if (m_loadInProgress) { return; }
-        if (!sGui || !sGui->hasWebDataServices()) { return; }
-        if (sGui->isShuttingDown()) { return; }
+        if (m_loadInProgress)
+        {
+            return;
+        }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return;
+        }
+        if (sGui->isShuttingDown())
+        {
+            return;
+        }
         bool direct = false;
 
         if (sGui->getWebDataServices()->getDbInfoDataReader() &&
@@ -389,16 +446,25 @@ namespace swift::gui::components
         {
             direct = true;
         }
-        else { sGui->getWebDataServices()->triggerReadOfDbInfoObjects(); }
+        else
+        {
+            sGui->getWebDataServices()->triggerReadOfDbInfoObjects();
+        }
 
         if (sGui->getWebDataServices()->getSharedInfoDataReader() &&
             sGui->getWebDataServices()->getSharedInfoDataReader()->getInfoObjectCount() > 0)
         {
             direct = true;
         }
-        else { sGui->getWebDataServices()->triggerReadOfSharedInfoObjects(); }
+        else
+        {
+            sGui->getWebDataServices()->triggerReadOfSharedInfoObjects();
+        }
 
-        if (direct) { m_dsTriggerGuiUpdate.inputSignal(); }
+        if (direct)
+        {
+            m_dsTriggerGuiUpdate.inputSignal();
+        }
     }
 
     void CDbLoadOverviewComponent::adjustTextWidth()

@@ -17,13 +17,19 @@ namespace swift::gui
     CUpperCaseValidator::CUpperCaseValidator(int minLength, int maxLength, QObject *parent)
         : QValidator(parent), m_minLength(minLength), m_maxLength(maxLength)
     {
-        if (minLength < 1) { m_optionalValue = true; };
+        if (minLength < 1)
+        {
+            m_optionalValue = true;
+        };
     }
 
     CUpperCaseValidator::CUpperCaseValidator(bool optionalValue, int minLength, int maxLength, QObject *parent)
         : QValidator(parent), m_optionalValue(optionalValue), m_minLength(minLength), m_maxLength(maxLength)
     {
-        if (minLength < 1) { m_optionalValue = true; };
+        if (minLength < 1)
+        {
+            m_optionalValue = true;
+        };
     }
 
     void CUpperCaseValidator::setAllowedCharacters09AZ()
@@ -38,9 +44,18 @@ namespace swift::gui
         Q_UNUSED(pos);
         this->fixup(input);
 
-        if (m_optionalValue && input.isEmpty()) { return Acceptable; }
-        if (input.length() > m_maxLength) { return Invalid; }
-        if (input.length() < m_minLength) { return Intermediate; }
+        if (m_optionalValue && input.isEmpty())
+        {
+            return Acceptable;
+        }
+        if (input.length() > m_maxLength)
+        {
+            return Invalid;
+        }
+        if (input.length() < m_minLength)
+        {
+            return Intermediate;
+        }
         if (!m_restrictions.isEmpty())
         {
             bool valid = false;
@@ -52,15 +67,24 @@ namespace swift::gui
                     break;
                 }
             }
-            if (!valid) { return Invalid; }
+            if (!valid)
+            {
+                return Invalid;
+            }
         }
         return Acceptable;
     }
 
     void CUpperCaseValidator::fixup(QString &input) const
     {
-        if (input.isEmpty()) { return; }
+        if (input.isEmpty())
+        {
+            return;
+        }
         input = input.toUpper();
-        if (!m_allowedCharacters.isEmpty()) { input = removeIfNotInString(input, m_allowedCharacters); }
+        if (!m_allowedCharacters.isEmpty())
+        {
+            input = removeIfNotInString(input, m_allowedCharacters);
+        }
     }
 } // namespace swift::gui

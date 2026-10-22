@@ -32,7 +32,10 @@ namespace swift::misc
     {
         QStringList names;
         names.reserve(size());
-        for (const CApplicationInfo &info : *this) { names.append(info.getProcessInfo().processName()); }
+        for (const CApplicationInfo &info : *this)
+        {
+            names.append(info.getProcessInfo().processName());
+        }
         return names;
     }
 
@@ -43,7 +46,10 @@ namespace swift::misc
             reinit ? currentApplicationDataDirectoryMapWithoutCurrentVersion() :
                      applicationDataDirectoryMapWithoutCurrentVersion();
 
-        for (const CApplicationInfo &info : otherVersions) { this->push_back(info); }
+        for (const CApplicationInfo &info : otherVersions)
+        {
+            this->push_back(info);
+        }
         return this->size();
     }
 
@@ -83,7 +89,10 @@ namespace swift::misc
                 const QString exeDir = CDirectoryUtils::decodeNormalizedDirectory(info.filePath());
                 appInfo.setExecutablePath(exeDir);
             }
-            else { appInfo = CApplicationInfo::fromJson(appInfoJson); }
+            else
+            {
+                appInfo = CApplicationInfo::fromJson(appInfoJson);
+            }
             appInfo.setApplicationDataDirectory(info.filePath());
             directories.insert(info.filePath(), appInfo);
         }

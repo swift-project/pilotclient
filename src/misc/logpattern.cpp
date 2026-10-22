@@ -70,14 +70,20 @@ namespace swift::misc
         QStringList patternNames;
         for (const QString &name : CLogPattern::allHumanReadableNames())
         {
-            if (CLogPattern::fromHumanReadableName(name).match(message)) { patternNames.push_back(name); }
+            if (CLogPattern::fromHumanReadableName(name).match(message))
+            {
+                patternNames.push_back(name);
+            }
         }
         return patternNames;
     }
 
     QStringList CLogPattern::humanOrTechnicalCategoriesFrom(const CStatusMessage &message)
     {
-        if (message.getCategories().isEmpty()) { return {}; }
+        if (message.getCategories().isEmpty())
+        {
+            return {};
+        }
         QStringList c(humanReadableNamesFrom(message).join(", "));
         return c.isEmpty() ? message.getCategories().toQStringList() : c;
     }
@@ -105,16 +111,28 @@ namespace swift::misc
 
     CLogPattern CLogPattern::anyOf(const CLogCategoryList &categories)
     {
-        if (categories.size() == 0) { return empty(); }
-        if (categories.size() == 1) { return exactMatch(categories[0]); }
+        if (categories.size() == 0)
+        {
+            return empty();
+        }
+        if (categories.size() == 1)
+        {
+            return exactMatch(categories[0]);
+        }
         const QStringList strList = categories.toQStringList();
         return { AnyOf, QSet<QString>(strList.begin(), strList.end()) };
     }
 
     CLogPattern CLogPattern::allOf(const CLogCategoryList &categories)
     {
-        if (categories.size() == 0) { return {}; }
-        if (categories.size() == 1) { return exactMatch(categories[0]); }
+        if (categories.size() == 0)
+        {
+            return {};
+        }
+        if (categories.size() == 1)
+        {
+            return exactMatch(categories[0]);
+        }
         const QStringList strList = categories.toQStringList();
         return { AnyOf, QSet<QString>(strList.begin(), strList.end()) };
     }
@@ -182,7 +200,10 @@ namespace swift::misc
             return true;
         }
 
-        if (!m_severities.contains(message.getSeverity())) { return false; }
+        if (!m_severities.contains(message.getSeverity()))
+        {
+            return false;
+        }
 
         switch (m_strategy)
         {
@@ -253,7 +274,10 @@ namespace swift::misc
         //  Co   1  0  0  0  0  0  ?  0   (Contains)
         //  No   1  0  0  0  0  0  0  0   (Nothing)
 
-        if (m_strategy != Everything && other.m_strategy == Everything) { return true; }
+        if (m_strategy != Everything && other.m_strategy == Everything)
+        {
+            return true;
+        }
         switch (m_strategy)
         {
         case ExactMatch:
@@ -356,7 +380,10 @@ namespace swift::misc
     {
         // a bug in QtDBus prevents us from marshalling m_severities as a list
         quint8 severities = 0;
-        for (auto s : m_severities) { severities |= (1 << static_cast<int>(s)); }
+        for (auto s : m_severities)
+        {
+            severities |= (1 << static_cast<int>(s));
+        }
 
         argument << severities << m_strategy << m_strings.values();
     }
@@ -371,14 +398,20 @@ namespace swift::misc
         m_severities.clear();
         for (int s : { 0, 1, 2, 3 })
         {
-            if (severities & (1 << s)) { m_severities.insert(static_cast<CStatusMessage::StatusSeverity>(s)); }
+            if (severities & (1 << s))
+            {
+                m_severities.insert(static_cast<CStatusMessage::StatusSeverity>(s));
+            }
         }
     }
 
     void CLogPattern::marshalToDataStream(QDataStream &stream) const
     {
         quint8 severities = 0;
-        for (auto s : m_severities) { severities |= (1 << static_cast<int>(s)); }
+        for (auto s : m_severities)
+        {
+            severities |= (1 << static_cast<int>(s));
+        }
 
         stream << severities << m_strategy << m_strings.values();
     }
@@ -393,7 +426,10 @@ namespace swift::misc
         m_severities.clear();
         for (int s : { 0, 1, 2, 3 })
         {
-            if (severities & (1 << s)) { m_severities.insert(static_cast<CStatusMessage::StatusSeverity>(s)); }
+            if (severities & (1 << s))
+            {
+                m_severities.insert(static_cast<CStatusMessage::StatusSeverity>(s));
+            }
         }
     }
 } // namespace swift::misc

@@ -218,15 +218,24 @@ namespace swift::misc::simulation
 
     bool CCategoryMatcher::isGlider(const CAircraftIcaoCode &icao) const
     {
-        if (icao.getDesignator() == CAircraftIcaoCode::getGliderDesignator()) { return true; }
+        if (icao.getDesignator() == CAircraftIcaoCode::getGliderDesignator())
+        {
+            return true;
+        }
         const int glider1st = this->gliderFirstLevel();
-        if (glider1st >= 0 && icao.hasCategory()) { return icao.getCategory().getFirstLevel() == glider1st; }
+        if (glider1st >= 0 && icao.hasCategory())
+        {
+            return icao.getCategory().getFirstLevel() == glider1st;
+        }
         return false;
     }
 
     int CCategoryMatcher::gliderFirstLevel() const
     {
-        if (m_gliders.isEmpty()) { return -1; }
+        if (m_gliders.isEmpty())
+        {
+            return -1;
+        }
         return m_gliders.front().getFirstLevel();
     }
 } // namespace swift::misc::simulation

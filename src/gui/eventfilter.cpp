@@ -21,8 +21,14 @@ namespace swift::gui
                 // key.  Otherwise convert the text to upper case and insert it at
                 // the current cursor position.
                 auto *pte = qobject_cast<QPlainTextEdit *>(object);
-                if (!pte) { return false; }
-                if (pte->isReadOnly()) { return false; }
+                if (!pte)
+                {
+                    return false;
+                }
+                if (pte->isReadOnly())
+                {
+                    return false;
+                }
 
                 if (e->text().length() == 1)
                 {
@@ -30,7 +36,10 @@ namespace swift::gui
                     if (c.isLetter())
                     {
                         const ushort unicode = c.unicode();
-                        if (unicode > 127) { return true; }
+                        if (unicode > 127)
+                        {
+                            return true;
+                        }
 
                         pte->insertPlainText(e->text().toUpper());
                         // return true to prevent further processing

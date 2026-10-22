@@ -110,7 +110,10 @@ namespace MiscTest
         qWait(0);
         QVERIFY2(observer.allValues() == QList<int> { 1 }, "still has expected value");
 
-        for (int e = 2; e <= 6; ++e) { mutator.addElement(e); }
+        for (int e = 2; e <= 6; ++e)
+        {
+            mutator.addElement(e);
+        }
         ok = qWaitFor([&] { return observer.allValues() == QList<int> { 1, 2, 3, 4, 5, 6 }; });
         QVERIFY2(ok, "expected value received");
 
@@ -133,7 +136,10 @@ namespace MiscTest
                                           << "with exit code" << code;
                              });
             m_process.start(QCoreApplication::applicationDirPath() + "/tests_sharedstatetestserver", QStringList());
-            if (!m_process.waitForStarted()) { qDebug() << "Server failed to start"; }
+            if (!m_process.waitForStarted())
+            {
+                qDebug() << "Server failed to start";
+            }
         }
         //! dtor
         ~Server()
@@ -150,7 +156,10 @@ namespace MiscTest
     void CTestSharedState::dbusScalar()
     {
         QDBusConnection connection = QDBusConnection::sessionBus();
-        if (!connection.isConnected()) { QSKIP("No session bus"); }
+        if (!connection.isConnected())
+        {
+            QSKIP("No session bus");
+        }
         Server s;
 
         CDataLinkDBus dataLink;
@@ -178,7 +187,10 @@ namespace MiscTest
     void CTestSharedState::dbusList()
     {
         QDBusConnection connection = QDBusConnection::sessionBus();
-        if (!connection.isConnected()) { QSKIP("No session bus"); }
+        if (!connection.isConnected())
+        {
+            QSKIP("No session bus");
+        }
         Server s;
 
         CDataLinkDBus dataLink;

@@ -10,7 +10,10 @@ namespace swift::misc
 {
     QString toHtmTable(const QStringList &values, int columns)
     {
-        if (values.isEmpty() || columns < 1) { return {}; }
+        if (values.isEmpty() || columns < 1)
+        {
+            return {};
+        }
 
         QString html;
         const int size = values.size();

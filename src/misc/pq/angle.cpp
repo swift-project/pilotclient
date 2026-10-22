@@ -35,7 +35,10 @@ namespace swift::misc::physical_quantities
 
     void CAngle::unifySign(int degrees, int &minutes)
     {
-        if (degrees == 0) { return; }
+        if (degrees == 0)
+        {
+            return;
+        }
         minutes = std::copysign(minutes, degrees);
     }
 
@@ -109,7 +112,10 @@ namespace swift::misc::physical_quantities
     double CAngle::normalizeDegrees180(double degrees, int roundDigits)
     {
         double d = CMathUtils::normalizeDegrees360(degrees + 180.0) - 180.0;
-        if (d <= -180.0) { d = 180.0; } // -180 -> 180
+        if (d <= -180.0)
+        {
+            d = 180.0;
+        } // -180 -> 180
         return roundDigits < 0 ? d : CMathUtils::round(d, roundDigits);
     }
 

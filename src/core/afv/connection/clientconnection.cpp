@@ -50,7 +50,10 @@ namespace swift::core::afv::connection
             { // callback called when connected
               this, [=, this](bool authenticated) {
                   // callback when connection has been established
-                  if (!myself) { return; } // cppcheck-suppress knownConditionTrueFalse
+                  if (!myself)
+                  {
+                      return;
+                  } // cppcheck-suppress knownConditionTrueFalse
 
                   if (authenticated)
                   {
@@ -65,13 +68,19 @@ namespace swift::core::afv::connection
                       CLogMessage(this).info(u"Connected: '%1' to voice server, socket open: %2")
                           << cs << boolToYesNo(m_udpSocket->isOpen());
                   }
-                  else { m_connection.reset(); }
+                  else
+                  {
+                      m_connection.reset();
+                  }
 
                   // Make sure crypto channels etc. are created
                   m_connection.setConnected(authenticated);
 
                   // callback of the calling parent
-                  if (callback) { callback(authenticated); }
+                  if (callback)
+                  {
+                      callback(authenticated);
+                  }
               } });
     }
 
@@ -112,14 +121,20 @@ namespace swift::core::afv::connection
 
     bool CClientConnection::updateVoiceServerUrl(const QString &url)
     {
-        if (!m_apiServerConnection) { return false; }
+        if (!m_apiServerConnection)
+        {
+            return false;
+        }
         return m_apiServerConnection->setUrl(url);
     }
 
     const QString &CClientConnection::getVoiceServerUrl() const
     {
         static const QString e;
-        if (!m_apiServerConnection) { return e; }
+        if (!m_apiServerConnection)
+        {
+            return e;
+        }
         return m_apiServerConnection->getUrl();
     }
 

@@ -36,7 +36,7 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const AuthChallenge &lhs, const AuthChallenge &rhs)
     {
-        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() &&
                lhs.m_challengeKey == rhs.m_challengeKey;
     }
 

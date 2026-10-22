@@ -19,9 +19,18 @@ namespace swift::gui
 
     bool CDropBase::acceptDrop(const QMimeData *mime) const
     {
-        if (!mime) { return false; }
-        if (!m_allowDrop) { return false; }
-        if (m_acceptedMetaTypes.isEmpty()) { return false; }
+        if (!mime)
+        {
+            return false;
+        }
+        if (!m_allowDrop)
+        {
+            return false;
+        }
+        if (m_acceptedMetaTypes.isEmpty())
+        {
+            return false;
+        }
 
         if (m_acceptJsonFile && CGuiUtility::isMimeRepresentingReadableJsonFile(mime))
         {
@@ -29,9 +38,15 @@ namespace swift::gui
             return true;
         }
 
-        if (!CGuiUtility::hasSwiftVariantMimeType(mime)) { return false; }
+        if (!CGuiUtility::hasSwiftVariantMimeType(mime))
+        {
+            return false;
+        }
         const int metaTypeId = CGuiUtility::metaTypeIdFromSwiftDragAndDropData(mime);
-        if (metaTypeId == QMetaType::UnknownType) { return false; }
+        if (metaTypeId == QMetaType::UnknownType)
+        {
+            return false;
+        }
         const bool accept = m_acceptedMetaTypes.contains(metaTypeId);
         return accept;
     }

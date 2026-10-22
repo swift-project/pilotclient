@@ -58,17 +58,26 @@ namespace swift::misc::simulation
     bool CBackgroundValidation::triggerValidation(const CSimulatorInfo &simulator, const QString &simDirectory)
     {
         const QPointer<CBackgroundValidation> myself(this);
-        if (simulator.isNoSimulator()) { return this->requestLastValidationResults(); }
+        if (simulator.isNoSimulator())
+        {
+            return this->requestLastValidationResults();
+        }
 
         {
             QWriteLocker l(&m_lock);
-            if (m_inWork) { return false; }
+            if (m_inWork)
+            {
+                return false;
+            }
             m_simulator = simulator;
             m_simDirectory = simDirectory;
             m_checkedSimulatorMsgs.remove(simulator);
         }
         QTimer::singleShot(5, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->doWork();
         });
         return true;
@@ -90,7 +99,10 @@ namespace swift::misc::simulation
             msgs = m_lastResultMsgs;
             wasStopped = m_lastResultWasStopped;
         }
-        if (m_lastResultSimulator.isUnspecified()) { return false; }
+        if (m_lastResultSimulator.isUnspecified())
+        {
+            return false;
+        }
         emit this->validated(simulator, valid, invalid, wasStopped, msgs);
         return true;
     }
@@ -109,7 +121,10 @@ namespace swift::misc::simulation
 
     void CBackgroundValidation::doWork()
     {
-        if (m_inWork) { return; }
+        if (m_inWork)
+        {
+            return;
+        }
         m_inWork = true;
         emit this->validating(true);
 
@@ -123,12 +138,22 @@ namespace swift::misc::simulation
         const qint64 started = QDateTime::currentMSecsSinceEpoch();
         m_wasStopped = false;
 
-        do {
-            if (!simulator.isSingleSimulator()) { break; }
-            if (this->wasAlreadyChecked(simulator)) { break; }
+        do
+        {
+            if (!simulator.isSingleSimulator())
+            {
+                break;
+            }
+            if (this->wasAlreadyChecked(simulator))
+            {
+                break;
+            }
 
             const CAircraftMatcherSetup setup = m_matchingSettings.get();
-            if (!setup.doVerificationAtStartup()) { break; }
+            if (!setup.doVerificationAtStartup())
+            {
+                break;
+            }
 
             onlyErrorsAndWarnings = setup.onlyShowVerificationWarningsAndErrors();
             const CAircraftModelList models = m_modelSets.getCachedModels(simulator);
@@ -147,6 +172,7 @@ namespace swift::misc::simulation
                                                                    m_wasStopped, m_simDirectory);
             }
 
+            // cppcheck-suppress duplicateExpression
             const qint64 deltaTimeMs = now - started;
             msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo,
                                           QStringLiteral("Validated in %1ms").arg(deltaTimeMs)));
@@ -169,14 +195,20 @@ namespace swift::misc::simulation
             m_timerBasedRuns++;
 
             // stop timer after some runs
-            if (m_timerBasedRuns > 3) { m_updateTimer.stopTimer(); }
+            if (m_timerBasedRuns > 3)
+            {
+                m_updateTimer.stopTimer();
+            }
         }
 
         emit this->validating(false);
         if (validated)
         {
             const bool e = !onlyErrorsAndWarnings || (!invalid.isEmpty() || msgs.hasWarningOrErrorMessages());
-            if (e || !isTimerBased) { emit this->validated(simulator, valid, invalid, m_wasStopped, msgs); }
+            if (e || !isTimerBased)
+            {
+                emit this->validated(simulator, valid, invalid, m_wasStopped, msgs);
+            }
         }
     }
 } // namespace swift::misc::simulation

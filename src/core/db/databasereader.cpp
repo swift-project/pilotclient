@@ -44,7 +44,10 @@ namespace swift::core::db
 
     void CDatabaseReader::readInBackgroundThread(CEntityFlags::Entity entities, const QDateTime &newerThan)
     {
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         Q_ASSERT_X(hasStarted(), Q_FUNC_INFO, "Thread was not started yet!");
 
         // we accept cached data
@@ -109,8 +112,14 @@ namespace swift::core::db
                     else
                     {
                         Q_ASSERT_X(rmDbReadingOrShared, Q_FUNC_INFO, "Wrong retrieval mode");
-                        if (rmDbOrSharedFlag == CDbFlags::DbReading) { dbEntities |= currentEntity; }
-                        else if (rmDbOrSharedFlag == CDbFlags::Shared) { sharedEntities |= currentEntity; }
+                        if (rmDbOrSharedFlag == CDbFlags::DbReading)
+                        {
+                            dbEntities |= currentEntity;
+                        }
+                        else if (rmDbOrSharedFlag == CDbFlags::Shared)
+                        {
+                            sharedEntities |= currentEntity;
+                        }
 
                         if (changedUrl)
                         {
@@ -168,8 +177,14 @@ namespace swift::core::db
             {
                 // cache ignored
                 Q_ASSERT_X(rmDbReadingOrShared, Q_FUNC_INFO, "Wrong retrieval mode");
-                if (rmDbOrSharedFlag == CDbFlags::DbReading) { dbEntities |= currentEntity; }
-                else if (rmDbOrSharedFlag == CDbFlags::Shared) { sharedEntities |= currentEntity; }
+                if (rmDbOrSharedFlag == CDbFlags::DbReading)
+                {
+                    dbEntities |= currentEntity;
+                }
+                else if (rmDbOrSharedFlag == CDbFlags::Shared)
+                {
+                    sharedEntities |= currentEntity;
+                }
             }
             currentEntity = CEntityFlags::iterateDbEntities(allEntities);
         }
@@ -206,7 +221,10 @@ namespace swift::core::db
     CEntityFlags::Entity CDatabaseReader::triggerLoadingDirectlyFromSharedFiles(CEntityFlags::Entity entities,
                                                                                 bool checkCacheTsUpfront)
     {
-        if (entities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
+        if (entities == CEntityFlags::NoEntity)
+        {
+            return CEntityFlags::NoEntity;
+        }
         if (checkCacheTsUpfront)
         {
             CEntityFlags::Entity newerHeaderEntities = this->getEntitesWithNewerSharedInfoObject(entities);
@@ -222,12 +240,21 @@ namespace swift::core::db
                 {
                     QPointer<CDatabaseReader> myself(this);
                     QTimer::singleShot(0, this, [=, this] {
-                        if (!myself) { return; }
-                        if (!sApp || sApp->isShuttingDown()) { return; }
+                        if (!myself)
+                        {
+                            return;
+                        }
+                        if (!sApp || sApp->isShuttingDown())
+                        {
+                            return;
+                        }
                         emit this->dataRead(validInCacheEntities, CEntityFlags::ReadFinished, 0, {});
                     });
                 }
-                if (newerHeaderEntities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
+                if (newerHeaderEntities == CEntityFlags::NoEntity)
+                {
+                    return CEntityFlags::NoEntity;
+                }
                 entities = newerHeaderEntities;
             }
         }
@@ -242,11 +269,17 @@ namespace swift::core::db
         Q_ASSERT_X(mode == CDbFlags::DbReading || mode == CDbFlags::Shared, Q_FUNC_INFO, "Wrong mode");
 
         // ps_read is implemented in the derived classes
-        if (entities == CEntityFlags::NoEntity) { return; }
+        if (entities == CEntityFlags::NoEntity)
+        {
+            return;
+        }
 
         QPointer<CDatabaseReader> myself(this);
         QTimer::singleShot(0, this, [=, this] {
-            if (!sApp || sApp->isShuttingDown() || !myself) { return; }
+            if (!sApp || sApp->isShuttingDown() || !myself)
+            {
+                return;
+            }
             this->read(entities, mode, newerThan);
         });
     }
@@ -267,7 +300,10 @@ namespace swift::core::db
                 datastoreResponse.setMessage(
                     CStatusMessage(this, CStatusMessage::SeverityError, u"Empty response, no data"));
             }
-            else { CDatabaseReader::stringToDatastoreResponse(dataFileData, datastoreResponse); }
+            else
+            {
+                CDatabaseReader::stringToDatastoreResponse(dataFileData, datastoreResponse);
+            }
         }
         return datastoreResponse;
     }
@@ -316,7 +352,10 @@ namespace swift::core::db
     {
         this->setReplyStatus(nwReply);
         const CDatabaseReader::JsonDatastoreResponse dsr = this->transformReplyIntoDatastoreResponse(nwReply);
-        if (dsr.isSharedFile()) { this->receivedSharedFileHeaderNonClosing(nwReply); }
+        if (dsr.isSharedFile())
+        {
+            this->receivedSharedFileHeaderNonClosing(nwReply);
+        }
         else
         {
             if (dsr.isLoadedFromDb())
@@ -331,16 +370,28 @@ namespace swift::core::db
     CDbInfoList CDatabaseReader::getDbInfoObjects() const
     {
         static const CDbInfoList e;
-        if (!sApp->hasWebDataServices()) { return e; }
-        if (!sApp->getWebDataServices()->getDbInfoDataReader()) { return e; }
+        if (!sApp->hasWebDataServices())
+        {
+            return e;
+        }
+        if (!sApp->getWebDataServices()->getDbInfoDataReader())
+        {
+            return e;
+        }
         return sApp->getWebDataServices()->getDbInfoDataReader()->getInfoObjects();
     }
 
     CDbInfoList CDatabaseReader::getSharedInfoObjects() const
     {
         static const CDbInfoList e;
-        if (!sApp->hasWebDataServices()) { return e; }
-        if (!sApp->getWebDataServices()->getSharedInfoDataReader()) { return e; }
+        if (!sApp->hasWebDataServices())
+        {
+            return e;
+        }
+        if (!sApp->getWebDataServices()->getSharedInfoDataReader())
+        {
+            return e;
+        }
         return sApp->getWebDataServices()->getSharedInfoDataReader()->getInfoObjects();
     }
 
@@ -360,7 +411,10 @@ namespace swift::core::db
         CEntityFlags::Entity currentEntity = CEntityFlags::iterateDbEntities(myEntities);
         while (currentEntity != CEntityFlags::NoEntity)
         {
-            if (!hasSharedFileHeader(currentEntity)) { return false; }
+            if (!hasSharedFileHeader(currentEntity))
+            {
+                return false;
+            }
             currentEntity = CEntityFlags::iterateDbEntities(myEntities);
         }
         return true;
@@ -371,12 +425,18 @@ namespace swift::core::db
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
         static const QDateTime e;
         const CDbInfoList il(getDbInfoObjects());
-        if (il.isEmpty() || entity == CEntityFlags::NoEntity) { return e; }
+        if (il.isEmpty() || entity == CEntityFlags::NoEntity)
+        {
+            return e;
+        }
 
         // for some entities there can be more than one entry because of the
         // raw tables (see DB view last updates)
         const CDbInfo info = il.findFirstByEntityOrDefault(entity);
-        if (!info.isValid()) { return e; }
+        if (!info.isValid())
+        {
+            return e;
+        }
         return info.getUtcTimestamp();
     }
 
@@ -385,10 +445,16 @@ namespace swift::core::db
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
         static const QDateTime e;
         const CDbInfoList il(this->getSharedInfoObjects());
-        if (il.isEmpty() || entity == CEntityFlags::NoEntity) { return e; }
+        if (il.isEmpty() || entity == CEntityFlags::NoEntity)
+        {
+            return e;
+        }
 
         const CDbInfo info = il.findFirstByEntityOrDefault(entity);
-        if (!info.isValid()) { return e; }
+        if (!info.isValid())
+        {
+            return e;
+        }
         return info.getUtcTimestamp();
     }
 
@@ -396,17 +462,26 @@ namespace swift::core::db
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
         static const QDateTime e;
-        if (!this->hasSharedFileHeader(entity)) { return e; }
+        if (!this->hasSharedFileHeader(entity))
+        {
+            return e;
+        }
         return m_sharedFileResponses[entity].getLastModifiedTimestamp();
     }
     bool CDatabaseReader::isSharedHeaderNewerThanCacheTimestamp(CEntityFlags::Entity entity) const
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
         const QDateTime cacheTs(this->getCacheTimestamp(entity));
-        if (!cacheTs.isValid()) { return true; } // we have no cache ts
+        if (!cacheTs.isValid())
+        {
+            return true;
+        } // we have no cache ts
 
         const QDateTime headerTimestamp(this->getLatestSharedFileHeaderTimestamp(entity));
-        if (!headerTimestamp.isValid()) { return false; }
+        if (!headerTimestamp.isValid())
+        {
+            return false;
+        }
         return headerTimestamp > cacheTs;
     }
 
@@ -414,10 +489,16 @@ namespace swift::core::db
     {
         Q_ASSERT_X(CEntityFlags::isSingleEntity(entity), Q_FUNC_INFO, "need single entity");
         const QDateTime cacheTs(this->getCacheTimestamp(entity));
-        if (!cacheTs.isValid()) { return true; } // we have no cache ts
+        if (!cacheTs.isValid())
+        {
+            return true;
+        } // we have no cache ts
 
         const QDateTime sharedInfoTimestamp(this->getLatestEntityTimestampFromSharedInfoObjects(entity));
-        if (!sharedInfoTimestamp.isValid()) { return false; }
+        if (!sharedInfoTimestamp.isValid())
+        {
+            return false;
+        }
         return sharedInfoTimestamp > cacheTs;
     }
 
@@ -428,7 +509,10 @@ namespace swift::core::db
         CEntityFlags::Entity newerEntities = CEntityFlags::NoEntity;
         while (currentEntity != CEntityFlags::NoEntity)
         {
-            if (this->isSharedHeaderNewerThanCacheTimestamp(currentEntity)) { newerEntities |= currentEntity; }
+            if (this->isSharedHeaderNewerThanCacheTimestamp(currentEntity))
+            {
+                newerEntities |= currentEntity;
+            }
             currentEntity = CEntityFlags::iterateDbEntities(entities);
         }
         return newerEntities;
@@ -441,7 +525,10 @@ namespace swift::core::db
         CEntityFlags::Entity newerEntities = CEntityFlags::NoEntity;
         while (currentEntity != CEntityFlags::NoEntity)
         {
-            if (this->isSharedInfoObjectNewerThanCacheTimestamp(currentEntity)) { newerEntities |= currentEntity; }
+            if (this->isSharedInfoObjectNewerThanCacheTimestamp(currentEntity))
+            {
+                newerEntities |= currentEntity;
+            }
             currentEntity = CEntityFlags::iterateDbEntities(entities);
         }
         return newerEntities;
@@ -455,7 +542,10 @@ namespace swift::core::db
     CEntityFlags::Entity CDatabaseReader::emitReadSignalPerSingleCachedEntity(CEntityFlags::Entity cachedEntities,
                                                                               bool onlyIfHasData)
     {
-        if (cachedEntities == CEntityFlags::NoEntity) { return CEntityFlags::NoEntity; }
+        if (cachedEntities == CEntityFlags::NoEntity)
+        {
+            return CEntityFlags::NoEntity;
+        }
         CEntityFlags::Entity emitted = CEntityFlags::NoEntity;
         CEntityFlags::Entity cachedEntitiesToEmit = cachedEntities;
         CEntityFlags::Entity currentCachedEntity = CEntityFlags::iterateDbEntities(cachedEntitiesToEmit);
@@ -493,7 +583,10 @@ namespace swift::core::db
 
     CUrl CDatabaseReader::getBaseUrl(CDbFlags::DataRetrievalModeFlag mode) const
     {
-        if (!sApp || sApp->isShuttingDown()) { return {}; }
+        if (!sApp || sApp->isShuttingDown())
+        {
+            return {};
+        }
         switch (mode)
         {
         case CDbFlags::DbReading: return this->getDbServiceBaseUrl().withAppendedPath("/service");
@@ -506,7 +599,10 @@ namespace swift::core::db
 
     bool CDatabaseReader::isChangedUrl(const CUrl &oldUrl, const CUrl &currentUrl)
     {
-        if (oldUrl.isEmpty()) { return true; }
+        if (oldUrl.isEmpty())
+        {
+            return true;
+        }
         Q_ASSERT_X(!currentUrl.isEmpty(), Q_FUNC_INFO, "No base URL");
 
         const QString old(oldUrl.getFullUrl(false));
@@ -519,14 +615,20 @@ namespace swift::core::db
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
         this->receivedSharedFileHeaderNonClosing(nwReplyPtr);
         nwReply->close();
     }
 
     void CDatabaseReader::receivedSharedFileHeaderNonClosing(QNetworkReply *nwReplyPtr)
     {
-        if (this->isAbandoned()) { return; }
+        if (this->isAbandoned())
+        {
+            return;
+        }
 
         const HeaderResponse headerResponse = this->transformReplyIntoHeaderResponse(nwReplyPtr);
         const QString fileName = nwReplyPtr->url().fileName();
@@ -575,7 +677,10 @@ namespace swift::core::db
     bool CDatabaseReader::hasCacheTimestampNewerThan(CEntityFlags::Entity entity, const QDateTime &threshold) const
     {
         const QDateTime ts = this->getCacheTimestamp(entity);
-        if (!ts.isValid()) { return false; }
+        if (!ts.isValid())
+        {
+            return false;
+        }
         return ts > threshold;
     }
 
@@ -629,12 +734,21 @@ namespace swift::core::db
     bool CDatabaseReader::overrideCacheFromFile(bool overrideNewerOnly, const QFileInfo &fileInfo,
                                                 CEntityFlags::Entity entity, CStatusMessageList &msgs) const
     {
-        if (!fileInfo.birthTime().isValid()) { return false; }
-        if (!overrideNewerOnly) { return true; }
+        if (!fileInfo.birthTime().isValid())
+        {
+            return false;
+        }
+        if (!overrideNewerOnly)
+        {
+            return true;
+        }
 
         const qint64 fileTs = fileInfo.birthTime().toUTC().toMSecsSinceEpoch();
         const QDateTime cacheDateTime(this->getCacheTimestamp(entity));
-        if (!cacheDateTime.isValid()) { return true; } // no cache
+        if (!cacheDateTime.isValid())
+        {
+            return true;
+        } // no cache
         const qint64 cacheTs = cacheDateTime.toUTC().toMSecsSinceEpoch();
         if (fileTs > cacheTs)
         {
@@ -683,7 +797,10 @@ namespace swift::core::db
 
     QString CDatabaseReader::dateTimeToDbLatestTs(const QDateTime &ts)
     {
-        if (!ts.isValid()) { return {}; }
+        if (!ts.isValid())
+        {
+            return {};
+        }
         return ts.toUTC().toString(Qt::ISODate);
     }
 
@@ -805,7 +922,10 @@ namespace swift::core::db
 
     QString CDatabaseReader::HeaderResponse::getLoadTimeStringWithStartedHint() const
     {
-        if (m_requestStarted < 0) { return this->getLoadTimeString(); }
+        if (m_requestStarted < 0)
+        {
+            return this->getLoadTimeString();
+        }
         const qint64 diff = QDateTime::currentMSecsSinceEpoch() - m_requestStarted;
         static const QString s("%1 load time, started %2ms before now");
         return s.arg(this->getLoadTimeString()).arg(diff);
@@ -826,7 +946,10 @@ namespace swift::core::db
         }
 
         const QVariant qvStatusCode = nwReply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-        if (qvStatusCode.isValid() && qvStatusCode.canConvert<int>()) { m_httpStatusCode = qvStatusCode.toInt(); }
+        if (qvStatusCode.isValid() && qvStatusCode.canConvert<int>())
+        {
+            m_httpStatusCode = qvStatusCode.toInt();
+        }
 
         const QDateTime lastModified = nwReply->header(QNetworkRequest::LastModifiedHeader).toDateTime();
         const qulonglong size = nwReply->header(QNetworkRequest::ContentLengthHeader).toULongLong();

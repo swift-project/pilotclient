@@ -28,16 +28,14 @@ namespace swift::gui::models
         : COrderableListModelDbObjects("CAircraftModelListModel", parent)
     {
         this->setAircraftModelMode(mode);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("CAircraftModelListModel", "callsign");
-        (void)QT_TRANSLATE_NOOP("CAircraftModelListModel", "combined type");
-        (void)QT_TRANSLATE_NOOP("CAircraftModelListModel", "model");
     }
 
     void CAircraftModelListModel::setAircraftModelMode(CAircraftModelListModel::AircraftModelMode mode)
     {
-        if (m_mode == mode) { return; }
+        if (m_mode == mode)
+        {
+            return;
+        }
         m_mode = mode;
         m_columns.clear();
         switch (mode)
@@ -228,7 +226,10 @@ namespace swift::gui::models
 
     void CAircraftModelListModel::setHighlight(bool highlightModels)
     {
-        if (m_highlightModels == highlightModels) { return; }
+        if (m_highlightModels == highlightModels)
+        {
+            return;
+        }
 
         this->beginResetModel();
         m_highlightModels = highlightModels;
@@ -237,13 +238,19 @@ namespace swift::gui::models
 
     QStringList CAircraftModelListModel::getModelStrings(bool sort) const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         return this->container().getModelStringList(sort);
     }
 
     void CAircraftModelListModel::replaceOrAddByModelString(const CAircraftModelList &models)
     {
-        if (models.isEmpty()) { return; }
+        if (models.isEmpty())
+        {
+            return;
+        }
         CAircraftModelList currentModels(container());
         currentModels.removeModelsWithString(models.getModelStringList(true), Qt::CaseInsensitive);
         currentModels.push_back(models);
@@ -255,13 +262,19 @@ namespace swift::gui::models
         if (role == Qt::BackgroundRole)
         {
             const bool ms = highlightModels() && !m_highlightStrings.isEmpty();
-            if (!ms) { return CListModelDbObjects::data(index, role); }
+            if (!ms)
+            {
+                return CListModelDbObjects::data(index, role);
+            }
 
             // the underlying model object
             const CAircraftModel model(this->at(index));
 
             // highlight stashed first
-            if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive)) { return m_highlightColor; }
+            if (m_highlightStrings.contains(model.getModelString(), Qt::CaseInsensitive))
+            {
+                return m_highlightColor;
+            }
 
             return {};
         }

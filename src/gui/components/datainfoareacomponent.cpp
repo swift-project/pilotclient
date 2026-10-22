@@ -72,14 +72,23 @@ namespace swift::gui::components
 
         // write to disk
         const bool s = sGui->getWebDataServices()->writeDbDataToDisk(CSwiftDirectories::staticDbFilesDirectory());
-        if (s) { CLogMessage(this).info(u"Written DB data"); }
-        else { CLogMessage(this).error(u"Cannot write DB data"); }
+        if (s)
+        {
+            CLogMessage(this).info(u"Written DB data");
+        }
+        else
+        {
+            CLogMessage(this).error(u"Cannot write DB data");
+        }
         return s;
     }
 
     bool CDataInfoAreaComponent::readDbDataFromResourceDir()
     {
-        if (!sGui) { return false; }
+        if (!sGui)
+        {
+            return false;
+        }
         const CStatusMessageList msgs = sGui->getWebDataServices()->initDbCachesFromLocalResourceFiles(true);
 
         // info
@@ -95,7 +104,10 @@ namespace swift::gui::components
             ui->comp_DbModels->showLoadIndicator();
             ok = true;
         }
-        else { CLogMessage::preformatted(msgs); }
+        else
+        {
+            CLogMessage::preformatted(msgs);
+        }
         return ok;
     }
 

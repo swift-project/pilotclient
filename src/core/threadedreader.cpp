@@ -61,7 +61,10 @@ namespace swift::core
             oldHash = m_contentHash;
         }
         size_t newHash = qHash(startPosition < 0 ? content : content.mid(startPosition));
-        if (oldHash == newHash) { return false; }
+        if (oldHash == newHash)
+        {
+            return false;
+        }
         {
             QWriteLocker wl(&m_lock);
             m_contentHash = newHash;
@@ -89,12 +92,21 @@ namespace swift::core
     bool CThreadedReader::doWorkCheck() const
     {
         // sApp->hasWebDataServices() cannot be used, as some readers are already used during init phase
-        if (!this->isEnabled()) { return false; }
+        if (!this->isEnabled())
+        {
+            return false;
+        }
 
         // MS 2019-02-23 isAbandoned() check only makes sense when called by worker thread (T541)
-        if (CThreadUtils::isInThisThread(this) && this->isAbandoned()) { return false; }
+        if (CThreadUtils::isInThisThread(this) && this->isAbandoned())
+        {
+            return false;
+        }
 
-        if (!m_unitTest && (!sApp || sApp->isShuttingDown())) { return false; }
+        if (!m_unitTest && (!sApp || sApp->isShuttingDown()))
+        {
+            return false;
+        }
         return true;
     }
 
@@ -135,14 +147,20 @@ namespace swift::core
 
     void CThreadedReader::logNetworkReplyReceived(QNetworkReply *reply)
     {
-        if (!reply) { return; }
+        if (!reply)
+        {
+            return;
+        }
         QWriteLocker wl(&m_lock);
         m_urlReadLog.markAsReceived(reply, reply->error() == QNetworkReply::NoError);
     }
 
     void CThreadedReader::logInconsistentData(const CStatusMessage &msg, const char *funcInfo)
     {
-        if (msg.isEmpty()) { return; }
+        if (msg.isEmpty())
+        {
+            return;
+        }
         CStatusMessage logMsg(msg);
         logMsg.addCategory(CLogCategories::dataInconsistency());
         if (funcInfo)

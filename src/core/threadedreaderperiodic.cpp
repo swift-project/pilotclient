@@ -26,7 +26,10 @@ namespace swift::core
 
     void CThreadedReaderPeriodic::doWork()
     {
-        if (!doWorkCheck()) { return; }
+        if (!doWorkCheck())
+        {
+            return;
+        }
         this->doWorkImpl();
         using namespace std::chrono_literals;
         Q_ASSERT(m_periodicTime.load() > 0ms);

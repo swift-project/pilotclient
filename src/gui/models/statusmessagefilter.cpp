@@ -20,18 +20,27 @@ namespace swift::gui::models
 
     CStatusMessageList CStatusMessageFilter::filter(const CStatusMessageList &inContainer) const
     {
-        if (!this->isValid()) { return inContainer; }
+        if (!this->isValid())
+        {
+            return inContainer;
+        }
         CStatusMessageList outContainer;
         for (const CStatusMessage &msg : inContainer)
         {
             if (m_severity != CStatusMessage::SeverityInfo && m_severity != CStatusMessage::SeverityDebug)
             {
-                if (!msg.isSeverityHigherOrEqual(this->m_severity)) { continue; }
+                if (!msg.isSeverityHigherOrEqual(this->m_severity))
+                {
+                    continue;
+                }
             }
 
             if (!this->m_msgText.isEmpty())
             {
-                if (!this->stringMatchesFilterExpression(msg.getMessage(), this->m_msgText)) { continue; }
+                if (!this->stringMatchesFilterExpression(msg.getMessage(), this->m_msgText))
+                {
+                    continue;
+                }
             }
 
             if (!this->m_category.isEmpty())

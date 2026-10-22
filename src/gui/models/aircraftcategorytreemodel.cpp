@@ -38,7 +38,10 @@ namespace swift::gui::models
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "Wrong thread");
 
         this->clear();
-        if (categories.isEmpty()) { return; }
+        if (categories.isEmpty())
+        {
+            return;
+        }
 
         m_categories = categories;
         m_categories.sortByLevel();
@@ -67,10 +70,16 @@ namespace swift::gui::models
             } // columns
 
             // add all items
-            if (categoryRow.isEmpty()) { continue; }
+            if (categoryRow.isEmpty())
+            {
+                continue;
+            }
 
             QStandardItem *parent = categoryRow.first();
-            if (category.isFirstLevel()) { this->invisibleRootItem()->appendRow(categoryRow); }
+            if (category.isFirstLevel())
+            {
+                this->invisibleRootItem()->appendRow(categoryRow);
+            }
             else
             {
                 const int p = category.getDepth() - 1;

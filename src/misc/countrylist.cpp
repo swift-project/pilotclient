@@ -16,13 +16,19 @@ namespace swift::misc
     CCountry CCountryList::findByIsoCode(const QString &isoCode) const
     {
         const QString iso(isoCode.trimmed().toUpper());
-        if (!CCountry::isValidIsoCode(iso)) { return {}; }
+        if (!CCountry::isValidIsoCode(iso))
+        {
+            return {};
+        }
         return IDatastoreObjectList::findByKey(isoCode);
     }
 
     CCountry CCountryList::findBestMatchByCountryName(const QString &candidate) const
     {
-        if (candidate.isEmpty()) { return {}; }
+        if (candidate.isEmpty())
+        {
+            return {};
+        }
 
         thread_local const QRegularExpression reg("^[a-z]+", QRegularExpression::CaseInsensitiveOption);
         const QRegularExpressionMatch match = reg.match(candidate);
@@ -30,26 +36,47 @@ namespace swift::misc
         const CCountryList countries =
             this->findBy([&](const CCountry &country) { return country.matchesCountryName(cn); });
 
-        if (countries.isEmpty()) { return this->findFirstByAlias(cn); }
-        if (countries.size() < 2) { return countries.frontOrDefault(); }
+        if (countries.isEmpty())
+        {
+            return this->findFirstByAlias(cn);
+        }
+        if (countries.size() < 2)
+        {
+            return countries.frontOrDefault();
+        }
 
         // find best match by further reducing
         for (const CCountry &c : countries)
         {
-            if (c.getName() == cn) { return c; }
-            if (c.getName().startsWith(cn, Qt::CaseInsensitive)) { return c; }
-            if (cn.startsWith(c.getName(), Qt::CaseInsensitive)) { return c; }
+            if (c.getName() == cn)
+            {
+                return c;
+            }
+            if (c.getName().startsWith(cn, Qt::CaseInsensitive))
+            {
+                return c;
+            }
+            if (cn.startsWith(c.getName(), Qt::CaseInsensitive))
+            {
+                return c;
+            }
         }
         return countries.front();
     }
 
     CCountry CCountryList::findFirstByAlias(const QString &alias) const
     {
-        if (alias.isEmpty()) { return {}; }
+        if (alias.isEmpty())
+        {
+            return {};
+        }
         const QString a(alias.toUpper().trimmed());
         for (const CCountry &country : (*this))
         {
-            if (country.matchesAlias(a)) { return country; }
+            if (country.matchesAlias(a))
+            {
+                return country;
+            }
         }
         return {};
     }
@@ -60,10 +87,16 @@ namespace swift::misc
         for (const CCountry &country : (*this))
         {
             const QString s = country.getCombinedStringIsoName();
-            if (s.isEmpty()) { continue; }
+            if (s.isEmpty())
+            {
+                continue;
+            }
             sl.append(s);
         }
-        if (sorted) { sl.sort(); }
+        if (sorted)
+        {
+            sl.sort();
+        }
         return sl;
     }
 
@@ -73,10 +106,16 @@ namespace swift::misc
         for (const CCountry &country : (*this))
         {
             const QString s = country.getCombinedStringNameIso();
-            if (s.isEmpty()) { continue; }
+            if (s.isEmpty())
+            {
+                continue;
+            }
             sl.append(s);
         }
-        if (sorted) { sl.sort(); }
+        if (sorted)
+        {
+            sl.sort();
+        }
         return sl;
     }
 
@@ -86,10 +125,16 @@ namespace swift::misc
         for (const CCountry &country : (*this))
         {
             const QString s = country.getName();
-            if (s.isEmpty()) { continue; }
+            if (s.isEmpty())
+            {
+                continue;
+            }
             sl.append(s);
         }
-        if (sorted) { sl.sort(); }
+        if (sorted)
+        {
+            sl.sort();
+        }
         return sl;
     }
 
@@ -99,10 +144,16 @@ namespace swift::misc
         for (const CCountry &country : (*this))
         {
             const QString s = country.getIsoCode();
-            if (s.length() != 2) { continue; }
+            if (s.length() != 2)
+            {
+                continue;
+            }
             sl.append(s);
         }
-        if (sorted) { sl.sort(); }
+        if (sorted)
+        {
+            sl.sort();
+        }
         return sl;
     }
 
@@ -112,10 +163,16 @@ namespace swift::misc
         for (const CCountry &country : (*this))
         {
             const QString s = country.getIso3Code();
-            if (s.length() != 3) { continue; }
+            if (s.length() != 3)
+            {
+                continue;
+            }
             sl.append(s);
         }
-        if (sorted) { sl.sort(); }
+        if (sorted)
+        {
+            sl.sort();
+        }
         return sl;
     }
 

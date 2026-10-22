@@ -71,7 +71,7 @@ namespace XSwiftBus
         std::string loadPlanesPackage(const std::string &path);
 
         //! Set the ICAO code to use for aircraft without a model match
-        void setDefaultIcao(const std::string &defaultIcao);
+        static void setDefaultIcao(const std::string &defaultIcao);
 
         //! Set whether the plugin draws type and callsign labels above aircraft
         void setDrawingLabels(bool drawing, int rgb = -1);
@@ -283,7 +283,7 @@ namespace XSwiftBus
 
         std::vector<XPMPUpdate_t> m_updates;
         void doPlaneUpdates();
-        void interpolatePosition(Plane *);
+        static void interpolatePosition(Plane *);
         void interpolateGear(Plane *);
     };
 } // namespace XSwiftBus

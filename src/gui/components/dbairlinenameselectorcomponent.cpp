@@ -36,7 +36,10 @@ namespace swift::gui::components
 
     bool CDbAirlineNameSelectorComponent::setAirlineIcao(const CAirlineIcaoCode &icao)
     {
-        if (!CDbAirlineIcaoSelectorBase::setAirlineIcao(icao)) { return false; }
+        if (!CDbAirlineIcaoSelectorBase::setAirlineIcao(icao))
+        {
+            return false;
+        }
         const QString name(icao.getName());
         ui->le_AirlineName->setText(name);
         return true;
@@ -60,9 +63,15 @@ namespace swift::gui::components
 
     void CDbAirlineNameSelectorComponent::ps_dataChanged()
     {
-        if (!sGui) { return; }
+        if (!sGui)
+        {
+            return;
+        }
         QString s(ui->le_AirlineName->text());
-        if (s.isEmpty()) { return; }
+        if (s.isEmpty())
+        {
+            return;
+        }
         int dbKey = CDatastoreUtility::extractIntegerKey(s);
         if (dbKey >= 0)
         {

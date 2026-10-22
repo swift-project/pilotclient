@@ -87,7 +87,10 @@ namespace swift::gui::components
     void CSettingsHotkeyComponent::editEntry()
     {
         const auto index = ui->tv_Hotkeys->selectionModel()->currentIndex();
-        if (!index.isValid()) { return; }
+        if (!index.isValid())
+        {
+            return;
+        }
 
         const auto model = ui->tv_Hotkeys->model();
         const QModelIndex indexHotkey = model->index(index.row(), 0, QModelIndex());
@@ -170,7 +173,10 @@ namespace swift::gui::components
             message += "\n Do you want to use it anway?";
             const auto reply = QMessageBox::warning(this, "SettingsHotkeyComponent", message,
                                                     QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-            if (reply == QMessageBox::No) { return false; }
+            if (reply == QMessageBox::No)
+            {
+                return false;
+            }
         }
         return true;
     }
@@ -194,7 +200,10 @@ namespace swift::gui::components
     CIdentifierList CSettingsHotkeyComponent::getAllIdentifiers() const
     {
         CIdentifierList identifiers;
-        if (!sGui || !sGui->getIContextApplication()) { return identifiers; }
+        if (!sGui || !sGui->getIContextApplication())
+        {
+            return identifiers;
+        }
         if (sGui->getIContextApplication())
         {
             identifiers = sGui->getIContextApplication()->getRegisteredApplications();
@@ -225,7 +234,10 @@ namespace swift::gui::components
     bool CConfigHotkeyWizardPage::validatePage()
     {
         Q_ASSERT_X(m_config, Q_FUNC_INFO, "Missing configuration");
-        if (CConfigurationWizard::lastWizardStepSkipped(this->wizard())) { return true; }
+        if (CConfigurationWizard::lastWizardStepSkipped(this->wizard()))
+        {
+            return true;
+        }
         m_config->saveSettings();
         return true;
     }

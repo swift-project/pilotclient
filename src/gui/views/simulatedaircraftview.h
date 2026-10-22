@@ -120,7 +120,7 @@ namespace swift::gui
                                          bool newEnabled);
 
             //! Follow aircraft in simulator
-            void followAircraftInSimulator(const swift::misc::simulation::CSimulatedAircraft &aircraft);
+            static void followAircraftInSimulator(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
             //! Enable aircraft parts
             void enableParts(const swift::misc::simulation::CSimulatedAircraft &aircraft, bool enabled);
@@ -142,13 +142,13 @@ namespace swift::gui
             void doMatchingsAgainForSelected();
 
             //! Enable fast position updates
-            void enableFastPositionUpdates(const swift::misc::simulation::CSimulatedAircraft &aircraft);
+            static void enableFastPositionUpdates(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
             //! Update if aircraft is enabled
-            void updateAircraftEnabled(const swift::misc::simulation::CSimulatedAircraft &aircraft);
+            static void updateAircraftEnabled(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
             //! Update the gnd.flag support
-            void updateAircraftSupportingGndFLag(const swift::misc::simulation::CSimulatedAircraft &aircraft);
+            static void updateAircraftSupportingGndFLag(const swift::misc::simulation::CSimulatedAircraft &aircraft);
 
             //! FP dialog
             void showFlightPlanDialog();

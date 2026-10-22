@@ -20,16 +20,25 @@ namespace swift::misc::simulation
 
     bool CModelConverterX::supportsModelConverterX()
     {
-        if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return false; }
+        if (!CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
+            return false;
+        }
         return !getBinary().isEmpty();
     }
 
     QProcess *CModelConverterX::startModelConverterX(const CAircraftModel &model, QObject *parent)
     {
         // checks
-        if (model.getFileName().isEmpty()) { return nullptr; }
+        if (model.getFileName().isEmpty())
+        {
+            return nullptr;
+        }
         const QString modelConverterX = getBinary();
-        if (modelConverterX.isEmpty()) { return nullptr; }
+        if (modelConverterX.isEmpty())
+        {
+            return nullptr;
+        }
 
         // delete other MCX
         if (s_proccess)
@@ -43,7 +52,10 @@ namespace swift::misc::simulation
                                  &QObject::deleteLater);
                 old->terminate();
             }
-            else { old->deleteLater(); }
+            else
+            {
+                old->deleteLater();
+            }
         }
 
         auto process = new QProcess(parent);

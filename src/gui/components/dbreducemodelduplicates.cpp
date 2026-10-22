@@ -73,7 +73,10 @@ namespace swift::gui::components
     void CDbReduceModelDuplicates::process()
     {
         using namespace std::chrono_literals;
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         this->clearProgressBar();
         m_stop = false;
@@ -121,9 +124,18 @@ namespace swift::gui::components
         int mc = 0;
         for (const CAircraftModel &distributorModel : distributorModels)
         {
-            if (m_stop) { break; }
-            if (!distributorModel.getLivery().isAirlineLivery()) { continue; }
-            if (!distributorModel.getAircraftIcaoCode().hasValidDbKey()) { continue; }
+            if (m_stop)
+            {
+                break;
+            }
+            if (!distributorModel.getLivery().isAirlineLivery())
+            {
+                continue;
+            }
+            if (!distributorModel.getAircraftIcaoCode().hasValidDbKey())
+            {
+                continue;
+            }
             if (ui->rb_SameLiveryAndAircraft->isChecked())
             {
                 removeModels.replaceOrAddModelsWithString(
@@ -139,12 +151,21 @@ namespace swift::gui::components
                     Qt::CaseInsensitive);
             }
 
-            if (mc % 50 == 0) { ui->pb_Progress->setValue(mc); }
-            if (mc % 100 == 0) { CGuiApplication::processEventsFor(10); }
+            if (mc % 50 == 0)
+            {
+                ui->pb_Progress->setValue(mc);
+            }
+            if (mc % 100 == 0)
+            {
+                CGuiApplication::processEventsFor(10);
+            }
             mc++;
         }
 
-        if (!m_stop) { ui->pb_Progress->setValue(distributorModels.sizeInt()); }
+        if (!m_stop)
+        {
+            ui->pb_Progress->setValue(distributorModels.sizeInt());
+        }
         ui->tvp_RemoveModels->updateContainerMaybeAsync(removeModels);
         m_removeCandidates = removeModels;
         m_stop = false;

@@ -56,7 +56,10 @@ namespace swift::core
 
     bool CAircraftMatcher::setSetup(const CAircraftMatcherSetup &setup)
     {
-        if (m_setup == setup) { return false; }
+        if (m_setup == setup)
+        {
+            return false;
+        }
         m_setup = setup;
         emit this->setupChanged();
         return true;
@@ -74,7 +77,8 @@ namespace swift::core
                      airlineTelephony, boolToYesNo(useWebServices)),
             getLogCategories());
         CAirlineIcaoCode code;
-        do {
+        do
+        {
             if (CAircraftMatcher::isValidAirlineIcaoDesignator(primaryIcao, useWebServices))
             {
                 CCallsign::addLogDetailsToList(log, callsign,
@@ -170,7 +174,8 @@ namespace swift::core
         static const QString info("Multiple models (%1) with airline ICAOs for '%2'");
         CAirlineIcaoCode code;
 
-        do {
+        do
+        {
             bool reduced = false;
             if (!primaryIcao.isEmpty())
             {
@@ -311,7 +316,10 @@ namespace swift::core
                 log, callsign, QStringLiteral("Using %1 models to resolve airline designator").arg(models.size()));
             const CAirlineIcaoCode airline = CAircraftMatcher::failoverValidAirlineIcaoDesignator(
                 callsign, primaryIcao, secondaryIcao, airlineFromCallsign, airlineName, airlineTelephony, models, log);
-            if (airline.hasValidDbKey()) { return airline; }
+            if (airline.hasValidDbKey())
+            {
+                return airline;
+            }
         }
         CCallsign::addLogDetailsToList(log, callsign,
                                        QStringLiteral("Now using resolution of airline ICAO without specific models"));
@@ -341,8 +349,14 @@ namespace swift::core
                                      "-----------------------------------------\n");
 
         const QDateTime startTime = QDateTime::currentDateTimeUtc();
-        if (whatToLog == MatchingLogNothing) { log = nullptr; }
-        if (log) { log->clear(); }
+        if (whatToLog == MatchingLogNothing)
+        {
+            log = nullptr;
+        }
+        if (log)
+        {
+            log->clear();
+        }
 
         CMatchingUtils::addLogDetailsToList(log, remoteAircraft, m1.arg(startTime.toString(format)));
         CMatchingUtils::addLogDetailsToList(
@@ -530,11 +544,17 @@ namespace swift::core
                 CStatusMessageList log2ndRun;
                 matchedModelMs =
                     CAircraftMatcher::getClosestMatch(rerunAircraft, whatToLog, log ? &log2ndRun : nullptr, false);
-                if (log) { log->push_back(log2ndRun); }
+                if (log)
+                {
+                    log->push_back(log2ndRun);
+                }
 
                 // the script can fuckup the model, leading to an empty model string or such
                 matchedModelMs.setCallsign(remoteAircraft.getCallsign());
-                if (matchedModelMs.hasModelString()) { matchedModel = matchedModelMs; }
+                if (matchedModelMs.hasModelString())
+                {
+                    matchedModel = matchedModelMs;
+                }
                 else
                 {
                     CMatchingUtils::addLogDetailsToList(
@@ -641,8 +661,14 @@ namespace swift::core
                                                                      const CAircraftModelList &modelSet,
                                                                      CStatusMessageList *log)
     {
-        if (!setup.doRunMsReverseLookupScript()) { return { inModel }; }
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return inModel; }
+        if (!setup.doRunMsReverseLookupScript())
+        {
+            return { inModel };
+        }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return inModel;
+        }
         const QString js = CFileUtils::readFileToString(setup.getMsReverseLookupFile());
         const MatchingScriptReturnValues rv =
             CAircraftMatcher::matchingScript(js, inModel, inModel, setup, modelSet, ReverseLookup, log);
@@ -655,8 +681,14 @@ namespace swift::core
                                                                      const CAircraftModelList &modelSet,
                                                                      CStatusMessageList *log)
     {
-        if (!setup.doRunMsMatchingStageScript()) { return { inModel }; }
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return inModel; }
+        if (!setup.doRunMsMatchingStageScript())
+        {
+            return { inModel };
+        }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return inModel;
+        }
         const QString js = CFileUtils::readFileToString(setup.getMsMatchingStageFile());
         const MatchingScriptReturnValues rv =
             CAircraftMatcher::matchingScript(js, inModel, matchedModel, setup, modelSet, MatchingStage, log);
@@ -750,7 +782,10 @@ namespace swift::core
                                         .arg(ms.property("lineNumber").toInt())
                                         .arg(ms.toString());
                 CLogMessage(static_cast<CAircraftMatcher *>(nullptr)).warning(msg);
-                if (log) { CCallsign::addLogDetailsToList(log, callsign, msg); }
+                if (log)
+                {
+                    CCallsign::addLogDetailsToList(log, callsign, msg);
+                }
             }
             else
             {
@@ -758,7 +793,10 @@ namespace swift::core
                 {
                     const auto *reverseModelProcessed = qobject_cast<const MSInOutValues *>(ms.toQObject());
                     logMessage = reverseModelProcessed->getLogMessage();
-                    if (!reverseModelProcessed->isModified()) { break; }
+                    if (!reverseModelProcessed->isModified())
+                    {
+                        break;
+                    }
 
                     // rerun
                     rv.rerun = reverseModelProcessed->isRerun();
@@ -852,7 +890,10 @@ namespace swift::core
                         rv.modified = true;
                     }
                 }
-                else if (ms.isString()) { logMessage = ms.toString(); }
+                else if (ms.isString())
+                {
+                    logMessage = ms.toString();
+                }
             }
 
             // end this
@@ -874,11 +915,17 @@ namespace swift::core
                                                         const CAircraftMatcherSetup &setup,
                                                         const CAircraftModelList &modelSet, CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
 
         // already DB model?
         CAircraftModel model(modelToLookup); // copy
-        if (modelToLookup.isLoadedFromDb()) { return modelToLookup; }
+        if (modelToLookup.isLoadedFromDb())
+        {
+            return modelToLookup;
+        }
 
         // --- now I try to fill in as many DB data as possible ---
         // 1) This will unify data where possible
@@ -891,7 +938,8 @@ namespace swift::core
         // 2) not in the DB yet
         const CCallsign callsign(model.getCallsign());
 
-        do {
+        do
+        {
             if (modelToLookup.hasModelString())
             {
                 if (!setup.isReverseLookupModelString())
@@ -973,7 +1021,10 @@ namespace swift::core
                 }
                 const CAircraftIcaoCode icaoFromDb =
                     CAircraftMatcher::reverseLookupAircraftIcaoId(ids.aircraft, callsign, log);
-                if (icaoFromDb.hasValidDbKey()) { model.setAircraftIcaoCode(icaoFromDb); }
+                if (icaoFromDb.hasValidDbKey())
+                {
+                    model.setAircraftIcaoCode(icaoFromDb);
+                }
             }
 
             if (!modelToLookup.getLivery().hasValidDbKey() && ids.livery >= 0)
@@ -986,7 +1037,10 @@ namespace swift::core
                                                        .arg(ids.toQString()));
                 }
                 const CLivery liveryFromDb = CAircraftMatcher::reverseLookupLiveryId(ids.livery, callsign, log);
-                if (liveryFromDb.hasValidDbKey()) { model.setLivery(liveryFromDb); }
+                if (liveryFromDb.hasValidDbKey())
+                {
+                    model.setLivery(liveryFromDb);
+                }
             }
 
             // aircraft ICAO if not from DB yet
@@ -1127,7 +1181,10 @@ namespace swift::core
                                                           const CAircraftModelList &modelSet, CStatusMessageList *log)
     {
         CAircraftModel reverseModel = reverseLookupModel(modelToLookup, networkLiveryInfo, setup, modelSet, log);
-        if (!setup.doRunMsReverseLookupScript()) { return reverseModel; }
+        if (!setup.doRunMsReverseLookupScript())
+        {
+            return reverseModel;
+        }
         const CCallsign cs = modelToLookup.getCallsign();
         const MatchingScriptReturnValues rv = CAircraftMatcher::reverseLookupScript(reverseModel, setup, modelSet, log);
         if (rv.runScriptModifiedAndRerun())
@@ -1147,7 +1204,10 @@ namespace swift::core
     CAircraftModel CAircraftMatcher::reverseLookupModelStringInDB(const QString &modelString, const CCallsign &callsign,
                                                                   bool doLookupString, CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
         if (!doLookupString)
         {
             if (log)
@@ -1177,7 +1237,10 @@ namespace swift::core
             }
         }
 
-        if (!isDBModel) { return {}; } // not found
+        if (!isDBModel)
+        {
+            return {};
+        } // not found
 
         // found
         model.setCallsign(callsign);
@@ -1190,7 +1253,10 @@ namespace swift::core
                                                                    const CAircraftModelList &modelSet,
                                                                    bool useNonDbEntries, CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
         if (modelString.isEmpty())
         {
             if (log)
@@ -1241,7 +1307,10 @@ namespace swift::core
             }
         }
 
-        if (!isDBModel && !useNonDbEntries) { return {}; } // ignore DB entries
+        if (!isDBModel && !useNonDbEntries)
+        {
+            return {};
+        } // ignore DB entries
 
         // found
         model.setCallsign(callsign);
@@ -1251,7 +1320,10 @@ namespace swift::core
 
     CAircraftModel CAircraftMatcher::reverseLookupModelId(int id, const CCallsign &callsign, CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
         CAircraftModel model = sApp->getWebDataServices()->getModelForDbKey(id);
         if (log)
         {
@@ -1273,7 +1345,10 @@ namespace swift::core
     CAircraftIcaoCode CAircraftMatcher::reverseLookupAircraftIcao(const CAircraftIcaoCode &icaoCandidate,
                                                                   const CCallsign &logCallsign, CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
 
         const QString designator(icaoCandidate.getDesignator());
         CAircraftIcaoCodeList foundIcaos = sApp->getWebDataServices()->getAircraftIcaoCodesForDesignator(designator);
@@ -1377,7 +1452,10 @@ namespace swift::core
     CAircraftIcaoCode CAircraftMatcher::reverseLookupAircraftIcaoId(int id, const CCallsign &logCallsign,
                                                                     CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
         const CAircraftIcaoCode icao = sApp->getWebDataServices()->getAircraftIcaoCodeForDbKey(id);
         if (log)
         {
@@ -1398,7 +1476,10 @@ namespace swift::core
     CAirlineIcaoCode CAircraftMatcher::reverseLookupAirlineIcao(const CAirlineIcaoCode &icaoPattern,
                                                                 const CCallsign &callsign, CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
         const CAirlineIcaoCode icao = sApp->getWebDataServices()->smartAirlineIcaoSelector(icaoPattern, callsign);
         if (log)
         {
@@ -1426,7 +1507,10 @@ namespace swift::core
     CLivery CAircraftMatcher::reverseLookupStandardLivery(const CAirlineIcaoCode &airline, const CCallsign &callsign,
                                                           CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
         if (!airline.hasValidDesignator())
         {
             if (log)
@@ -1461,7 +1545,10 @@ namespace swift::core
 
     CLivery CAircraftMatcher::reverseLookupLiveryId(int id, const CCallsign &logCallsign, CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
         const CLivery livery = sApp->getWebDataServices()->getLiveryForDbKey(id);
         if (log)
         {
@@ -1486,13 +1573,19 @@ namespace swift::core
         if (ids.livery >= 0)
         {
             livery = CAircraftMatcher::reverseLookupLiveryId(ids.livery, logCallsign, log);
-            if (livery.hasValidDbKey()) { found++; }
+            if (livery.hasValidDbKey())
+            {
+                found++;
+            }
         }
 
         if (ids.aircraft >= 0)
         {
             aircraftIcao = CAircraftMatcher::reverseLookupAircraftIcaoId(ids.aircraft, logCallsign, log);
-            if (aircraftIcao.hasValidDbKey()) { found++; }
+            if (aircraftIcao.hasValidDbKey())
+            {
+                found++;
+            }
         }
         return found;
     }
@@ -1500,8 +1593,14 @@ namespace swift::core
     QString CAircraftMatcher::reverseLookupAirlineName(const QString &candidate, const CCallsign &callsign,
                                                        CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
-        if (candidate.isEmpty()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
+        if (candidate.isEmpty())
+        {
+            return {};
+        }
         const QStringList names = sApp->getWebDataServices()->getAirlineNames();
         if (names.contains(candidate, Qt::CaseInsensitive))
         {
@@ -1518,8 +1617,14 @@ namespace swift::core
     QString CAircraftMatcher::reverseLookupTelephonyDesignator(const QString &candidate, const CCallsign &callsign,
                                                                CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
-        if (candidate.isEmpty()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
+        if (candidate.isEmpty())
+        {
+            return {};
+        }
         const QStringList designators = sApp->getWebDataServices()->getTelephonyDesignators();
         if (designators.contains(candidate, Qt::CaseInsensitive))
         {
@@ -1534,7 +1639,10 @@ namespace swift::core
     bool CAircraftMatcher::isKnownAircraftDesignator(const QString &candidate, const CCallsign &callsign,
                                                      CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return false; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return false;
+        }
         if (!CAircraftIcaoCode::isValidDesignator(candidate))
         {
             CCallsign::addLogDetailsToList(log, callsign,
@@ -1552,7 +1660,10 @@ namespace swift::core
     bool CAircraftMatcher::isKnownModelString(const QString &candidate, const CCallsign &callsign,
                                               CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return false; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return false;
+        }
         const bool known = sApp->getWebDataServices()->containsModelString(candidate);
         static const QString sKnown("Known modelstring '%1'");
         static const QString sUnknown("Unknown modelstring '%1'");
@@ -1564,7 +1675,10 @@ namespace swift::core
                                                                    const CAirlineIcaoCode &airline,
                                                                    const CCallsign &callsign, CStatusMessageList *log)
     {
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return {}; }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return {};
+        }
         if (!airline.isLoadedFromDb())
         {
             CCallsign::addLogDetailsToList(
@@ -1602,7 +1716,10 @@ namespace swift::core
 
     CAirlineIcaoCode CAircraftMatcher::callsignToAirline(const CCallsign &callsign, CStatusMessageList *log)
     {
-        if (callsign.isEmpty() || !sApp || !sApp->getWebDataServices()) { return {}; }
+        if (callsign.isEmpty() || !sApp || !sApp->getWebDataServices())
+        {
+            return {};
+        }
         const CAirlineIcaoCode icao = sApp->getWebDataServices()->findBestMatchByCallsign(callsign);
 
         if (icao.hasValidDesignator())
@@ -1623,7 +1740,10 @@ namespace swift::core
 
     int CAircraftMatcher::setModelSet(const CAircraftModelList &models, const CSimulatorInfo &simulator, bool forced)
     {
-        if (!simulator.isSingleSimulator()) { return 0; }
+        if (!simulator.isSingleSimulator())
+        {
+            return 0;
+        }
 
         CAircraftModelList modelsCleaned(models);
         const int r1 = modelsCleaned.removeAllWithoutModelString();
@@ -1665,7 +1785,10 @@ namespace swift::core
             CLogMessage(this).error(u"Found model duplicate strings, check models: '%1'")
                 << duplicateModels.dbKeysAsString(", ");
         }
-        else if (!warnings.isEmpty()) { CLogMessage(this).validationWarning(warnings); }
+        else if (!warnings.isEmpty())
+        {
+            CLogMessage(this).validationWarning(warnings);
+        }
         else
         {
             CLogMessage(this).validationInfo(u"Set %1 models in matcher, simulator '%2'")
@@ -1711,9 +1834,18 @@ namespace swift::core
     {
         Q_UNUSED(livery)
         Q_ASSERT_X(sApp && sApp->hasWebDataServices(), Q_FUNC_INFO, "Missing web data services");
-        if (m_modelSet.isEmpty()) { return; } // ignore empty sets to not create silly stats
-        if (sessionId.isEmpty()) { return; }
-        if (aircraftIcao.isEmpty()) { return; }
+        if (m_modelSet.isEmpty())
+        {
+            return;
+        } // ignore empty sets to not create silly stats
+        if (sessionId.isEmpty())
+        {
+            return;
+        }
+        if (aircraftIcao.isEmpty())
+        {
+            return;
+        }
 
         QString description;
         if (!sApp->getWebDataServices()->getAircraftIcaoCodeForDesignator(aircraftIcao).isLoadedFromDb())
@@ -1726,7 +1858,10 @@ namespace swift::core
         if (airlineIcao.isEmpty())
         {
             const CAirlineIcaoCode al = CAircraftMatcher::reverseLookupAirlineIcao(airlineIcao, callsign);
-            if (al.isLoadedFromDb()) { airlineIcaoChecked = al; }
+            if (al.isLoadedFromDb())
+            {
+                airlineIcaoChecked = al;
+            }
         }
 
         CMatchingStatisticsEntry::EntryType type = CMatchingStatisticsEntry::Missing;
@@ -1741,7 +1876,10 @@ namespace swift::core
 
     void CAircraftMatcher::addingRemoteModelFailed(const CSimulatedAircraft &remoteAircraft)
     {
-        if (!m_setup.removeFromSetIfFailed()) { return; }
+        if (!m_setup.removeFromSetIfFailed())
+        {
+            return;
+        }
         if (remoteAircraft.hasCallsign() && remoteAircraft.hasModelString())
         {
             const QString modelString = remoteAircraft.getModelString();
@@ -1750,12 +1888,18 @@ namespace swift::core
             CLogMessage(this).warning(u"Disabled CS: '%1' model '%2' for matching")
                 << remoteAircraft.getCallsignAsString() << modelString;
         }
-        else { CLogMessage(this).warning(u"Disabled '%1' for matching") << remoteAircraft.toQString(true); }
+        else
+        {
+            CLogMessage(this).warning(u"Disabled '%1' for matching") << remoteAircraft.toQString(true);
+        }
     }
 
     bool CAircraftMatcher::saveDisabledForMatchingModels()
     {
-        if (m_disabledModels.isEmpty()) { return false; }
+        if (m_disabledModels.isEmpty())
+        {
+            return false;
+        }
 
         // log the models
         const QString ts = QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss");
@@ -1776,13 +1920,17 @@ namespace swift::core
         const CAircraftMatcherSetup::MatchingMode mode = setup.getMatchingMode();
         CStatusMessageList *reduceLog = log && whatToLog.testFlag(MatchingLogStepwiseReduce) ? log : nullptr;
         bool reduced = false;
-        do {
+        do
+        {
             // by livery, then by ICAO
             if (mode.testFlag(CAircraftMatcherSetup::ByLivery))
             {
                 matchedModels =
                     ifPossibleReduceByLiveryAndAircraftIcaoCode(remoteAircraft, matchedModels, reduced, log);
-                if (reduced) { break; } // almost perfect, we stop here (we have ICAO + livery match)
+                if (reduced)
+                {
+                    break;
+                } // almost perfect, we stop here (we have ICAO + livery match)
             }
             else if (reduceLog)
             {
@@ -1807,7 +1955,10 @@ namespace swift::core
                     QString usedFamily;
                     matchedModels = ifPossibleReduceByFamily(remoteAircraft, UsePseudoFamily, matchedModels, reduced,
                                                              usedFamily, log);
-                    if (reduced) { break; }
+                    if (reduced)
+                    {
+                        break;
+                    }
                 }
                 else if (reduceLog)
                 {
@@ -1848,7 +1999,6 @@ namespace swift::core
             if (!milFlagReduced && mode.testFlag(CAircraftMatcherSetup::ByCivilian) && !remoteAircraft.isMilitary())
             {
                 matchedModels = ifPossibleReduceByMilitaryFlag(remoteAircraft, matchedModels, reduced, reduceLog);
-                milFlagReduced = true;
             }
 
             // combined code
@@ -1856,7 +2006,10 @@ namespace swift::core
             {
                 matchedModels =
                     ifPossibleReduceByCombinedType(remoteAircraft, matchedModels, setup, reduced, reduceLog);
-                if (reduced) { break; }
+                if (reduced)
+                {
+                    break;
+                }
             }
             else if (log)
             {
@@ -1893,7 +2046,10 @@ namespace swift::core
         map = modelSet.scoreFull(remoteAircraft.getModel(), preferColorLiveries, noZeroScores, scoreLog);
 
         CAircraftModel matchedModel;
-        if (map.isEmpty()) { return {}; }
+        if (map.isEmpty())
+        {
+            return {};
+        }
 
         maxScore = map.lastKey();
         const CAircraftModelList maxScoreAircraft(map.values(maxScore));
@@ -1956,7 +2112,10 @@ namespace swift::core
         }
 
         // return
-        if (matchedModels.isEmpty()) { return defaultModel; }
+        if (matchedModels.isEmpty())
+        {
+            return defaultModel;
+        }
         return matchedModels.front();
     }
 
@@ -2054,7 +2213,10 @@ namespace swift::core
             models = ifPossibleReduceByAircraftOrFamily(remoteAircraft, UsePseudoFamily, models, setup,
                                                         QStringLiteral("Reduce by aircraft ICAO second."), r2, log);
             reduced = r1 || r2;
-            if (reduced) { return models; }
+            if (reduced)
+            {
+                return models;
+            }
         }
         else if (mode.testFlag(CAircraftMatcherSetup::ByIcaoData))
         {
@@ -2143,7 +2305,10 @@ namespace swift::core
             CAircraftModelList matchedModels =
                 ifPossibleReduceByFamily(remoteAircraft, usedFamily, allowPseudoFamily, inList,
                                          QStringLiteral("real family from ICAO"), reduced, log);
-            if (reduced) { return matchedModels; }
+            if (reduced)
+            {
+                return matchedModels;
+            }
         }
 
         // scenario: the ICAO actually is the family
@@ -2187,7 +2352,10 @@ namespace swift::core
                 CMatchingUtils::addLogDetailsToList(log, remoteAircraft,
                                                     u"Not found by family '" % family % u"' (" % hint % ")");
             }
-            if (!allowPseudoFamily) { return inList; }
+            if (!allowPseudoFamily)
+            {
+                return inList;
+            }
             // fallthru
         }
         else
@@ -2227,7 +2395,10 @@ namespace swift::core
             }
         }
 
-        if (foundByCM.isEmpty() && foundByFamily.isEmpty()) { return inList; }
+        if (foundByCM.isEmpty() && foundByFamily.isEmpty())
+        {
+            return inList;
+        }
         reduced = true;
 
         // avoid dpulicates, then add
@@ -2407,7 +2578,10 @@ namespace swift::core
     {
         reduced = false;
         const CAircraftModelList outList = ifPossibleReduceByAircraft(remoteAircraft, inList, info, reduced, log);
-        if (reduced || !setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByFamily)) { return outList; }
+        if (reduced || !setup.getMatchingMode().testFlag(CAircraftMatcherSetup::ByFamily))
+        {
+            return outList;
+        }
         QString family;
         return ifPossibleReduceByFamily(remoteAircraft, allowPseudoFamily, inList, reduced, family, log);
     }
@@ -2537,7 +2711,10 @@ namespace swift::core
                                                getLogCategories());
             }
         }
-        if (step1Data.size() == 1) { return step1Data; }
+        if (step1Data.size() == 1)
+        {
+            return step1Data;
+        }
 
         CAircraftModelList step2Data = inList.findByAirlineNamesOrTelephonyDesignator(telephony);
         if (step2Data.isEmpty() || step2Data.size() == inList.size())
@@ -2672,7 +2849,10 @@ namespace swift::core
 
     QString CAircraftMatcher::scoresToString(const ScoredModels &scores, int lastElements)
     {
-        if (scores.isEmpty()) { return {}; }
+        if (scores.isEmpty())
+        {
+            return {};
+        }
         QMultiMapIterator<int, CAircraftModel> i(scores);
         i.toBack();
         int c = 0;
@@ -2681,7 +2861,10 @@ namespace swift::core
         {
             i.previous();
             const CAircraftModel m(i.value());
-            if (!str.isEmpty()) { str += '\n'; }
+            if (!str.isEmpty())
+            {
+                str += '\n';
+            }
             str += QString::number(c) % u": score: " % QString::number(i.key()) % u" model: '" % m.getModelString() %
                    u"' aircraft: '" % m.getAircraftIcaoCodeDesignator() % u"' livery: '" %
                    m.getLivery().getCombinedCodePlusInfo() % u'\'';
@@ -2694,11 +2877,23 @@ namespace swift::core
                                                                  const QString &airlineTelephony, bool useSwiftDbData,
                                                                  CStatusMessageList *log)
     {
-        if (!useSwiftDbData) { return { designator }; }
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return { designator }; }
+        if (!useSwiftDbData)
+        {
+            return { designator };
+        }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return { designator };
+        }
         const CAirlineIcaoCodeList codes = sApp->getWebDataServices()->getAirlineIcaoCodesForDesignator(designator);
-        if (codes.isEmpty()) { return { designator }; }
-        if (codes.size() == 1) { return codes.front(); }
+        if (codes.isEmpty())
+        {
+            return { designator };
+        }
+        if (codes.size() == 1)
+        {
+            return codes.front();
+        }
 
         // more than 1
         bool reduced = false;
@@ -2710,9 +2905,18 @@ namespace swift::core
 
     bool CAircraftMatcher::isValidAirlineIcaoDesignator(const QString &designator, bool checkAgainstSwiftDb)
     {
-        if (!CAirlineIcaoCode::isValidAirlineDesignator(designator)) { return false; }
-        if (!checkAgainstSwiftDb) { return true; }
-        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices()) { return true; }
+        if (!CAirlineIcaoCode::isValidAirlineDesignator(designator))
+        {
+            return false;
+        }
+        if (!checkAgainstSwiftDb)
+        {
+            return true;
+        }
+        if (!sApp || sApp->isShuttingDown() || !sApp->hasWebDataServices())
+        {
+            return true;
+        }
         return (sApp->getWebDataServices()->containsAirlineIcaoDesignator(designator));
     }
 } // namespace swift::core

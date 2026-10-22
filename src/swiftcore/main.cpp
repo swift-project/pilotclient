@@ -27,9 +27,11 @@ int main(int argc, char *argv[])
     CGuiApplication a(CApplicationInfo::swiftCore(), CApplicationInfo::PilotClientCore, CIcons::swiftCore24());
     a.addWindowStateOption();
     a.addDBusAddressOption();
-    a.addNetworkOptions();
     a.addAudioOptions();
-    if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
+    if (!a.parseCommandLineArgsAndLoadSetup())
+    {
+        return EXIT_FAILURE;
+    }
 
     const QString dBusAddress(a.getCmdDBusAddressValue());
     a.initContextsAndStartCoreFacade(CCoreFacadeConfig(CCoreFacadeConfig::LocalInDBusServer, dBusAddress));
@@ -47,6 +49,9 @@ int main(int argc, char *argv[])
     }
 
     CSwiftCore w;
-    if (a.getWindowState() != Qt::WindowMinimized) { w.show(); }
+    if (a.getWindowState() != Qt::WindowMinimized)
+    {
+        w.show();
+    }
     return a.exec();
 }

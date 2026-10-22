@@ -70,11 +70,17 @@ namespace swift::gui::editors
         {
             bool ok {};
             const int dbKey = id.toInt(&ok);
-            if (ok) { livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey); }
+            if (ok)
+            {
+                livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey);
+            }
         }
 
         // fallback
-        if (!livery.hasValidDbKey()) { livery = ui->comp_LiverySelector->getLivery(); }
+        if (!livery.hasValidDbKey())
+        {
+            livery = ui->comp_LiverySelector->getLivery();
+        }
 
         if (livery.hasCompleteData() && livery.hasValidDbKey())
         {
@@ -93,7 +99,10 @@ namespace swift::gui::editors
 
     bool CLiveryForm::setValue(const CLivery &livery)
     {
-        if (m_originalLivery == livery) { return false; }
+        if (m_originalLivery == livery)
+        {
+            return false;
+        }
 
         m_originalLivery = livery;
         ui->comp_LiverySelector->setLivery(livery);
@@ -104,21 +113,36 @@ namespace swift::gui::editors
         ui->color_Tail->setColor(livery.getColorTail());
         ui->cb_Military->setChecked(livery.isMilitary());
 
-        if (livery.isColorLivery()) { ui->editor_AirlineIcao->clear(); }
-        else { ui->editor_AirlineIcao->setValue(livery.getAirlineIcaoCode()); }
+        if (livery.isColorLivery())
+        {
+            ui->editor_AirlineIcao->clear();
+        }
+        else
+        {
+            ui->editor_AirlineIcao->setValue(livery.getAirlineIcaoCode());
+        }
         return true;
     }
 
     void CLiveryForm::jsonPasted(const QString &json)
     {
-        if (json.isEmpty()) { return; } // avoid unnecessary conversions
+        if (json.isEmpty())
+        {
+            return;
+        } // avoid unnecessary conversions
         try
         {
             CVariant jsonVariant;
             jsonVariant.convertFromJson(json::jsonObjectFromString(json));
-            if (!jsonVariant.canConvert<CLiveryList>()) { return; }
+            if (!jsonVariant.canConvert<CLiveryList>())
+            {
+                return;
+            }
             const auto liveries = jsonVariant.value<CLiveryList>();
-            if (!liveries.isEmpty()) { this->setValue(liveries.front()); }
+            if (!liveries.isEmpty())
+            {
+                this->setValue(liveries.front());
+            }
         }
         catch (const CJsonException &ex)
         {
@@ -132,7 +156,10 @@ namespace swift::gui::editors
         CStatusMessageList msgs(livery.validate());
         if (withNestedForms)
         {
-            if (!livery.isColorLivery()) { msgs.push_back(ui->editor_AirlineIcao->validate()); }
+            if (!livery.isColorLivery())
+            {
+                msgs.push_back(ui->editor_AirlineIcao->validate());
+            }
         }
         if (this->isReadOnly())
         {
@@ -190,36 +217,66 @@ namespace swift::gui::editors
     void CLiveryForm::onDroppedLivery(const swift::misc::CVariant &variantDropped)
     {
         CLivery livery;
-        if (variantDropped.canConvert<CLivery>()) { livery = variantDropped.value<CLivery>(); }
+        if (variantDropped.canConvert<CLivery>())
+        {
+            livery = variantDropped.value<CLivery>();
+        }
         else if (variantDropped.canConvert<CLiveryList>())
         {
             auto liveryList(variantDropped.value<CLiveryList>());
-            if (liveryList.isEmpty()) { return; }
+            if (liveryList.isEmpty())
+            {
+                return;
+            }
             livery = liveryList.front();
         }
-        else { return; }
+        else
+        {
+            return;
+        }
         this->setValue(livery);
     }
 
     void CLiveryForm::onAirlineChanged(const CAirlineIcaoCode &code)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-        if (!code.hasCompleteData()) { return; }
-        if (!code.hasValidDbKey()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
+        if (!code.hasCompleteData())
+        {
+            return;
+        }
+        if (!code.hasValidDbKey())
+        {
+            return;
+        }
 
         // only replace with STD livery if airline does not match
         const CLivery currentLivery = this->getValue();
-        if (currentLivery.hasValidDbKey() && currentLivery.getAirlineIcaoCode() == code) { return; }
+        if (currentLivery.hasValidDbKey() && currentLivery.getAirlineIcaoCode() == code)
+        {
+            return;
+        }
 
         const CLivery stdLivery(sGui->getWebDataServices()->getLiveries().findStdLiveryByAirlineIcaoVDesignator(code));
-        if (stdLivery.hasValidDbKey()) { this->setValue(stdLivery); }
+        if (stdLivery.hasValidDbKey())
+        {
+            this->setValue(stdLivery);
+        }
     }
 
     void CLiveryForm::setTemporaryLivery()
     {
-        if (!sGui || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         const CLivery l = sGui->getWebDataServices()->getTempLiveryOrDefault();
-        if (l.isLoadedFromDb()) { this->setValue(l); }
+        if (l.isLoadedFromDb())
+        {
+            this->setValue(l);
+        }
     }
 
     void CLiveryForm::searchForColor()
@@ -230,9 +287,15 @@ namespace swift::gui::editors
             m_colorSearch->setModal(true);
         }
         const auto c = static_cast<QDialog::DialogCode>(m_colorSearch->exec());
-        if (c == QDialog::Rejected) { return; }
+        if (c == QDialog::Rejected)
+        {
+            return;
+        }
         const CLivery found = m_colorSearch->getLivery();
-        if (found.isLoadedFromDb()) { this->setValue(found); }
+        if (found.isLoadedFromDb())
+        {
+            this->setValue(found);
+        }
     }
 
     void CLiveryForm::onIdEntered()

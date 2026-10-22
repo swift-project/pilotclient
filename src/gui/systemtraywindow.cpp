@@ -84,7 +84,10 @@ namespace swift::gui
         QMainWindow::changeEvent(event);
         if (event->type() == QEvent::WindowStateChange)
         {
-            if (isMinimized()) { hide(); }
+            if (isMinimized())
+            {
+                hide();
+            }
         }
     }
 

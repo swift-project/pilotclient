@@ -15,19 +15,14 @@ namespace swift::gui::models
         : CListModelBase("MatchingStatisticsModel", parent)
     {
         this->setMode(mode);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("MatchingStatisticsModel", "session");
-        (void)QT_TRANSLATE_NOOP("MatchingStatisticsModel", "model set");
-        (void)QT_TRANSLATE_NOOP("MatchingStatisticsModel", "combination");
-        (void)QT_TRANSLATE_NOOP("MatchingStatisticsModel", "type");
-        (void)QT_TRANSLATE_NOOP("MatchingStatisticsModel", "aircraft");
-        (void)QT_TRANSLATE_NOOP("MatchingStatisticsModel", "airline");
     }
 
     void CMatchingStatisticsModel::setMode(CMatchingStatisticsModel::MatchingStatisticsMode mode)
     {
-        if (m_mode == mode) { return; }
+        if (m_mode == mode)
+        {
+            return;
+        }
         m_mode = mode;
         m_columns.clear();
         switch (mode)

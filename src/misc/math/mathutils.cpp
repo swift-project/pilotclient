@@ -20,7 +20,10 @@ namespace swift::misc::math
         // gosh, is there no Qt method for this??? It's year 2013
         double intpart {};
         double fractpart = modf(value, &intpart);
-        if (epsilonZeroLimits(fractpart)) { return value; } // do not mess any "integers" to the worse
+        if (epsilonZeroLimits(fractpart))
+        {
+            return value;
+        } // do not mess any "integers" to the worse
         const double m = pow(10.0, digits);
         const qint64 ri = qRound64(value * m); // do not loose any range here
         const double rv = static_cast<double>(ri) / m;
@@ -29,10 +32,16 @@ namespace swift::misc::math
 
     double CMathUtils::roundEpsilon(double value, double epsilon)
     {
-        if (epsilonZeroLimits(epsilon)) { return value; } // avoid division by 0
+        if (epsilonZeroLimits(epsilon))
+        {
+            return value;
+        } // avoid division by 0
         double intpart {};
         double fractpart = modf(value, &intpart);
-        if (epsilonZeroLimits(fractpart)) { return value; } // do not mess any "integers" to the worse
+        if (epsilonZeroLimits(fractpart))
+        {
+            return value;
+        } // do not mess any "integers" to the worse
         const double roundValue = value / epsilon;
         const qint64 ri = qRound64(roundValue);
         const double rv = static_cast<double>(ri) * epsilon; // do not loose any range here
@@ -91,7 +100,10 @@ namespace swift::misc::math
         int remainder = std::abs(value % divisor);
         int shortfall = divisor - remainder;
 
-        if (shortfall < remainder) { multiplier += value < 0 ? -1 : 1; }
+        if (shortfall < remainder)
+        {
+            multiplier += value < 0 ? -1 : 1;
+        }
 
         return multiplier * divisor;
     }
@@ -103,15 +115,24 @@ namespace swift::misc::math
         const int prec = width >= 0 ? width + 1 : 10;
         const QString f = QString::number(fractpart, 'f', prec); // avoid scientific notation
         const QString fInt = f.length() < 3 ? QString("0") : f.mid(2);
-        if (width < 0) { return fInt; }
-        if (fInt.length() >= width) { return fInt.left(width); }
+        if (width < 0)
+        {
+            return fInt;
+        }
+        if (fInt.length() >= width)
+        {
+            return fInt.left(width);
+        }
         return fInt.leftJustified(width, '0');
     }
 
     double CMathUtils::sum(const QList<double> &values)
     {
         double sum = 0;
-        for (double v : values) { sum += v; }
+        for (double v : values)
+        {
+            sum += v;
+        }
         return sum;
     }
 

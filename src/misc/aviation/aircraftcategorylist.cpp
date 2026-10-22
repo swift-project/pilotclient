@@ -35,21 +35,30 @@ namespace swift::misc::aviation
     QSet<QString> CAircraftCategoryList::getLevelStrings() const
     {
         CSetBuilder<QString> levels;
-        for (const CAircraftCategory &category : *this) { levels.insert(category.getLevelString()); }
+        for (const CAircraftCategory &category : *this)
+        {
+            levels.insert(category.getLevelString());
+        }
         return levels;
     }
 
     QString CAircraftCategoryList::getLevelsString(const QString &separator) const
     {
         const QSet<QString> levels = this->getLevelStrings();
-        if (levels.isEmpty()) { return {}; }
+        if (levels.isEmpty())
+        {
+            return {};
+        }
         return levels.values().join(separator);
     }
 
     QList<int> CAircraftCategoryList::getFirstLevels() const
     {
         CSetBuilder<int> levels;
-        for (const CAircraftCategory &category : *this) { levels.insert(category.getFirstLevel()); }
+        for (const CAircraftCategory &category : *this)
+        {
+            levels.insert(category.getFirstLevel());
+        }
         QList<int> ll = levels;
         ll.removeOne(0);
         return ll;
@@ -58,7 +67,10 @@ namespace swift::misc::aviation
     QList<int> CAircraftCategoryList::getSecondLevels() const
     {
         CSetBuilder<int> levels;
-        for (const CAircraftCategory &category : *this) { levels.insert(category.getSecondLevel()); }
+        for (const CAircraftCategory &category : *this)
+        {
+            levels.insert(category.getSecondLevel());
+        }
         QList<int> ll = levels;
         ll.removeOne(0);
         return ll;
@@ -66,20 +78,32 @@ namespace swift::misc::aviation
 
     CAircraftCategoryList CAircraftCategoryList::findHighestLevels(const CAircraftCategoryList &categories)
     {
-        if (categories.isEmpty()) { return {}; }
+        if (categories.isEmpty())
+        {
+            return {};
+        }
         QMap<int, CAircraftCategory> highestLevels;
         for (const CAircraftCategory &category : *this)
         {
             const int fl = category.getFirstLevel();
             if (highestLevels.contains(fl))
             {
-                if (highestLevels[fl].isHigherLevel(category)) { highestLevels[fl] = category; }
+                if (highestLevels[fl].isHigherLevel(category))
+                {
+                    highestLevels[fl] = category;
+                }
             }
-            else { highestLevels[fl] = category; }
+            else
+            {
+                highestLevels[fl] = category;
+            }
         }
 
         CAircraftCategoryList topLevels;
-        for (const CAircraftCategory &category : highestLevels.values()) { topLevels.push_back(category); }
+        for (const CAircraftCategory &category : highestLevels.values())
+        {
+            topLevels.push_back(category);
+        }
         return topLevels;
     }
 
@@ -88,7 +112,10 @@ namespace swift::misc::aviation
         CAircraftCategoryList categories;
         for (const CAircraftCategory &category : *this)
         {
-            if (category.getFirstLevel() == level) { categories.push_back(category); }
+            if (category.getFirstLevel() == level)
+            {
+                categories.push_back(category);
+            }
         }
         return categories;
     }
@@ -96,22 +123,37 @@ namespace swift::misc::aviation
     CAircraftCategoryList CAircraftCategoryList::findByLevel(const QList<int> &level, bool noRootNode) const
     {
         CAircraftCategoryList categories;
-        if (level.isEmpty()) { return categories; }
+        if (level.isEmpty())
+        {
+            return categories;
+        }
         const int ls = level.size();
         for (const CAircraftCategory &category : *this)
         {
-            if (noRootNode && ls == category.getDepth()) { continue; } // ignore root nodes
-            if (category.matchesLevel(level)) { categories.push_back(category); }
+            if (noRootNode && ls == category.getDepth())
+            {
+                continue;
+            } // ignore root nodes
+            if (category.matchesLevel(level))
+            {
+                categories.push_back(category);
+            }
         }
         return categories;
     }
 
     CAircraftCategory CAircraftCategoryList::findByFullLevel(const QList<int> &level) const
     {
-        if (level.size() != 3) { return {}; }
+        if (level.size() != 3)
+        {
+            return {};
+        }
         for (const CAircraftCategory &category : *this)
         {
-            if (category.isLevel(level[0], level[1], level[2])) { return category; }
+            if (category.isLevel(level[0], level[1], level[2]))
+            {
+                return category;
+            }
         }
         return {};
     }
@@ -125,7 +167,10 @@ namespace swift::misc::aviation
     {
         QList<int> levels = category.getLevel();
         CAircraftCategoryList categories;
-        if (levels.size() < 2) { categories = this->findFirstLevels(); }
+        if (levels.size() < 2)
+        {
+            categories = this->findFirstLevels();
+        }
         else
         {
             levels.removeLast();
@@ -137,41 +182,68 @@ namespace swift::misc::aviation
 
     CAircraftCategoryList CAircraftCategoryList::findInParallelBranch(const CAircraftCategory &category) const
     {
-        if (category.isNull() || this->isEmpty()) { return {}; }
-        if (category.isFirstLevel()) { return {}; }
+        if (category.isNull() || this->isEmpty())
+        {
+            return {};
+        }
+        if (category.isFirstLevel())
+        {
+            return {};
+        }
         const bool isL2 = category.getDepth() == 2;
         const QList<int> loopLevels = isL2 ? this->getFirstLevels() : this->getSecondLevels();
-        if (loopLevels.isEmpty()) { return {}; }
+        if (loopLevels.isEmpty())
+        {
+            return {};
+        }
 
         QList<int> level = category.getLevel();
         CAircraftCategoryList result;
         for (int l = loopLevels.front(); loopLevels.back() >= l; ++l)
         {
             level[isL2 ? 0 : 1] = l;
-            if (category.isLevel(level)) { continue; } // ignore category itself
+            if (category.isLevel(level))
+            {
+                continue;
+            } // ignore category itself
             const CAircraftCategory cat = this->findByFullLevel(level);
-            if (!cat.isNull()) { result.push_back(cat); }
+            if (!cat.isNull())
+            {
+                result.push_back(cat);
+            }
         }
         return result;
     }
 
     int CAircraftCategoryList::removeIfLevel(const QList<int> &level)
     {
-        if (level.isEmpty()) { return 0; }
+        if (level.isEmpty())
+        {
+            return 0;
+        }
         const int c = this->size();
         const CAircraftCategoryList removed = this->removedLevel(level);
         const int delta = c - removed.size();
-        if (delta > 0) { *this = removed; }
+        if (delta > 0)
+        {
+            *this = removed;
+        }
         return delta;
     }
 
     CAircraftCategoryList CAircraftCategoryList::removedLevel(const QList<int> &level) const
     {
-        if (level.isEmpty()) { return *this; } // nothing removed
+        if (level.isEmpty())
+        {
+            return *this;
+        } // nothing removed
         CAircraftCategoryList removed;
         for (const CAircraftCategory &category : *this)
         {
-            if (category.matchesLevel(level)) { continue; }
+            if (category.matchesLevel(level))
+            {
+                continue;
+            }
             removed.push_back(category);
         }
         return removed;

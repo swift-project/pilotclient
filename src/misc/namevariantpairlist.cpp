@@ -20,35 +20,56 @@ namespace swift::misc
 
     QStringList CNameVariantPairList::getNames(bool sorted) const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         QStringList codes = this->transform(predicates::MemberTransform(&CNameVariantPair::getName));
-        if (sorted) { codes.sort(); }
+        if (sorted)
+        {
+            codes.sort();
+        }
         return codes;
     }
 
     CNameVariantPair CNameVariantPairList::getValue(const QString &name) const
     {
-        if (name.isEmpty()) { return {}; }
+        if (name.isEmpty())
+        {
+            return {};
+        }
         return this->findBy(&CNameVariantPair::getName, name).frontOrDefault();
     }
 
     CVariant CNameVariantPairList::getVariantValue(const QString &name) const
     {
-        if (name.isEmpty()) { return {}; }
+        if (name.isEmpty())
+        {
+            return {};
+        }
         return getValue(name).getVariant();
     }
 
     QString CNameVariantPairList::getValueAsString(const QString &name) const
     {
-        if (name.isEmpty()) { return {}; }
+        if (name.isEmpty())
+        {
+            return {};
+        }
         const CVariant cs(getValue(name).getVariant());
-        if (cs.isNull() || !cs.canConvert<QString>()) { return {}; }
+        if (cs.isNull() || !cs.canConvert<QString>())
+        {
+            return {};
+        }
         return cs.value<QString>();
     }
 
     bool CNameVariantPairList::addOrReplaceValue(const QString &name, const CVariant &value, const CIcon &icon)
     {
-        if (name.isEmpty()) { return false; }
+        if (name.isEmpty())
+        {
+            return false;
+        }
         int i = getIndexForName(name);
         if (i < 0)
         {
@@ -66,7 +87,10 @@ namespace swift::misc
     {
         for (int i = 0; i < this->size(); i++)
         {
-            if ((*this)[i].getName() == name) { return i; }
+            if ((*this)[i].getName() == name)
+            {
+                return i;
+            }
         }
         return -1;
     }

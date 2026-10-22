@@ -131,10 +131,22 @@ namespace swift::simplugin::emulated
         static const QString c3("%1 %2 %3 %4");
 
         CStatusMessage msg;
-        if (!p3.isEmpty()) { msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c3.arg(function, p1, p2, p3)); }
-        else if (!p2.isEmpty()) { msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c2.arg(function, p1, p2)); }
-        else if (!p1.isEmpty()) { msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c1.arg(function, p1)); }
-        else { msg = CStatusMessage(this, CStatusMessage::SeverityInfo, function); }
+        if (!p3.isEmpty())
+        {
+            msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c3.arg(function, p1, p2, p3));
+        }
+        else if (!p2.isEmpty())
+        {
+            msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c2.arg(function, p1, p2));
+        }
+        else if (!p1.isEmpty())
+        {
+            msg = CStatusMessage(this, CStatusMessage::SeverityInfo, c1.arg(function, p1));
+        }
+        else
+        {
+            msg = CStatusMessage(this, CStatusMessage::SeverityInfo, function);
+        }
         this->appendStatusMessageToList(msg);
     }
 
@@ -150,7 +162,10 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulatedMonitorDialog::updateWindowTitleAndUiValues(const CSimulatorInfo &info)
     {
-        if (!info.isSingleSimulator()) { return; }
+        if (!info.isSingleSimulator())
+        {
+            return;
+        }
         this->setWindowTitle("Emulated driver : " + info.toQString());
         this->setSimulatorUiValues();
     }
@@ -163,7 +178,10 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulatedMonitorDialog::onSavedComTransmissionValues(CComSystem::ComUnit unit)
     {
-        if (!this->canUseSimulator()) { return; }
+        if (!this->canUseSimulator())
+        {
+            return;
+        }
         const CSimulatedAircraft ownAircraft = m_simulator->getOwnAircraft();
         CComSystem com = ownAircraft.getComSystem(unit);
         ui->comp_ComTransmissions->updateComSystem(com, unit);
@@ -172,26 +190,38 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulatedMonitorDialog::changeComFromUi(const CSimulatedAircraft &aircraft)
     {
-        if (!this->canUseSimulator()) { return; }
+        if (!this->canUseSimulator())
+        {
+            return;
+        }
         m_simulator->changeInternalCom(aircraft);
     }
 
     void CSimulatorEmulatedMonitorDialog::changeSelcalFromUi(const CSelcal &selcal)
     {
-        if (!this->canUseSimulator()) { return; }
+        if (!this->canUseSimulator())
+        {
+            return;
+        }
         m_simulator->changeInternalSelcal(selcal);
     }
 
     void CSimulatorEmulatedMonitorDialog::changeSituationFromUi()
     {
-        if (!this->canUseSimulator()) { return; }
+        if (!this->canUseSimulator())
+        {
+            return;
+        }
         const CAircraftSituation s(ui->editor_Situation->getSituation());
         m_simulator->changeInternalSituation(s);
     }
 
     void CSimulatorEmulatedMonitorDialog::changePartsFromUi()
     {
-        if (!this->canUseSimulator()) { return; }
+        if (!this->canUseSimulator())
+        {
+            return;
+        }
         const CAircraftParts p(ui->editor_AircraftParts->getAircraftPartsFromGui());
         m_simulator->changeInternalParts(p);
     }
@@ -217,7 +247,10 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulatedMonitorDialog::timerBasedUiUpdates()
     {
-        if (!this->canUseSimulator()) { return; }
+        if (!this->canUseSimulator())
+        {
+            return;
+        }
 
         ui->le_PhysicallyAddedAircraft->setText(QString::number(m_simulator->getStatisticsPhysicallyAddedAircraft()));
         ui->le_PhysicallyRemovedAircraft->setText(QString::number(m_simulator->aircraftSituationsAdded()));
@@ -229,7 +262,10 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulatedMonitorDialog::resetStatistics()
     {
-        if (!this->canUseSimulator()) { return; }
+        if (!this->canUseSimulator())
+        {
+            return;
+        }
 
         m_simulator->resetAircraftStatistics();
         ui->le_PhysicallyAddedAircraft->clear();
@@ -281,8 +317,14 @@ namespace swift::simplugin::emulated
             this->enableInterpolationLogButtons(fetching);
             ok = true;
         }
-        else { Q_ASSERT_X(false, Q_FUNC_INFO, "Unhandled button"); }
-        if (!ok) { CLogMessage(this).warning(u"Cannot parse command for button: %1") << sender->objectName(); }
+        else
+        {
+            Q_ASSERT_X(false, Q_FUNC_INFO, "Unhandled button");
+        }
+        if (!ok)
+        {
+            CLogMessage(this).warning(u"Cannot parse command for button: %1") << sender->objectName();
+        }
     }
 
     void CSimulatorEmulatedMonitorDialog::enableInterpolationLogButtons(bool enable)
@@ -296,7 +338,10 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulatedMonitorDialog::emitSignal()
     {
-        if (!this->canUseSimulator()) { return; }
+        if (!this->canUseSimulator())
+        {
+            return;
+        }
 
         const CCallsign cs = ui->comp_CallsignCompleter->getCallsign();
         const QObject *sender = QObject::sender();
@@ -311,7 +356,10 @@ namespace swift::simplugin::emulated
 
     void CSimulatorEmulatedMonitorDialog::addAutoPublishTestData()
     {
-        if (!this->canUseSimulator()) { return; }
+        if (!this->canUseSimulator())
+        {
+            return;
+        }
         m_simulator->m_autoPublishing.testData();
     }
 

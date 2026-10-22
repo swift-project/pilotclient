@@ -39,7 +39,10 @@ namespace swift::gui::components
 
     bool CLegalInfoComponent::validateAgreement()
     {
-        if (this->isAgreedTo()) { return true; }
+        if (this->isAgreedTo())
+        {
+            return true;
+        }
         static const CStatusMessage m =
             CStatusMessage(this).validationError(u"You need to agree with the swift license");
         this->showOverlayMessage(m);
@@ -53,7 +56,10 @@ namespace swift::gui::components
 
     void CLegalInfoComponent::setChecklistInfo()
     {
-        if (!sGui) { return; }
+        if (!sGui)
+        {
+            return;
+        }
         const CGlobalSetup gs = sGui->getGlobalSetup();
         const CUrl url = gs.getHelpPageUrl().withAppendedPath("checklist");
         ui->lbl_Tip->setText(QStringLiteral("Please read the <a href=\"%1\">checklist before your 1st flight</a>")

@@ -33,7 +33,10 @@ namespace swift::gui::views
 
     void CAircraftSituationView::emitRequestElevationForSituation()
     {
-        if (!this->hasSingleSelectedRow()) { return; }
+        if (!this->hasSingleSelectedRow())
+        {
+            return;
+        }
         const CAircraftSituation situation = this->selectedObject();
         emit this->requestElevation(situation);
     }

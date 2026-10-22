@@ -172,7 +172,8 @@ namespace swift::misc
 
         // Now walk the module list of the process,
         // and display information about each module
-        do {
+        do
+        {
             ProcessModule pm;
             pm.moduleName = QString::fromWCharArray(static_cast<const wchar_t *>(&me32.szModule[0]));
             if (nameFilter.isEmpty() || pm.moduleName.contains(nameFilter, Qt::CaseInsensitive))
@@ -180,7 +181,10 @@ namespace swift::misc
                 pm.executable = QString::fromWCharArray(static_cast<const wchar_t *>(&me32.szExePath[0]));
                 pm.processId = static_cast<qint64>(me32.th32ProcessID);
                 results.append(pm);
-                if (!nameFilter.isEmpty()) { break; }
+                if (!nameFilter.isEmpty())
+                {
+                    break;
+                }
             }
         }
         while (Module32Next(hModuleSnap, &me32));

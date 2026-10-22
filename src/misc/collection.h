@@ -85,13 +85,19 @@ namespace swift::misc
         //! Initializer list constructor.
         QOrderedSet(std::initializer_list<T> il)
         {
-            for (const auto &v : il) { insert(v); }
+            for (const auto &v : il)
+            {
+                insert(v);
+            }
         }
 
         //! Constructor from QList
         QOrderedSet(const QList<T> &list)
         {
-            for (const auto &v : list) { insert(v); }
+            for (const auto &v : list)
+            {
+                insert(v);
+            }
         }
     };
 
@@ -290,7 +296,10 @@ namespace swift::misc
         //! \return An iterator to the position of the next element after the one removed.
         iterator erase(iterator it1, iterator it2)
         {
-            while (it1 != it2) { it1 = erase(it1); }
+            while (it1 != it2)
+            {
+                it1 = erase(it1);
+            }
             return it1;
         }
 
@@ -307,7 +316,10 @@ namespace swift::misc
         void remove(const T &object)
         {
             auto it = find(object);
-            if (it != end()) { erase(it); }
+            if (it != end())
+            {
+                erase(it);
+            }
         }
 
         //! Removes from this collection all of the elements of another collection.
@@ -328,7 +340,10 @@ namespace swift::misc
                     it = erase(it);
                     count++;
                 }
-                else { ++it; }
+                else
+                {
+                    ++it;
+                }
             }
             return count;
         }

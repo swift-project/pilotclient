@@ -22,7 +22,10 @@ namespace swift::sound::sample_provider
     void CBufferedWaveProvider::addSamples(const QVector<float> &samples)
     {
         int delta = m_audioBuffer.size() + samples.size() - m_maxBufferSize;
-        if (delta > 0) { m_audioBuffer.remove(0, delta); }
+        if (delta > 0)
+        {
+            m_audioBuffer.remove(0, delta);
+        }
         m_audioBuffer.append(samples);
     }
 

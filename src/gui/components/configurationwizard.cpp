@@ -52,8 +52,14 @@ namespace swift::gui::components
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "missing sGui");
         const QPointer<CConfigurationWizard> myself(this);
         connect(this, &QWizard::helpRequested, sGui, [=] {
-            if (!myself) { return; }
-            if (!sGui || sGui->isShuttingDown()) { return; }
+            if (!myself)
+            {
+                return;
+            }
+            if (!sGui || sGui->isShuttingDown())
+            {
+                return;
+            }
             sGui->showHelp("install");
         });
 
@@ -95,7 +101,10 @@ namespace swift::gui::components
             m_skipped = true;
             this->next();
         }
-        else { m_skipped = false; }
+        else
+        {
+            m_skipped = false;
+        }
     }
 
     void CConfigurationWizard::ended() { this->setParentOpacity(1.0); }
@@ -103,14 +112,23 @@ namespace swift::gui::components
     void CConfigurationWizard::setParentOpacity(qreal opacity)
     {
         QWidget *parent = this->parentWidget();
-        if (!parent) { return; }
-        if (CMathUtils::epsilonEqual(parent->windowOpacity(), opacity)) { return; }
+        if (!parent)
+        {
+            return;
+        }
+        if (CMathUtils::epsilonEqual(parent->windowOpacity(), opacity))
+        {
+            return;
+        }
         parent->setWindowOpacity(opacity);
     }
 
     void CConfigurationWizard::setScreenGeometry()
     {
-        if (!sGui) { return; }
+        if (!sGui)
+        {
+            return;
+        }
         const QRect g = CGuiApplication::currentScreenGeometry();
 
         // 1280/720 on 4k hires

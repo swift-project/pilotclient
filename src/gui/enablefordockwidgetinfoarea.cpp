@@ -52,13 +52,19 @@ namespace swift::gui
     CInfoArea *CEnableForDockWidgetInfoArea::getParentInfoArea() const
     {
         Q_ASSERT(m_parentDockableInfoArea);
-        if (!m_parentDockableInfoArea) { return nullptr; }
+        if (!m_parentDockableInfoArea)
+        {
+            return nullptr;
+        }
         return m_parentDockableInfoArea->getParentInfoArea();
     }
 
     bool CEnableForDockWidgetInfoArea::isParentDockWidgetFloating() const
     {
-        if (!m_parentDockableInfoArea) { return false; } // not floating if not yet initialized
+        if (!m_parentDockableInfoArea)
+        {
+            return false;
+        } // not floating if not yet initialized
         return m_parentDockableInfoArea->isFloating();
     }
 
@@ -86,9 +92,15 @@ namespace swift::gui
     void CEnableForDockWidgetInfoArea::displayMyself()
     {
         // if we are already visible, we are done
-        if (this->isVisibleWidget()) { return; }
+        if (this->isVisibleWidget())
+        {
+            return;
+        }
 
         // select myself
-        if (this->getParentInfoArea()) { this->getParentInfoArea()->selectArea(this->getDockWidgetInfoArea()); }
+        if (this->getParentInfoArea())
+        {
+            this->getParentInfoArea()->selectArea(this->getDockWidgetInfoArea());
+        }
     }
 } // namespace swift::gui

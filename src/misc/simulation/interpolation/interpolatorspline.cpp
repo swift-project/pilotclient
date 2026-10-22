@@ -35,7 +35,10 @@ namespace swift::misc::simulation
             for (size_t i = 1; i < N; ++i)
             {
                 const double denom = b(i) - a(i) * c(i - 1);
-                if (i < N - 1) { c(i) /= denom; }
+                if (i < N - 1)
+                {
+                    c(i) /= denom;
+                }
                 d[i] = (d[i] - a(i) * d[i - 1]) / denom;
             }
 
@@ -127,24 +130,36 @@ namespace swift::misc::simulation
         const qint64 os = qMax(CFsdSetup::c_interimPositionTimeOffsetMsec, m_s[2].getTimeOffsetMs());
         m_s[0].addMsecs(-os); // oldest, Ref T297 default offset time to fill data
         m_s[2].addMsecs(os); // latest, Ref T297 default offset time to fill data
-        if (m_currentSituations.isEmpty()) { return false; }
+        if (m_currentSituations.isEmpty())
+        {
+            return false;
+        }
 
         // and use the real values if available
         // m_s[0] .. oldest -> m_[2] .. latest
         const CAircraftSituation latest = m_currentSituations.front();
-        if (latest.isNewerThanAdjusted(m_s[1])) { m_s[2] = latest; }
+        if (latest.isNewerThanAdjusted(m_s[1]))
+        {
+            m_s[2] = latest;
+        }
         const qint64 currentAdjusted = m_s[1].getAdjustedMSecsSinceEpoch();
 
         // avoid 2 very close positions currently done by time, maybe we can also choose distance
         const qint64 osNotTooClose = qRound64(0.8 * os);
         const CAircraftSituation older =
             m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted - osNotTooClose);
-        if (!older.isNull()) { m_s[0] = older; }
+        if (!older.isNull())
+        {
+            m_s[0] = older;
+        }
         else
         {
             const CAircraftSituation closeOlder =
                 m_currentSituations.findObjectBeforeAdjustedOrDefault(currentAdjusted);
-            if (!closeOlder.isNull()) { m_s[0] = closeOlder; }
+            if (!closeOlder.isNull())
+            {
+                m_s[0] = closeOlder;
+            }
         }
         const qint64 latestAdjusted = m_s[2].getAdjustedMSecsSinceEpoch();
         const qint64 olderAdjusted = m_s[0].getAdjustedMSecsSinceEpoch();
@@ -282,8 +297,14 @@ namespace swift::misc::simulation
         bool updated = false;
         for (CAircraftSituation &s : m_s)
         {
-            if (s.hasGroundElevation()) { continue; } // do not override existing values
-            if (canSkip && s.canLikelySkipNearGroundInterpolation()) { continue; }
+            if (s.hasGroundElevation())
+            {
+                continue;
+            } // do not override existing values
+            if (canSkip && s.canLikelySkipNearGroundInterpolation())
+            {
+                continue;
+            }
 
             const CElevationPlane plane =
                 this->findClosestElevationWithinRange(s, CElevationPlane::singlePointRadius());
@@ -327,7 +348,10 @@ namespace swift::misc::simulation
             SWIFT_VERIFY_X(m_currentTimeMsSinceEpoc < t2, Q_FUNC_INFO,
                            "invalid timestamp t2"); // t1==t2 results in div/0
         }
-        if (!valid) { return { {}, {} }; }
+        if (!valid)
+        {
+            return { {}, {} };
+        }
 
         const double newX =
             evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.x[1], m_pa.x[2], m_pa.dx[1], m_pa.dx[2]);
@@ -344,7 +368,10 @@ namespace swift::misc::simulation
             SWIFT_VERIFY_X(CAircraftSituation::isValidVector(m_pa.y), Q_FUNC_INFO, "invalid Y"); // all y values
             SWIFT_VERIFY_X(CAircraftSituation::isValidVector(m_pa.z), Q_FUNC_INFO, "invalid Z"); // all z values
         }
-        if (!valid) { return { {}, {} }; }
+        if (!valid)
+        {
+            return { {}, {} };
+        }
 
         const std::array<double, 3> normalVector = { { newX, newY, newZ } };
         const CCoordinateGeodetic currentPosition(normalVector);
@@ -356,7 +383,10 @@ namespace swift::misc::simulation
             CLogMessage(this).warning(u"Invalid vector v: %2 %3 %4")
                 << normalVector[0] << normalVector[1] << normalVector[2];
         }
-        if (!valid) { return { {}, {} }; }
+        if (!valid)
+        {
+            return { {}, {} };
+        }
 
         const double newA =
             evalSplineInterval(m_currentTimeMsSinceEpoc, t1, t2, m_pa.a[1], m_pa.a[2], m_pa.da[1], m_pa.da[2]);
@@ -370,7 +400,10 @@ namespace swift::misc::simulation
         const double t1 = m_pa.t[1];
         const double t2 = m_pa.t[2]; // latest (adjusted)
         bool valid = (t1 < t2) && (m_currentTimeMsSinceEpoc >= t1) && (m_currentTimeMsSinceEpoc < t2);
-        if (!valid) { return { COnGroundInfo::OnGroundSituationUnknown, COnGroundInfo::NotSetGroundDetails }; }
+        if (!valid)
+        {
+            return { COnGroundInfo::OnGroundSituationUnknown, COnGroundInfo::NotSetGroundDetails };
+        }
 
         const double gnd1 = m_pa.gnd[1];
         const double gnd2 = m_pa.gnd[2]; // latest
@@ -432,16 +465,31 @@ namespace swift::misc::simulation
                                                             const CAircraftSituation &latest,
                                                             const CInterpolationAndRenderingSetupPerCallsign &setup)
     {
-        if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return true; }
+        if (!CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            return true;
+        }
         CAircraftSituationList situations;
 
         // oldest last, null ignored
-        if (!latest.isNull()) { situations.push_back(latest); }
-        if (!newer.isNull()) { situations.push_back(newer); }
-        if (!oldest.isNull()) { situations.push_back(oldest); }
+        if (!latest.isNull())
+        {
+            situations.push_back(latest);
+        }
+        if (!newer.isNull())
+        {
+            situations.push_back(newer);
+        }
+        if (!oldest.isNull())
+        {
+            situations.push_back(oldest);
+        }
 
         const bool sorted = situations.isSortedAdjustedLatestFirstWithoutNullPositions();
-        if (setup.isNull() || !setup.isAircraftPartsEnabled()) { return sorted; }
+        if (setup.isNull() || !setup.isAircraftPartsEnabled())
+        {
+            return sorted;
+        }
 
         bool details = false;
         if (situations.containsOnGroundDetails(COnGroundInfo::InFromParts))
@@ -453,7 +501,10 @@ namespace swift::misc::simulation
 
         for (const CAircraftSituation &s : situations)
         {
-            if (!s.hasGroundElevation()) { continue; }
+            if (!s.hasGroundElevation())
+            {
+                continue;
+            }
             SWIFT_VERIFY_X(!s.getGroundElevation().isZeroEpsilonConsidered(), Q_FUNC_INFO, "Suspicous 0 gnd. value");
         }
 

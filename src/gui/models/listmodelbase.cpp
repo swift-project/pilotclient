@@ -40,8 +40,14 @@ namespace swift::gui::models
         Q_UNUSED(row)
         Q_UNUSED(column)
         Q_UNUSED(parent)
-        if (!this->isDropAllowed()) { return false; }
-        if (!this->acceptDrop(data)) { return false; }
+        if (!this->isDropAllowed())
+        {
+            return false;
+        }
+        if (!this->acceptDrop(data))
+        {
+            return false;
+        }
         return true;
     }
 
@@ -52,14 +58,20 @@ namespace swift::gui::models
         Q_UNUSED(row)
         Q_UNUSED(column)
 
-        if (!this->isOrderable() || !this->acceptDrop(mimeData)) { return false; }
+        if (!this->isOrderable() || !this->acceptDrop(mimeData))
+        {
+            return false;
+        }
         const CVariant valueVariant(this->toCVariant(mimeData));
         if (valueVariant.isValid())
         {
             if (action == Qt::MoveAction)
             {
                 const auto container(valueVariant.value<ContainerType>());
-                if (container.isEmpty()) { return false; }
+                if (container.isEmpty())
+                {
+                    return false;
+                }
                 const int position = parent.row();
                 this->moveItems(container, position);
             }
@@ -70,7 +82,10 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     bool CListModelBase<T, UseCompare>::isValidIndex(const QModelIndex &index) const
     {
-        if (!index.isValid()) { return false; }
+        if (!index.isValid())
+        {
+            return false;
+        }
         return (index.row() >= 0 && index.row() < this->rowCount(index) && index.column() >= 0 &&
                 index.column() < this->columnCount(index));
     }
@@ -79,16 +94,25 @@ namespace swift::gui::models
     QVariant CListModelBase<T, UseCompare>::data(const QModelIndex &index, int role) const
     {
         // check / init
-        if (!this->isValidIndex(index)) { return {}; }
+        if (!this->isValidIndex(index))
+        {
+            return {};
+        }
 
-        if (role == Qt::BackgroundRole) { return CListModelBaseNonTemplate::data(index, role); }
+        if (role == Qt::BackgroundRole)
+        {
+            return CListModelBaseNonTemplate::data(index, role);
+        }
 
         // Formatter
         const CDefaultFormatter *formatter = m_columns.getFormatter(index);
         Q_ASSERT_X(formatter, Q_FUNC_INFO, "Missing formatter");
 
         // Upfront checking avoids unnecessary data fetching
-        if (!formatter || !formatter->supportsRole(role)) { return CListModelBaseNonTemplate::data(index, role); }
+        if (!formatter || !formatter->supportsRole(role))
+        {
+            return CListModelBaseNonTemplate::data(index, role);
+        }
         // index, upfront checking
         const int row = index.row();
         const int col = index.column();
@@ -112,14 +136,26 @@ namespace swift::gui::models
     bool CListModelBase<T, UseCompare>::setData(const QModelIndex &index, const QVariant &value, int role)
     {
         auto dataRole = static_cast<Qt::ItemDataRole>(role);
-        if (dataRole != Qt::UserRole && dataRole != Qt::EditRole) { return false; }
+        if (dataRole != Qt::UserRole && dataRole != Qt::EditRole)
+        {
+            return false;
+        }
 
         // check / init
-        if (!this->isValidIndex(index)) { return false; }
-        if (!m_columns.isEditable(index)) { return false; }
+        if (!this->isValidIndex(index))
+        {
+            return false;
+        }
+        if (!m_columns.isEditable(index))
+        {
+            return false;
+        }
         const CDefaultFormatter *formatter = m_columns.getFormatter(index);
         Q_ASSERT(formatter);
-        if (!formatter) { return false; }
+        if (!formatter)
+        {
+            return false;
+        }
 
         ObjectType obj = m_container[index.row()];
         const ObjectType currentObject(obj);
@@ -143,9 +179,15 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     bool CListModelBase<T, UseCompare>::setInContainer(const QModelIndex &index, const ObjectType &obj)
     {
-        if (!index.isValid()) { return false; }
+        if (!index.isValid())
+        {
+            return false;
+        }
         const int row = index.row();
-        if (row < 0 || row >= this->container().size()) { return false; }
+        if (row < 0 || row >= this->container().size())
+        {
+            return false;
+        }
         m_container[row] = obj;
         return true;
     }
@@ -153,12 +195,18 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     int CListModelBase<T, UseCompare>::update(const ContainerType &container, bool sort)
     {
-        if (m_modelDestroyed) { return 0; }
+        if (m_modelDestroyed)
+        {
+            return 0;
+        }
 
         // Keep sorting out of begin/end reset model
         ContainerType sortedContainer;
         ContainerType selection;
-        if (m_selectionModel) { selection = m_selectionModel->selectedObjects(); }
+        if (m_selectionModel)
+        {
+            selection = m_selectionModel->selectedObjects();
+        }
         const int oldSize = m_container.size();
         const bool performSort = sort && container.size() > 1 && this->hasValidSortColumn();
         if (performSort)
@@ -173,7 +221,10 @@ namespace swift::gui::models
         this->endResetModel();
 
         // reselect if implemented in specialized view
-        if (!selection.isEmpty()) { m_selectionModel->selectObjects(selection); }
+        if (!selection.isEmpty())
+        {
+            m_selectionModel->selectObjects(selection);
+        }
 
         const int newSize = m_container.size();
         Q_UNUSED(oldSize)
@@ -186,8 +237,14 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     void CListModelBase<T, UseCompare>::update(const QModelIndex &index, const ObjectType &object)
     {
-        if (m_modelDestroyed) { return; }
-        if (index.row() >= m_container.size()) { return; }
+        if (m_modelDestroyed)
+        {
+            return;
+        }
+        if (index.row() >= m_container.size())
+        {
+            return;
+        }
         m_container[index.row()] = object;
 
         const QModelIndex i1 = index.sibling(index.row(), 0);
@@ -205,14 +262,20 @@ namespace swift::gui::models
     CWorker *CListModelBase<T, UseCompare>::updateAsync(const ContainerType &container, bool sort)
     {
         Q_UNUSED(sort)
-        if (m_modelDestroyed) { return nullptr; }
+        if (m_modelDestroyed)
+        {
+            return nullptr;
+        }
         const auto sortColumn = this->getSortColumn();
         const auto sortOrder = this->getSortOrder();
         CWorker *worker = CWorker::fromTask(this, "ModelSort", [this, container, sortColumn, sortOrder]() {
             return this->sortContainerByColumn(container, sortColumn, sortOrder);
         });
         worker->thenWithResult<ContainerType>(this, [this](const ContainerType &sortedContainer) {
-            if (m_modelDestroyed) { return; }
+            if (m_modelDestroyed)
+            {
+                return;
+            }
             this->update(sortedContainer, false);
         });
         worker->then(this, &CListModelBase::asyncUpdateFinished);
@@ -222,13 +285,19 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     void CListModelBase<T, UseCompare>::updateContainerMaybeAsync(const ContainerType &container, bool sort)
     {
-        if (m_modelDestroyed) { return; }
+        if (m_modelDestroyed)
+        {
+            return;
+        }
         if (container.size() > asyncThreshold && sort)
         {
             // larger container with sorting
             this->updateAsync(container, sort);
         }
-        else { this->update(container, sort); }
+        else
+        {
+            this->update(container, sort);
+        }
     }
 
     template <typename T, bool UseCompare>
@@ -241,7 +310,10 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     void CListModelBase<T, UseCompare>::removeFilter()
     {
-        if (!this->hasFilter()) { return; }
+        if (!this->hasFilter())
+        {
+            return;
+        }
         m_filter.reset(nullptr);
         this->beginResetModel();
         this->updateFilteredContainer();
@@ -253,7 +325,10 @@ namespace swift::gui::models
     void CListModelBase<T, UseCompare>::takeFilterOwnership(std::unique_ptr<IModelFilter<ContainerType>> &filter)
     {
         ContainerType selection;
-        if (m_selectionModel) { selection = m_selectionModel->selectedObjects(); }
+        if (m_selectionModel)
+        {
+            selection = m_selectionModel->selectedObjects();
+        }
 
         if (!filter)
         {
@@ -275,7 +350,10 @@ namespace swift::gui::models
         }
 
         // reselect if implemented in specialized views
-        if (!selection.isEmpty()) { m_selectionModel->selectObjects(selection); }
+        if (!selection.isEmpty())
+        {
+            m_selectionModel->selectObjects(selection);
+        }
     }
 
     template <typename T, bool UseCompare>
@@ -287,7 +365,10 @@ namespace swift::gui::models
             static const ObjectType def {}; // default object
             return def;
         }
-        else { return this->containerOrFilteredContainer()[index.row()]; }
+        else
+        {
+            return this->containerOrFilteredContainer()[index.row()];
+        }
     }
 
     template <typename T, bool UseCompare>
@@ -309,12 +390,18 @@ namespace swift::gui::models
     {
         if (this->hasFilter())
         {
-            if (filtered) { *filtered = true; }
+            if (filtered)
+            {
+                *filtered = true;
+            }
             return m_containerFiltered;
         }
         else
         {
-            if (filtered) { *filtered = false; }
+            if (filtered)
+            {
+                *filtered = false;
+            }
             return m_container;
         }
     }
@@ -373,7 +460,10 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     void CListModelBase<T, UseCompare>::insert(const ContainerType &container)
     {
-        if (container.isEmpty()) { return; }
+        if (container.isEmpty())
+        {
+            return;
+        }
         beginInsertRows(QModelIndex(), 0, 0);
         m_container.push_back(container);
         endInsertRows();
@@ -427,8 +517,14 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     void CListModelBase<T, UseCompare>::updateFilteredContainer()
     {
-        if (this->hasFilter()) { m_containerFiltered = m_filter->filter(m_container); }
-        else { m_containerFiltered.clear(); }
+        if (this->hasFilter())
+        {
+            m_containerFiltered = m_filter->filter(m_container);
+        }
+        else
+        {
+            m_containerFiltered.clear();
+        }
     }
 
     template <typename T, bool UseCompare>
@@ -482,7 +578,10 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     void CListModelBase<T, UseCompare>::sort(int column, Qt::SortOrder order)
     {
-        if (column == m_sortColumn && order == m_sortOrder) { return; }
+        if (column == m_sortColumn && order == m_sortOrder)
+        {
+            return;
+        }
 
         // new order
         m_sortColumn = column;
@@ -499,7 +598,10 @@ namespace swift::gui::models
     template <typename T, bool UseCompare>
     void CListModelBase<T, UseCompare>::truncate(int maxNumber, bool forceSort)
     {
-        if (this->rowCount() <= maxNumber) { return; }
+        if (this->rowCount() <= maxNumber)
+        {
+            return;
+        }
         if (forceSort)
         {
             this->sort(); // make sure container is sorted
@@ -514,7 +616,10 @@ namespace swift::gui::models
     CListModelBase<T, UseCompare>::sortContainerByColumn(const ContainerType &container, int column,
                                                          Qt::SortOrder order) const
     {
-        if (m_modelDestroyed) { return container; }
+        if (m_modelDestroyed)
+        {
+            return container;
+        }
         if (container.size() < 2 || !m_columns.isSortable(column))
         {
             return container; // nothing to do
@@ -543,7 +648,10 @@ namespace swift::gui::models
     QMimeData *CListModelBase<T, UseCompare>::mimeData(const QModelIndexList &indexes) const
     {
         auto *mimeData = new QMimeData();
-        if (indexes.isEmpty()) { return mimeData; }
+        if (indexes.isEmpty())
+        {
+            return mimeData;
+        }
 
         ContainerType container;
         QList<int> rows; // avoid redundant objects
@@ -551,9 +659,15 @@ namespace swift::gui::models
         // Indexes are per row and column
         for (const QModelIndex &index : indexes)
         {
-            if (!index.isValid()) { continue; }
+            if (!index.isValid())
+            {
+                continue;
+            }
             const int r = index.row();
-            if (rows.contains(r)) { continue; }
+            if (rows.contains(r))
+            {
+                continue;
+            }
             container.push_back(this->at(index));
             rows.append(r);
         }

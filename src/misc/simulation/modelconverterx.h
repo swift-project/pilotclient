@@ -48,7 +48,10 @@ namespace swift::misc::simulation
             //! \copydoc swift::misc::TSettingTrait::isValid
             static bool isValid(const QString &value, QString &)
             {
-                if (value.isEmpty()) { return true; }
+                if (value.isEmpty())
+                {
+                    return true;
+                }
                 const QFile f(value);
                 return f.exists();
             }

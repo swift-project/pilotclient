@@ -81,10 +81,10 @@ namespace swift::gui::components
         swift::misc::network::CRemoteFile getRemoteFileSelected() const;
 
         //! Download dir from UI
-        QString downloadDir() const;
+        QString getDownloadDir() const;
 
         //! xswiftbus dir from UI
-        QString xSwiftBusDir() const;
+        QString GetXSwiftBusDir() const;
 
         //! Is the download dir existing?
         bool existsDownloadDir() const;

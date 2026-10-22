@@ -89,12 +89,18 @@ namespace swift::gui::components
 
     void CModelMatcherComponent::tabIndexChanged(int index)
     {
-        if (index < 0) { return; }
+        if (index < 0)
+        {
+            return;
+        }
         const QTabWidget *tw = CGuiUtility::parentTabWidget(this);
         Q_ASSERT_X(tw, Q_FUNC_INFO, "Cannot find parent tab widget");
         const QWidget *tabWidget = tw->currentWidget();
         const QWidget *myselfTabWidget = this->parentWidget();
-        if (tabWidget != myselfTabWidget) { return; }
+        if (tabWidget != myselfTabWidget)
+        {
+            return;
+        }
         this->redisplay();
     }
 
@@ -202,7 +208,10 @@ namespace swift::gui::components
     {
         Q_UNUSED(url)
 
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         if (number > 0 && entity.testFlag(CEntityFlags::ModelEntity) && CEntityFlags::isFinishedReadState(state))
         {
             const QStringList modelStrings(sGui->getWebDataServices()->getModelStrings(true));
@@ -212,10 +221,16 @@ namespace swift::gui::components
 
     void CModelMatcherComponent::displaySettingsDialog()
     {
-        if (!m_settingsDialog) { m_settingsDialog = new CSettingsMatchingDialog(this); }
+        if (!m_settingsDialog)
+        {
+            m_settingsDialog = new CSettingsMatchingDialog(this);
+        }
         m_settingsDialog->setMatchingSetup(m_matcher.getSetup());
         const auto r = static_cast<QDialog::DialogCode>(m_settingsDialog->exec());
-        if (r == QDialog::Accepted) { m_matcher.setSetup(m_settingsDialog->getMatchingSetup()); }
+        if (r == QDialog::Accepted)
+        {
+            m_matcher.setSetup(m_settingsDialog->getMatchingSetup());
+        }
     }
 
     void CModelMatcherComponent::redisplay()
@@ -272,7 +287,10 @@ namespace swift::gui::components
                              false);
         CAircraftModel model("default model", CAircraftModel::TypeOwnSimulatorModel, "dummy model", icaoAircraft,
                              livery);
-        if (model.getCallsign().isEmpty()) { model.setCallsign("SWIFT"); }
+        if (model.getCallsign().isEmpty())
+        {
+            model.setCallsign("SWIFT");
+        }
         return model;
     }
 
@@ -286,7 +304,10 @@ namespace swift::gui::components
         {
             const MatchingScriptReturnValues rv =
                 CAircraftMatcher::reverseLookupScript(inModel, setup, modelSet, &msgs);
-            if (rv.runScriptAndModified()) { return rv; }
+            if (rv.runScriptAndModified())
+            {
+                return rv;
+            }
             else
             {
                 CCallsign::addLogDetailsToList(&msgs, inModel.getCallsign(),

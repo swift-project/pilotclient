@@ -87,7 +87,10 @@ namespace swift::gui::components
         const QString dir =
             QFileDialog::getExistingDirectory(this, tr("Simulator directory"), startDirectory,
                                               QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-        if (dir.isEmpty()) { return; }
+        if (dir.isEmpty())
+        {
+            return;
+        }
         ui->le_SimulatorDirectory->setText(CFileUtils::normalizeFilePathToQtStandard(dir));
         this->adjustModelDirectory();
     }
@@ -97,7 +100,10 @@ namespace swift::gui::components
         const QString startDirectory = CFileUtils::fixWindowsUncPath(this->getFileBrowserModelDirectory());
         const QString dir = QFileDialog::getExistingDirectory(
             this, tr("Model directory"), startDirectory, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-        if (dir.isEmpty()) { return; }
+        if (dir.isEmpty())
+        {
+            return;
+        }
         m_unsavedChanges = true;
         const QStringList newDirs = this->addDirectory(dir, this->parseModelDirectories());
         this->displayModelDirectories(newDirs);
@@ -109,7 +115,10 @@ namespace swift::gui::components
         const QString dir =
             QFileDialog::getExistingDirectory(this, tr("Exclude directory"), startDirectory,
                                               QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-        if (dir.isEmpty()) { return; }
+        if (dir.isEmpty())
+        {
+            return;
+        }
         m_unsavedChanges = true;
         const QStringList newDirs =
             CFileUtils::stripLeadingSlashOrDriveLetters(this->addDirectory(dir, this->parseExcludeDirectories()));
@@ -142,15 +151,27 @@ namespace swift::gui::components
         if (msgs.isSuccess())
         {
             const CStatusMessage m = m_settings.setAndSaveSettings(s, simulator);
-            if (!m.isEmpty()) { CLogMessage::preformatted(m); }
-            if (m.isSuccess()) { this->showOverlayHTMLMessage("Saved settings", 5s); }
-            else { this->showOverlayMessage(m); }
+            if (!m.isEmpty())
+            {
+                CLogMessage::preformatted(m);
+            }
+            if (m.isSuccess())
+            {
+                this->showOverlayHTMLMessage("Saved settings", 5s);
+            }
+            else
+            {
+                this->showOverlayMessage(m);
+            }
             m_unsavedChanges = m_unsavedChanges && !m.isSuccess(); // reset if success, but only if there were changes
 
             // display as it was saved
             this->displaySettings(simulator);
         }
-        else { this->showOverlayMessagesOrHTMLMessage(msgs); }
+        else
+        {
+            this->showOverlayMessagesOrHTMLMessage(msgs);
+        }
     }
 
     void CSettingsSimulatorBasicsComponent::copyDefaults()
@@ -161,7 +182,10 @@ namespace swift::gui::components
         {
             QMessageBox::StandardButton reply = QMessageBox::question(this, "Override", "Override existing values?",
                                                                       QMessageBox::Yes | QMessageBox::No);
-            if (reply != QMessageBox::Yes) { return; }
+            if (reply != QMessageBox::Yes)
+            {
+                return;
+            }
         }
 
         // override if values are not empty
@@ -233,7 +257,10 @@ namespace swift::gui::components
     void CSettingsSimulatorBasicsComponent::onSimulatorSettingsChanged(const CSimulatorInfo &simulator)
     {
         const CSimulatorInfo selectedSimulator(ui->comp_SimulatorSelector->getValue());
-        if (selectedSimulator == simulator) { this->displaySettings(simulator); }
+        if (selectedSimulator == simulator)
+        {
+            this->displaySettings(simulator);
+        }
     }
 
     QStringList CSettingsSimulatorBasicsComponent::parseModelDirectories() const
@@ -249,14 +276,20 @@ namespace swift::gui::components
     QStringList CSettingsSimulatorBasicsComponent::parseDirectories(const QString &rawString) const
     {
         const QString raw = rawString.trimmed();
-        if (raw.isEmpty()) { return {}; }
+        if (raw.isEmpty())
+        {
+            return {};
+        }
         QStringList dirs;
         thread_local const QRegularExpression regExp("\n|\r\n|\r");
         const QStringList rawLines = raw.split(regExp);
         for (const QString &l : rawLines)
         {
             const QString normalized = CFileUtils::normalizeFilePathToQtStandard(l);
-            if (normalized.isEmpty()) { continue; }
+            if (normalized.isEmpty())
+            {
+                continue;
+            }
             dirs.push_back(normalized);
         }
         dirs = CFileUtils::removeSubDirectories(dirs);
@@ -268,8 +301,14 @@ namespace swift::gui::components
     {
         const QString d(CFileUtils::normalizeFilePathToQtStandard(directory));
         QStringList dirs(existingDirs);
-        if (d.isEmpty()) { return existingDirs; }
-        if (!dirs.contains(d, m_fileCaseSensitivity)) { dirs.push_back(d); }
+        if (d.isEmpty())
+        {
+            return existingDirs;
+        }
+        if (!dirs.contains(d, m_fileCaseSensitivity))
+        {
+            dirs.push_back(d);
+        }
         dirs.removeDuplicates();
         dirs.sort(m_fileCaseSensitivity);
         return dirs;
@@ -282,16 +321,22 @@ namespace swift::gui::components
         return this->removeDirectories(QStringList({ d }), existingDirs);
     }
 
-    QStringList CSettingsSimulatorBasicsComponent::removeDirectories(const QStringList &removeDirectories,
+    QStringList CSettingsSimulatorBasicsComponent::removeDirectories(const QStringList &directories,
                                                                      const QStringList &existingDirs)
     {
-        if (existingDirs.isEmpty() || removeDirectories.isEmpty()) { return existingDirs; }
-        const QStringList rDirs = CFileUtils::fixWindowsUncPaths(removeDirectories);
+        if (existingDirs.isEmpty() || directories.isEmpty())
+        {
+            return existingDirs;
+        }
+        const QStringList rDirs = CFileUtils::fixWindowsUncPaths(directories);
         const QStringList eDirs = CFileUtils::fixWindowsUncPaths(existingDirs);
         QStringList dirs;
         for (const QString &dir : eDirs)
         {
-            if (rDirs.contains(dir, m_fileCaseSensitivity)) { continue; }
+            if (rDirs.contains(dir, m_fileCaseSensitivity))
+            {
+                continue;
+            }
             dirs.push_back(dir);
         }
         dirs.removeDuplicates();
@@ -346,7 +391,10 @@ namespace swift::gui::components
         settings.setSimulatorDirectory(simDir);
 
         const QStringList m = settings.getModelDirectoriesFromSimulatorDirectoryOrDefault();
-        if (m.isEmpty()) { ui->pte_ModelDirectories->setPlaceholderText("Model directories"); }
+        if (m.isEmpty())
+        {
+            ui->pte_ModelDirectories->setPlaceholderText("Model directories");
+        }
         else
         {
             const QString ms = m.join("\n");
@@ -354,7 +402,10 @@ namespace swift::gui::components
         }
 
         const QStringList e = settings.getDefaultModelExcludeDirectoryPatterns();
-        if (e.isEmpty()) { ui->pte_ExcludeDirectories->setPlaceholderText("Exclude directories"); }
+        if (e.isEmpty())
+        {
+            ui->pte_ExcludeDirectories->setPlaceholderText("Exclude directories");
+        }
         else
         {
             const QString es = e.join("\n");
@@ -367,8 +418,14 @@ namespace swift::gui::components
         const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
         const QStringList modelDirs(this->parseDirectories(ui->pte_ModelDirectories->toPlainText()));
         QString md = modelDirs.isEmpty() ? "" : modelDirs.first();
-        if (md.isEmpty()) { md = m_settings.getFirstModelDirectoryOrDefault(simulator); }
-        if (md.isEmpty()) { md = this->getFileBrowserSimulatorDirectory(); }
+        if (md.isEmpty())
+        {
+            md = m_settings.getFirstModelDirectoryOrDefault(simulator);
+        }
+        if (md.isEmpty())
+        {
+            md = this->getFileBrowserSimulatorDirectory();
+        }
         return CFileUtils::normalizeFilePathToQtStandard(md);
     }
 
@@ -376,7 +433,10 @@ namespace swift::gui::components
     {
         const CSimulatorInfo simulator(ui->comp_SimulatorSelector->getValue());
         QString sd(ui->le_SimulatorDirectory->text().trimmed());
-        if (sd.isEmpty()) { sd = m_settings.getSimulatorDirectoryOrDefault(simulator); }
+        if (sd.isEmpty())
+        {
+            sd = m_settings.getSimulatorDirectoryOrDefault(simulator);
+        }
         return CFileUtils::normalizeFilePathToQtStandard(sd);
     }
 } // namespace swift::gui::components

@@ -27,14 +27,23 @@ namespace swift::misc::network
 
     QString CAuthenticatedUser::getRealNameAndId() const
     {
-        if (hasValidRealName()) { return m_realname % u' ' % getDbKeyAsStringInParentheses(); }
-        else { return getDbKeyAsString(); }
+        if (hasValidRealName())
+        {
+            return m_realname % u' ' % getDbKeyAsStringInParentheses();
+        }
+        else
+        {
+            return getDbKeyAsString();
+        }
     }
 
     QString CAuthenticatedUser::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n);
-        if (m_realname.isEmpty()) { return QStringLiteral("<no realname>"); }
+        if (m_realname.isEmpty())
+        {
+            return QStringLiteral("<no realname>");
+        }
         return m_realname % (this->hasValidDbKey() ? this->getDbKeyAsStringInParentheses(" ") : QString());
     }
 
@@ -102,7 +111,10 @@ namespace swift::misc::network
 
     QVariant CAuthenticatedUser::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);

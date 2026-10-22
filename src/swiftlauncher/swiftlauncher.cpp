@@ -20,7 +20,6 @@
 
 #include "config/buildconfig.h"
 #include "core/context/contextapplicationproxy.h"
-#include "core/context/contextnetwork.h"
 #include "core/setupreader.h"
 #include "gui/components/configurationwizard.h"
 #include "gui/components/texteditdialog.h"
@@ -115,7 +114,10 @@ CSwiftLauncher::CSwiftLauncher(bool installerMode, QWidget *parent)
     if (installerMode)
     {
         QTimer::singleShot(1000, this, [=, this] {
-            if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+            if (!sGui || sGui->isShuttingDown() || !myself)
+            {
+                return;
+            }
             ui->fr_SwiftLauncherMain->showOverlayHTMLMessage("Checking installation!<br>One moment please ....");
             this->raise();
         });
@@ -123,7 +125,10 @@ CSwiftLauncher::CSwiftLauncher(bool installerMode, QWidget *parent)
 
     // auto launch wizard and other init parts
     QTimer::singleShot(2500, this, [=, this] {
-        if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+        if (!sGui || sGui->isShuttingDown() || !myself)
+        {
+            return;
+        }
         this->onCoreModeReleased();
         this->requestMacMicrophoneAccess();
         if (installerMode) this->installerMode();
@@ -134,12 +139,19 @@ CSwiftLauncher::CSwiftLauncher(bool installerMode, QWidget *parent)
 
 void CSwiftLauncher::installerMode()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
 
     bool runDialog = false;
-    do {
+    do
+    {
         const QDir dir = CSwiftDirectories::logDirectory();
-        if (!dir.exists()) { break; }
+        if (!dir.exists())
+        {
+            break;
+        }
 
         for (const CSimulatorInfo &sim : CSimulatorInfo::allSimulatorsSet())
         {
@@ -155,7 +167,7 @@ void CSwiftLauncher::installerMode()
     }
     while (false);
 
-    bool startWizard = true;
+    bool shouldStartWizard = true;
     ui->fr_SwiftLauncherMain->closeOverlay();
 
     if (runDialog)
@@ -164,20 +176,32 @@ void CSwiftLauncher::installerMode()
             QMessageBox::question(this, tr("swift configuration"),
                                   tr("This installation directory already contains a swift configuration.\n"
                                      "Do you want to use that one?"));
-        if (ret != QMessageBox::No) { startWizard = false; }
+        if (ret != QMessageBox::No)
+        {
+            shouldStartWizard = false;
+        }
     }
 
-    if (startWizard) { this->startWizard(); }
+    if (shouldStartWizard)
+    {
+        this->startWizard();
+    }
 }
 
 void CSwiftLauncher::clearWindowsRegistry()
 {
-    if (!CBuildConfig::isRunningOnWindowsNtPlatform()) { return; }
+    if (!CBuildConfig::isRunningOnWindowsNtPlatform())
+    {
+        return;
+    }
     const QMessageBox::StandardButton ret =
         QMessageBox::warning(this, tr("Registry swift applications"),
                              tr("Do you really want to delete all entries?\nThis cannot be undone!"),
                              QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, QMessageBox::No);
-    if (ret != QMessageBox::Yes) { return; }
+    if (ret != QMessageBox::Yes)
+    {
+        return;
+    }
     CGuiApplication::removeAllWindowsSwiftRegistryEntries();
 }
 
@@ -187,7 +211,10 @@ QString CSwiftLauncher::getCmdLine() const { return toCmdLine(m_executable, m_ex
 
 bool CSwiftLauncher::startDetached()
 {
-    if (m_executable.isEmpty()) { return false; }
+    if (m_executable.isEmpty())
+    {
+        return false;
+    }
     const QString cmd = this->getCmdLine();
     CLogMessage(this).info(cmd);
     return QProcess::startDetached(m_executable, m_executableArgs);
@@ -195,14 +222,23 @@ bool CSwiftLauncher::startDetached()
 
 CEnableForFramelessWindow::WindowMode CSwiftLauncher::getWindowMode() const
 {
-    if (ui->rb_WindowFrameless->isChecked()) { return CEnableForFramelessWindow::WindowFrameless; }
+    if (ui->rb_WindowFrameless->isChecked())
+    {
+        return CEnableForFramelessWindow::WindowFrameless;
+    }
     return CEnableForFramelessWindow::WindowNormal;
 }
 
 CoreModes::CoreMode CSwiftLauncher::getCoreMode() const
 {
-    if (ui->rb_SwiftStandalone->isChecked()) { return CoreModes::Standalone; }
-    if (ui->rb_SwiftDistributed->isChecked()) { return CoreModes::Distributed; }
+    if (ui->rb_SwiftStandalone->isChecked())
+    {
+        return CoreModes::Standalone;
+    }
+    if (ui->rb_SwiftDistributed->isChecked())
+    {
+        return CoreModes::Distributed;
+    }
 
     Q_ASSERT_X(false, Q_FUNC_INFO, "wrong mode");
     return CoreModes::Standalone;
@@ -210,12 +246,18 @@ CoreModes::CoreMode CSwiftLauncher::getCoreMode() const
 
 void CSwiftLauncher::mousePressEvent(QMouseEvent *event)
 {
-    if (!handleMousePressEvent(event)) { QMainWindow::mousePressEvent(event); }
+    if (!handleMousePressEvent(event))
+    {
+        QMainWindow::mousePressEvent(event);
+    }
 }
 
 void CSwiftLauncher::mouseMoveEvent(QMouseEvent *event)
 {
-    if (!handleMouseMoveEvent(event)) { QMainWindow::mouseMoveEvent(event); }
+    if (!handleMouseMoveEvent(event))
+    {
+        QMainWindow::mouseMoveEvent(event);
+    }
 }
 
 void CSwiftLauncher::mouseReleaseEvent(QMouseEvent *event)
@@ -249,7 +291,10 @@ void CSwiftLauncher::init()
 
 void CSwiftLauncher::initStyleSheet()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     const QString s = sGui->getStyleSheetUtility().styles({ CStyleSheetUtility::fileNameFonts(),
                                                             CStyleSheetUtility::fileNameStandardWidget(),
                                                             CStyleSheetUtility::fileNameSwiftLauncher() });
@@ -286,52 +331,59 @@ void CSwiftLauncher::setHeaderInfo(const CArtifact &latestArtifact)
 
 bool CSwiftLauncher::setSwiftCoreExecutable()
 {
-    if (!sGui || sGui->isShuttingDown()) { return false; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return false;
+    }
     this->saveSetup();
     QStringList args = ui->comp_DBusSelector->getDBusCmdLineArgs();
-    if (ui->cb_ResetWindow->isChecked()) { args.append("--resetsize"); }
-    if (ui->cb_DisableCoreAudio->isChecked()) { args.append("--noaudio"); }
+    if (ui->cb_ResetWindow->isChecked())
+    {
+        args.append("--resetsize");
+    }
+    if (ui->cb_DisableCoreAudio->isChecked())
+    {
+        args.append("--noaudio");
+    }
 
     m_executableArgs = sGui->argumentsJoined(args);
     m_executable = CSwiftDirectories::executableFilePath(CBuildConfig::swiftCoreExecutableName());
     return true;
 }
 
-bool CSwiftLauncher::setSwiftDataExecutable()
+void CSwiftLauncher::setSwiftDataExecutable()
 {
     m_executable = CSwiftDirectories::executableFilePath(CBuildConfig::swiftDataExecutableName());
-
-    QStringList fsdArgs;
-#ifdef SWIFT_VATSIM_SUPPORT
-    int id = 0;
-    QString key;
-    if (IContextNetwork::getCmdLineClientIdAndKey(id, key))
-    {
-        // from cmd. line
-        fsdArgs << "--idAndKey";
-        fsdArgs << sApp->getParserValue("clientIdAndKey"); // as typed in
-    }
-#endif
-
-    m_executableArgs = sGui->argumentsJoined({}, fsdArgs);
-    return true;
+    m_executableArgs = sGui->argumentsJoined();
 }
 
 bool CSwiftLauncher::setSwiftGuiExecutable()
 {
-    if (!sGui || sGui->isShuttingDown()) { return false; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return false;
+    }
     m_executable = CSwiftDirectories::executableFilePath(CBuildConfig::swiftGuiExecutableName());
     QStringList args { "--core", CoreModes::coreModeToString(getCoreMode()), "--window",
                        CEnableForFramelessWindow::windowModeToString(getWindowMode()) };
 
-    if (ui->cb_ResetWindow->isChecked()) { args << "--resetsize"; }
+    if (ui->cb_ResetWindow->isChecked())
+    {
+        args << "--resetsize";
+    }
     if (this->isStandaloneGuiSelected())
     {
-        if (ui->cb_DisableSaAfv->isChecked()) { args.append("--noaudio"); }
+        if (ui->cb_DisableSaAfv->isChecked())
+        {
+            args.append("--noaudio");
+        }
     }
     else
     {
-        if (ui->cb_DisableGUIAfv->isChecked()) { args.append("--noaudio"); }
+        if (ui->cb_DisableGUIAfv->isChecked())
+        {
+            args.append("--noaudio");
+        }
 
         const QString dBus(ui->comp_DBusSelector->getDBusAddress());
         args.append(ui->comp_DBusSelector->getDBusCmdLineArgs());
@@ -355,7 +407,10 @@ bool CSwiftLauncher::setSwiftGuiExecutable()
 
 bool CSwiftLauncher::canConnectSwiftOnDBusServer(const QString &dBusAddress, QString &msg) const
 {
-    if (this->isStandaloneGuiSelected()) { return true; } // do not mind here
+    if (this->isStandaloneGuiSelected())
+    {
+        return true;
+    } // do not mind here
     return CContextApplicationProxy::isContextResponsive(dBusAddress, msg);
 }
 
@@ -384,7 +439,10 @@ void CSwiftLauncher::saveSetup()
 {
     CLauncherSetup setup = m_setup.get();
     const QString dBus(ui->comp_DBusSelector->getDBusAddress());
-    if (!dBus.isEmpty()) { setup.setDBusAddress(dBus); }
+    if (!dBus.isEmpty())
+    {
+        setup.setDBusAddress(dBus);
+    }
     setup.setFramelessWindow(ui->rb_WindowFrameless->isChecked());
     setup.setCoreMode(CLauncherSetup::Standalone);
 
@@ -394,7 +452,10 @@ void CSwiftLauncher::saveSetup()
     audio.setFlag(CLauncherSetup::AudioDisableStandaloneAudio, ui->cb_DisableSaAfv->isChecked());
     setup.setAudioMode(audio);
 
-    if (ui->rb_SwiftDistributed->isChecked()) { setup.setCoreMode(CLauncherSetup::Distributed); }
+    if (ui->rb_SwiftDistributed->isChecked())
+    {
+        setup.setCoreMode(CLauncherSetup::Distributed);
+    }
 
     const CStatusMessage msg = m_setup.set(setup);
     Q_UNUSED(msg)
@@ -404,7 +465,10 @@ bool CSwiftLauncher::warnAboutOtherSwiftApplications()
 {
     CApplicationInfoList running = CGuiApplication::getRunningApplications();
     running.removeApplication(CApplicationInfo::Launcher);
-    if (running.isEmpty()) { return true; }
+    if (running.isEmpty())
+    {
+        return true;
+    }
 
     // getting here means another application is running
     const QString msg = u"While using the wizard no other application should run.\nClose applications and try "
@@ -416,7 +480,10 @@ bool CSwiftLauncher::warnAboutOtherSwiftApplications()
 
 QString CSwiftLauncher::toCmdLine(const QString &exe, const QStringList &exeArgs)
 {
-    if (exeArgs.isEmpty()) { return exe; }
+    if (exeArgs.isEmpty())
+    {
+        return exe;
+    }
     const QString exeArgsString = exeArgs.join(' ');
     const QString cmd(exe + " " + exeArgsString);
     return cmd;
@@ -433,29 +500,48 @@ void CSwiftLauncher::startButtonPressed()
     {
         if (this->setSwiftGuiExecutable())
         {
-            if (shift) { this->popupExecutableArgs(); }
-            else { close(); }
+            if (shift)
+            {
+                this->popupExecutableArgs();
+            }
+            else
+            {
+                close();
+            }
         }
     }
     else if (sender == ui->tb_SwiftMappingTool)
     {
         ui->tb_SwiftMappingTool->setEnabled(false);
         m_startMappingToolWaitCycles = 2;
-        if (this->setSwiftDataExecutable())
+        this->setSwiftDataExecutable();
+        if (shift)
         {
-            if (shift) { this->popupExecutableArgs(); }
-            else { close(); }
+            this->popupExecutableArgs();
+        }
+        else
+        {
+            close();
         }
     }
     else if (sender == ui->tb_SwiftCore)
     {
-        if (this->isStandaloneGuiSelected()) { ui->rb_SwiftDistributed->setChecked(true); }
+        if (this->isStandaloneGuiSelected())
+        {
+            ui->rb_SwiftDistributed->setChecked(true);
+        }
         ui->tb_SwiftCore->setEnabled(false);
         m_startCoreWaitCycles = 2;
         if (this->setSwiftCoreExecutable())
         {
-            if (shift) { this->popupExecutableArgs(); }
-            else { this->startDetached(); }
+            if (shift)
+            {
+                this->popupExecutableArgs();
+            }
+            else
+            {
+                this->startDetached();
+            }
         }
     }
     else if (sender == ui->tb_Database)
@@ -467,8 +553,14 @@ void CSwiftLauncher::startButtonPressed()
 
 void CSwiftLauncher::dbusServerModeSelected(bool selected)
 {
-    if (!selected) { return; }
-    if (!this->isStandaloneGuiSelected()) { return; }
+    if (!selected)
+    {
+        return;
+    }
+    if (!this->isStandaloneGuiSelected())
+    {
+        return;
+    }
     ui->rb_SwiftDistributed->setChecked(true);
 }
 
@@ -488,7 +580,10 @@ void CSwiftLauncher::showMainPage() { ui->sw_SwiftLauncher->setCurrentWidget(ui-
 
 void CSwiftLauncher::tabChanged(int current)
 {
-    if (current == static_cast<int>(PageUpdates)) { ui->comp_DataUpdates->display(); }
+    if (current == static_cast<int>(PageUpdates))
+    {
+        ui->comp_DataUpdates->display();
+    }
 }
 
 void CSwiftLauncher::showLogPage() { ui->sw_SwiftLauncher->setCurrentWidget(ui->pg_SwiftLauncherLog); }
@@ -496,9 +591,18 @@ void CSwiftLauncher::showLogPage() { ui->sw_SwiftLauncher->setCurrentWidget(ui->
 void CSwiftLauncher::checkRunningApplicationsAndCore()
 {
     // wait some time before buttons are enabled (allows startup)
-    if (m_startCoreWaitCycles > 0) { m_startCoreWaitCycles--; }
-    if (m_startMappingToolWaitCycles > 0) { m_startMappingToolWaitCycles--; }
-    if (m_startGuiWaitCycles > 0) { m_startGuiWaitCycles--; }
+    if (m_startCoreWaitCycles > 0)
+    {
+        m_startCoreWaitCycles--;
+    }
+    if (m_startMappingToolWaitCycles > 0)
+    {
+        m_startMappingToolWaitCycles--;
+    }
+    if (m_startGuiWaitCycles > 0)
+    {
+        m_startGuiWaitCycles--;
+    }
 
     const CApplicationInfoList runningApps = CGuiApplication::getRunningApplications();
     const bool foundLocalCore = runningApps.containsApplication(CApplicationInfo::PilotClientCore);
@@ -514,8 +618,14 @@ void CSwiftLauncher::checkRunningApplicationsAndCore()
 void CSwiftLauncher::startWizard()
 {
     const bool show = this->warnAboutOtherSwiftApplications();
-    if (!show) { return; }
-    if (!m_wizard) { m_wizard.reset(new CConfigurationWizard(this)); }
+    if (!show)
+    {
+        return;
+    }
+    if (!m_wizard)
+    {
+        m_wizard.reset(new CConfigurationWizard(this));
+    }
     m_wizard->show();
     CGuiUtility::centerWidget(m_wizard.data(), this);
 }
@@ -538,7 +648,10 @@ void CSwiftLauncher::popupExecutableArgs() { QMessageBox::information(this, "Com
 
 void CSwiftLauncher::showSimulatorConfigDirs()
 {
-    if (!m_textEditDialog) { m_textEditDialog.reset(new CTextEditDialog(this)); }
+    if (!m_textEditDialog)
+    {
+        m_textEditDialog.reset(new CTextEditDialog(this));
+    }
 
     const QObject *s = QObject::sender();
     QStringList dirs;
@@ -575,7 +688,10 @@ void CSwiftLauncher::requestMacMicrophoneAccess()
     // https://discordapp.com/channels/539048679160676382/567983892791951374/634806582013591603
 #ifdef Q_OS_MAC
     const CMacOSMicrophoneAccess::AuthorizationStatus status = m_micAccess.getAuthorizationStatus();
-    if (status == CMacOSMicrophoneAccess::Authorized) { return; }
+    if (status == CMacOSMicrophoneAccess::Authorized)
+    {
+        return;
+    }
     m_micAccess.requestAccess();
     CLogMessage(this).info(u"MacOS requested input device");
 #endif

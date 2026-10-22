@@ -42,12 +42,24 @@ namespace swift::gui::components
     {
         QString engineCount, engineType, aircraftType;
         const QString cc(combinedCode.trimmed().toUpper().left(3));
-        if (m_cc == cc) { return; }
+        if (m_cc == cc)
+        {
+            return;
+        }
         m_cc = cc;
 
-        if (cc.length() > 0) { aircraftType = cc.at(0); }
-        if (cc.length() > 1) { engineCount = cc.mid(1, 1); }
-        if (cc.length() > 2) { engineType = cc.mid(2, 1); }
+        if (cc.length() > 0)
+        {
+            aircraftType = cc.at(0);
+        }
+        if (cc.length() > 1)
+        {
+            engineCount = cc.mid(1, 1);
+        }
+        if (cc.length() > 2)
+        {
+            engineType = cc.mid(2, 1);
+        }
 
         if (this->getCombinedTypeFromComboBoxes() != cc)
         {
@@ -56,7 +68,10 @@ namespace swift::gui::components
             CGuiUtility::setComboBoxValueByStartingString(ui->cb_Type, aircraftType, "unspecified");
         }
 
-        if (ui->le_CombinedType->text() != cc) { ui->le_CombinedType->setText(cc); }
+        if (ui->le_CombinedType->text() != cc)
+        {
+            ui->le_CombinedType->setText(cc);
+        }
         emit this->changedCombinedType(cc);
     }
 
@@ -82,8 +97,14 @@ namespace swift::gui::components
     QString CAircraftCombinedTypeSelector::getCombinedType() const
     {
         QString ct(ui->le_CombinedType->text().trimmed().toUpper());
-        if (ct.isEmpty() || ct == QStringView(u"---")) { return {}; }
-        if (CAircraftIcaoCode::isValidCombinedType(ct)) { return ct; }
+        if (ct.isEmpty() || ct == QStringView(u"---"))
+        {
+            return {};
+        }
+        if (CAircraftIcaoCode::isValidCombinedType(ct))
+        {
+            return ct;
+        }
 
         QString ct2(getCombinedTypeFromComboBoxes());
         return ct2;
@@ -99,7 +120,10 @@ namespace swift::gui::components
     {
         Q_UNUSED(text);
         const QString ct(this->getCombinedTypeFromComboBoxes());
-        if (ui->le_CombinedType->text() == ct) { return; }
+        if (ui->le_CombinedType->text() == ct)
+        {
+            return;
+        }
         ui->le_CombinedType->setText(ct);
         emit this->changedCombinedType(ct);
     }

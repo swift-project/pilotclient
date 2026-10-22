@@ -32,9 +32,6 @@ namespace swift::gui
             //! Constructor
             IAircraftModelViewMenu(swift::gui::views::CAircraftModelView *modelView) : IMenuDelegate(modelView) {}
 
-            //! Log.categories
-            static const QStringList &getLogCategories();
-
         protected:
             //! Model view
             swift::gui::views::CAircraftModelView *modelView() const;

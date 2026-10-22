@@ -51,10 +51,19 @@ namespace swift::core
 
     CStatusMessage CCoreFacade::tryToReconnectWithDBus()
     {
-        if (m_shuttingDown) { return { this, CStatusMessage::SeverityInfo, u"Shutdown" }; }
-        if (!m_config.requiresDBusConnection()) { return { this, CStatusMessage::SeverityInfo, u"Not DBus based" }; }
+        if (m_shuttingDown)
+        {
+            return { this, CStatusMessage::SeverityInfo, u"Shutdown" };
+        }
+        if (!m_config.requiresDBusConnection())
+        {
+            return { this, CStatusMessage::SeverityInfo, u"Not DBus based" };
+        }
         const QString dBusAddress = this->getDBusAddress();
-        if (dBusAddress.isEmpty()) { return { this, CStatusMessage::SeverityInfo, u"Not DBus based, no address" }; }
+        if (dBusAddress.isEmpty())
+        {
+            return { this, CStatusMessage::SeverityInfo, u"Not DBus based, no address" };
+        }
         QString connectMsg;
         if (!CContextApplicationProxy::isContextResponsive(dBusAddress, connectMsg))
         {
@@ -72,7 +81,10 @@ namespace swift::core
 
     void CCoreFacade::init()
     {
-        if (m_initalized || m_shuttingDown) { return; }
+        if (m_initalized || m_shuttingDown)
+        {
+            return;
+        }
 
         QMap<QString, qint64> times;
         QElapsedTimer time;
@@ -84,7 +96,10 @@ namespace swift::core
 
         // DBus
         time.start();
-        if (m_config.requiresDBusSever()) { this->initDBusServer(dbusAddress); }
+        if (m_config.requiresDBusSever())
+        {
+            this->initDBusServer(dbusAddress);
+        }
         if (m_config.requiresDBusConnection())
         {
             this->initDBusConnection(dbusAddress);
@@ -128,25 +143,40 @@ namespace swift::core
         }
 
         // contexts
-        if (m_contextApplication) { m_contextApplication->deleteLater(); }
+        if (m_contextApplication)
+        {
+            m_contextApplication->deleteLater();
+        }
         m_contextApplication = IContextApplication::create(this, m_config.getMode(), m_dbusServer, m_dbusConnection);
         times.insert("Application", time.restart());
 
-        if (m_contextAudio) { m_contextAudio->deleteLater(); }
+        if (m_contextAudio)
+        {
+            m_contextAudio->deleteLater();
+        }
         m_contextAudio = qobject_cast<CContextAudioBase *>(
             IContextAudio::create(this, m_config.getMode(), m_dbusServer, m_dbusConnection));
         times.insert("Audio", time.restart());
 
-        if (m_contextOwnAircraft) { m_contextOwnAircraft->deleteLater(); }
+        if (m_contextOwnAircraft)
+        {
+            m_contextOwnAircraft->deleteLater();
+        }
         m_contextOwnAircraft = IContextOwnAircraft::create(this, m_config.getMode(), m_dbusServer, m_dbusConnection);
         times.insert("Own aircraft", time.restart());
 
-        if (m_contextSimulator) { m_contextSimulator->deleteLater(); }
+        if (m_contextSimulator)
+        {
+            m_contextSimulator->deleteLater();
+        }
         m_contextSimulator = IContextSimulator::create(this, m_config.getMode(), m_dbusServer, m_dbusConnection);
         times.insert("Simulator", time.restart());
 
         // depends on own aircraft and simulator context, which is bad style
-        if (m_contextNetwork) { m_contextNetwork->deleteLater(); }
+        if (m_contextNetwork)
+        {
+            m_contextNetwork->deleteLater();
+        }
         m_contextNetwork = IContextNetwork::create(this, m_config.getMode(), m_dbusServer, m_dbusConnection);
         times.insert("Network", time.restart());
 
@@ -181,7 +211,7 @@ namespace swift::core
         // audio can be empty depending on whre it runs
         if (this->getIContextAudio() && !this->getIContextAudio()->isEmptyObject())
         {
-            handled = handled || this->getIContextAudio()->parseCommandLine(commandLine, originator);
+            handled = this->getIContextAudio()->parseCommandLine(commandLine, originator);
         }
         if (this->getIContextNetwork())
         {
@@ -201,7 +231,10 @@ namespace swift::core
     void CCoreFacade::initDBusServer(const QString &dBusAddress)
     {
         Q_ASSERT(!dBusAddress.isEmpty());
-        if (m_dbusServer) { m_dbusServer->deleteLater(); } // delete if there was an existing one
+        if (m_dbusServer)
+        {
+            m_dbusServer->deleteLater();
+        } // delete if there was an existing one
         m_dbusServer = new CDBusServer(dBusAddress, this);
         CLogMessage(this).info(u"DBus server on address: '%1'") << dBusAddress;
     }
@@ -281,8 +314,14 @@ namespace swift::core
                 // xCtxChangedOwnAircraftModel and we avoid roundtrips
                 c = connect(this->getCContextSimulator(), &CContextSimulator::ownAircraftModelChanged,
                             this->getCContextOwnAircraft(), [=, this](const CAircraftModel &changedModel) {
-                                if (!this->getIContextOwnAircraft()) { return; }
-                                if (!this->getCContextSimulator()) { return; }
+                                if (!this->getIContextOwnAircraft())
+                                {
+                                    return;
+                                }
+                                if (!this->getCContextSimulator())
+                                {
+                                    return;
+                                }
                                 this->getCContextOwnAircraft()->xCtxChangedSimulatorModel(
                                     changedModel, this->getCContextSimulator()->identifier());
                             });
@@ -317,7 +356,10 @@ namespace swift::core
     QString CCoreFacade::getDBusAddress() const
     {
         QString dbusAddress;
-        if (m_config.hasDBusAddress()) { dbusAddress = m_config.getDBusAddress(); }
+        if (m_config.hasDBusAddress())
+        {
+            dbusAddress = m_config.getDBusAddress();
+        }
         else
         {
             const CLauncherSetup setup = m_launcherSetup.get();
@@ -328,8 +370,14 @@ namespace swift::core
 
     void CCoreFacade::gracefulShutdown()
     {
-        if (!m_initalized) { return; }
-        if (m_shuttingDown) { return; }
+        if (!m_initalized)
+        {
+            return;
+        }
+        if (m_shuttingDown)
+        {
+            return;
+        }
         m_shuttingDown = true;
 
         // disable all signals towards runtime
@@ -344,7 +392,10 @@ namespace swift::core
         m_dataLinkDBus = nullptr;
 
         // unregister all from DBus
-        if (m_dbusServer) { m_dbusServer->removeAllObjects(); }
+        if (m_dbusServer)
+        {
+            m_dbusServer->removeAllObjects();
+        }
 
         // handle contexts
 
@@ -407,7 +458,10 @@ namespace swift::core
 
     void CCoreFacade::initDBusConnection(const QString &address)
     {
-        if (m_initDBusConnection) { return; }
+        if (m_initDBusConnection)
+        {
+            return;
+        }
         if (address.isEmpty() || address == CDBusServer::sessionBusAddress())
         {
             QDBusConnection::disconnectFromBus(m_dbusConnection.name());

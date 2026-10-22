@@ -30,24 +30,14 @@ namespace swift::gui::models
         : CListModelCallsignObjects("ModelSimulatedAircraftList", parent)
     {
         this->setAircraftMode(NetworkMode);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "callsign");
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "pilotrealname");
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "latitude");
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "longitude");
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "altitude");
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "distance");
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "height");
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "transponder");
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "groundspeed");
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "icao");
-        (void)QT_TRANSLATE_NOOP("ModelSimulatedAircraftList", "model");
     }
 
     void CSimulatedAircraftListModel::setAircraftMode(AircraftMode mode)
     {
-        if (m_mode == mode) { return; }
+        if (m_mode == mode)
+        {
+            return;
+        }
         m_mode = mode;
         m_columns.clear();
         switch (mode)

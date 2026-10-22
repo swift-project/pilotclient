@@ -53,8 +53,14 @@ namespace swift::gui::components
         using namespace std::chrono_literals;
 
         Q_UNUSED(count);
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-        if (!entity.testFlag(CEntityFlags::LiveryEntity)) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
+        if (!entity.testFlag(CEntityFlags::LiveryEntity))
+        {
+            return;
+        }
 
         if (CEntityFlags::isFinishedReadState(readState))
         {
@@ -74,14 +80,20 @@ namespace swift::gui::components
     {
         using namespace std::chrono_literals;
 
-        if (!entity.testFlag(CEntityFlags::LiveryEntity)) { return; }
+        if (!entity.testFlag(CEntityFlags::LiveryEntity))
+        {
+            return;
+        }
         this->showDownloadProgress(progress, current, max, url, 5s);
         Q_UNUSED(logId);
     }
 
     void CDbLiveryComponent::onReload()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::LiveryEntity);
     }
 } // namespace swift::gui::components

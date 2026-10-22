@@ -66,7 +66,10 @@ namespace swift::gui::components
     {
         Q_ASSERT(this->isParentDockWidgetFloating()); // show hide should not be visible if docked
         Q_ASSERT(this->window());
-        if (!this->isParentDockWidgetFloating()) { return; }
+        if (!this->isParentDockWidgetFloating())
+        {
+            return;
+        }
 
         // manually setting size, all other approaches failed
         static const QSize defaultSizeShown(500, 600);
@@ -85,7 +88,10 @@ namespace swift::gui::components
             if (m_sizeFloatingShown.isValid())
             {
                 this->window()->resize(m_sizeFloatingShown);
-                if (considerCurrentSize) { m_sizeFloatingHidden = manuallySetSize; } // for next time
+                if (considerCurrentSize)
+                {
+                    m_sizeFloatingHidden = manuallySetSize;
+                } // for next time
             }
             else
             {
@@ -101,7 +107,10 @@ namespace swift::gui::components
             if (m_sizeFloatingHidden.isValid())
             {
                 this->window()->resize(m_sizeFloatingHidden);
-                if (considerCurrentSize) { m_sizeFloatingShown = manuallySetSize; }
+                if (considerCurrentSize)
+                {
+                    m_sizeFloatingShown = manuallySetSize;
+                }
             }
             else
             {
@@ -114,7 +123,10 @@ namespace swift::gui::components
 
     void CCockpitComponent::mouseDoubleClickEvent(QMouseEvent *event)
     {
-        if (event) { emit requestTextMessageEntryTab(TextMessagesAll); }
+        if (event)
+        {
+            emit requestTextMessageEntryTab(TextMessagesAll);
+        }
         COverlayMessagesFrame::mouseDoubleClickEvent(event);
     }
 

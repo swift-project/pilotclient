@@ -16,12 +16,18 @@ namespace swift::misc::network
 
     bool CServerList::removeByName(const QString &name)
     {
-        if (name.isEmpty()) { return false; }
+        if (name.isEmpty())
+        {
+            return false;
+        }
         const CServerList copy(*this);
         bool removed = false;
         for (const CServer &server : copy)
         {
-            if (!server.matchesName(name)) { continue; }
+            if (!server.matchesName(name))
+            {
+                continue;
+            }
             this->remove(server);
             removed = true;
         }
@@ -30,7 +36,10 @@ namespace swift::misc::network
 
     void CServerList::removeUsers()
     {
-        for (CServer &s : *this) { s.setUser(CUser()); }
+        for (CServer &s : *this)
+        {
+            s.setUser(CUser());
+        }
     }
 
     bool CServerList::containsAddressPort(const CServer &server)
@@ -40,17 +49,29 @@ namespace swift::misc::network
 
     void CServerList::addIfAddressNotExists(const CServer &server)
     {
-        if (!server.hasAddressAndPort() || server.getName().isEmpty()) { return; }
-        if (!this->containsAddressPort(server)) { this->push_back(server); }
+        if (!server.hasAddressAndPort() || server.getName().isEmpty())
+        {
+            return;
+        }
+        if (!this->containsAddressPort(server))
+        {
+            this->push_back(server);
+        }
     }
 
     void CServerList::addIfAddressNotExists(const CServerList &servers)
     {
-        for (const CServer &s : servers) { this->addIfAddressNotExists(s); }
+        for (const CServer &s : servers)
+        {
+            this->addIfAddressNotExists(s);
+        }
     }
 
     void CServerList::setFsdSetup(const CFsdSetup &setup)
     {
-        for (CServer &s : *this) { s.setFsdSetup(setup); }
+        for (CServer &s : *this)
+        {
+            s.setFsdSetup(setup);
+        }
     }
 } // namespace swift::misc::network

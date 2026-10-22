@@ -46,7 +46,10 @@ namespace swift::core
     {
         auto info = std::find_if(m_boundActions.begin(), m_boundActions.end(),
                                  [index](const BindInfo &info) { return info.m_index == index; });
-        if (info != m_boundActions.end()) { m_boundActions.erase(info); }
+        if (info != m_boundActions.end())
+        {
+            m_boundActions.erase(info);
+        }
     }
 
     void CInputManager::reloadHotkeySettings()
@@ -54,7 +57,10 @@ namespace swift::core
         m_configuredActions.clear();
         for (const CActionHotkey &actionHotkey : m_actionHotkeys.getThreadLocal())
         {
-            if (!actionHotkey.getApplicableMachine().isFromLocalMachine()) { continue; }
+            if (!actionHotkey.getApplicableMachine().isFromLocalMachine())
+            {
+                continue;
+            }
             CHotkeyCombination combination = actionHotkey.getCombination();
             if (combination.isEmpty()) continue;
 
@@ -89,12 +95,21 @@ namespace swift::core
 
     void CInputManager::callFunctionsBy(const QString &action, bool isKeyDown, bool shouldEmit)
     {
-        if (action.isEmpty()) { return; }
-        if (m_actionRelayingEnabled && shouldEmit) { emit remoteActionFromLocal(action, isKeyDown); }
+        if (action.isEmpty())
+        {
+            return;
+        }
+        if (m_actionRelayingEnabled && shouldEmit)
+        {
+            emit remoteActionFromLocal(action, isKeyDown);
+        }
 
         for (const auto &boundAction : std::as_const(m_boundActions))
         {
-            if (boundAction.m_action == action) { boundAction.m_function(isKeyDown); }
+            if (boundAction.m_action == action)
+            {
+                boundAction.m_function(isKeyDown);
+            }
         }
     }
 
@@ -150,7 +165,10 @@ namespace swift::core
             CHotkeyCombination deltaCombination = currentCombination.getDeltaComparedTo(m_combinationBeforeCapture);
 
             // Don't continue if there is no relevant combination yet
-            if (m_capturedCombination.isEmpty() && deltaCombination.isEmpty()) { return; }
+            if (m_capturedCombination.isEmpty() && deltaCombination.isEmpty())
+            {
+                return;
+            }
 
             if (deltaCombination.size() < m_capturedCombination.size())
             {
@@ -168,14 +186,23 @@ namespace swift::core
         QSet<QString> newActiveActions;
         for (const auto [combination, action] : makePairsRange(std::as_const(m_configuredActions)))
         {
-            if (combination.isSubsetOf(currentCombination)) { newActiveActions.insert(action); }
+            if (combination.isSubsetOf(currentCombination))
+            {
+                newActiveActions.insert(action);
+            }
         }
 
         const QSet<QString> pressedActions = newActiveActions - m_activeActions;
         const QSet<QString> releasedActions = m_activeActions - newActiveActions;
         m_activeActions = newActiveActions;
-        for (const QString &action : pressedActions) { callFunctionsBy(action, true); }
-        for (const QString &action : releasedActions) { callFunctionsBy(action, false); }
+        for (const QString &action : pressedActions)
+        {
+            callFunctionsBy(action, true);
+        }
+        for (const QString &action : releasedActions)
+        {
+            callFunctionsBy(action, false);
+        }
 
         // combination
         m_lastCombination = currentCombination;

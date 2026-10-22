@@ -16,7 +16,10 @@ namespace swift::misc::input
         QStringList keys;
         for (const CKeyboardKey &k : *this)
         {
-            if (k.hasKey()) { keys.push_back(k.getKeyAsString()); }
+            if (k.hasKey())
+            {
+                keys.push_back(k.getKeyAsString());
+            }
         }
         return keys;
     }

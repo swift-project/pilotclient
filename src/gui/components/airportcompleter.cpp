@@ -34,11 +34,23 @@ namespace swift::gui::components
 
     void CAirportCompleter::setAirport(const CAirport &airport)
     {
-        if (m_current == airport) { return; }
+        if (m_current == airport)
+        {
+            return;
+        }
         m_current = airport;
-        if (airport.getIcaoAsString() != ui->le_Icao->text()) { ui->le_Icao->setText(airport.getIcaoAsString()); }
-        if (airport.getDescriptiveName() != ui->le_Name->text()) { ui->le_Name->setText(airport.getDescriptiveName()); }
-        if (airport.getLocation() != ui->le_Location->text()) { ui->le_Location->setText(airport.getLocation()); }
+        if (airport.getIcaoAsString() != ui->le_Icao->text())
+        {
+            ui->le_Icao->setText(airport.getIcaoAsString());
+        }
+        if (airport.getDescriptiveName() != ui->le_Name->text())
+        {
+            ui->le_Name->setText(airport.getDescriptiveName());
+        }
+        if (airport.getLocation() != ui->le_Location->text())
+        {
+            ui->le_Location->setText(airport.getLocation());
+        }
         emit this->changedAirport(m_current);
     }
 
@@ -62,7 +74,10 @@ namespace swift::gui::components
     void CAirportCompleter::onIcaoChanged()
     {
         const QString icao(this->getIcaoText());
-        if (m_current.getIcaoAsString() == icao) { return; }
+        if (m_current.getIcaoAsString() == icao)
+        {
+            return;
+        }
         const CAirport airport(sGui->getWebDataServices()->getAirportForIcaoDesignator(icao));
         this->setAirport(airport);
     }
@@ -70,7 +85,10 @@ namespace swift::gui::components
     void CAirportCompleter::onNameChanged()
     {
         const QString name(ui->le_Name->text());
-        if (m_current.getDescriptiveName() == name) { return; }
+        if (m_current.getDescriptiveName() == name)
+        {
+            return;
+        }
         const CAirport airport(sGui->getWebDataServices()->getAirportForNameOrLocation(name));
         this->setAirport(airport);
     }
@@ -78,14 +96,20 @@ namespace swift::gui::components
     void CAirportCompleter::onLocationChanged()
     {
         const QString location(ui->le_Location->text());
-        if (m_current.getLocation() == location) { return; }
+        if (m_current.getLocation() == location)
+        {
+            return;
+        }
         const CAirport airport(sGui->getWebDataServices()->getAirportForNameOrLocation(location));
         this->setAirport(airport);
     }
 
     void CAirportCompleter::onAirportsChanged()
     {
-        if (!sGui || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         const CAirportList airports = sGui->getWebDataServices()->getAirports();
         ui->le_Icao->setCompleter(new QCompleter(airports.allIcaoCodes(true), ui->le_Icao));
         ui->le_Name->setCompleter(new QCompleter(airports.allDescriptivesNames(true), ui->le_Name));
@@ -124,7 +148,10 @@ namespace swift::gui::components
             if (CAirportIcaoCode::isValidIcaoDesignator(icao, true))
             {
                 const CAirport airport = sGui->getWebDataServices()->getAirportForIcaoDesignator(icao);
-                if (!airport.isNull()) { this->setAirport(airport); }
+                if (!airport.isNull())
+                {
+                    this->setAirport(airport);
+                }
             }
         }
     }

@@ -41,7 +41,10 @@ namespace swift::core::vatsim
         Q_ASSERT_X(hasStarted(), Q_FUNC_INFO, "Thread was not started yet!");
         QPointer<CVatsimStatusFileReader> myself(this);
         QTimer::singleShot(0, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->read();
         });
     }
@@ -53,11 +56,17 @@ namespace swift::core::vatsim
     void CVatsimStatusFileReader::read()
     {
         this->threadAssertCheck();
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
 
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
         const CUrl url(sApp->getGlobalSetup().getVatsimStatusFileUrl());
-        if (url.isEmpty()) { return; }
+        if (url.isEmpty())
+        {
+            return;
+        }
         CLogMessage(this).info(u"Trigger read of VATSIM status file from '%1'") << url.toQString(true);
         this->getFromNetworkAndLog(url, { this, &CVatsimStatusFileReader::parseVatsimFile });
     }
@@ -87,7 +96,10 @@ namespace swift::core::vatsim
 
             if (statusFileData.isEmpty()) return;
             auto jsonDoc = QJsonDocument::fromJson(statusFileData.toUtf8());
-            if (jsonDoc.isEmpty()) { return; }
+            if (jsonDoc.isEmpty())
+            {
+                return;
+            }
 
             CUrl dataFileUrl;
             CUrl serverFileUrl;
@@ -115,8 +127,14 @@ namespace swift::core::vatsim
             const bool changed = vs.setUrls(dataFileUrl, serverFileUrl, metarFileUrl);
             vs.setUtcTimestamp(QDateTime::currentDateTime());
             const CStatusMessage cacheMsg = m_lastGoodSetup.set(vs);
-            if (cacheMsg.isFailure()) { CLogMessage::preformatted(cacheMsg); }
-            else { CLogMessage(this).info(u"Read VATSIM status file from '%1'") << urlString; }
+            if (cacheMsg.isFailure())
+            {
+                CLogMessage::preformatted(cacheMsg);
+            }
+            else
+            {
+                CLogMessage(this).info(u"Read VATSIM status file from '%1'") << urlString;
+            }
             Q_UNUSED(changed);
 
             // data read finished

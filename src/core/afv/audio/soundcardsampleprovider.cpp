@@ -69,7 +69,10 @@ namespace swift::core::afv::audio
                         m_receiverInputs.begin(), m_receiverInputs.end(),
                         [txTransceiver](const CReceiverSampleProvider *p) { return p->getId() == txTransceiver.id; });
 
-                    if (it != m_receiverInputs.end()) { (*it)->setMute(true); }
+                    if (it != m_receiverInputs.end())
+                    {
+                        (*it)->setMute(true);
+                    }
                 }
             }
         }
@@ -117,10 +120,19 @@ namespace swift::core::afv::audio
                         m_receiverInputs.begin(), m_receiverInputs.end(),
                         [rxTransceiver](const CReceiverSampleProvider *p) { return p->getId() == rxTransceiver.id; });
 
-                    if (it != m_receiverInputs.end()) { receiverInput = *it; }
+                    if (it != m_receiverInputs.end())
+                    {
+                        receiverInput = *it;
+                    }
 
-                    if (!receiverInput) { continue; }
-                    if (receiverInput->getMute()) { continue; }
+                    if (!receiverInput)
+                    {
+                        continue;
+                    }
+                    if (receiverInput->getMute())
+                    {
+                        continue;
+                    }
 
                     if (!audioPlayed)
                     {
@@ -150,7 +162,10 @@ namespace swift::core::afv::audio
                 m_receiverInputs.begin(), m_receiverInputs.end(),
                 [radioTransceiver](const CReceiverSampleProvider *p) { return p->getId() == radioTransceiver.id; });
 
-            if (it != m_receiverInputs.end()) { (*it)->setFrequency(radioTransceiver.frequencyHz); }
+            if (it != m_receiverInputs.end())
+            {
+                (*it)->setFrequency(radioTransceiver.frequencyHz);
+            }
         }
 
         for (CReceiverSampleProvider *receiverInput : std::as_const(m_receiverInputs))
@@ -158,7 +173,10 @@ namespace swift::core::afv::audio
             const quint16 transceiverID = receiverInput->getId();
             const bool contains = std::any_of(radioTransceivers.cbegin(), radioTransceivers.cend(),
                                               [transceiverID](const auto &tx) { return transceiverID == tx.id; });
-            if (!contains) { receiverInput->setFrequency(0); }
+            if (!contains)
+            {
+                receiverInput->setFrequency(0);
+            }
         }
     }
 
@@ -171,7 +189,10 @@ namespace swift::core::afv::audio
     {
         auto receiverInput = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(),
                                           [&](const auto receiver) { return receiver->getId() == transceiverID; });
-        if (receiverInput == m_receiverInputs.end()) { return false; }
+        if (receiverInput == m_receiverInputs.end())
+        {
+            return false;
+        }
         return (*receiverInput)->setGainRatio(gainRatio);
     }
 

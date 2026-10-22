@@ -33,8 +33,14 @@ namespace swift::gui
 
     bool COverlayMessagesFrameEnableForDockWidgetInfoArea::isForwardingOverlayMessages() const
     {
-        if (!this->hasDockWidgetArea()) { return false; }
-        if (this->isParentDockWidgetFloating()) { return false; }
+        if (!this->hasDockWidgetArea())
+        {
+            return false;
+        }
+        if (this->isParentDockWidgetFloating())
+        {
+            return false;
+        }
         return true;
     }
 

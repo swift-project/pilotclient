@@ -57,7 +57,10 @@ namespace swift::gui::editors
 
     void CAirlineIcaoForm::setValue(const CAirlineIcaoCode &icao)
     {
-        if (m_currentCode == icao) { return; }
+        if (m_currentCode == icao)
+        {
+            return;
+        }
         m_currentCode = icao;
 
         ui->selector_AirlineDesignator->setAirlineIcao(icao);
@@ -70,7 +73,10 @@ namespace swift::gui::editors
         ui->country_Selector->setCountry(icao.getCountry());
 
         const QPixmap pm = CIcon(icao.toIcon());
-        if (pm.width() < 125) { ui->lbl_AirlineIcon->setPixmap(pm); }
+        if (pm.width() < 125)
+        {
+            ui->lbl_AirlineIcon->setPixmap(pm);
+        }
         else
         {
             ui->lbl_AirlineIcon->setTextFormat(Qt::RichText);
@@ -80,7 +86,10 @@ namespace swift::gui::editors
         // sometimes artefacts when icon is displayed
         this->repaint();
 
-        if (m_currentCode.hasCompleteData()) { emit this->airlineChanged(m_currentCode); }
+        if (m_currentCode.hasCompleteData())
+        {
+            emit this->airlineChanged(m_currentCode);
+        }
     }
 
     CAirlineIcaoCode CAirlineIcaoForm::getValue() const
@@ -91,10 +100,16 @@ namespace swift::gui::editors
         {
             bool ok {};
             const int dbKey = id.toInt(&ok);
-            if (ok) { code = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey); }
+            if (ok)
+            {
+                code = sGui->getWebDataServices()->getAirlineIcaoCodeForDbKey(dbKey);
+            }
         }
 
-        if (code.hasValidDbKey()) { return code; }
+        if (code.hasValidDbKey())
+        {
+            return code;
+        }
         code = m_currentCode;
         code.setVirtualAirline(ui->cb_Va->isChecked());
         code.setMilitary(ui->cb_Military->isChecked());
@@ -155,14 +170,23 @@ namespace swift::gui::editors
 
     void CAirlineIcaoForm::jsonPasted(const QString &json)
     {
-        if (json.isEmpty()) { return; } // avoid unnecessary conversions
+        if (json.isEmpty())
+        {
+            return;
+        } // avoid unnecessary conversions
         try
         {
             CVariant jsonVariant;
             jsonVariant.convertFromJson(json::jsonObjectFromString(json));
-            if (!jsonVariant.canConvert<CAirlineIcaoCodeList>()) { return; }
+            if (!jsonVariant.canConvert<CAirlineIcaoCodeList>())
+            {
+                return;
+            }
             const auto icaos = jsonVariant.value<CAirlineIcaoCodeList>();
-            if (!icaos.isEmpty()) { this->setValue(icaos.front()); }
+            if (!icaos.isEmpty())
+            {
+                this->setValue(icaos.front());
+            }
         }
         catch (const CJsonException &ex)
         {
@@ -173,20 +197,32 @@ namespace swift::gui::editors
     void CAirlineIcaoForm::onDroppedCode(const swift::misc::CVariant &variantDropped)
     {
         CAirlineIcaoCode icao;
-        if (variantDropped.canConvert<CAirlineIcaoCode>()) { icao = variantDropped.value<CAirlineIcaoCode>(); }
+        if (variantDropped.canConvert<CAirlineIcaoCode>())
+        {
+            icao = variantDropped.value<CAirlineIcaoCode>();
+        }
         else if (variantDropped.canConvert<CAirlineIcaoCodeList>())
         {
             const auto icaoList(variantDropped.value<CAirlineIcaoCodeList>());
-            if (icaoList.isEmpty()) { return; }
+            if (icaoList.isEmpty())
+            {
+                return;
+            }
             icao = icaoList.front();
         }
-        else { return; }
+        else
+        {
+            return;
+        }
         this->setValue(icao);
     }
 
     void CAirlineIcaoForm::onIdEntered()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
 
         bool ok {};
         const int id = ui->le_Id->text().toInt(&ok);

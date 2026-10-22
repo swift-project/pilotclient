@@ -43,11 +43,20 @@ namespace swift::gui::components
         this->setVisible(false);
         this->setMinimumHeight(0);
 
-        if (!sGui || !sGui->getIContextNetwork()) { return; }
-        if (m_maxNumber < 1) { return; }
+        if (!sGui || !sGui->getIContextNetwork())
+        {
+            return;
+        }
+        if (m_maxNumber < 1)
+        {
+            return;
+        }
         const int max = qMin(m_maxNumber, m_rows * m_cols);
         CAtcStationList stations = sGui->getIContextNetwork()->getClosestAtcStationsOnline(max);
-        if (stations.isEmpty()) { return; }
+        if (stations.isEmpty())
+        {
+            return;
+        }
 
         CGuiUtility::deleteLayout(this->layout(), true);
         auto *layout = new QGridLayout(this);
@@ -64,12 +73,18 @@ namespace swift::gui::components
             if (m_ignoreNonAtc)
             {
                 // strict check, only "real ATC stations", no supervisors etc
-                if (!station.getCallsign().hasAtcSuffix()) { continue; }
+                if (!station.getCallsign().hasAtcSuffix())
+                {
+                    continue;
+                }
             }
 
             auto *button = new QPushButton(this);
             button->setText(station.getCallsignAsString());
-            if (m_withIcons) { button->setIcon(CIcon(station.toIcon()).toQIcon()); }
+            if (m_withIcons)
+            {
+                button->setIcon(CIcon(station.toIcon()).toQIcon());
+            }
             QObject::connect(button, &QPushButton::released, this, &CAtcButtonComponent::onButtonClicked);
             const CVariant atcv = CVariant::fromValue(station);
             layout->addWidget(button, row, col++);
@@ -79,7 +94,10 @@ namespace swift::gui::components
 
             if (col >= m_cols)
             {
-                if (row == m_rows) { break; }
+                if (row == m_rows)
+                {
+                    break;
+                }
                 row++;
                 col = 0;
             }
@@ -99,28 +117,46 @@ namespace swift::gui::components
     {
         m_rows = rows;
         m_cols = cols;
-        if (setMaxElements) { m_maxNumber = rows * cols; }
+        if (setMaxElements)
+        {
+            m_maxNumber = rows * cols;
+        }
     }
 
     void CAtcButtonComponent::onChangedAtcStations()
     {
-        if (!m_backgroundUpdates) { return; }
-        if (!this->isVisible()) { return; }
+        if (!m_backgroundUpdates)
+        {
+            return;
+        }
+        if (!this->isVisible())
+        {
+            return;
+        }
         this->updateStations();
     }
 
     void CAtcButtonComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         Q_UNUSED(from);
-        if (to.isDisconnected()) { this->setVisible(false); }
+        if (to.isDisconnected())
+        {
+            this->setVisible(false);
+        }
     }
 
     void CAtcButtonComponent::onButtonClicked()
     {
         auto *button = qobject_cast<QPushButton *>(QObject::sender());
-        if (!button) { return; }
+        if (!button)
+        {
+            return;
+        }
         const CVariant v(button->property("atc"));
-        if (!v.isValid() || !v.canConvert<CAtcStation>()) { return; }
+        if (!v.isValid() || !v.canConvert<CAtcStation>())
+        {
+            return;
+        }
         const auto station = v.value<CAtcStation>();
         emit this->requestAtcStation(station);
     }

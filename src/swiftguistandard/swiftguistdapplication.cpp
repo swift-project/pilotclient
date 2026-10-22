@@ -19,7 +19,6 @@ CSwiftGuiStdApplication::CSwiftGuiStdApplication()
 {
     this->addParserOption(m_cmdFacadeMode);
     this->addDBusAddressOption();
-    this->addNetworkOptions();
     this->addAudioOptions();
 }
 

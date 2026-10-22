@@ -23,7 +23,10 @@ namespace swift::misc::aviation
         QString s;
         for (QChar c : selcalCandidate)
         {
-            if (CSelcal::isValidCharacter(c)) { s += c; }
+            if (CSelcal::isValidCharacter(c))
+            {
+                s += c;
+            }
         }
         return CSelcal::isValidCode(s) ? s : QString();
     }
@@ -39,7 +42,10 @@ namespace swift::misc::aviation
         QList<CFrequency> f;
         if (!CSelcal::isValidCode(m_code)) return f;
         f.reserve(m_code.length());
-        for (const QChar c : m_code) { f.append(CSelcal::audioFrequencyEquivalent(c)); }
+        for (const QChar c : m_code)
+        {
+            f.append(CSelcal::audioFrequencyEquivalent(c));
+        }
         return f;
     }
 

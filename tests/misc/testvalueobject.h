@@ -61,7 +61,10 @@ namespace swift::misc
         //! \copydoc swift::misc::mixin::Index::propertyByIndex
         CVariant propertyByIndex(const swift::misc::CPropertyIndex &index) const
         {
-            if (index.isMyself()) { return CVariant::fromValue(*this); }
+            if (index.isMyself())
+            {
+                return CVariant::fromValue(*this);
+            }
             const auto i = index.frontCasted<ColumnIndex>();
             switch (i)
             {
