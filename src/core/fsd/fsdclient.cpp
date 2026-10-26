@@ -1268,9 +1268,8 @@ namespace swift::core::fsd
                                              data.m_livery);
     }
 
-    void CFSDClient::handleVisualPilotDataUpdate(const QStringList & /*tokens*/, MessageType /*messageType*/)
+    void CFSDClient::handleVisualPilotDataUpdate(const QStringList &tokens, MessageType messageType)
     {
-#if 0
         VisualPilotDataUpdate dataUpdate;
         switch (messageType)
         {
@@ -1288,18 +1287,12 @@ namespace swift::core::fsd
             CAngle(dataUpdate.m_pitch, CAngleUnit::deg()),
             CAngle(dataUpdate.m_bank, CAngleUnit::deg()));
 
-        // not used
-        // situation.setVelocity(CAircraftVelocity(
-        //    dataUpdate.m_xVelocity, dataUpdate.m_yVelocity, dataUpdate.m_zVelocity, CSpeedUnit::m_s(),
-        //    dataUpdate.m_pitchRadPerSec, dataUpdate.m_bankRadPerSec, dataUpdate.m_headingRadPerSec, CAngleUnit::rad(), CTimeUnit::s()));
-
         // Ref T297, default offset time
         situation.setCurrentUtcTime();
         const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
         situation.setTimeOffsetMs(offsetTimeMs);
 
         emit visualPilotDataUpdateReceived(situation);
-#endif
     }
 
     void CFSDClient::handleVisualPilotDataToggle(const QStringList &tokens)
