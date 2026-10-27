@@ -106,6 +106,12 @@ add_swift_test(
 )
 
 add_swift_test(
+        NAME misc_simulation_interpolatorvelocity
+        SOURCES simulation/testinterpolatorvelocity/testinterpolatorvelocity.cpp
+        LINK_LIBRARIES misc tests_test Qt::Core
+)
+
+add_swift_test(
         NAME misc_simulation_xplane
         SOURCES simulation/testxplane/testxplane.cpp
         LINK_LIBRARIES misc tests_test Qt::Core
