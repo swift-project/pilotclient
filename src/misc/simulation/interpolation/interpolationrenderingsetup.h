@@ -48,7 +48,8 @@ namespace swift::misc
             enum InterpolatorMode
             {
                 Spline,
-                Linear
+                Linear,
+                Velocity //!< velocity based extrapolation (VATSIM velocity, 6DOF), falls back to linear without velocity
             };
 
             //! Debugging messages for simulation

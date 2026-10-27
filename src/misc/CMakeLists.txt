@@ -579,6 +579,8 @@ add_library(misc SHARED
         simulation/interpolation/interpolatorpbh.h
         simulation/interpolation/interpolatorspline.cpp
         simulation/interpolation/interpolatorspline.h
+        simulation/interpolation/interpolatorvelocity.cpp
+        simulation/interpolation/interpolatorvelocity.h
         simulation/matchinglog.cpp
         simulation/matchinglog.h
         simulation/matchingscript.cpp

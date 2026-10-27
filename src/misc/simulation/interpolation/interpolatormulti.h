@@ -8,11 +8,14 @@
 
 #include "misc/simulation/interpolation/interpolatorlinear.h"
 #include "misc/simulation/interpolation/interpolatorspline.h"
+#include "misc/simulation/interpolation/interpolatorvelocity.h"
 #include "misc/statusmessagelist.h"
 
 namespace swift::misc::simulation
 {
     //! Multiplexed interpolator which allows switching between modes at runtime.
+    //! \remark Aircraft delivering velocity data (VATSIM visual positions) are always extrapolated
+    //!         by CInterpolatorVelocity, regardless of the configured spline / linear mode.
     class SWIFT_MISC_EXPORT CInterpolatorMulti
     {
     public:
@@ -46,6 +49,7 @@ namespace swift::misc::simulation
     private:
         CInterpolatorSpline m_spline;
         CInterpolatorLinear m_linear;
+        CInterpolatorVelocity m_velocity;
     };
 
     /*!

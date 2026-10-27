@@ -1287,6 +1287,12 @@ namespace swift::core::fsd
             CAngle(dataUpdate.m_pitch, CAngleUnit::deg()),
             CAngle(dataUpdate.m_bank, CAngleUnit::deg()));
 
+        // 6DOF velocity for the velocity based extrapolation interpolator
+        situation.setVelocity(CAircraftVelocity(
+            dataUpdate.m_xVelocity, dataUpdate.m_yVelocity, dataUpdate.m_zVelocity, CSpeedUnit::m_s(),
+            dataUpdate.m_pitchRadPerSec, dataUpdate.m_bankRadPerSec, dataUpdate.m_headingRadPerSec, CAngleUnit::rad(),
+            CTimeUnit::s()));
+
         // Ref T297, default offset time
         situation.setCurrentUtcTime();
         const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
