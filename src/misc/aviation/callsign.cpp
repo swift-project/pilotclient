@@ -68,23 +68,38 @@ namespace swift::misc::aviation
     {
         const QString ucCallsign = callsign.trimmed().toUpper();
 
+        // keep round brackets, some networks use callsigns like "(1234)" for ground vehicles etc.
+        const auto isAllowedChar = [](QChar c) {
+            return c == '(' || c == ')';
+        };
+
         // Ref T664, allow ATC with hyphen, such as Ml-SNO_CTR
         switch (hint)
         {
         // ATC allows "-", aircraft not
-        case Atc: return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
-        case Aircraft: return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
+        case Atc:
+            return removeChars(ucCallsign, [&](QChar c) {
+                return !c.isLetterOrNumber() && c != '_' && c != '-' && !isAllowedChar(c);
+            });
+        case Aircraft:
+            return removeChars(ucCallsign, [&](QChar c) {
+                return !c.isLetterOrNumber() && c != '_' && !isAllowedChar(c);
+            });
         default: break;
         }
 
         // no hint
         if (CCallsign::looksLikeAtcCallsign(ucCallsign))
         {
-            return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_' && c != '-'; });
+            return removeChars(ucCallsign, [&](QChar c) {
+                return !c.isLetterOrNumber() && c != '_' && c != '-' && !isAllowedChar(c);
+            });
         }
 
         // strict check
-        return removeChars(ucCallsign, [](QChar c) { return !c.isLetterOrNumber() && c != '_'; });
+        return removeChars(ucCallsign, [&](QChar c) {
+            return !c.isLetterOrNumber() && c != '_' && !isAllowedChar(c);
+        });
     }
 
     const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)

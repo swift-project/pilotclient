@@ -244,6 +244,12 @@ namespace MiscTest
         QVERIFY2(cs1 == cs2, "Callsigns shall be equal");
         QVERIFY2(cs1 != cs3, "Callsigns shall not be equal");
 
+        // round brackets shall be preserved, e.g. ground vehicles on some networks
+        const CCallsign bracket("(1234)");
+        QCOMPARE(bracket.asString(), "(1234)");
+        QCOMPARE(bracket.getFsdCallsignString(), "(1234)");
+        QVERIFY(bracket.asString() == bracket.getStringAsSet());
+
         const CCallsign pilot("DLH123");
         const CCallsign copilot1("DLH123A");
         const CCallsign copilot2("DLH1233");
