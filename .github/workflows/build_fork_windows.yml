@@ -1,0 +1,105 @@
+# SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+# SPDX-License-Identifier: CC0-1.0
+
+name: Build fork (Windows)
+
+# Fork-friendly build: no swift-project secrets required.
+# - conan deps come from conancenter, missing prebuilt packages are built from source
+# - VATSIM support is disabled (no private externals repo / auth library needed)
+# - packaging is a portable zip instead of an InstallBuilder installer
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  buildWin64:
+    runs-on: windows-2022
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        with:
+          version: 6.11.2
+          arch: win64_msvc2022_64
+          modules: 'qtmultimedia'
+          aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          pip install conan==2.29.1 ninja meson
+
+      - name: conan profile detect
+        shell: bash
+        run: |
+          conan profile detect --force
+          sed -i 's/build_type=Release/build_type=RelWithDebInfo/' ~/.conan2/profiles/default
+          grep build_type ~/.conan2/profiles/default
+
+      - name: Install conan dependencies
+        shell: bash
+        run: |
+          conan install . --output-folder=build_conan -s build_type=RelWithDebInfo -c tools.cmake.cmaketoolchain:generator=Ninja --build=missing
+
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Configure
+        shell: pwsh
+        run: |
+          $toolchain = (Get-ChildItem -Recurse -Filter "conan_toolchain.cmake" build_conan | Select-Object -First 1).FullName
+          if (-not $toolchain) { Write-Error "conan_toolchain.cmake not found"; exit 1 }
+          Write-Host "Toolchain: $toolchain"
+          $pyScripts = python -c "import sys, os; print(os.path.join(os.path.dirname(sys.executable), 'Scripts'))"
+          $env:PATH = "$pyScripts;$env:PATH"
+          cmake -S . -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE="$toolchain" -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=cl -DSWIFT_BUILD_SAMPLES=OFF -DSWIFT_BUILD_DOCUMENTATION=OFF -DSWIFT_BUILD_P3D_PLUGIN=OFF -DSWIFT_BUILD_XPLANE_PLUGIN=OFF -DSWIFT_BUILD_XSWIFTBUS=OFF -DSWIFT_BUILD_FLIGHTGEAR_PLUGIN=OFF -DSWIFT_BUILD_EMULATED_PLUGIN=OFF -DSWIFT_BUILD_MSFS_PLUGIN=OFF -DSWIFT_BUILD_MSFS2024_PLUGIN=OFF -DSWIFT_VATSIM_SUPPORT=OFF -DSWIFT_USE_PCH=OFF
+
+      - name: Create externals stub dirs
+        shell: bash
+        run: |
+          # the fork has no swift-project/externals checkout; copy_externals_to_build_dir
+          # only needs the directories to exist (copy of an empty dir is a no-op)
+          mkdir -p third_party/externals/win32-msvc/64/bin third_party/externals/win32-msvc/64/lib
+
+      - name: Build
+        shell: pwsh
+        run: |
+          cmake --build build --config RelWithDebInfo
+
+      - name: Run interpolation tests
+        shell: pwsh
+        run: |
+          $env:PATH = "$env:QT_ROOT_DIR\bin;$env:PATH"
+          ctest --test-dir build -R "misc_simulation_interpolator" -C RelWithDebInfo --output-on-failure
+          Write-Host "=== direct run diagnostics ==="
+          $exe = "build\out\bin\tests_misc_simulation_interpolatorvelocity.exe"
+          & $exe "-o" "velocity_test_output.txt,txt"
+          Write-Host "ExitCode: $LASTEXITCODE (0xC0000135 = missing DLL, 0xC0000005 = access violation)"
+          if (Test-Path velocity_test_output.txt) { Get-Content velocity_test_output.txt }
+
+      - name: Package portable zip
+        shell: pwsh
+        run: |
+          $bin = "build\out\bin"
+          Get-ChildItem "$bin\*.exe" | ForEach-Object {
+            windeployqt --release --no-compiler-runtime "$($_.FullName)"
+          }
+          $version = python scripts/utils.py --version
+          Compress-Archive -Path "$bin\*" -DestinationPath "swift-windows-64-portable-$version.zip"
+          Write-Host "Packaged swift-windows-64-portable-$version.zip"
+
+      - name: Upload portable build
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: swift-windows-64-portable
+          path: swift-windows-64-portable-*.zip

@@ -4,9 +4,7 @@
 name: Build swift
 
 on:
-  merge_group:
-    branches: [main]
-  workflow_dispatch: # manually triggered
+  workflow_dispatch: # manually triggered; merge_group trigger removed for fork (requires swift-project secrets)
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
