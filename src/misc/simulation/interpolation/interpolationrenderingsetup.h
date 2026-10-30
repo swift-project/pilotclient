@@ -49,7 +49,8 @@ namespace swift::misc
             {
                 Spline,
                 Linear,
-                Velocity //!< velocity based extrapolation (VATSIM velocity, 6DOF), falls back to linear without velocity
+                Velocity //!< velocity based extrapolation (VATSIM velocity, 6DOF), falls back to linear without
+                         //!< velocity
             };
 
             //! Debugging messages for simulation

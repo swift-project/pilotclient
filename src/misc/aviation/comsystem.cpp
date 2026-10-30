@@ -220,9 +220,12 @@ namespace swift::misc::aviation
         }
 
         if (comFreq.isNull()) { return CFrequency::null(); }
-        if (!isValidComFrequency(comFreq)) { return CFrequency::null(); } // validate BEFORE rounding, an out of range
-                                                                          // value must not be clamped into the
-                                                                          // civil aviation range
+        if (!isValidComFrequency(comFreq))
+        {
+            return CFrequency::null();
+        } // validate BEFORE rounding, an out of range
+          // value must not be clamped into the
+          // civil aviation range
         roundToChannelSpacing(comFreq, ChannelSpacing8_33KHz);
         return isValidComFrequency(comFreq) ? comFreq : CFrequency::null();
     }

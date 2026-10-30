@@ -69,9 +69,7 @@ namespace swift::misc::aviation
         const QString ucCallsign = callsign.trimmed().toUpper();
 
         // keep round brackets, some networks use callsigns like "(1234)" for ground vehicles etc.
-        const auto isAllowedChar = [](QChar c) {
-            return c == '(' || c == ')';
-        };
+        const auto isAllowedChar = [](QChar c) { return c == '(' || c == ')'; };
 
         // Ref T664, allow ATC with hyphen, such as Ml-SNO_CTR
         switch (hint)
@@ -82,9 +80,8 @@ namespace swift::misc::aviation
                 return !c.isLetterOrNumber() && c != '_' && c != '-' && !isAllowedChar(c);
             });
         case Aircraft:
-            return removeChars(ucCallsign, [&](QChar c) {
-                return !c.isLetterOrNumber() && c != '_' && !isAllowedChar(c);
-            });
+            return removeChars(ucCallsign,
+                               [&](QChar c) { return !c.isLetterOrNumber() && c != '_' && !isAllowedChar(c); });
         default: break;
         }
 
@@ -97,9 +94,7 @@ namespace swift::misc::aviation
         }
 
         // strict check
-        return removeChars(ucCallsign, [&](QChar c) {
-            return !c.isLetterOrNumber() && c != '_' && !isAllowedChar(c);
-        });
+        return removeChars(ucCallsign, [&](QChar c) { return !c.isLetterOrNumber() && c != '_' && !isAllowedChar(c); });
     }
 
     const CIcon &CCallsign::convertToIcon(const CCallsign &callsign)

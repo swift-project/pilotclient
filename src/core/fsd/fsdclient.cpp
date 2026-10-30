@@ -1274,28 +1274,31 @@ namespace swift::core::fsd
         switch (messageType)
         {
         case MessageType::VisualPilotDataUpdate: dataUpdate = VisualPilotDataUpdate::fromTokens(tokens); break;
-        case MessageType::VisualPilotDataPeriodic: dataUpdate = VisualPilotDataPeriodic::fromTokens(tokens).toUpdate(); break;
-        case MessageType::VisualPilotDataStopped: dataUpdate = VisualPilotDataStopped::fromTokens(tokens).toUpdate(); break;
+        case MessageType::VisualPilotDataPeriodic:
+            dataUpdate = VisualPilotDataPeriodic::fromTokens(tokens).toUpdate();
+            break;
+        case MessageType::VisualPilotDataStopped:
+            dataUpdate = VisualPilotDataStopped::fromTokens(tokens).toUpdate();
+            break;
         default: qFatal("Precondition violated"); break;
         }
         const CCallsign callsign(dataUpdate.sender(), CCallsign::Aircraft);
 
         CAircraftSituation situation(
-            callsign,
-            CCoordinateGeodetic(dataUpdate.m_latitude, dataUpdate.m_longitude, dataUpdate.m_altitudeTrue),
+            callsign, CCoordinateGeodetic(dataUpdate.m_latitude, dataUpdate.m_longitude, dataUpdate.m_altitudeTrue),
             CHeading(dataUpdate.m_heading, CHeading::True, CAngleUnit::deg()),
-            CAngle(dataUpdate.m_pitch, CAngleUnit::deg()),
-            CAngle(dataUpdate.m_bank, CAngleUnit::deg()));
+            CAngle(dataUpdate.m_pitch, CAngleUnit::deg()), CAngle(dataUpdate.m_bank, CAngleUnit::deg()));
 
         // 6DOF velocity for the velocity based extrapolation interpolator
-        situation.setVelocity(CAircraftVelocity(
-            dataUpdate.m_xVelocity, dataUpdate.m_yVelocity, dataUpdate.m_zVelocity, CSpeedUnit::m_s(),
-            dataUpdate.m_pitchRadPerSec, dataUpdate.m_bankRadPerSec, dataUpdate.m_headingRadPerSec, CAngleUnit::rad(),
-            CTimeUnit::s()));
+        situation.setVelocity(CAircraftVelocity(dataUpdate.m_xVelocity, dataUpdate.m_yVelocity, dataUpdate.m_zVelocity,
+                                                CSpeedUnit::m_s(), dataUpdate.m_pitchRadPerSec,
+                                                dataUpdate.m_bankRadPerSec, dataUpdate.m_headingRadPerSec,
+                                                CAngleUnit::rad(), CTimeUnit::s()));
 
         // Ref T297, default offset time
         situation.setCurrentUtcTime();
-        const qint64 offsetTimeMs = receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
+        const qint64 offsetTimeMs =
+            receivedPositionFixTsAndGetOffsetTime(situation.getCallsign(), situation.getMSecsSinceEpoch());
         situation.setTimeOffsetMs(offsetTimeMs);
 
         emit visualPilotDataUpdateReceived(situation);
