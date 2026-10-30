@@ -53,8 +53,10 @@ namespace swift::gui::editors
 
         ui->cb_AircraftPartsReceive->setChecked(d & CFsdSetup::ReceiveAircraftParts);
         ui->cb_AircraftPartsSend->setChecked(d & CFsdSetup::SendAircraftParts);
+        ui->cb_GndFlagSend->setChecked(d & CFsdSetup::SendGndFlag);
         ui->cb_FastPositionReceive->setChecked(d & CFsdSetup::ReceiveInterimPositions);
         ui->cb_FastPositionSend->setChecked(d & CFsdSetup::SendInterimPositions);
+        ui->cb_VisualPositionSend->setChecked(d & CFsdSetup::SendVisualPositions);
         ui->cb_3LetterAirlineICAO->setChecked(setup.force3LetterAirlineCodes());
         ui->cb_EuroscopeSimData->setChecked(d & CFsdSetup::ReceiveEuroscopeSimData);
         ui->cb_IcaoEquipment->setChecked(d & CFsdSetup::SendFplWithIcaoEquipment);
