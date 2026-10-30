@@ -613,7 +613,7 @@ namespace swift::gui::components
         for (int index = ui->tw_TextMessages->count() - 1; index >= 0; index--)
         {
             QWidget *tab = ui->tw_TextMessages->widget(index);
-            if (tab && tab->property("callsign").toString() == callsign.asString()) { return tab; }
+            if (tab && CCallsign(tab->property("callsign").toString()) == callsign) { return tab; }
         }
 
         QWidget *w = this->findTextMessageTabByName(callsign.asString());
