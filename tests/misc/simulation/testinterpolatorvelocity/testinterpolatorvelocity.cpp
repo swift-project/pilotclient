@@ -188,7 +188,7 @@ namespace MiscTest
         // stream the fixes in, fix #displacedFix displaced eastbound
         double lastLatDeg = -1.0;
         double lastLonDeg = -999.0;
-        const double mPerDegLon = c_mPerDegLat * c_radToDeg; // at equator ~111.3km
+        const double mPerDegLon = c_mPerDegLat * c_degToRad; // at equator ~111.3km
         for (int i = 0; i < fixCount; i++)
         {
             const double lon = (i == displacedFix) ? displacementDeg : 0.0;
