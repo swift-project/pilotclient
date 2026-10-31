@@ -6,6 +6,7 @@
 //! \ingroup testmisc
 
 #include <cmath>
+#include <limits>
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -114,9 +115,8 @@ namespace MiscTest
         qint64 lastTMs = -1;
         for (int i = 0; i < fixCount; i++)
         {
-            provider.insertNewSituation(
-                northFlightSituation(cs, i, tsBase, offsetMs, c_fixIntervalMs, 0.0));
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+            provider.insertNewSituation(northFlightSituation(cs, i, tsBase, offsetMs, c_fixIntervalMs, 0.0));
+            QTest::qWait(2); // advance wall clock so the provider's last-modified stamp moves forward
 
             const qint64 tFix = tsBase + i * c_fixIntervalMs + offsetMs; // adjusted time of this fix
             const qint64 tInter = tFix + c_fixIntervalMs / 4; // in between this and the next fix
@@ -132,11 +132,14 @@ namespace MiscTest
                 if (lastLatDeg >= 0.0)
                 {
                     const double stepM = std::fabs(latDeg - lastLatDeg) * c_mPerDegLat / c_radToDeg;
-                    const double maxStepM =
-                        c_northVelocityM_s * (t - lastTMs) / 1000.0 + 2.0;
+                    const double maxStepM = c_northVelocityM_s * (t - lastTMs) / 1000.0 + 2.0;
                     QVERIFY2(stepM < maxStepM,
                              QStringLiteral("Position jump %1m, max %2m").arg(stepM).arg(maxStepM).toLatin1());
-                    QVERIFY2(latDeg > lastLatDeg, "Shall move north");
+                    QVERIFY2(latDeg > lastLatDeg, QStringLiteral("Shall move north, lat %1 last %2 (t %3)")
+                                                      .arg(latDeg, 0, 'f', 8)
+                                                      .arg(lastLatDeg, 0, 'f', 8)
+                                                      .arg(t)
+                                                      .toLatin1());
                     QVERIFY2(std::fabs(lonDeg - lastLonDeg) < 1e-9, "Shall not drift east/west");
                 }
 
@@ -190,7 +193,7 @@ namespace MiscTest
         {
             const double lon = (i == displacedFix) ? displacementDeg : 0.0;
             provider.insertNewSituation(northFlightSituation(cs, i, tsBase, offsetMs, c_fixIntervalMs, lon));
-            QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+            QTest::qWait(2); // advance wall clock so the provider's last-modified stamp moves forward
 
             const qint64 tFix = tsBase + i * c_fixIntervalMs + offsetMs;
             const qint64 tInter = tFix + c_fixIntervalMs / 2;
@@ -232,8 +235,9 @@ namespace MiscTest
         const CInterpolationResult result = interpolator.getInterpolation(tBack, setup, 0);
         QVERIFY2(result.getInterpolationStatus().isInterpolated(), "Not interpolated");
         const CAircraftSituation s(result);
-        QVERIFY2(std::fabs(s.longitude().value(CAngleUnit::deg())) < 1e-4,
-                 QStringLiteral("Not converged back, lon err %1").arg(s.longitude().value(CAngleUnit::deg())).toLatin1());
+        QVERIFY2(
+            std::fabs(s.longitude().value(CAngleUnit::deg())) < 1e-4,
+            QStringLiteral("Not converged back, lon err %1").arg(s.longitude().value(CAngleUnit::deg())).toLatin1());
         const double ideal = idealLatitude(0.0, tBack - offsetMs, tsBase);
         QVERIFY2(std::fabs(s.latitude().value(CAngleUnit::deg()) - ideal) < 1e-4, "Not back on ideal track");
     }
@@ -267,25 +271,24 @@ namespace MiscTest
             s.setTimeOffsetMs(offsetMs);
             provider.insertNewSituation(s);
         }
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+        QTest::qWait(2); // advance wall clock so the provider's last-modified stamp moves forward
 
         // interpolate between two fixes, shall yield in-between latitude (linear fallback)
         const qint64 t0 = tsBase + 5 * fixIntervalMs + offsetMs;
         const qint64 t1 = tsBase + 6 * fixIntervalMs + offsetMs;
-        const auto latAt = [&](qint64 t) {
+        const auto latAt = [&](qint64 t) -> double {
             const CInterpolationResult r = interpolator.getInterpolation(t, setup, 0);
-            QVERIFY2(r.getInterpolationStatus().isInterpolated(), "Fallback not interpolated");
+            if (!r.getInterpolationStatus().isInterpolated()) { return std::numeric_limits<double>::quiet_NaN(); }
             return static_cast<const CAircraftSituation &>(r).latitude().value(CAngleUnit::deg());
         };
         const double latAtT0 = latAt(t0);
         const double latAtT1 = latAt(t1);
         const double latMid = latAt(t0 + fixIntervalMs / 2);
+        QVERIFY2(!std::isnan(latAtT0) && !std::isnan(latAtT1) && !std::isnan(latMid), "Fallback not interpolated");
         const double expectedMid = latAtT0 + (latAtT1 - latAtT0) / 2.0;
-        QVERIFY2(std::fabs(latMid - expectedMid) < 1e-9,
-                 QStringLiteral("Fallback shall interpolate linearly, %1 vs %2")
-                     .arg(latMid)
-                     .arg(expectedMid)
-                     .toLatin1());
+        QVERIFY2(
+            std::fabs(latMid - expectedMid) < 1e-9,
+            QStringLiteral("Fallback shall interpolate linearly, %1 vs %2").arg(latMid).arg(expectedMid).toLatin1());
     }
 } // namespace MiscTest
 
