@@ -78,14 +78,20 @@ namespace swift::misc::aviation
 
     bool CLivery::setAirlineIcaoCode(const CAirlineIcaoCode &airlineIcao)
     {
-        if (m_airline == airlineIcao) { return false; }
+        if (m_airline == airlineIcao)
+        {
+            return false;
+        }
         m_airline = airlineIcao;
         return true;
     }
 
     bool CLivery::setAirlineIcaoCodeDesignator(const QString &airlineIcaoDesignator)
     {
-        if (m_airline.getDesignator() == airlineIcaoDesignator) { return false; }
+        if (m_airline.getDesignator() == airlineIcaoDesignator)
+        {
+            return false;
+        }
         m_airline.setDesignator(airlineIcaoDesignator);
         return true;
     }
@@ -98,7 +104,10 @@ namespace swift::misc::aviation
 
     bool CLivery::matchesCombinedCode(const QString &candidate) const
     {
-        if (candidate.isEmpty() || !this->hasCombinedCode()) { return false; }
+        if (candidate.isEmpty() || !this->hasCombinedCode())
+        {
+            return false;
+        }
         const QString c(candidate.trimmed().toUpper());
         return c == m_combinedCode;
     }
@@ -116,9 +125,6 @@ namespace swift::misc::aviation
         return (i18n ? liveryI18n : livery) % u" cc: '" % m_combinedCode % u"' airline: '" % m_airline.toQString(i18n) %
                u"' desc.: '" % m_description % u"' F: '" % m_colorFuselage.hex() % u"' T: '" % m_colorTail.hex() %
                u"' Mil: " % boolToYesNo(this->isMilitary());
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("Aviation", "Livery");
     }
 
     bool CLivery::hasCompleteData() const { return !m_description.isEmpty() && !m_combinedCode.isEmpty(); }
@@ -148,7 +154,10 @@ namespace swift::misc::aviation
                                              u"Livery: color livery, but airline looks odd"));
             }
         }
-        else { msg.push_back(m_airline.validate()); }
+        else
+        {
+            msg.push_back(m_airline.validate());
+        }
         return msg;
     }
 
@@ -171,7 +180,10 @@ namespace swift::misc::aviation
 
     bool CLivery::isAirlineStandardLivery() const
     {
-        if (isColorLivery()) { return false; }
+        if (isColorLivery())
+        {
+            return false;
+        }
         return (m_airline.hasValidDesignator() && m_combinedCode.endsWith(standardLiveryMarker()));
     }
 
@@ -184,16 +196,25 @@ namespace swift::misc::aviation
 
     double CLivery::getColorDistance(const CRgbColor &fuselage, const CRgbColor &tail) const
     {
-        if (!fuselage.isValid() || !tail.isValid()) { return 1.0; }
+        if (!fuselage.isValid() || !tail.isValid())
+        {
+            return 1.0;
+        }
         if (this->getColorFuselage().isValid() && this->getColorTail().isValid())
         {
-            if (this->matchesColors(fuselage, tail)) { return 0.0; } // avoid rounding
+            if (this->matchesColors(fuselage, tail))
+            {
+                return 0.0;
+            } // avoid rounding
             const double xDist = this->getColorFuselage().colorDistance(fuselage);
             const double yDist = this->getColorTail().colorDistance(tail);
             const double d = xDist * xDist + yDist * yDist;
             return d / 2.0; // normalize to 0..1
         }
-        else { return 1.0; }
+        else
+        {
+            return 1.0;
+        }
     }
 
     CLivery CLivery::fromDatabaseJson(const QJsonObject &json, const QString &prefix)
@@ -218,7 +239,10 @@ namespace swift::misc::aviation
         const CRgbColor colorTail(json.value(prefix % u"colortail").toString());
         const bool military = CDatastoreUtility::dbBoolStringToBool(json.value(prefix % u"military").toString());
         CAirlineIcaoCode airline;
-        if (!isColorLivery) { airline = CAirlineIcaoCode::fromDatabaseJson(json, "al_"); }
+        if (!isColorLivery)
+        {
+            airline = CAirlineIcaoCode::fromDatabaseJson(json, "al_");
+        }
         CLivery livery(combinedCode, airline, description, colorFuselage, colorTail, military);
         livery.setKeyVersionTimestampFromDatabaseJson(json, prefix);
 
@@ -263,7 +287,10 @@ namespace swift::misc::aviation
             airline = cachedAirlineIcao ? airlineIcaos[idAirlineIcao] :
                                           CAirlineIcaoCode::fromDatabaseJson(json, prefixAirline);
 
-            if (!cachedAirlineIcao && airline.isLoadedFromDb()) { airlineIcaos[idAirlineIcao] = airline; }
+            if (!cachedAirlineIcao && airline.isLoadedFromDb())
+            {
+                airlineIcaos[idAirlineIcao] = airline;
+            }
         }
 
         CLivery livery(combinedCode, airline, description, colorFuselage, colorTail, military);
@@ -279,11 +306,20 @@ namespace swift::misc::aviation
 
     bool CLivery::isValidCombinedCode(const QString &candidate)
     {
-        if (candidate.isEmpty()) { return false; }
-        if (candidate.startsWith(colorLiveryMarker())) { return candidate.length() > colorLiveryMarker().length() + 1; }
+        if (candidate.isEmpty())
+        {
+            return false;
+        }
+        if (candidate.startsWith(colorLiveryMarker()))
+        {
+            return candidate.length() > colorLiveryMarker().length() + 1;
+        }
         else
         {
-            if (candidate.count('.') != 1) { return false; }
+            if (candidate.count('.') != 1)
+            {
+                return false;
+            }
             return candidate.length() > 2;
         }
     }
@@ -326,14 +362,23 @@ namespace swift::misc::aviation
     void CLivery::addLogDetailsToList(CStatusMessageList *log, const CLivery &livery, const QString &message,
                                       const QStringList &extraCategories, CStatusMessage::StatusSeverity s)
     {
-        if (!log) { return; }
-        if (message.isEmpty()) { return; }
+        if (!log)
+        {
+            return;
+        }
+        if (message.isEmpty())
+        {
+            return;
+        }
         log->push_back(logMessage(livery, message, extraCategories, s));
     }
 
     QVariant CLivery::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
@@ -378,7 +423,10 @@ namespace swift::misc::aviation
 
     int CLivery::comparePropertyByIndex(CPropertyIndexRef index, const CLivery &compareValue) const
     {
-        if (index.isMyself()) { return this->getCombinedCode().compare(compareValue.getCombinedCode()); }
+        if (index.isMyself())
+        {
+            return this->getCombinedCode().compare(compareValue.getCombinedCode());
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithIntegerKey::comparePropertyByIndex(index, compareValue);
@@ -413,10 +461,22 @@ namespace swift::misc::aviation
             return;
         }
 
-        if (!m_colorFuselage.isValid()) { this->setColorFuselage(otherLivery.getColorFuselage()); }
-        if (!m_colorTail.isValid()) { this->setColorTail(otherLivery.getColorTail()); }
-        if (m_combinedCode.isEmpty()) { this->setCombinedCode(otherLivery.getCombinedCode()); }
-        if (m_description.isEmpty()) { this->setDescription(otherLivery.getDescription()); }
+        if (!m_colorFuselage.isValid())
+        {
+            this->setColorFuselage(otherLivery.getColorFuselage());
+        }
+        if (!m_colorTail.isValid())
+        {
+            this->setColorTail(otherLivery.getColorTail());
+        }
+        if (m_combinedCode.isEmpty())
+        {
+            this->setCombinedCode(otherLivery.getCombinedCode());
+        }
+        if (m_description.isEmpty())
+        {
+            this->setDescription(otherLivery.getDescription());
+        }
 
         m_airline.updateMissingParts(otherLivery.getAirlineIcaoCode());
         if (!this->hasValidDbKey())

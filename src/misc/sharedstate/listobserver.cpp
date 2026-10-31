@@ -20,7 +20,10 @@ namespace swift::misc::shared_state
     void CGenericListObserver::setFilter(const CVariant &filter)
     {
         m_observer->setEventSubscription(filter);
-        if (m_watcher && m_watcher->isConnected()) { reconstruct(); }
+        if (m_watcher && m_watcher->isConnected())
+        {
+            reconstruct();
+        }
     }
 
     void CGenericListObserver::reconstruct()

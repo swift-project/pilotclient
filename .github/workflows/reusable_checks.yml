@@ -8,7 +8,7 @@ on:
 
 jobs:
   checks:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -32,7 +32,7 @@ jobs:
       - name: Run cppcheck
         run: |
           sudo apt-get -y install cppcheck
-          cppcheck --template=gcc --inline-suppr --std=c++17 \
+          cppcheck --template=gcc --inline-suppr --std=c++20 \
                    --enable=style,unusedFunction \
                    -i src/plugins/weatherdata/gfs/g2clib \
                    -DCPPCHECK --force \

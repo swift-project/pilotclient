@@ -48,12 +48,18 @@ namespace swift::simplugin::flightgear
 
     void CSimulatorFlightgearConfigWindow::onSettingsAccepted()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         const CFGSwiftBusSettings s = m_fgswiftbusServerSetting.getThreadLocal();
         CFGSwiftBusSettings changed = getSettingsFromUI();
 
-        if (s != changed) { m_fgswiftbusServerSetting.set(changed); }
+        if (s != changed)
+        {
+            m_fgswiftbusServerSetting.set(changed);
+        }
         close();
     }
 } // namespace swift::simplugin::flightgear

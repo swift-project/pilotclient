@@ -63,7 +63,7 @@ namespace swift::core::fsd
     //! AddPilot equal operator
     inline bool operator==(const AddPilot &lhs, const AddPilot &rhs)
     {
-        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.cid() == rhs.cid() &&
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() && lhs.cid() == rhs.cid() &&
                lhs.password() == rhs.password() && lhs.rating() == rhs.rating() &&
                lhs.protocolVersion() == rhs.protocolVersion() && lhs.simType() == rhs.simType() &&
                lhs.realName() == rhs.realName();

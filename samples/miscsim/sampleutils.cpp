@@ -14,14 +14,24 @@ namespace swift::misc
                                           QTextStream &streamIn)
     {
         Q_ASSERT(!directoryOptions.isEmpty());
-        if (directoryOptions.isEmpty()) { return {}; }
-        if (directoryOptions.size() < 2) { return directoryOptions.first(); }
+        if (directoryOptions.isEmpty())
+        {
+            return {};
+        }
+        if (directoryOptions.size() < 2)
+        {
+            return directoryOptions.first();
+        }
 
         QString selectedDir;
-        do {
+        do
+        {
             for (int i = 0; i < directoryOptions.size(); i++)
             {
-                if (i > 0) { streamOut << "  "; }
+                if (i > 0)
+                {
+                    streamOut << "  ";
+                }
                 streamOut << (i + 1) << ") " << directoryOptions.at(i);
             }
             streamOut << Qt::endl;

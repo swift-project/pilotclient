@@ -37,7 +37,10 @@ namespace swift::misc::simulation
         CCoordinateGeodetic alreadyInRangeGnd;
         {
             QReadLocker l(&m_lockElvCoordinates);
-            if (!m_enableElevation) { return false; }
+            if (!m_enableElevation)
+            {
+                return false;
+            }
 
             // check if we have already an elevation within range
             alreadyInRangeGnd = m_elvCoordinatesGnd.findFirstWithinRangeOrDefault(elevationCoordinate, minRange);
@@ -89,12 +92,18 @@ namespace swift::misc::simulation
             QWriteLocker l(&m_lockElvCoordinates);
             if (likelyOnGroundElevation)
             {
-                if (m_elvCoordinatesGnd.size() > m_maxElevationsGnd) { m_elvCoordinatesGnd.pop_back(); }
+                if (m_elvCoordinatesGnd.size() > m_maxElevationsGnd)
+                {
+                    m_elvCoordinatesGnd.pop_back();
+                }
                 m_elvCoordinatesGnd.push_front(elevationCoordinate);
             }
             else
             {
-                if (m_elvCoordinates.size() > m_maxElevations) { m_elvCoordinates.pop_back(); }
+                if (m_elvCoordinates.size() > m_maxElevations)
+                {
+                    m_elvCoordinates.pop_back();
+                }
                 m_elvCoordinates.push_front(elevationCoordinate);
             }
 
@@ -126,13 +135,22 @@ namespace swift::misc::simulation
 
     bool ISimulationEnvironmentProvider::insertCG(const CLength &cg, const CCallsign &cs)
     {
-        if (cs.isEmpty()) { return false; }
+        if (cs.isEmpty())
+        {
+            return false;
+        }
 
         const bool remove = cg.isNull();
         {
             QWriteLocker l(&m_lockCG);
-            if (remove) { m_cgsPerCallsign.remove(cs); }
-            else { m_cgsPerCallsign[cs] = cg; }
+            if (remove)
+            {
+                m_cgsPerCallsign.remove(cs);
+            }
+            else
+            {
+                m_cgsPerCallsign[cs] = cg;
+            }
         }
         return true;
     }
@@ -141,7 +159,10 @@ namespace swift::misc::simulation
     {
         bool stored = false;
         QWriteLocker l(&m_lockCG);
-        if (!m_enableCG) { return false; }
+        if (!m_enableCG)
+        {
+            return false;
+        }
         if (!cs.isEmpty())
         {
             if (m_cgsPerCallsignOverridden.contains(cs))
@@ -174,10 +195,16 @@ namespace swift::misc::simulation
 
     bool ISimulationEnvironmentProvider::insertCGOverridden(const CLength &cg, const CCallsign &cs)
     {
-        if (cs.isEmpty()) { return false; }
+        if (cs.isEmpty())
+        {
+            return false;
+        }
 
         QWriteLocker l(&m_lockCG);
-        if (!m_enableCG) { return false; }
+        if (!m_enableCG)
+        {
+            return false;
+        }
         if (cg.isNull())
         {
             m_cgsPerCallsignOverridden.remove(cs);
@@ -190,24 +217,42 @@ namespace swift::misc::simulation
 
     bool ISimulationEnvironmentProvider::insertCGOverridden(const CLength &cg, const CCallsignSet &callsigns)
     {
-        if (callsigns.isEmpty()) { return false; }
+        if (callsigns.isEmpty())
+        {
+            return false;
+        }
 
         QWriteLocker l(&m_lockCG);
-        if (!m_enableCG) { return false; }
+        if (!m_enableCG)
+        {
+            return false;
+        }
         for (const CCallsign &cs : callsigns)
         {
-            if (cg.isNull()) { m_cgsPerCallsignOverridden.remove(cs); }
-            else { m_cgsPerCallsignOverridden[cs] = cg; }
+            if (cg.isNull())
+            {
+                m_cgsPerCallsignOverridden.remove(cs);
+            }
+            else
+            {
+                m_cgsPerCallsignOverridden[cs] = cg;
+            }
         }
         return true;
     }
 
     bool ISimulationEnvironmentProvider::insertCGForModelString(const CLength &cg, const QString &modelString)
     {
-        if (modelString.isEmpty()) { return false; }
+        if (modelString.isEmpty())
+        {
+            return false;
+        }
 
         QWriteLocker l(&m_lockCG);
-        if (!m_enableCG) { return false; }
+        if (!m_enableCG)
+        {
+            return false;
+        }
         if (cg.isNull())
         {
             m_cgsPerModel.remove(modelString.toUpper());
@@ -220,7 +265,10 @@ namespace swift::misc::simulation
 
     bool ISimulationEnvironmentProvider::insertCGForModelStringOverridden(const CLength &cg, const QString &modelString)
     {
-        if (modelString.isEmpty()) { return false; }
+        if (modelString.isEmpty())
+        {
+            return false;
+        }
         QWriteLocker l(&m_lockCG);
         if (cg.isNull())
         {
@@ -242,16 +290,25 @@ namespace swift::misc::simulation
     CLength ISimulationEnvironmentProvider::overriddenCGorDefault(const CLength &defaultCG,
                                                                   const QString &modelString) const
     {
-        if (modelString.isEmpty()) { return defaultCG; }
+        if (modelString.isEmpty())
+        {
+            return defaultCG;
+        }
         const QString ms = modelString.toUpper();
         QReadLocker l(&m_lockCG);
-        if (!m_cgsPerModelOverridden.contains(ms)) { return defaultCG; }
+        if (!m_cgsPerModelOverridden.contains(ms))
+        {
+            return defaultCG;
+        }
         return m_cgsPerModelOverridden[ms];
     }
 
     int ISimulationEnvironmentProvider::removeSimulatorCG(const CCallsign &cs)
     {
-        if (cs.isEmpty()) { return 0; }
+        if (cs.isEmpty())
+        {
+            return 0;
+        }
 
         QWriteLocker l(&m_lockCG);
         m_cgsPerCallsignOverridden.remove(cs);
@@ -295,7 +352,10 @@ namespace swift::misc::simulation
     CAltitude ISimulationEnvironmentProvider::highestElevation() const
     {
         const CCoordinateGeodeticList coordinates = this->getElevationCoordinatesOnGround();
-        if (coordinates.isEmpty()) { return CAltitude::null(); }
+        if (coordinates.isEmpty())
+        {
+            return CAltitude::null();
+        }
         return coordinates.findMaxHeight();
     }
 
@@ -312,9 +372,15 @@ namespace swift::misc::simulation
     {
         int currentMax {};
         CCoordinateGeodeticList coordinates(this->getAllElevationCoordinates(currentMax));
-        if (maxNumber < 0) { maxNumber = currentMax; }
+        if (maxNumber < 0)
+        {
+            maxNumber = currentMax;
+        }
         const int size = coordinates.size();
-        if (size <= maxNumber) { return 0; }
+        if (size <= maxNumber)
+        {
+            return 0;
+        }
         coordinates.sortByEuclideanDistanceSquared(referenceCoordinate);
         coordinates.truncate(maxNumber);
         const int delta = size - coordinates.size();
@@ -329,7 +395,10 @@ namespace swift::misc::simulation
     ISimulationEnvironmentProvider::findClosestElevationWithinRange(const ICoordinateGeodetic &reference,
                                                                     const CLength &range) const
     {
-        if (!this->isElevationProviderEnabled()) { return CElevationPlane::null(); }
+        if (!this->isElevationProviderEnabled())
+        {
+            return CElevationPlane::null();
+        }
 
         // for single point we use a slightly optimized version
         const bool singlePoint = (&range == &CElevationPlane::singlePointRadius() || range.isNull() ||
@@ -358,7 +427,10 @@ namespace swift::misc::simulation
     CElevationPlane ISimulationEnvironmentProvider::findClosestElevationWithinRangeOrRequest(
         const ICoordinateGeodetic &reference, const CLength &range, const CCallsign &callsign)
     {
-        if (!this->isElevationProviderEnabled()) { return CElevationPlane::null(); }
+        if (!this->isElevationProviderEnabled())
+        {
+            return CElevationPlane::null();
+        }
         const CElevationPlane ep = ISimulationEnvironmentProvider::findClosestElevationWithinRange(reference, range);
         if (ep.isNull())
         {
@@ -372,7 +444,10 @@ namespace swift::misc::simulation
 
     bool ISimulationEnvironmentProvider::requestElevationBySituation(const CAircraftSituation &situation)
     {
-        if (!this->isElevationProviderEnabled()) { return false; }
+        if (!this->isElevationProviderEnabled())
+        {
+            return false;
+        }
         return this->requestElevation(situation, situation.getCallsign());
     }
 
@@ -408,11 +483,17 @@ namespace swift::misc::simulation
 
     QString ISimulationEnvironmentProvider::getElevationRequestTimesInfo() const
     {
-        if (!this->isElevationProviderEnabled()) { return QStringLiteral("Elevation provider disabled"); }
+        if (!this->isElevationProviderEnabled())
+        {
+            return QStringLiteral("Elevation provider disabled");
+        }
 
         static const QString info("%1ms/%2ms");
         QPair<qint64, qint64> times = this->getElevationRequestTimes();
-        if (times.first < 0 || times.second < 0) { return QStringLiteral("no req. times"); }
+        if (times.first < 0 || times.second < 0)
+        {
+            return QStringLiteral("no req. times");
+        }
         return info.arg(times.first).arg(times.second);
     }
 
@@ -437,11 +518,20 @@ namespace swift::misc::simulation
             v = m_simulatorVersion;
         }
 
-        if (!n.isEmpty() && !v.isEmpty()) { return n % u' ' % v; }
-        if (!n.isEmpty()) { return n; }
+        if (!n.isEmpty() && !v.isEmpty())
+        {
+            return n % u' ' % v;
+        }
+        if (!n.isEmpty())
+        {
+            return n;
+        }
 
         const CSimulatorInfo simInfo = this->getSimulatorInfo();
-        if (!simInfo.isUnspecified()) { return simInfo.toQString(true); }
+        if (!simInfo.isUnspecified())
+        {
+            return simInfo.toQString(true);
+        }
         return QStringLiteral("not available");
     }
 
@@ -465,17 +555,32 @@ namespace swift::misc::simulation
 
     CLength ISimulationEnvironmentProvider::getSimulatorCG(const aviation::CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return CLength::null(); }
+        if (callsign.isEmpty())
+        {
+            return CLength::null();
+        }
         QReadLocker l(&m_lockCG);
-        if (!m_enableCG) { return CLength::null(); }
-        if (m_cgsPerCallsignOverridden.contains(callsign)) { return m_cgsPerCallsignOverridden[callsign]; }
-        if (!m_cgsPerCallsign.contains(callsign)) { return CLength::null(); }
+        if (!m_enableCG)
+        {
+            return CLength::null();
+        }
+        if (m_cgsPerCallsignOverridden.contains(callsign))
+        {
+            return m_cgsPerCallsignOverridden[callsign];
+        }
+        if (!m_cgsPerCallsign.contains(callsign))
+        {
+            return CLength::null();
+        }
         return m_cgsPerCallsign.value(callsign);
     }
 
     CLength ISimulationEnvironmentProvider::getSimulatorOrDbCG(const CCallsign &callsign, const CLength &dbCG) const
     {
-        if (callsign.isEmpty()) { return CLength::null(); }
+        if (callsign.isEmpty())
+        {
+            return CLength::null();
+        }
         const CSimulatorSettings::CGSource source = m_settings.getCGSource();
         if (source == CSimulatorSettings::CGFromDBOnly ||
             (source == CSimulatorSettings::CGFromDBFirst && !dbCG.isNull()))
@@ -493,24 +598,42 @@ namespace swift::misc::simulation
 
     CLength ISimulationEnvironmentProvider::getSimulatorCGPerModelString(const QString &modelString) const
     {
-        if (modelString.isEmpty()) { return CLength::null(); }
+        if (modelString.isEmpty())
+        {
+            return CLength::null();
+        }
         const QString ms = modelString.toUpper();
         QReadLocker l(&m_lockCG);
-        if (!m_enableCG) { return CLength::null(); }
-        if (m_cgsPerModelOverridden.contains(ms)) { return m_cgsPerModelOverridden.value(ms); }
-        if (!m_cgsPerModel.contains(ms)) { return CLength::null(); }
+        if (!m_enableCG)
+        {
+            return CLength::null();
+        }
+        if (m_cgsPerModelOverridden.contains(ms))
+        {
+            return m_cgsPerModelOverridden.value(ms);
+        }
+        if (!m_cgsPerModel.contains(ms))
+        {
+            return CLength::null();
+        }
         return m_cgsPerModel.value(ms);
     }
 
     CLength ISimulationEnvironmentProvider::getSimulatorOrDbCGPerModelString(const QString &modelString,
                                                                              const CLength &dbCG) const
     {
-        if (modelString.isEmpty()) { return CLength::null(); }
+        if (modelString.isEmpty())
+        {
+            return CLength::null();
+        }
         const CSimulatorSettings::CGSource source = m_settings.getCGSource();
         const QString ms = modelString.toUpper();
         {
             QReadLocker l(&m_lockCG);
-            if (m_cgsPerModelOverridden.contains(ms)) { return m_cgsPerModelOverridden.value(ms); }
+            if (m_cgsPerModelOverridden.contains(ms))
+            {
+                return m_cgsPerModelOverridden.value(ms);
+            }
         }
         if (source == CSimulatorSettings::CGFromDBOnly ||
             (!dbCG.isNull() && source == CSimulatorSettings::CGFromDBFirst))
@@ -528,19 +651,31 @@ namespace swift::misc::simulation
 
     bool ISimulationEnvironmentProvider::hasSimulatorCG(const aviation::CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return false; }
+        if (callsign.isEmpty())
+        {
+            return false;
+        }
         QReadLocker l(&m_lockCG);
         return m_enableCG && (m_cgsPerCallsign.contains(callsign) || m_cgsPerCallsignOverridden.contains(callsign));
     }
 
     bool ISimulationEnvironmentProvider::hasSameSimulatorCG(const CLength &cg, const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return false; }
+        if (callsign.isEmpty())
+        {
+            return false;
+        }
         QReadLocker l(&m_lockCG);
-        if (m_cgsPerCallsignOverridden.contains(callsign)) { return m_cgsPerCallsignOverridden[callsign] == cg; }
+        if (m_cgsPerCallsignOverridden.contains(callsign))
+        {
+            return m_cgsPerCallsignOverridden[callsign] == cg;
+        }
 
         // normal values
-        if (!m_cgsPerCallsign.contains(callsign)) { return false; }
+        if (!m_cgsPerCallsign.contains(callsign))
+        {
+            return false;
+        }
         return m_cgsPerCallsign[callsign] == cg;
     }
 
@@ -576,7 +711,10 @@ namespace swift::misc::simulation
     bool ISimulationEnvironmentProvider::cleanElevationValues(const CAircraftSituation &reference,
                                                               const CLength &keptRange, bool forced)
     {
-        if (reference.isNull() || keptRange.isNull()) { return false; }
+        if (reference.isNull() || keptRange.isNull())
+        {
+            return false;
+        }
         const CLength r = minRange(keptRange);
 
         CCoordinateGeodeticList cleanedKeptElvs;
@@ -749,14 +887,20 @@ namespace swift::misc::simulation
     CSimulationEnvironmentAware::findClosestElevationWithinRange(const ICoordinateGeodetic &reference,
                                                                  const physical_quantities::CLength &range) const
     {
-        if (!this->hasProvider()) { return CElevationPlane::null(); }
+        if (!this->hasProvider())
+        {
+            return CElevationPlane::null();
+        }
         return this->provider()->findClosestElevationWithinRange(reference, range);
     }
 
     CElevationPlane CSimulationEnvironmentAware::findClosestElevationWithinRangeOrRequest(
         const ICoordinateGeodetic &reference, const CLength &range, const CCallsign &callsign)
     {
-        if (!this->hasProvider()) { return CElevationPlane::null(); }
+        if (!this->hasProvider())
+        {
+            return CElevationPlane::null();
+        }
         return this->provider()->findClosestElevationWithinRangeOrRequest(reference, range, callsign);
     }
 
@@ -764,19 +908,28 @@ namespace swift::misc::simulation
                                                                                     const CLength &range, int minValues,
                                                                                     int sufficientValues) const
     {
-        if (!this->hasProvider()) { return CElevationPlane::null(); }
+        if (!this->hasProvider())
+        {
+            return CElevationPlane::null();
+        }
         return this->provider()->averageElevationOfOnGroundAircraft(reference, range, minValues, sufficientValues);
     }
 
     CAltitude CSimulationEnvironmentAware::highestElevation() const
     {
-        if (!this->hasProvider()) { return CAltitude::null(); }
+        if (!this->hasProvider())
+        {
+            return CAltitude::null();
+        }
         return this->provider()->highestElevation();
     }
 
     bool CSimulationEnvironmentAware::requestElevation(const ICoordinateGeodetic &reference, const CCallsign &callsign)
     {
-        if (!this->hasProvider()) { return false; }
+        if (!this->hasProvider())
+        {
+            return false;
+        }
         return this->provider()->requestElevation(reference, callsign);
     }
 
@@ -787,74 +940,110 @@ namespace swift::misc::simulation
 
     QPair<int, int> CSimulationEnvironmentAware::getElevationsFoundMissed() const
     {
-        if (!this->hasProvider()) { return { 0, 0 }; }
+        if (!this->hasProvider())
+        {
+            return { 0, 0 };
+        }
         return this->provider()->getElevationsFoundMissed();
     }
 
     QString CSimulationEnvironmentAware::getElevationsFoundMissedInfo() const
     {
-        if (!this->hasProvider()) { return {}; }
+        if (!this->hasProvider())
+        {
+            return {};
+        }
         return this->provider()->getElevationsFoundMissedInfo();
     }
 
     QPair<qint64, qint64> CSimulationEnvironmentAware::getElevationRequestTimes() const
     {
-        if (!this->hasProvider()) { return { -1, -1 }; }
+        if (!this->hasProvider())
+        {
+            return { -1, -1 };
+        }
         return this->provider()->getElevationRequestTimes();
     }
 
     QString CSimulationEnvironmentAware::getElevationRequestTimesInfo() const
     {
-        if (!this->hasProvider()) { return {}; }
+        if (!this->hasProvider())
+        {
+            return {};
+        }
         return this->provider()->getElevationRequestTimesInfo();
     }
 
     CSimulatorPluginInfo CSimulationEnvironmentAware::getSimulatorPluginInfo() const
     {
-        if (!this->hasProvider()) { return {}; }
+        if (!this->hasProvider())
+        {
+            return {};
+        }
         return this->provider()->getSimulatorPluginInfo();
     }
 
     CSimulatorInfo CSimulationEnvironmentAware::getSimulatorInfo() const
     {
-        if (!this->hasProvider()) { return {}; }
+        if (!this->hasProvider())
+        {
+            return {};
+        }
         return this->provider()->getSimulatorInfo();
     }
 
     QString CSimulationEnvironmentAware::getSimulatorNameAndVersion() const
     {
-        if (!this->hasProvider()) { return "not available"; }
+        if (!this->hasProvider())
+        {
+            return "not available";
+        }
         return this->provider()->getSimulatorNameAndVersion();
     }
 
     CAircraftModel CSimulationEnvironmentAware::getDefaultModel() const
     {
-        if (!this->hasProvider()) { return {}; }
+        if (!this->hasProvider())
+        {
+            return {};
+        }
         return this->provider()->getDefaultModel();
     }
 
     CLength CSimulationEnvironmentAware::getSimulatorCG(const CCallsign &callsign) const
     {
-        if (!this->hasProvider()) { return CLength::null(); }
+        if (!this->hasProvider())
+        {
+            return CLength::null();
+        }
         return this->provider()->getSimulatorCG(callsign);
     }
 
     CLength CSimulationEnvironmentAware::getSimulatorOrDbCG(const CCallsign &callsign, const CLength &dbCG) const
     {
-        if (!this->hasProvider()) { return CLength::null(); }
+        if (!this->hasProvider())
+        {
+            return CLength::null();
+        }
         return this->provider()->getSimulatorOrDbCG(callsign, dbCG);
     }
 
     bool CSimulationEnvironmentAware::hasSimulatorCG(const CCallsign &callsign) const
     {
-        if (!this->hasProvider()) { return false; }
+        if (!this->hasProvider())
+        {
+            return false;
+        }
         return this->provider()->hasSimulatorCG(callsign);
     }
 
     bool CSimulationEnvironmentAware::cleanElevationValues(const CAircraftSituation &reference, const CLength &range,
                                                            bool forced)
     {
-        if (!this->hasProvider()) { return false; }
+        if (!this->hasProvider())
+        {
+            return false;
+        }
         return this->provider()->cleanElevationValues(reference, range, forced);
     }
 } // namespace swift::misc::simulation

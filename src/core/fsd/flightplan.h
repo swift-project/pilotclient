@@ -58,7 +58,7 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const FlightPlan &lhs, const FlightPlan &rhs)
     {
-        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() &&
                lhs.m_flightType == rhs.m_flightType && lhs.m_aircraftIcaoType == rhs.m_aircraftIcaoType &&
                lhs.m_trueCruisingSpeed == rhs.m_trueCruisingSpeed && lhs.m_depAirport == rhs.m_depAirport &&
                lhs.m_estimatedDepTime == rhs.m_estimatedDepTime && lhs.m_actualDepTime == rhs.m_actualDepTime &&

@@ -78,11 +78,26 @@ namespace swift::gui::components
         CGuiUtility::checkBoxReadOnly(ui->cb_MSFS, !CBuildConfig::isCompiledWithMSFSSupport());
         CGuiUtility::checkBoxReadOnly(ui->cb_MSFS2024, !CBuildConfig::isCompiledWithMSFS2024Support());
 
-        if (p3d) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::P3D)); }
-        else if (xp) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE)); }
-        else if (fg) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::FG)); }
-        else if (msfs) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS)); }
-        else if (msfs2024) { ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS2024)); }
+        if (p3d)
+        {
+            ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::P3D));
+        }
+        else if (xp)
+        {
+            ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::XPLANE));
+        }
+        else if (fg)
+        {
+            ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::FG));
+        }
+        else if (msfs)
+        {
+            ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS));
+        }
+        else if (msfs2024)
+        {
+            ui->comp_SettingsSimulator->setSimulator(CSimulatorInfo(CSimulatorInfo::MSFS2024));
+        }
     }
 
     QStringList CConfigSimulatorComponent::selectedSimsToPluginIds()
@@ -90,11 +105,26 @@ namespace swift::gui::components
         QStringList ids;
 
         // have to match full canonical ids from swift-plugin-simulators.xml
-        if (ui->cb_P3D->isChecked()) { ids << CSimulatorPluginInfo::p3dPluginIdentifier(); }
-        if (ui->cb_XP->isChecked()) { ids << CSimulatorPluginInfo::xplanePluginIdentifier(); }
-        if (ui->cb_FG->isChecked()) { ids << CSimulatorPluginInfo::fgPluginIdentifier(); }
-        if (ui->cb_MSFS->isChecked()) { ids << CSimulatorPluginInfo::msfsPluginIdentifier(); }
-        if (ui->cb_MSFS2024->isChecked()) { ids << CSimulatorPluginInfo::msfs2024PluginIdentifier(); }
+        if (ui->cb_P3D->isChecked())
+        {
+            ids << CSimulatorPluginInfo::p3dPluginIdentifier();
+        }
+        if (ui->cb_XP->isChecked())
+        {
+            ids << CSimulatorPluginInfo::xplanePluginIdentifier();
+        }
+        if (ui->cb_FG->isChecked())
+        {
+            ids << CSimulatorPluginInfo::fgPluginIdentifier();
+        }
+        if (ui->cb_MSFS->isChecked())
+        {
+            ids << CSimulatorPluginInfo::msfsPluginIdentifier();
+        }
+        if (ui->cb_MSFS2024->isChecked())
+        {
+            ids << CSimulatorPluginInfo::msfs2024PluginIdentifier();
+        }
 
         return ids;
     }

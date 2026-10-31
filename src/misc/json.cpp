@@ -59,7 +59,10 @@ const QJsonValue &operator>>(const QJsonValue &json, std::string &value)
 
 const QJsonValue &operator>>(const QJsonValue &json, QStringList &value)
 {
-    for (auto &&element : json.toArray()) { value << element.toString(); }
+    for (auto &&element : json.toArray())
+    {
+        value << element.toString();
+    }
     return json;
 }
 
@@ -139,7 +142,10 @@ QJsonValueRef operator>>(QJsonValueRef json, std::string &value)
 
 QJsonValueRef operator>>(QJsonValueRef json, QStringList &value)
 {
-    for (auto &&element : json.toArray()) { value << element.toString(); }
+    for (auto &&element : json.toArray())
+    {
+        value << element.toString();
+    }
     return json;
 }
 
@@ -412,11 +418,17 @@ namespace swift::misc::json
 {
     QJsonObject jsonObjectFromString(const QString &json, bool acceptCacheFormat)
     {
-        if (json.isEmpty()) { return {}; }
+        if (json.isEmpty())
+        {
+            return {};
+        }
 
         QJsonParseError error {};
         const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8(), &error));
-        if (error.error != QJsonParseError::NoError) { throw CJsonException(error.errorString()); }
+        if (error.error != QJsonParseError::NoError)
+        {
+            throw CJsonException(error.errorString());
+        }
 
         return acceptCacheFormat ? json::unwrapCache(jsonDoc.object()) : jsonDoc.object();
     }
@@ -430,7 +442,10 @@ namespace swift::misc::json
 
     QJsonArray jsonArrayFromString(const QString &json)
     {
-        if (json.isEmpty()) { return {}; }
+        if (json.isEmpty())
+        {
+            return {};
+        }
         const QJsonDocument jsonDoc(QJsonDocument::fromJson(json.toUtf8()));
         return jsonDoc.array();
     }
@@ -439,7 +454,10 @@ namespace swift::misc::json
     {
         if (toBeAppended.isEmpty()) return target;
         const QStringList keys = toBeAppended.keys();
-        foreach (const QString &key, keys) { target.insert(key, toBeAppended.value(key)); }
+        foreach (const QString &key, keys)
+        {
+            target.insert(key, toBeAppended.value(key));
+        }
         return target;
     }
 
@@ -471,7 +489,10 @@ namespace swift::misc::json
         for (const auto &key : incrementalObject.keys()) // clazy:exclude=range-loop
         {
             // If it is not an object, just insert the value
-            if (!incrementalObject.value(key).isObject()) { currentObject.insert(key, incrementalObject.value(key)); }
+            if (!incrementalObject.value(key).isObject())
+            {
+                currentObject.insert(key, incrementalObject.value(key));
+            }
             else
             {
                 auto child = applyIncrementalObject(currentObject.value(key).toObject(),
@@ -484,7 +505,10 @@ namespace swift::misc::json
 
     bool looksLikeJson(const QString &json)
     {
-        if (json.isEmpty()) { return false; }
+        if (json.isEmpty())
+        {
+            return false;
+        }
         const QString t = json.trimmed();
         return t.startsWith('{') && t.endsWith('}');
     }
@@ -500,9 +524,15 @@ namespace swift::misc::json
         // key
         // - type
         // - value
-        if (object.size() != 1) { return false; }
+        if (object.size() != 1)
+        {
+            return false;
+        }
         const QStringList keys = object.keys();
-        if (keys.size() != 1) { return false; }
+        if (keys.size() != 1)
+        {
+            return false;
+        }
         const QString key = keys.front();
         const QJsonObject cacheObject = object.value(key).toObject();
         return (cacheObject.contains("type") && cacheObject.contains("value"));
@@ -511,7 +541,10 @@ namespace swift::misc::json
     QJsonObject swiftDataObjectValue(const QString &jsonString)
     {
         const QJsonObject obj = jsonObjectFromString(jsonString);
-        if (obj.isEmpty()) { return obj; }
+        if (obj.isEmpty())
+        {
+            return obj;
+        }
         return swiftDataObjectValue(obj);
     }
 
@@ -520,7 +553,10 @@ namespace swift::misc::json
         // key
         // - type
         // - value
-        if (object.size() != 1) { return object; } // no cache format
+        if (object.size() != 1)
+        {
+            return object;
+        } // no cache format
         const QJsonObject cacheObject = object.constBegin()->toObject();
         if (cacheObject.contains("type") && cacheObject.contains("value"))
         {
@@ -537,7 +573,10 @@ namespace swift::misc::json
 
     QJsonObject unwrapCache(const QJsonObject &object)
     {
-        if (object.size() != 1) { return object; } // no cache format
+        if (object.size() != 1)
+        {
+            return object;
+        } // no cache format
         const QJsonObject cacheObject = object.constBegin()->toObject();
         if (cacheObject.contains("type") && cacheObject.contains("value"))
         {
@@ -552,7 +591,10 @@ namespace swift::misc::json
     QJsonObject unwrapCache(const QString &jsonString)
     {
         const QJsonObject obj = jsonObjectFromString(jsonString);
-        if (obj.isEmpty()) { return obj; }
+        if (obj.isEmpty())
+        {
+            return obj;
+        }
         return unwrapCache(obj);
     }
 
@@ -572,7 +614,10 @@ namespace swift::misc::json
     QString firstJsonValueAsString(const QString &json)
     {
         static const QString empty;
-        if (json.isEmpty()) { return empty; }
+        if (json.isEmpty())
+        {
+            return empty;
+        }
         const QJsonObject obj = jsonObjectFromString(json);
         return firstJsonValueAsString(obj);
     }
@@ -580,10 +625,19 @@ namespace swift::misc::json
     QString firstJsonValueAsString(const QJsonObject &json)
     {
         static const QString empty;
-        if (json.isEmpty()) { return empty; }
+        if (json.isEmpty())
+        {
+            return empty;
+        }
         const QStringList keys1 = json.keys();
-        if (keys1.isEmpty()) { return empty; }
-        if (keys1.contains("value", Qt::CaseInsensitive)) { return json.value("value").toString(); }
+        if (keys1.isEmpty())
+        {
+            return empty;
+        }
+        if (keys1.contains("value", Qt::CaseInsensitive))
+        {
+            return json.value("value").toString();
+        }
 
         const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
         return jsonLevel1.value("value").toString();
@@ -592,44 +646,80 @@ namespace swift::misc::json
     QStringList firstJsonValueAsStringList(const QString &json)
     {
         static const QStringList empty;
-        if (json.isEmpty()) { return empty; }
+        if (json.isEmpty())
+        {
+            return empty;
+        }
         const QJsonObject obj = jsonObjectFromString(json);
         return firstJsonValueAsStringList(obj);
     }
 
     int firstJsonValueAsInt(const QString &json, int defaultValue, bool *ok)
     {
-        if (ok) { *ok = false; }
-        if (json.isEmpty()) { return defaultValue; }
+        if (ok)
+        {
+            *ok = false;
+        }
+        if (json.isEmpty())
+        {
+            return defaultValue;
+        }
         const QJsonObject obj = jsonObjectFromString(json);
         return firstJsonValueAsInt(obj, defaultValue, ok);
     }
 
     int firstJsonValueAsInt(const QJsonObject &json, int defaultValue, bool *ok)
     {
-        if (ok) { *ok = false; }
-        if (json.isEmpty()) { return defaultValue; }
+        if (ok)
+        {
+            *ok = false;
+        }
+        if (json.isEmpty())
+        {
+            return defaultValue;
+        }
         const QStringList keys1 = json.keys();
-        if (keys1.isEmpty()) { return defaultValue; }
+        if (keys1.isEmpty())
+        {
+            return defaultValue;
+        }
         if (keys1.contains("value", Qt::CaseInsensitive))
         {
-            if (ok) { *ok = true; }
+            if (ok)
+            {
+                *ok = true;
+            }
             return json.value("value").toInt(defaultValue);
         }
 
         const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
-        if (!jsonLevel1.contains("value")) { return defaultValue; }
-        if (ok) { *ok = true; }
+        if (!jsonLevel1.contains("value"))
+        {
+            return defaultValue;
+        }
+        if (ok)
+        {
+            *ok = true;
+        }
         return jsonLevel1.value("value").toInt(defaultValue);
     }
 
     QStringList firstJsonValueAsStringList(const QJsonObject &json)
     {
         static const QStringList empty;
-        if (json.isEmpty()) { return empty; }
+        if (json.isEmpty())
+        {
+            return empty;
+        }
         const QStringList keys1 = json.keys();
-        if (keys1.isEmpty()) { return empty; }
-        if (keys1.contains("value", Qt::CaseInsensitive)) { return arrayToQStringList(json.value("value").toArray()); }
+        if (keys1.isEmpty())
+        {
+            return empty;
+        }
+        if (keys1.contains("value", Qt::CaseInsensitive))
+        {
+            return arrayToQStringList(json.value("value").toArray());
+        }
 
         const QJsonObject jsonLevel1 = json.value(keys1.front()).toObject();
         return arrayToQStringList(jsonLevel1.value("value").toArray());
@@ -638,10 +728,16 @@ namespace swift::misc::json
     QStringList arrayToQStringList(const QJsonArray &array)
     {
         QStringList sl;
-        if (array.isEmpty()) { return sl; }
+        if (array.isEmpty())
+        {
+            return sl;
+        }
         for (const auto &i : array)
         {
-            if (!i.isString()) { continue; }
+            if (!i.isString())
+            {
+                continue;
+            }
             sl.push_back(i.toString());
         }
         return sl;

@@ -105,14 +105,20 @@ namespace swift::core::vatsim
 
     CVoiceCapabilities CVatsimDataFileReader::getVoiceCapabilityForCallsign(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return {}; }
+        if (callsign.isEmpty())
+        {
+            return {};
+        }
         QReadLocker rl(&m_lock);
         return m_flightPlanRemarks.value(callsign).getVoiceCapabilities();
     }
 
     CFlightPlanRemarks CVatsimDataFileReader::getFlightPlanRemarksForCallsign(const CCallsign &callsign) const
     {
-        if (callsign.isEmpty()) { return QString(); }
+        if (callsign.isEmpty())
+        {
+            return QString();
+        }
         QReadLocker rl(&m_lock);
         return m_flightPlanRemarks.value(callsign);
     }
@@ -143,7 +149,10 @@ namespace swift::core::vatsim
     CUserList CVatsimDataFileReader::getUsersForCallsigns(const CCallsignSet &callsigns) const
     {
         CUserList users;
-        if (callsigns.isEmpty()) { return users; }
+        if (callsigns.isEmpty())
+        {
+            return users;
+        }
         for (const CCallsign &callsign : callsigns)
         {
             users.push_back(this->getPilotsForCallsign(callsign));
@@ -157,11 +166,17 @@ namespace swift::core::vatsim
     void CVatsimDataFileReader::read()
     {
         this->threadAssertCheck();
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
 
         Q_ASSERT_X(sApp, Q_FUNC_INFO, "Missing application");
         const QUrl url(sApp->getVatsimDataFileUrl());
-        if (url.isEmpty()) { return; }
+        if (url.isEmpty())
+        {
+            return;
+        }
         this->getFromNetworkAndLog(url, { this, &CVatsimDataFileReader::parseVatsimFile });
     }
 
@@ -180,23 +195,29 @@ namespace swift::core::vatsim
         }
 
         this->logNetworkReplyReceived(nwReplyPtr);
-        QStringList illegalEquipmentCodes;
         const QUrl url = nwReply->url();
         const QString urlString = url.toString();
 
         if (nwReply->error() == QNetworkReply::NoError)
         {
+            QStringList illegalEquipmentCodes;
             const QString dataFileData = nwReply->readAll();
             nwReply->close(); // close asap
 
-            if (dataFileData.isEmpty()) { return; }
+            if (dataFileData.isEmpty())
+            {
+                return;
+            }
             if (!this->didContentChange(dataFileData)) // Quick check by hash
             {
                 CLogMessage(this).info(u"VATSIM file '%1' has same content, skipped") << urlString;
                 return;
             }
             auto jsonDoc = QJsonDocument::fromJson(dataFileData.toUtf8());
-            if (jsonDoc.isEmpty()) { return; }
+            if (jsonDoc.isEmpty())
+            {
+                return;
+            }
 
             // build on local vars for thread safety
             CAtcStationList atcStations;
@@ -287,8 +308,14 @@ namespace swift::core::vatsim
         CSimulatedAircraft aircraft(callsign, user, situation);
         const QString icaoAndEquipment(pilot["flight_plan"]["aircraft"].toString().trimmed()); // in ICAO format
         CFlightPlanAircraftInfo info(icaoAndEquipment);
-        if (info.getAircraftIcao().hasValidDesignator()) { aircraft.setAircraftIcaoCode(info.getAircraftIcao()); }
-        else if (!icaoAndEquipment.isEmpty()) { o_illegalEquipmentCodes.push_back(icaoAndEquipment); }
+        if (info.getAircraftIcao().hasValidDesignator())
+        {
+            aircraft.setAircraftIcaoCode(info.getAircraftIcao());
+        }
+        else if (!icaoAndEquipment.isEmpty())
+        {
+            o_illegalEquipmentCodes.push_back(icaoAndEquipment);
+        }
         aircraft.setTransponderCode(pilot["transponder"].toString().toInt());
         return aircraft;
     }

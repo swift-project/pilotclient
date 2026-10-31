@@ -36,7 +36,10 @@ namespace swift::sound
         const int inputSamples = input.size() / 2; // 16 bit input, so 2 bytes per sample
         QVector<qint16> output;
         output.fill(0, inputSamples);
-        for (int n = 0; n < inputSamples; n++) { output[n] = *reinterpret_cast<const qint16 *>(input.data() + n * 2); }
+        for (int n = 0; n < inputSamples; n++)
+        {
+            output[n] = *reinterpret_cast<const qint16 *>(input.data() + n * 2);
+        }
         return output;
     }
 
@@ -56,14 +59,20 @@ namespace swift::sound
     {
         QVector<qint16> mono;
         mono.reserve(stereo.size() / 2);
-        for (int i = 0; i < stereo.size(); i = i + 2) { mono.append(stereo.at(i)); }
+        for (int i = 0; i < stereo.size(); i = i + 2)
+        {
+            mono.append(stereo.at(i));
+        }
         return mono;
     }
 
     QVector<float> convertFromShortToFloat(const QVector<qint16> &input)
     {
         QVector<float> output;
-        for (auto sample : input) { output.push_back(sample / 32768.0f); }
+        for (auto sample : input)
+        {
+            output.push_back(sample / 32768.0f);
+        }
         return output;
     }
 
@@ -96,10 +105,16 @@ namespace swift::sound
         QList<QAudioDevice> supportedDevices;
         for (const QAudioDevice &d : allQtDevices)
         {
-            if (d.description() == device.getName() && d.isFormatSupported(format)) { supportedDevices.push_back(d); }
+            if (d.description() == device.getName() && d.isFormatSupported(format))
+            {
+                supportedDevices.push_back(d);
+            }
         }
 
-        if (supportedDevices.isEmpty()) { return {}; }
+        if (supportedDevices.isEmpty())
+        {
+            return {};
+        }
 
         QAudioDevice deviceWithLowestLatency = supportedDevices.at(0);
 
@@ -137,7 +152,10 @@ namespace swift::sound
 
     QAudioDevice getHighestCompatibleOutputDevice(const CAudioDeviceInfo &device, QAudioFormat &format)
     {
-        if (device.isDefault()) { return CAudioDeviceInfoList::defaultQtOutputDevice(); }
+        if (device.isDefault())
+        {
+            return CAudioDeviceInfoList::defaultQtOutputDevice();
+        }
         const QList<QAudioDevice> allQtDevices = CAudioDeviceInfoList::allQtOutputDevices();
 
         QList<QAudioDevice> supportedDevices;
@@ -146,7 +164,10 @@ namespace swift::sound
             if (d.description() == device.getName())
             {
                 // exact match, format supported
-                if (d.isFormatSupported(format)) { return d; }
+                if (d.isFormatSupported(format))
+                {
+                    return d;
+                }
             }
             supportedDevices.push_back(d);
         }
@@ -206,7 +227,10 @@ namespace swift::sound
 
     double normalize0to100(double in)
     {
-        if (in < 0) { return 0; }
+        if (in < 0)
+        {
+            return 0;
+        }
         return (in >= 1.0) ? 1.0 : in;
     }
 

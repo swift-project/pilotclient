@@ -31,7 +31,10 @@ namespace swift::misc
     void CDirectories::setLastModelDirectory(const QString &dir)
     {
         m_dirLastModelJson = dir;
-        if (this->hasLastViewJsonDirectory()) { return; }
+        if (this->hasLastViewJsonDirectory())
+        {
+            return;
+        }
         this->setLastViewJsonDirectory(dir);
     }
 
@@ -43,13 +46,19 @@ namespace swift::misc
     void CDirectories::setLastModelStashDirectory(const QString &dir)
     {
         m_dirLastModelStashJson = dir;
-        if (this->hasLastModelDirectory()) { return; }
+        if (this->hasLastModelDirectory())
+        {
+            return;
+        }
         this->setLastModelDirectory(dir);
     }
 
     QString CDirectories::getMatchingScriptDirectoryOrDefault() const
     {
-        if (m_dirMatchingScript.isEmpty()) { return CSwiftDirectories::shareMatchingScriptDirectory(); }
+        if (m_dirMatchingScript.isEmpty())
+        {
+            return CSwiftDirectories::shareMatchingScriptDirectory();
+        }
         return m_dirMatchingScript;
     }
 
@@ -61,7 +70,10 @@ namespace swift::misc
 
     QVariant CDirectories::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -109,9 +121,15 @@ namespace swift::misc
 
     QString CDirectories::existingOrDefaultDir(const QString &checkDir, const QString &defaultDir) const
     {
-        if (checkDir.isEmpty()) { return defaultDir; } // empty dir returns true ????
+        if (checkDir.isEmpty())
+        {
+            return defaultDir;
+        } // empty dir returns true ????
         const QDir d(checkDir);
-        if (d.exists()) { return checkDir; }
+        if (d.exists())
+        {
+            return checkDir;
+        }
         return defaultDir;
     }
 } // namespace swift::misc

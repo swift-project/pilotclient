@@ -62,12 +62,24 @@ namespace swift::gui::components
     void CSelcalCodeSelector::setSelcalCode(const QString &selcal)
     {
         const QString s = selcal.isEmpty() ? "    " : selcal.toUpper().trimmed();
-        if (s.length() != 4) { return; } // still incomplete code
-        if (this->getSelcalCode() == s) { return; } // avoid unintended signals
+        if (s.length() != 4)
+        {
+            return;
+        } // still incomplete code
+        if (this->getSelcalCode() == s)
+        {
+            return;
+        } // avoid unintended signals
         const QString s1 = s.left(2);
         const QString s2 = s.right(2);
-        if (swift::misc::aviation::CSelcal::codePairs().contains(s1)) { ui->cb_SelcalPairs1->setCurrentText(s1); }
-        if (swift::misc::aviation::CSelcal::codePairs().contains(s2)) { ui->cb_SelcalPairs2->setCurrentText(s2); }
+        if (swift::misc::aviation::CSelcal::codePairs().contains(s1))
+        {
+            ui->cb_SelcalPairs1->setCurrentText(s1);
+        }
+        if (swift::misc::aviation::CSelcal::codePairs().contains(s2))
+        {
+            ui->cb_SelcalPairs2->setCurrentText(s2);
+        }
     }
 
     void CSelcalCodeSelector::setSelcal(const swift::misc::aviation::CSelcal &selcal)
@@ -84,7 +96,10 @@ namespace swift::gui::components
 
     void CSelcalCodeSelector::clear()
     {
-        if (ui->cb_SelcalPairs1->count() < 1) { this->resetSelcalCodes(true); }
+        if (ui->cb_SelcalPairs1->count() < 1)
+        {
+            this->resetSelcalCodes(true);
+        }
         ui->cb_SelcalPairs1->setCurrentIndex(0);
         ui->cb_SelcalPairs2->setCurrentIndex(0);
     }

@@ -25,7 +25,10 @@ namespace swift::gui::components
     QString CStringListDialog::getSelectedValue() const
     {
         const QList<QListWidgetItem *> selectedItems = ui->lw_StringList->selectedItems();
-        if (selectedItems.isEmpty()) { return {}; }
+        if (selectedItems.isEmpty())
+        {
+            return {};
+        }
         return selectedItems.front()->text();
     }
 } // namespace swift::gui::components

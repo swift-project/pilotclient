@@ -51,8 +51,14 @@ namespace swift::core::data
 
     QVariant CVatsimSetup::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)

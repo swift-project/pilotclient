@@ -377,7 +377,10 @@ namespace swift::core::fsd
         template <class T>
         void sendQueuedMessage(const T &message)
         {
-            if (!message.isValid()) { return; }
+            if (!message.isValid())
+            {
+                return;
+            }
             if (m_unitTestMode)
             {
                 this->sendDirectMessage(message);
@@ -390,7 +393,10 @@ namespace swift::core::fsd
         template <class T>
         void sendDirectMessage(const T &message)
         {
-            if (!message.isValid()) { return; }
+            if (!message.isValid())
+            {
+                return;
+            }
             this->sendMessageString(messageToFSDString(message));
         }
 

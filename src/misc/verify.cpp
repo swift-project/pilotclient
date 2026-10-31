@@ -19,10 +19,12 @@
 #endif
 
 #ifdef Q_CC_CLANG
-#    if __has_builtin(__builtin_debugtrap)
-#        define SWIFT_BUILTIN_DEBUGTRAP __builtin_debugtrap
-#    elif __has_builtin(__builtin_debugger)
-#        define SWIFT_BUILTIN_DEBUGTRAP __builtin_debugger
+#    ifndef CPPCHECK
+#        if __has_builtin(__builtin_debugtrap)
+#            define SWIFT_BUILTIN_DEBUGTRAP __builtin_debugtrap
+#        elif __has_builtin(__builtin_debugger)
+#            define SWIFT_BUILTIN_DEBUGTRAP __builtin_debugger
+#        endif
 #    endif
 #endif
 

@@ -36,7 +36,7 @@ using namespace swift::misc::simulation;
 void SwiftGuiStd::onMenuClicked()
 {
     using namespace std::chrono_literals;
-    QObject *sender = QObject::sender();
+    const QObject *sender = QObject::sender();
     if (sender == ui->menu_TestLocationsEDRY)
     {
         this->setTestPosition("N 049° 18' 17", "E 008° 27' 05",
@@ -71,8 +71,14 @@ void SwiftGuiStd::onMenuClicked()
         this->setMainPageToInfoArea();
         ui->comp_MainInfoArea->selectSettingsTab(swift::gui::components::CSettingsComponent::SettingTabGui);
     }
-    else if (sender == ui->menu_InternalsPage) { ui->sw_MainMiddle->setCurrentIndex(MainPageInternals); }
-    else if (sender == ui->menu_AutoPublish) { this->autoPublishDialog(); }
+    else if (sender == ui->menu_InternalsPage)
+    {
+        ui->sw_MainMiddle->setCurrentIndex(MainPageInternals);
+    }
+    else if (sender == ui->menu_AutoPublish)
+    {
+        this->autoPublishDialog();
+    }
     else if (sender == ui->menu_ToggleIncognito)
     {
         if (sGui)
@@ -107,7 +113,10 @@ void SwiftGuiStd::initMenus()
 
 int SwiftGuiStd::autoPublishDialog()
 {
-    if (!m_autoPublishDialog) { m_autoPublishDialog.reset(new CAutoPublishDialog(this)); }
+    if (!m_autoPublishDialog)
+    {
+        m_autoPublishDialog.reset(new CAutoPublishDialog(this));
+    }
     m_lastAutoPublish.set(QDateTime::currentMSecsSinceEpoch());
     return m_autoPublishDialog->readAndShow();
 }

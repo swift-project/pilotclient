@@ -52,7 +52,7 @@ namespace swift::gui
 
         //! Returns the color of the component.
         //! \sa setColor
-        const QColor &color() const { return m_color; }
+        const QColor &getColor() const { return m_color; }
 
         //! \copydoc QWidget::sizeHint
         QSize sizeHint() const override;

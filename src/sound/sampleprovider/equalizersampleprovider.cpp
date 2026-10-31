@@ -31,7 +31,10 @@ namespace swift::sound::sample_provider
 
         for (int n = 0; n < samplesRead; n++)
         {
-            for (auto &filter : m_filters) { samples[n] = filter.transform(samples[n]); }
+            for (auto &filter : m_filters)
+            {
+                samples[n] = filter.transform(samples[n]);
+            }
             samples[n] *= static_cast<float>(m_outputGain);
         }
         return samplesRead;
@@ -51,7 +54,7 @@ namespace swift::sound::sample_provider
         }
     }
 
-    double CEqualizerSampleProvider::outputGain() const { return m_outputGain; }
+    double CEqualizerSampleProvider::getOutputGain() const { return m_outputGain; }
 
     void CEqualizerSampleProvider::setOutputGain(double outputGain) { m_outputGain = outputGain; }
 } // namespace swift::sound::sample_provider

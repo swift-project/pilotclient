@@ -64,7 +64,10 @@ void SwiftGuiStd::init()
     Q_ASSERT_X(sGui->getWebDataServices(), Q_FUNC_INFO, "Missing web services");
     Q_ASSERT_X(sGui->supportsContexts(), Q_FUNC_INFO, "Missing contexts");
 
-    if (m_init) { return; }
+    if (m_init)
+    {
+        return;
+    }
 
     ui->dw_InfoBarStatus->initialFloating();
 
@@ -85,8 +88,14 @@ void SwiftGuiStd::init()
         }
     });
     connect(&m_logHistoryForLogButtons, &CLogHistoryReplica::elementAdded, this, [this](const CStatusMessage &message) {
-        if (message.getSeverity() == CStatusMessage::SeverityError) { m_statusBar.showErrorButton(); }
-        else if (message.getSeverity() == CStatusMessage::SeverityWarning) { m_statusBar.showWarningButton(); }
+        if (message.getSeverity() == CStatusMessage::SeverityError)
+        {
+            m_statusBar.showErrorButton();
+        }
+        else if (message.getSeverity() == CStatusMessage::SeverityWarning)
+        {
+            m_statusBar.showWarningButton();
+        }
     });
     m_logHistoryForOverlay.initialize(sApp->getDataLinkDBus());
     m_logHistoryForLogButtons.initialize(sApp->getDataLinkDBus());
@@ -189,7 +198,10 @@ void SwiftGuiStd::init()
     // more checks
     QPointer<SwiftGuiStd> myself(this);
     QTimer::singleShot(5000, this, [=, this] {
-        if (!myself) { return; }
+        if (!myself)
+        {
+            return;
+        }
         this->verifyPrerequisites();
     });
 
@@ -202,7 +214,10 @@ void SwiftGuiStd::init()
 
 void SwiftGuiStd::initStyleSheet()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     const QString s = sGui->getStyleSheetUtility().styles({ CStyleSheetUtility::fileNameFonts(),
                                                             CStyleSheetUtility::fileNameStandardWidget(),
                                                             CStyleSheetUtility::fileNameSwiftStandardGui() });
@@ -274,7 +289,10 @@ void SwiftGuiStd::initGuiSignals()
             &CFlightPlanComponent::loginDataSet);
     connect(ui->comp_Login, &CLoginComponent::requestNetworkSettings, this, &SwiftGuiStd::displayNetworkSettings);
     connect(ui->comp_Login, &CLoginComponent::requestLoginPage, [this]() {
-        if (!sApp || sApp->isShuttingDown()) { return; }
+        if (!sApp || sApp->isShuttingDown())
+        {
+            return;
+        }
         ui->sw_MainMiddle->setCurrentIndex(MainPageLogin);
     });
     connect(this, &SwiftGuiStd::currentMainInfoAreaChanged, ui->comp_Login, &CLoginComponent::mainInfoAreaChanged,
@@ -314,10 +332,6 @@ void SwiftGuiStd::initGuiSignals()
 
     // on top
     connect(sGui, &CGuiApplication::alwaysOnTop, this, &SwiftGuiStd::onToggledWindowsOnTop, Qt::QueuedConnection);
-
-    // main info area
-    connect(ui->comp_MainInfoArea, &CMainInfoAreaComponent::changedWholeInfoAreaFloating, this,
-            &SwiftGuiStd::onChangedMainInfoAreaFloating, Qt::QueuedConnection);
 }
 
 void SwiftGuiStd::initialContextDataReads()
@@ -336,6 +350,9 @@ void SwiftGuiStd::initialContextDataReads()
 void SwiftGuiStd::stopAllTimers(bool disconnectSignalSlots)
 {
     m_timerContextWatchdog.stop();
-    if (!disconnectSignalSlots) { return; }
+    if (!disconnectSignalSlots)
+    {
+        return;
+    }
     this->disconnect(&m_timerContextWatchdog);
 }

@@ -99,14 +99,20 @@ namespace swift::misc
 
     QString CRgbColor::hex(bool withHash) const
     {
-        if (!isValid()) { return {}; }
+        if (!isValid())
+        {
+            return {};
+        }
         const QString h(redHex() + greenHex() + blueHex());
         return withHash ? u'#' % h : h;
     }
 
     int CRgbColor::packed() const
     {
-        if (!isValid()) { return 0; }
+        if (!isValid())
+        {
+            return 0;
+        }
         return static_cast<int>(toQColor().rgb() & qRgba(255, 255, 255, 0));
     }
 
@@ -114,7 +120,10 @@ namespace swift::misc
 
     void CRgbColor::setByString(const QString &color, bool isName)
     {
-        if (color.isEmpty()) { return; }
+        if (color.isEmpty())
+        {
+            return;
+        }
 
         if (isName)
         {
@@ -127,7 +136,10 @@ namespace swift::misc
         {
             const QString c(color.trimmed());
             QColor q(c);
-            if (this->setQColor(q)) { return; }
+            if (this->setQColor(q))
+            {
+                return;
+            }
             if (c.startsWith("#"))
             {
                 this->setInvalid();
@@ -142,9 +154,18 @@ namespace swift::misc
 
     double CRgbColor::colorDistance(const CRgbColor &color) const
     {
-        if (!this->isValid() && !color.isValid()) { return 0; }
-        if (!this->isValid() || !color.isValid()) { return 1; }
-        if (*this == color) { return 0.0; } // avoid rounding
+        if (!this->isValid() && !color.isValid())
+        {
+            return 0;
+        }
+        if (!this->isValid() || !color.isValid())
+        {
+            return 1;
+        }
+        if (*this == color)
+        {
+            return 0.0;
+        } // avoid rounding
 
         // all values 0-1
         const double rd = (normalizedRed() - color.normalizedRed());
@@ -168,7 +189,10 @@ namespace swift::misc
 
     QVariant CRgbColor::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -200,7 +224,10 @@ namespace swift::misc
 
     int CRgbColor::comparePropertyByIndex(CPropertyIndexRef index, const CRgbColor &compareValue) const
     {
-        if (index.isMyself()) { return this->compare(compareValue); }
+        if (index.isMyself())
+        {
+            return this->compare(compareValue);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -216,17 +243,32 @@ namespace swift::misc
     int CRgbColor::compare(const CRgbColor &color) const
     {
         int c = Compare::compare(m_r, color.m_r);
-        if (c != 0) { return c; }
+        if (c != 0)
+        {
+            return c;
+        }
         c = Compare::compare(m_g, color.m_g);
-        if (c != 0) { return c; }
+        if (c != 0)
+        {
+            return c;
+        }
         return Compare::compare(m_b, color.m_b);
     }
 
     double CRgbColor::colorRange() const
     {
-        if (!this->isValid()) { return 255; }
-        if (m_b < 256 && m_g < 256 && m_r < 256) { return 255; }
-        if (m_b < 4096 && m_g < 4096 && m_r < 4096) { return 4095; }
+        if (!this->isValid())
+        {
+            return 255;
+        }
+        if (m_b < 256 && m_g < 256 && m_r < 256)
+        {
+            return 255;
+        }
+        if (m_b < 4096 && m_g < 4096 && m_r < 4096)
+        {
+            return 4095;
+        }
         return 65535;
     }
 

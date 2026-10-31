@@ -75,20 +75,32 @@ namespace swift::gui::components
 
     void CDbLiverySelectorComponent::setLivery(const QString &code)
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         const int dbKey = CDatastoreUtility::extractIntegerKey(code);
         CLivery livery;
 
-        if (dbKey >= 0) { livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey); }
+        if (dbKey >= 0)
+        {
+            livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey);
+        }
 
         if (!livery.hasValidDbKey())
         {
             const QString liveryCode = this->stripExtraInfo(code.toUpper().trimmed());
-            if (m_currentLivery.matchesCombinedCode(liveryCode)) { return; }
+            if (m_currentLivery.matchesCombinedCode(liveryCode))
+            {
+                return;
+            }
             livery = sGui->getWebDataServices()->getLiveries().findByCombinedCode(liveryCode);
         }
 
-        if (livery.hasCompleteData()) { this->setLivery(livery); }
+        if (livery.hasCompleteData())
+        {
+            this->setLivery(livery);
+        }
         else
         {
             ui->lbl_Description->setText("");
@@ -98,13 +110,19 @@ namespace swift::gui::components
 
     CLivery CDbLiverySelectorComponent::getLivery() const
     {
-        if (!sGui || sGui->isShuttingDown()) { return {}; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return {};
+        }
 
         const QString raw = ui->le_Livery->text();
         const int dbKey = CDatastoreUtility::extractIntegerKey(raw);
 
         CLivery livery;
-        if (dbKey >= 0) { livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey); }
+        if (dbKey >= 0)
+        {
+            livery = sGui->getWebDataServices()->getLiveryForDbKey(dbKey);
+        }
         else
         {
             const QString liveryCode(this->stripExtraInfo(ui->le_Livery->text()));
@@ -139,39 +157,57 @@ namespace swift::gui::components
 
     void CDbLiverySelectorComponent::dragEnterEvent(QDragEnterEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         this->setBackgroundRole(QPalette::Highlight);
         event->acceptProposedAction();
     }
 
     void CDbLiverySelectorComponent::dragMoveEvent(QDragMoveEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         event->acceptProposedAction();
     }
 
     void CDbLiverySelectorComponent::dragLeaveEvent(QDragLeaveEvent *event)
     {
-        if (!event) { return; }
+        if (!event)
+        {
+            return;
+        }
         event->accept();
     }
 
     void CDbLiverySelectorComponent::dropEvent(QDropEvent *event)
     {
-        if (!event || !acceptDrop(event->mimeData())) { return; }
+        if (!event || !acceptDrop(event->mimeData()))
+        {
+            return;
+        }
         const CVariant valueVariant(toCVariant(event->mimeData()));
         if (valueVariant.isValid())
         {
             if (valueVariant.canConvert<CLivery>())
             {
                 const auto livery(valueVariant.value<CLivery>());
-                if (!livery.hasValidDbKey()) { return; }
+                if (!livery.hasValidDbKey())
+                {
+                    return;
+                }
                 this->setLivery(livery);
             }
             else if (valueVariant.canConvert<CLiveryList>())
             {
                 const auto liveries(valueVariant.value<CLiveryList>());
-                if (liveries.isEmpty()) { return; }
+                if (liveries.isEmpty())
+                {
+                    return;
+                }
                 this->setLivery(liveries.front());
             }
         }
@@ -182,7 +218,10 @@ namespace swift::gui::components
     {
         Q_UNUSED(url)
 
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         if (entity.testFlag(CEntityFlags::LiveryEntity) && CEntityFlags::isFinishedReadState(readState))
         {
             if (count > 0)
@@ -198,13 +237,19 @@ namespace swift::gui::components
                 ui->le_Livery->setCompleter(c);
                 m_completerLiveries.reset(c); // deletes any old completer
             }
-            else { m_completerLiveries.reset(nullptr); }
+            else
+            {
+                m_completerLiveries.reset(nullptr);
+            }
         }
     }
 
     void CDbLiverySelectorComponent::onDataChanged()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->hasWebDataServices())
+        {
+            return;
+        }
         const QString raw = ui->le_Livery->text();
         this->setLivery(raw);
     }
@@ -213,12 +258,18 @@ namespace swift::gui::components
 
     QString CDbLiverySelectorComponent::stripExtraInfo(const QString &liveryCode) const
     {
-        if (liveryCode.isEmpty()) { return {}; }
+        if (liveryCode.isEmpty())
+        {
+            return {};
+        }
         const QString l(liveryCode.trimmed().toUpper());
         int is = l.indexOf(' ');
         int ib = l.indexOf('(');
         int i = qMin(is, ib);
-        if (i < 0) { return l; }
+        if (i < 0)
+        {
+            return l;
+        }
         return l.left(i);
     }
 } // namespace swift::gui::components

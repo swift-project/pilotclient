@@ -41,7 +41,10 @@ namespace swift::gui::models
 
     CVariant CDefaultFormatter::tooltipRole(const CVariant &value) const
     {
-        if (static_cast<QMetaType::Type>(value.type()) == QMetaType::QString) { return value; }
+        if (static_cast<QMetaType::Type>(value.type()) == QMetaType::QString)
+        {
+            return value;
+        }
         return value.toQString(m_useI18n);
     }
 
@@ -50,8 +53,14 @@ namespace swift::gui::models
         // direct return if type is already correct
         const auto type = static_cast<QMetaType::Type>(dataCVariant.type());
 
-        if (type == QMetaType::QPixmap) { return dataCVariant; }
-        if (type == QMetaType::QIcon) { return dataCVariant; }
+        if (type == QMetaType::QPixmap)
+        {
+            return dataCVariant;
+        }
+        if (type == QMetaType::QIcon)
+        {
+            return dataCVariant;
+        }
 
         // convert to pixmap
         if (type == QMetaType::QImage)
@@ -73,7 +82,10 @@ namespace swift::gui::models
 
     CVariant CDefaultFormatter::alignmentRole() const
     {
-        if (this->hasAlignment()) { return CVariant::fromValue(m_alignment); }
+        if (this->hasAlignment())
+        {
+            return CVariant::fromValue(m_alignment);
+        }
         return CVariant::fromValue(alignDefault()); // default
     }
 
@@ -87,7 +99,10 @@ namespace swift::gui::models
     bool CDefaultFormatter::supportsRole(int role) const
     {
         // generally supported?
-        if (role == Qt::TextAlignmentRole || role == Qt::UserRole) { return true; }
+        if (role == Qt::TextAlignmentRole || role == Qt::UserRole)
+        {
+            return true;
+        }
 
         // specific?
         return m_supportedRoles.contains(role);
@@ -95,14 +110,20 @@ namespace swift::gui::models
 
     CVariant CDefaultFormatter::data(int role, const CVariant &inputData) const
     {
-        if (!this->supportsRole(role)) { return {}; }
+        if (!this->supportsRole(role))
+        {
+            return {};
+        }
         const auto roleEnum = static_cast<Qt::ItemDataRole>(role);
 
         // always supported
         if (roleEnum == Qt::TextAlignmentRole) return { alignmentRole() };
 
         // check
-        if (role == Qt::UserRole) { return CDefaultFormatter::displayRole(inputData); } // just as data provider
+        if (role == Qt::UserRole)
+        {
+            return CDefaultFormatter::displayRole(inputData);
+        } // just as data provider
         switch (roleEnum)
         {
         case Qt::DisplayRole: return displayRole(inputData); // formatted to standard types or string
@@ -119,9 +140,18 @@ namespace swift::gui::models
 
     CVariant CDefaultFormatter::keepStandardTypesConvertToStringOtherwise(const CVariant &inputData) const
     {
-        if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::QString) { return inputData; }
-        if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::Bool) { return inputData; }
-        if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::Int) { return inputData; }
+        if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::QString)
+        {
+            return inputData;
+        }
+        if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::Bool)
+        {
+            return inputData;
+        }
+        if (static_cast<QMetaType::Type>(inputData.type()) == QMetaType::Int)
+        {
+            return inputData;
+        }
         return inputData.toQString(m_useI18n);
     }
 
@@ -146,7 +176,10 @@ namespace swift::gui::models
 
     CVariant CPixmapFormatter::tooltipRole(const CVariant &dataCVariant) const
     {
-        if (dataCVariant.isNull()) { return {}; }
+        if (dataCVariant.isNull())
+        {
+            return {};
+        }
         if (dataCVariant.canConvert<CIcon>())
         {
             const auto icon = dataCVariant.value<CIcon>();
@@ -157,8 +190,14 @@ namespace swift::gui::models
 
     CVariant CPixmapFormatter::decorationRole(const CVariant &dataCVariant) const
     {
-        if (dataCVariant.isNull()) { return {}; }
-        if (m_maxWidth < 0 && m_maxHeight < 0) { return CDefaultFormatter::decorationRole(dataCVariant); }
+        if (dataCVariant.isNull())
+        {
+            return {};
+        }
+        if (m_maxWidth < 0 && m_maxHeight < 0)
+        {
+            return CDefaultFormatter::decorationRole(dataCVariant);
+        }
 
         QPixmap pm;
         if (dataCVariant.canConvert<CIcon>())
@@ -167,13 +206,22 @@ namespace swift::gui::models
             pm = icon.toPixmap();
         }
 
-        if (pm.isNull()) { return {}; }
+        if (pm.isNull())
+        {
+            return {};
+        }
         const int pmw = pm.width();
         const int pmh = pm.height();
 
-        if (m_maxHeight >= 0 && m_maxHeight < pmh) { return CVariant::fromValue(pm.scaledToHeight(m_maxHeight)); }
+        if (m_maxHeight >= 0 && m_maxHeight < pmh)
+        {
+            return CVariant::fromValue(pm.scaledToHeight(m_maxHeight));
+        }
 
-        if (m_maxWidth >= 0 && m_maxWidth < pmw) { return CVariant::fromValue(pm.scaledToWidth(m_maxWidth)); }
+        if (m_maxWidth >= 0 && m_maxWidth < pmw)
+        {
+            return CVariant::fromValue(pm.scaledToWidth(m_maxWidth));
+        }
 
         return CVariant::fromValue(pm);
     }
@@ -246,7 +294,10 @@ namespace swift::gui::models
         {
             // special treatment for some cases
             const auto f = dataCVariant.value<CFrequency>();
-            if (CComSystem::isValidComFrequency(f)) { return CPhysiqalQuantiyFormatter::displayRole(dataCVariant); }
+            if (CComSystem::isValidComFrequency(f))
+            {
+                return CPhysiqalQuantiyFormatter::displayRole(dataCVariant);
+            }
             return emptyStringVariant();
         }
         else
@@ -269,7 +320,10 @@ namespace swift::gui::models
 
     CVariant CStringFormatter::displayRole(const CVariant &dataCVariant) const
     {
-        if (dataCVariant.canConvert<QString>()) { return dataCVariant; }
+        if (dataCVariant.canConvert<QString>())
+        {
+            return dataCVariant;
+        }
         if (!dataCVariant.isValid())
         {
             static const CVariant iv("invalid");
@@ -377,8 +431,14 @@ namespace swift::gui::models
     CVariant CAltitudeFormatter::displayRole(const CVariant &altitude) const
     {
         auto alt(altitude.value<CAltitude>());
-        if (m_flightLevel) { alt.toFlightLevel(); }
-        else { alt.switchUnit(m_unit); }
+        if (m_flightLevel)
+        {
+            alt.toFlightLevel();
+        }
+        else
+        {
+            alt.switchUnit(m_unit);
+        }
         return alt.toQString(m_useI18n);
     }
 
@@ -396,7 +456,10 @@ namespace swift::gui::models
     CVariant CColorFormatter::decorationRole(const CVariant &dataCVariant) const
     {
         const auto rgbColor(dataCVariant.value<CRgbColor>());
-        if (!rgbColor.isValid()) { return emptyPixmapVariant(); }
+        if (!rgbColor.isValid())
+        {
+            return emptyPixmapVariant();
+        }
         return CVariant::fromValue(rgbColor.toPixmap());
     }
 
@@ -404,7 +467,10 @@ namespace swift::gui::models
     {
         static const CVariant empty(CVariant::fromValue(QPixmap()));
         const auto rgbColor(dataCVariant.value<CRgbColor>());
-        if (!rgbColor.isValid()) { return emptyStringVariant(); }
+        if (!rgbColor.isValid())
+        {
+            return emptyStringVariant();
+        }
         return rgbColor.hex(true);
     }
 
@@ -416,20 +482,29 @@ namespace swift::gui::models
         case QMetaType::LongLong:
         {
             const qlonglong ll = expectedInteger.toLongLong(&ok);
-            if (ok) { return QString::number(ll); }
+            if (ok)
+            {
+                return QString::number(ll);
+            }
             break;
         }
         case QMetaType::ULongLong:
         {
             const qulonglong ll = expectedInteger.toULongLong(&ok);
-            if (ok) { return QString::number(ll); }
+            if (ok)
+            {
+                return QString::number(ll);
+            }
             break;
         }
         default: break;
         }
 
         const int i = expectedInteger.toInt(&ok);
-        if (ok) { return QString::number(i); }
+        if (ok)
+        {
+            return QString::number(i);
+        }
         return {};
     }
 

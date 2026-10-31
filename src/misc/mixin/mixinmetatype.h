@@ -71,8 +71,14 @@ namespace swift::misc::mixin
     template <class Derived>
     bool MetaType<Derived>::isA(int metaTypeId) const
     {
-        if (metaTypeId == QMetaType::UnknownType) { return false; }
-        if (metaTypeId == getMetaTypeId()) { return true; }
+        if (metaTypeId == QMetaType::UnknownType)
+        {
+            return false;
+        }
+        if (metaTypeId == getMetaTypeId())
+        {
+            return true;
+        }
         return baseIsA(static_cast<const TMetaBaseOfT<Derived> *>(derived()), metaTypeId);
     }
 

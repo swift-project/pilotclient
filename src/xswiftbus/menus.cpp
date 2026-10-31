@@ -36,12 +36,15 @@ namespace XSwiftBus
 
     CMenu::Data::~Data()
     {
-        if (!isMainMenu) { XPLMDestroyMenu(id); }
+        if (!isMainMenu)
+        {
+            XPLMDestroyMenu(id);
+        }
     }
 
     CMenu CMenu::mainMenu() { return { XPLMFindPluginsMenu(), true, nullptr }; }
 
-    CMenuItem CMenu::item(const std::string &name, std::function<void()> callback)
+    CMenuItem CMenu::appendItem(const std::string &name, std::function<void()> callback)
     {
         assert(!name.empty());
         m_data->items->emplace_back(CMenuItem { m_data->id, 0, false, [callback](bool) { callback(); } });

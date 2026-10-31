@@ -30,7 +30,10 @@ int main(int argc, char *argv[])
         // CGuiApplication a(CApplicationInfo::swiftMappingTool(), CApplicationInfo::MappingTool,
         //                   CIcons::swiftDatabase48());
         CSwiftDataApplication a; // application with contexts
-        if (!a.parseCommandLineArgsAndLoadSetup()) { return EXIT_FAILURE; }
+        if (!a.parseCommandLineArgsAndLoadSetup())
+        {
+            return EXIT_FAILURE;
+        }
         a.splashScreen(CIcons::swiftDatabase256());
         a.initAndStartWebDataServices(swift::core::CWebReaderFlags::AllSwiftDbReaders,
                                       CDatabaseReaderConfigList::forMappingTool());

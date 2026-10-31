@@ -13,13 +13,19 @@ namespace swift::core
 {
     int MSWebServices::countAircraftIcaoCodesForDesignator(const QString &designator) const
     {
-        if (!checkApp()) { return 0; }
+        if (!checkApp())
+        {
+            return 0;
+        }
         return sApp->getWebDataServices()->getAircraftIcaoCodesForDesignatorCount(designator);
     }
 
     int MSWebServices::countAirlineIcaoCodesForDesignator(const QString &designator) const
     {
-        if (!checkApp()) { return 0; }
+        if (!checkApp())
+        {
+            return 0;
+        }
         return sApp->getWebDataServices()->getAirlineIcaoCodesForDesignatorCount(designator);
     }
 

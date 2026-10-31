@@ -35,7 +35,10 @@ namespace swift::gui::filters
     int CFilterWidget::convertDbId(const QString &candidate)
     {
         const QString s = candidate.trimmed();
-        if (s.isEmpty()) { return -1; }
+        if (s.isEmpty())
+        {
+            return -1;
+        }
         bool ok = false;
         const int id = s.toInt(&ok);
         return ok && id >= 0 ? id : -1;

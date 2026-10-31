@@ -39,7 +39,10 @@ namespace swift::gui
     QStringList CSharedStringListCompleter::stringList() const
     {
         const QStringListModel *model = this->getCompleterModel();
-        if (!model) { return {}; }
+        if (!model)
+        {
+            return {};
+        }
         return model->stringList();
     }
 

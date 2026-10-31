@@ -76,7 +76,10 @@ CSwiftCore::~CSwiftCore() = default;
 
 void CSwiftCore::initStyleSheet()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     const QString s = sGui->getStyleSheetUtility().styles({ CStyleSheetUtility::fileNameFonts(),
                                                             CStyleSheetUtility::fileNameStandardWidget(),
                                                             CStyleSheetUtility::fileNameSwiftCore() });
@@ -86,13 +89,19 @@ void CSwiftCore::initStyleSheet()
 
 void CSwiftCore::showSettingsDialog()
 {
-    if (!m_settingsDialog) { m_settingsDialog.reset(new CCoreSettingsDialog(this)); }
+    if (!m_settingsDialog)
+    {
+        m_settingsDialog.reset(new CCoreSettingsDialog(this));
+    }
     m_settingsDialog->show();
 }
 
 void CSwiftCore::showRawFsdMessageDialog()
 {
-    if (!m_rawFsdMessageDialog) { m_rawFsdMessageDialog.reset(new CRawFsdMessagesDialog(this)); }
+    if (!m_rawFsdMessageDialog)
+    {
+        m_rawFsdMessageDialog.reset(new CRawFsdMessagesDialog(this));
+    }
     m_rawFsdMessageDialog->show();
 }
 
@@ -117,7 +126,10 @@ void CSwiftCore::initMenus()
 
 void CSwiftCore::restart()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
     ui->pb_Restart->setEnabled(false);
     const QStringList args = this->getRestartCmdArgs();
     sGui->restartApplication(args);
@@ -125,26 +137,44 @@ void CSwiftCore::restart()
 
 void CSwiftCore::disconnectFromNetwork()
 {
-    if (!sGui || sGui->isShuttingDown()) { return; }
-    if (!sGui->getIContextNetwork()) { return; }
-    if (!sGui->getIContextNetwork()->isConnected()) { return; }
+    if (!sGui || sGui->isShuttingDown())
+    {
+        return;
+    }
+    if (!sGui->getIContextNetwork())
+    {
+        return;
+    }
+    if (!sGui->getIContextNetwork()->isConnected())
+    {
+        return;
+    }
 
     const QMessageBox::StandardButton reply =
         QMessageBox::question(this, "Disconnect", "Disconnect from network?", QMessageBox::Yes | QMessageBox::No);
-    if (reply != QMessageBox::Yes) { return; }
+    if (reply != QMessageBox::Yes)
+    {
+        return;
+    }
     sGui->getIContextNetwork()->disconnectFromNetwork();
 }
 
 void CSwiftCore::audioDialog()
 {
-    if (!m_audioDialog) { m_audioDialog.reset(new CCockpitComAudioDialog(this)); }
+    if (!m_audioDialog)
+    {
+        m_audioDialog.reset(new CCockpitComAudioDialog(this));
+    }
     m_audioDialog->setModal(false);
     m_audioDialog->show();
 }
 
 void CSwiftCore::audioAdvancedDialog()
 {
-    if (!m_audioAdvDialog) { m_audioAdvDialog.reset(new CAudioAdvancedDistributedDialog(this)); }
+    if (!m_audioAdvDialog)
+    {
+        m_audioAdvDialog.reset(new CAudioAdvancedDistributedDialog(this));
+    }
     m_audioAdvDialog->setModal(false);
     m_audioAdvDialog->show();
 }

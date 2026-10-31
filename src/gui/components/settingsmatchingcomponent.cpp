@@ -35,7 +35,10 @@ namespace swift::gui::components
                     &CSettingsMatchingComponent::onSetupChanged, Qt::QueuedConnection);
             this->deferredReload(5000);
         }
-        else { this->showButtons(false); }
+        else
+        {
+            this->showButtons(false);
+        }
     }
 
     CSettingsMatchingComponent::~CSettingsMatchingComponent() = default;
@@ -52,7 +55,10 @@ namespace swift::gui::components
     void CSettingsMatchingComponent::onSavePressed() const
     {
         IContextSimulator *simContext = simulatorContext();
-        if (!simContext) { return; }
+        if (!simContext)
+        {
+            return;
+        }
         const CAircraftMatcherSetup setup = ui->form_Matching->value();
         simContext->setMatchingSetup(setup);
     }
@@ -61,7 +67,10 @@ namespace swift::gui::components
 
     void CSettingsMatchingComponent::onMatchingsAgainPressed()
     {
-        if (!sGui || !sGui->getISimulator() || !sGui->getISimulator()->isConnected()) { return; }
+        if (!sGui || !sGui->getISimulator() || !sGui->getISimulator()->isConnected())
+        {
+            return;
+        }
         const int reMatchedNo = sGui->getIContextSimulator()->doMatchingsAgain();
         CLogMessage(this).info(u"Triggered re-apping of %1 aircraft") << reMatchedNo;
     }
@@ -69,14 +78,20 @@ namespace swift::gui::components
     void CSettingsMatchingComponent::onSetupChanged()
     {
         const IContextSimulator *simContext = simulatorContext();
-        if (!simContext) { return; }
+        if (!simContext)
+        {
+            return;
+        }
         this->deferredReload(0);
     }
 
     void CSettingsMatchingComponent::deferredReload(int deferMs)
     {
         IContextSimulator *simContext = simulatorContext();
-        if (!simContext) { return; }
+        if (!simContext)
+        {
+            return;
+        }
         if (deferMs < 1)
         {
             const CAircraftMatcherSetup setup = simContext->getMatchingSetup();
@@ -86,7 +101,10 @@ namespace swift::gui::components
         {
             QPointer<CSettingsMatchingComponent> myself(this);
             QTimer::singleShot(deferMs, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->deferredReload(0);
             });
         }
@@ -94,7 +112,10 @@ namespace swift::gui::components
 
     IContextSimulator *CSettingsMatchingComponent::simulatorContext()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return nullptr; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return nullptr;
+        }
         return sGui->getIContextSimulator();
     }
 } // namespace swift::gui::components

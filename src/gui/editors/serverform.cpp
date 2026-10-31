@@ -73,8 +73,14 @@ namespace swift::gui::editors
 
     void CServerForm::showPasswordField(bool show)
     {
-        if (ui->wi_Password->isVisible() == show) { return; }
-        if (m_passwordNameLabel.isEmpty()) { m_passwordNameLabel = ui->lbl_IdPassword->text(); }
+        if (ui->wi_Password->isVisible() == show)
+        {
+            return;
+        }
+        if (m_passwordNameLabel.isEmpty())
+        {
+            m_passwordNameLabel = ui->lbl_IdPassword->text();
+        }
         ui->lbl_IdPassword->setText(show ? m_passwordNameLabel : "Id");
         ui->wi_Password->setVisible(show);
     }

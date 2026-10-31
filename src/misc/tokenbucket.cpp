@@ -50,7 +50,10 @@ namespace swift::misc
 
     int CTokenBucket::getTokensPerSecond() const
     {
-        if (m_intervalMs < 1) { return 0; }
+        if (m_intervalMs < 1)
+        {
+            return 0;
+        }
         return m_numTokensToRefill * 1000 / m_intervalMs;
     }
 
@@ -61,7 +64,10 @@ namespace swift::misc
         const int numberOfTokens = static_cast<int>(m_numTokensToRefill * deltaMs / m_intervalMs);
 
         // Update the time only when replenishment actually took place. We will end up in a infinite loop otherwise.
-        if (numberOfTokens > 0) { m_lastReplenishmentTime = now; }
+        if (numberOfTokens > 0)
+        {
+            m_lastReplenishmentTime = now;
+        }
         return numberOfTokens;
     }
 } // namespace swift::misc

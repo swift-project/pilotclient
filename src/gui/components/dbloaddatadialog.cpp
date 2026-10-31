@@ -52,9 +52,18 @@ namespace swift::gui::components
     {
         this->show();
         CGuiApplication::modalWindowToFront();
-        if (m_consolidating) { return false; }
-        if (m_pendingEntities != CEntityFlags::NoEntity) { return false; } // already loading
-        if (loadEntities == CEntityFlags::NoEntity) { return false; }
+        if (m_consolidating)
+        {
+            return false;
+        }
+        if (m_pendingEntities != CEntityFlags::NoEntity)
+        {
+            return false;
+        } // already loading
+        if (loadEntities == CEntityFlags::NoEntity)
+        {
+            return false;
+        }
         m_autoConsolidate = false;
         const QStringList entitiesStringList = CEntityFlags::entitiesToStringList(loadEntities);
         this->entitiesModel()->setStringList(entitiesStringList);
@@ -71,17 +80,26 @@ namespace swift::gui::components
     {
         QStringList entities;
         const QModelIndexList indexes = ui->lv_Entities->selectionModel()->selectedIndexes();
-        for (const QModelIndex &index : indexes) { entities.append(index.data(Qt::DisplayRole).toString()); }
+        for (const QModelIndex &index : indexes)
+        {
+            entities.append(index.data(Qt::DisplayRole).toString());
+        }
         return entities;
     }
 
     void CDbLoadDataDialog::onButtonClicked(QAbstractButton *button)
     {
-        if (!button) { return; }
+        if (!button)
+        {
+            return;
+        }
         if (button == ui->bb_loadDataDialog->button(QDialogButtonBox::Apply))
         {
             const QStringList entityList = this->selectedEntities();
-            if (entityList.isEmpty()) { return; }
+            if (entityList.isEmpty())
+            {
+                return;
+            }
             const CEntityFlags::Entity loadEntities = CEntityFlags::multipleEntitiesByNames(entityList);
             m_pendingEntities = sGui->getWebDataServices()->triggerLoadingDirectlyFromSharedFiles(loadEntities, false);
             const int pending = CEntityFlags::numberOfEntities(m_pendingEntities);
@@ -97,14 +115,23 @@ namespace swift::gui::components
     void CDbLoadDataDialog::onDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state, int number,
                                        const QUrl &url)
     {
-        if (m_pendingEntities == CEntityFlags::NoEntity) { return; } // not triggered from here
-        if (!m_pendingEntities.testFlag(CEntityFlags::entityToEntityFlag(entity))) { return; }
+        if (m_pendingEntities == CEntityFlags::NoEntity)
+        {
+            return;
+        } // not triggered from here
+        if (!m_pendingEntities.testFlag(CEntityFlags::entityToEntityFlag(entity)))
+        {
+            return;
+        }
 
         const QString e = CEntityFlags::entitiesToString(entity);
         const QString s = CEntityFlags::stateToString(state);
 
         ui->le_Info->setText(e % u" " % s);
-        if (!CEntityFlags::isFinishedReadStateOrFailure(state)) { return; }
+        if (!CEntityFlags::isFinishedReadStateOrFailure(state))
+        {
+            return;
+        }
         if (state == CEntityFlags::ReadFailed)
         {
             CLogMessage(this).warning(u"Read failed for %1 from '%2'") << e << url.toString();
@@ -113,7 +140,10 @@ namespace swift::gui::components
         m_pendingEntities &= ~entity;
         const int pending = CEntityFlags::numberOfEntities(m_pendingEntities);
         const int max = ui->pb_Loading->maximum();
-        if (m_pendingEntitiesCount < 0) { ui->pb_Loading->setValue(max - pending); }
+        if (m_pendingEntitiesCount < 0)
+        {
+            ui->pb_Loading->setValue(max - pending);
+        }
         else
         {
             m_pendingEntitiesCount -= number;
@@ -126,7 +156,10 @@ namespace swift::gui::components
 
             QPointer<CDbLoadDataDialog> myself(this);
             QTimer::singleShot(2000, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 ui->wi_Consolidate->setVisible(true);
                 ui->wi_WorkStatus->setVisible(false);
                 if (defaultConsolidate)
@@ -135,7 +168,10 @@ namespace swift::gui::components
                     QPointer<CDbLoadDataDialog> self(
                         this); // 2nd "self"/"myself" for cppcheck identicalConditionAfterEarlyExit
                     QTimer::singleShot(1000, this, [=] {
-                        if (!self) { return; }
+                        if (!self)
+                        {
+                            return;
+                        }
                         self->consolidate();
                     });
                 }
@@ -166,29 +202,45 @@ namespace swift::gui::components
     {
         const bool set = ui->cb_ModelSet->isChecked();
         const bool all = ui->cb_AllModels->isChecked();
-        if (m_consolidating) { return; }
-        if (!set && !all) { return; }
+        if (m_consolidating)
+        {
+            return;
+        }
+        if (!set && !all)
+        {
+            return;
+        }
         ui->wi_WorkStatus->setVisible(true);
         ui->pb_Loading->setValue(0);
         ui->pb_Loading->setMaximum(0); // 0/0 causing busy indicator
         const CSimulatorInfo simulator = ui->comp_SimulatorSelector->getValue();
 
-        do {
+        do
+        {
             if (set)
             {
                 ui->le_Info->setText("Model set");
                 CAircraftModelList models = m_sets.getCachedModels(simulator);
                 const int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
-                if (c > 0) { m_sets.setCachedModels(models, simulator); }
+                if (c > 0)
+                {
+                    m_sets.setCachedModels(models, simulator);
+                }
             }
 
-            if (!this->isVisible()) { break; } // dialog closed?
+            if (!this->isVisible())
+            {
+                break;
+            } // dialog closed?
             if (all)
             {
                 ui->le_Info->setText("All models");
                 CAircraftModelList models = m_models.getCachedModels(simulator);
                 const int c = CDatabaseUtils::consolidateModelsWithDbDataAllowsGuiRefresh(models, true, true);
-                if (c > 0) { m_models.setCachedModels(models, simulator); }
+                if (c > 0)
+                {
+                    m_models.setCachedModels(models, simulator);
+                }
             }
         }
         while (false);
@@ -197,7 +249,10 @@ namespace swift::gui::components
 
         QPointer<CDbLoadDataDialog> myself(this);
         QTimer::singleShot(2000, this, [=, this] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             ui->pb_Loading->setMaximum(100);
             ui->wi_WorkStatus->setVisible(false);
             if (m_autoConsolidate)

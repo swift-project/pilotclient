@@ -30,7 +30,10 @@ namespace swift::misc
         startupInfo.cb = sizeof(startupInfo);
 
         QString command = '"' % QString(program).replace('/', '\\') % '"';
-        if (!arguments.isEmpty()) { command += " \"" % arguments.join("\" \"").replace('/', '\\') % '"'; }
+        if (!arguments.isEmpty())
+        {
+            command += " \"" % arguments.join("\" \"").replace('/', '\\') % '"';
+        }
 
         DWORD flags = 0;
         flags |= NORMAL_PRIORITY_CLASS;
@@ -65,8 +68,14 @@ namespace swift::misc
 
     bool CProcessCtrl::startDetached(const QString &program, const QStringList &arguments, bool withConsoleWindow)
     {
-        if (withConsoleWindow) { return startDetachedWithConsoleWindow(program, arguments); }
-        else { return QProcess::startDetached(program, arguments); }
+        if (withConsoleWindow)
+        {
+            return startDetachedWithConsoleWindow(program, arguments);
+        }
+        else
+        {
+            return QProcess::startDetached(program, arguments);
+        }
     }
 
 } // namespace swift::misc

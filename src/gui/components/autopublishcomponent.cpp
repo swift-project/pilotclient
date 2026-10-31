@@ -54,7 +54,10 @@ namespace swift::gui::components
 
     void CAutoPublishComponent::analyzeAgainstDBData()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         const CAircraftModelList dbModels = sGui->getWebDataServices()->getModels();
         const CStatusMessageList msgs = m_data.analyzeAgainstDBData(dbModels);
         this->showOverlayMessages(msgs);
@@ -64,7 +67,10 @@ namespace swift::gui::components
     {
         using namespace std::chrono_literals;
 
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         if (m_data.isEmpty())
         {
             this->showOverlayHTMLMessage("No data!", 5s);
@@ -96,7 +102,10 @@ namespace swift::gui::components
     void CAutoPublishComponent::deleteAllFiles()
     {
         const int c = CAutoPublishData::deleteAutoPublishFiles();
-        if (c > 0) { this->showOverlayHTMLMessage(QStringLiteral("Deleted %1 file(s)").arg(c)); }
+        if (c > 0)
+        {
+            this->showOverlayHTMLMessage(QStringLiteral("Deleted %1 file(s)").arg(c));
+        }
         this->readFiles();
     }
 
@@ -111,25 +120,37 @@ namespace swift::gui::components
         {
             QPointer<CAutoPublishComponent> myself(this);
             this->showOverlayMessagesWithConfirmation(msgs, true, "Clean up auto publish files?", [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 const auto timeout = 5000ms;
                 myself->deleteAllFiles();
                 myself->showOverlayHTMLMessage("Cleaned auto publish files after uploading them to DB", timeout);
 
                 QTimer::singleShot(timeout * 2, this, [=] {
-                    if (!myself) { return; }
+                    if (!myself)
+                    {
+                        return;
+                    }
                     myself->closeParentDialog();
                 });
             });
             m_lastAutoPublish.set(QDateTime::currentMSecsSinceEpoch());
         }
-        else { this->showOverlayMessages(msgs, true); }
+        else
+        {
+            this->showOverlayMessages(msgs, true);
+        }
     }
 
     void CAutoPublishComponent::closeParentDialog()
     {
         QDialog *d = CGuiUtility::findParentDialog(this);
-        if (d) { d->close(); }
+        if (d)
+        {
+            d->close();
+        }
     }
 
 } // namespace swift::gui::components

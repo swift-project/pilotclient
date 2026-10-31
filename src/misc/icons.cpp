@@ -1092,7 +1092,10 @@ namespace swift::misc
 
     QPixmap CIcons::pixmapByIndex(CIcons::IconIndex index, int rotateDegrees)
     {
-        if (rotateDegrees == 0) { return pixmapByIndex(index); }
+        if (rotateDegrees == 0)
+        {
+            return pixmapByIndex(index);
+        }
         return rotate(rotateDegrees, pixmapByIndex(index));
     }
 

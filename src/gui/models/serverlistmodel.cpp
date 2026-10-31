@@ -22,15 +22,6 @@ namespace swift::gui::models
         m_columns.addColumn(CColumn::standardString("realname", { CServer::IndexUser, CUser::IndexRealName }));
         m_columns.addColumn(CColumn::standardString("userid", { CServer::IndexUser, CUser::IndexId }));
         m_columns.addColumn(CColumn::standardString("eco", { CServer::IndexEcosystem, CEcosystem::IndexSystemString }));
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ServerListModel", "name");
-        (void)QT_TRANSLATE_NOOP("ServerListModel", "description");
-        (void)QT_TRANSLATE_NOOP("ServerListModel", "address");
-        (void)QT_TRANSLATE_NOOP("ServerListModel", "port");
-        (void)QT_TRANSLATE_NOOP("ServerListModel", "realname");
-        (void)QT_TRANSLATE_NOOP("ServerListModel", "userid");
-        (void)QT_TRANSLATE_NOOP("ServerListModel", "eco");
     }
 
 } // namespace swift::gui::models

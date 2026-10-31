@@ -14,13 +14,22 @@ namespace swift::gui::models
 
     CDistributorList CDistributorFilter::filter(const CDistributorList &inDistributors) const
     {
-        if (!this->isValid()) { return inDistributors; }
-        if (this->ignoreSimulator()) { return inDistributors; }
+        if (!this->isValid())
+        {
+            return inDistributors;
+        }
+        if (this->ignoreSimulator())
+        {
+            return inDistributors;
+        }
 
         CDistributorList outContainer;
         for (const CDistributor &distributor : inDistributors)
         {
-            if (!distributor.getSimulator().matchesAnyOrNone(m_simulator)) { continue; }
+            if (!distributor.getSimulator().matchesAnyOrNone(m_simulator))
+            {
+                continue;
+            }
             outContainer.push_back(distributor);
         }
         return outContainer;

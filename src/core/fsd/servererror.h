@@ -60,7 +60,7 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const ServerError &lhs, const ServerError &rhs)
     {
-        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() &&
                lhs.m_errorNumber == rhs.m_errorNumber && lhs.m_causingParameter == rhs.m_causingParameter &&
                lhs.m_description == rhs.m_description;
     }

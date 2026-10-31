@@ -43,13 +43,5 @@ namespace swift::gui::models
         m_columns.addColumn(CColumn::standardString(
             "telephony", { CLivery::IndexAirlineIcaoCode, CAirlineIcaoCode::IndexTelephonyDesignator }));
         m_columns.addColumn(CColumn::standardString("changed", CLivery::IndexUtcTimestampFormattedYmdhms));
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ModelLiveryList", "key");
-        (void)QT_TRANSLATE_NOOP("ModelLiveryList", "description");
-        (void)QT_TRANSLATE_NOOP("ModelLiveryList", "fuselage");
-        (void)QT_TRANSLATE_NOOP("ModelLiveryList", "tail");
-        (void)QT_TRANSLATE_NOOP("ModelLiveryList", "mil.");
-        (void)QT_TRANSLATE_NOOP("ModelLiveryList", "military");
     }
 } // namespace swift::gui::models

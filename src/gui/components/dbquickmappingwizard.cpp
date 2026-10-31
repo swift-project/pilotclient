@@ -83,7 +83,10 @@ namespace swift::gui::components
             // disable enter, interferes with filter returnPressed
             event->accept();
         }
-        else { QWizard::keyPressEvent(event); }
+        else
+        {
+            QWizard::keyPressEvent(event);
+        }
     }
 
     void CDbQuickMappingWizard::presetAircraftIcao(const CAircraftIcaoCode &aircraftIcao)
@@ -96,7 +99,10 @@ namespace swift::gui::components
     void CDbQuickMappingWizard::presetModel(const CAircraftModel &model)
     {
         QString ms = model.getModelString();
-        if (!model.getDescription().isEmpty()) { ms += u" (" % model.getDescription() % u")"; }
+        if (!model.getDescription().isEmpty())
+        {
+            ms += u" (" % model.getDescription() % u")";
+        }
 
         this->presetAircraftIcao(model.getAircraftIcaoCode());
         ui->selector_AirlineIcaoCode->setAirlineIcao(model.getAirlineIcaoCode());
@@ -169,30 +175,51 @@ namespace swift::gui::components
     CLivery CDbQuickMappingWizard::getFirstSelectedOrDefaultLivery() const
     {
         const CLivery l = ui->comp_Livery->view()->firstSelectedOrDefaultObject();
-        if (l.isLoadedFromDb()) { return l; }
-        if (m_model.getLivery().isLoadedFromDb()) { return m_model.getLivery(); }
+        if (l.isLoadedFromDb())
+        {
+            return l;
+        }
+        if (m_model.getLivery().isLoadedFromDb())
+        {
+            return m_model.getLivery();
+        }
         return l;
     }
 
     CAircraftIcaoCode CDbQuickMappingWizard::getFirstSelectedOrDefaultAircraftIcao() const
     {
         const CAircraftIcaoCode icao = ui->comp_AircraftIcao->view()->firstSelectedOrDefaultObject();
-        if (icao.isLoadedFromDb()) { return icao; }
-        if (m_model.getAircraftIcaoCode().isLoadedFromDb()) { return m_model.getAircraftIcaoCode(); }
+        if (icao.isLoadedFromDb())
+        {
+            return icao;
+        }
+        if (m_model.getAircraftIcaoCode().isLoadedFromDb())
+        {
+            return m_model.getAircraftIcaoCode();
+        }
         return icao;
     }
 
     swift::misc::simulation::CDistributor CDbQuickMappingWizard::getFirstSelectedOrDefaultDistributor() const
     {
         const CDistributor dist = ui->comp_Distributor->view()->firstSelectedOrDefaultObject();
-        if (dist.isLoadedFromDb()) { return dist; }
-        if (m_model.getDistributor().isLoadedFromDb()) { return m_model.getDistributor(); }
+        if (dist.isLoadedFromDb())
+        {
+            return dist;
+        }
+        if (m_model.getDistributor().isLoadedFromDb())
+        {
+            return m_model.getDistributor();
+        }
         return dist;
     }
 
     void CDbQuickMappingWizard::onWebDataRead()
     {
-        if (!sGui || !sGui->hasWebDataServices()) { return; }
+        if (!sGui || !sGui->hasWebDataServices())
+        {
+            return;
+        }
     }
 
     void CDbQuickMappingWizard::onPublishedModels(const CAircraftModelList &modelsPublished,
@@ -208,7 +235,10 @@ namespace swift::gui::components
         {
             msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo, u"Publishing request sent"));
         }
-        else { msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"Publishing request failed")); }
+        else
+        {
+            msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityError, u"Publishing request failed"));
+        }
         msgs.push_back(messages);
         ui->comp_Log->appendStatusMessagesToList(msgs);
     }
@@ -228,12 +258,21 @@ namespace swift::gui::components
         }
         break;
         case PageColor:
-            if (!colorMode) { forward ? this->next() : this->back(); }
+            if (!colorMode)
+            {
+                forward ? this->next() : this->back();
+            }
             break;
         case PageLiverySelect:
         {
-            if (colorMode) { this->setColorFilter(); }
-            else { this->setAirlineIcaoFilter(); }
+            if (colorMode)
+            {
+                this->setColorFilter();
+            }
+            else
+            {
+                this->setAirlineIcaoFilter();
+            }
         }
         break;
         case PageDistributorSelect:
@@ -252,7 +291,10 @@ namespace swift::gui::components
             const bool errorFree = !msgs.hasWarningOrErrorMessages();
             ui->fr_ConfirmationOk->setVisible(errorFree);
             ui->fr_ConfirmationStillErrors->setVisible(!errorFree);
-            if (!errorFree) { ui->wp6_Confirmation->showOverlayMessages(msgs); }
+            if (!errorFree)
+            {
+                ui->wp6_Confirmation->showOverlayMessages(msgs);
+            }
         }
         break;
         case PageCredentials:
@@ -284,7 +326,10 @@ namespace swift::gui::components
         case PageConfirmation:
         {
             const CStatusMessageList msgs(this->validateData());
-            if (!msgs.isEmpty()) { ui->wp6_Confirmation->showOverlayMessages(msgs); }
+            if (!msgs.isEmpty())
+            {
+                ui->wp6_Confirmation->showOverlayMessages(msgs);
+            }
             ok = !msgs.hasWarningOrErrorMessages();
         }
         break;
@@ -317,7 +362,10 @@ namespace swift::gui::components
         }
 
         const CStatusMessage vMsg = ui->selector_Simulator->getValue().validateSimulatorsForModel();
-        if (vMsg.isWarningOrAbove()) { msgs.push_back(vMsg); }
+        if (vMsg.isWarningOrAbove())
+        {
+            msgs.push_back(vMsg);
+        }
 
         return msgs;
     }
@@ -338,7 +386,10 @@ namespace swift::gui::components
         if (!sims.isAnySimulator() && m_model.hasModelString() && sGui && sGui->hasWebDataServices())
         {
             const CAircraftModel m = sGui->getWebDataServices()->getModelForModelString(m_model.getModelString());
-            if (m.isLoadedFromDb()) { sims = m.getSimulator(); }
+            if (m.isLoadedFromDb())
+            {
+                sims = m.getSimulator();
+            }
         }
 
         if (sGui && !sGui->isShuttingDown() && sGui->getIContextSimulator() &&
@@ -360,7 +411,10 @@ namespace swift::gui::components
 
         // make sure the model is correctly excluded for XP etc.
         static const QString qmw(u"[swift QMW " % CBuildConfig::getVersionString() % u"]");
-        if (m_model.getSimulator().isXPlane()) { m_model.setModelMode(CAircraftModel::Exclude); }
+        if (m_model.getSimulator().isXPlane())
+        {
+            m_model.setModelMode(CAircraftModel::Exclude);
+        }
         m_model.setVersion(CBuildConfig::getVersionString());
         const QString extraInfo = QString(m_model.getDescription() % u" " % qmw).simplified().trimmed();
 

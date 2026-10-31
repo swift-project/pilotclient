@@ -34,13 +34,6 @@ namespace swift::gui::models
         : CListModelCallsignObjects("ModelAtcList", parent)
     {
         this->setStationMode(stationMode);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "callsign");
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "frequency");
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "distance");
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "controllername");
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "online");
     }
 
     void CAtcStationListModel::setStationMode(CAtcStationListModel::AtcStationMode stationMode)
@@ -91,16 +84,25 @@ namespace swift::gui::models
 
     void CAtcStationListModel::changedAtcStationConnectionStatus(const CAtcStation &station, bool added)
     {
-        if (station.getCallsign().isEmpty()) { return; }
+        if (station.getCallsign().isEmpty())
+        {
+            return;
+        }
         if (added)
         {
             const bool c = m_container.contains(&CAtcStation::getCallsign, station.getCallsign());
-            if (!c) { this->insert(station); }
+            if (!c)
+            {
+                this->insert(station);
+            }
         }
         else
         {
             QModelIndex parent;
-            if (rowCount(parent) == 0) { return; }
+            if (rowCount(parent) == 0)
+            {
+                return;
+            }
             beginRemoveRows(parent, 0, 0);
             this->removeIf(&CAtcStation::getCallsign, station.getCallsign());
             endRemoveRows();

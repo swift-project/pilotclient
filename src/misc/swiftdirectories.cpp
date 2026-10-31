@@ -25,7 +25,10 @@ namespace swift::misc
     QString binDirectoryImpl()
     {
         QString appDirectoryString(qApp->applicationDirPath());
-        if (appDirectoryString.endsWith("Contents/MacOS")) { appDirectoryString += "/../../.."; }
+        if (appDirectoryString.endsWith("Contents/MacOS"))
+        {
+            appDirectoryString += "/../../..";
+        }
         QDir appDirectory(appDirectoryString);
         return appDirectory.absolutePath();
     }
@@ -59,8 +62,14 @@ namespace swift::misc
         // the xswiftbus directory in out, not in dist
         static const QString bd = [] {
             QDir dir(binDirectory());
-            if (!dir.cdUp()) { return QString(); }
-            if (!dir.cd("xswiftbus")) { return QString(); }
+            if (!dir.cdUp())
+            {
+                return QString();
+            }
+            if (!dir.cd("xswiftbus"))
+            {
+                return QString();
+            }
             return dir.absolutePath();
         }();
         return bd;
@@ -75,9 +84,15 @@ namespace swift::misc
         {
             // MacOS bundle may or may not be a bundle
             const QDir dir(s + QLatin1String(".app/Contents/MacOS"));
-            if (dir.exists()) { s += QLatin1String(".app/Contents/MacOS/") + executable; }
+            if (dir.exists())
+            {
+                s += QLatin1String(".app/Contents/MacOS/") + executable;
+            }
         }
-        else if (CBuildConfig::isRunningOnWindowsNtPlatform()) { s += QLatin1String(".exe"); }
+        else if (CBuildConfig::isRunningOnWindowsNtPlatform())
+        {
+            s += QLatin1String(".exe");
+        }
         return s;
     }
 
@@ -86,7 +101,10 @@ namespace swift::misc
         QString appDir = CSwiftDirectories::binDirectory();
         Q_ASSERT(appDir.size() > 0);
         // Remove leading '/' on Unix
-        if (appDir.at(0) == '/') { appDir.remove(0, 1); }
+        if (appDir.at(0) == '/')
+        {
+            appDir.remove(0, 1);
+        }
         return QUrl::toPercentEncoding(appDir);
     }
 
@@ -112,7 +130,10 @@ namespace swift::misc
     QFileInfoList CSwiftDirectories::currentApplicationDataDirectories()
     {
         const QDir swiftAppData(applicationDataDirectory()); // contains 1..n subdirs
-        if (!swiftAppData.isReadable()) { return {}; }
+        if (!swiftAppData.isReadable())
+        {
+            return {};
+        }
         return swiftAppData.entryInfoList({}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Time);
     }
 
@@ -189,7 +210,10 @@ namespace swift::misc
     QString getBootstrapResourceFileImpl()
     {
         const QString d(CSwiftDirectories::shareDirectory());
-        if (d.isEmpty()) { return {}; }
+        if (d.isEmpty())
+        {
+            return {};
+        }
         const QFile file(
             QDir::cleanPath(d + QDir::separator() + "shared/bootstrap/" + CSwiftDirectories::bootstrapFileName()));
         Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing bootstrap file");
@@ -205,7 +229,10 @@ namespace swift::misc
     QString getSwiftStaticDbFilesDirImpl()
     {
         const QString d(CSwiftDirectories::shareDirectory());
-        if (d.isEmpty()) { return {}; }
+        if (d.isEmpty())
+        {
+            return {};
+        }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "shared/dbdata"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
@@ -220,7 +247,10 @@ namespace swift::misc
     QString getSoundFilesDirImpl()
     {
         const QString d(CSwiftDirectories::shareDirectory());
-        if (d.isEmpty()) { return {}; }
+        if (d.isEmpty())
+        {
+            return {};
+        }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "sounds"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
@@ -235,7 +265,10 @@ namespace swift::misc
     QString getStylesheetsDirImpl()
     {
         const QString d(CSwiftDirectories::shareDirectory());
-        if (d.isEmpty()) { return {}; }
+        if (d.isEmpty())
+        {
+            return {};
+        }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "qss"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
@@ -284,7 +317,10 @@ namespace swift::misc
     QString testFilesDirImpl()
     {
         const QString d(CSwiftDirectories::shareDirectory());
-        if (d.isEmpty()) { return {}; }
+        if (d.isEmpty())
+        {
+            return {};
+        }
         const QDir dir(QDir::cleanPath(d + QDir::separator() + "test"));
         Q_ASSERT_X(dir.exists(), Q_FUNC_INFO, "missing dir");
         return dir.absolutePath();
@@ -308,7 +344,10 @@ namespace swift::misc
         QString d = pathes.first();
         d = QDir::cleanPath(CFileUtils::appendFilePaths(d, "swift"));
         QDir dir(d);
-        if (dir.exists()) { return dir.absolutePath(); }
+        if (dir.exists())
+        {
+            return dir.absolutePath();
+        }
         return pathes.first();
     }
 
@@ -340,23 +379,41 @@ namespace swift::misc
     {
         QStringList failed;
         QDir d(binDirectory());
-        if (!d.isReadable()) { failed.append(d.absolutePath()); }
+        if (!d.isReadable())
+        {
+            failed.append(d.absolutePath());
+        }
 
         d = QDir(stylesheetsDirectory());
-        if (!d.isReadable()) { failed.append(d.absolutePath()); }
+        if (!d.isReadable())
+        {
+            failed.append(d.absolutePath());
+        }
 
         d = QDir(applicationDataDirectory());
-        if (!d.isReadable()) { failed.append(d.absolutePath()); }
+        if (!d.isReadable())
+        {
+            failed.append(d.absolutePath());
+        }
 
         // check if the executables are avialable
         QString fn = executableFilePath(CBuildConfig::swiftCoreExecutableName());
-        if (!QFile::exists(fn)) { failed.append(fn); }
+        if (!QFile::exists(fn))
+        {
+            failed.append(fn);
+        }
 
         fn = executableFilePath(CBuildConfig::swiftDataExecutableName());
-        if (!QFile::exists(fn)) { failed.append(fn); }
+        if (!QFile::exists(fn))
+        {
+            failed.append(fn);
+        }
 
         fn = executableFilePath(CBuildConfig::swiftGuiExecutableName());
-        if (!QFile::exists(fn)) { failed.append(fn); }
+        if (!QFile::exists(fn))
+        {
+            failed.append(fn);
+        }
 
         return failed;
     }
@@ -367,7 +424,10 @@ namespace swift::misc
         {
             const QString fp = CFileUtils::appendFilePathsAndFixUnc(directory, fileName);
             const QFileInfo fi(fp);
-            if (fi.exists()) { return fi.absoluteFilePath(); }
+            if (fi.exists())
+            {
+                return fi.absoluteFilePath();
+            }
         }
         const QString fp = CFileUtils::appendFilePathsAndFixUnc(CSwiftDirectories::soundFilesDirectory(), fileName);
         const QFileInfo fi(fp);

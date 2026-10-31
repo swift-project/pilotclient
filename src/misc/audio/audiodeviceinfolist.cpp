@@ -34,17 +34,29 @@ namespace swift::misc::audio
     CAudioDeviceInfo CAudioDeviceInfoList::findByNameOrDefault(const QString &name,
                                                                const CAudioDeviceInfo &defaultDevice, bool strict) const
     {
-        if (name.isEmpty()) { return defaultDevice; }
+        if (name.isEmpty())
+        {
+            return defaultDevice;
+        }
         for (const CAudioDeviceInfo &d : *this)
         {
             if (strict)
             {
-                if (d.getName() == name) { return d; }
+                if (d.getName() == name)
+                {
+                    return d;
+                }
             }
             else
             {
-                if (d.getName().startsWith(name, Qt::CaseInsensitive)) { return d; }
-                if (name.startsWith(d.getName(), Qt::CaseInsensitive)) { return d; }
+                if (d.getName().startsWith(name, Qt::CaseInsensitive))
+                {
+                    return d;
+                }
+                if (name.startsWith(d.getName(), Qt::CaseInsensitive))
+                {
+                    return d;
+                }
             }
         }
         return defaultDevice;
@@ -52,12 +64,18 @@ namespace swift::misc::audio
 
     CAudioDeviceInfoList CAudioDeviceInfoList::findByHostName(const QString &hostName) const
     {
-        if (hostName.isEmpty()) { return {}; }
+        if (hostName.isEmpty())
+        {
+            return {};
+        }
 
         CAudioDeviceInfoList devices;
         for (const CAudioDeviceInfo &d : *this)
         {
-            if (stringCompare(hostName, d.getMachineName(), Qt::CaseInsensitive)) { devices.push_back(d); }
+            if (stringCompare(hostName, d.getMachineName(), Qt::CaseInsensitive))
+            {
+                devices.push_back(d);
+            }
         }
         return devices;
     }
@@ -66,33 +84,54 @@ namespace swift::misc::audio
     {
         for (const CAudioDeviceInfo &d : *this)
         {
-            if (device.matchesNameTypeMachineProcess(d)) { return d; }
+            if (device.matchesNameTypeMachineProcess(d))
+            {
+                return d;
+            }
         }
         return {};
     }
 
     void CAudioDeviceInfoList::registerDevice(const CAudioDeviceInfo &device)
     {
-        if (!device.isValid()) { return; }
-        if (this->isRegisteredDevice(device)) { return; }
+        if (!device.isValid())
+        {
+            return;
+        }
+        if (this->isRegisteredDevice(device))
+        {
+            return;
+        }
         this->push_back(device);
     }
 
     void CAudioDeviceInfoList::registerDevices(const CAudioDeviceInfoList &devices)
     {
-        for (const CAudioDeviceInfo &device : devices) { this->registerDevice(device); }
+        for (const CAudioDeviceInfo &device : devices)
+        {
+            this->registerDevice(device);
+        }
     }
 
     void CAudioDeviceInfoList::unRegisterDevice(const CAudioDeviceInfo &device)
     {
-        if (!device.isValid()) { return; }
+        if (!device.isValid())
+        {
+            return;
+        }
         const CAudioDeviceInfo registeredDevice = this->findRegisteredDeviceOrDefault(device);
-        if (registeredDevice.isValid()) { this->remove(registeredDevice); }
+        if (registeredDevice.isValid())
+        {
+            this->remove(registeredDevice);
+        }
     }
 
     void CAudioDeviceInfoList::unRegisterDevices(const CAudioDeviceInfoList &devices)
     {
-        for (const CAudioDeviceInfo &device : devices) { this->unRegisterDevice(device); }
+        for (const CAudioDeviceInfo &device : devices)
+        {
+            this->unRegisterDevice(device);
+        }
     }
 
     void CAudioDeviceInfoList::unRegisterDevices(const CIdentifier &identifier)
@@ -114,13 +153,19 @@ namespace swift::misc::audio
     QStringList CAudioDeviceInfoList::getDeviceNames() const
     {
         QStringList names;
-        for (const CAudioDeviceInfo &d : *this) { names << d.getName(); }
+        for (const CAudioDeviceInfo &d : *this)
+        {
+            names << d.getName();
+        }
         return names;
     }
 
     bool CAudioDeviceInfoList::hasSameDevices(const CAudioDeviceInfoList &compareDevices) const
     {
-        if (compareDevices.size() != this->size()) { return false; }
+        if (compareDevices.size() != this->size())
+        {
+            return false;
+        }
         return std::all_of(cbegin(), cend(), [&](const CAudioDeviceInfo &d) {
             return compareDevices.findRegisteredDeviceOrDefault(d).isValid();
         });
@@ -132,7 +177,10 @@ namespace swift::misc::audio
         for (const QAudioDevice &inputDevice : allQtInputDevices())
         {
             const CAudioDeviceInfo d(CAudioDeviceInfo::InputDevice, inputDevice.description());
-            if (!devices.contains(d)) { devices.push_back(d); }
+            if (!devices.contains(d))
+            {
+                devices.push_back(d);
+            }
         }
         return devices;
     }
@@ -143,7 +191,10 @@ namespace swift::misc::audio
         for (const QAudioDevice &outputDevice : allQtOutputDevices())
         {
             const CAudioDeviceInfo d(CAudioDeviceInfo::OutputDevice, outputDevice.description());
-            if (!devices.contains(d)) { devices.push_back(d); }
+            if (!devices.contains(d))
+            {
+                devices.push_back(d);
+            }
         }
         return devices;
     }

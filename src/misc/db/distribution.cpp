@@ -22,7 +22,10 @@ namespace swift::misc::db
 
     void CDistribution::setDownloadUrl(const CUrl &url)
     {
-        if (url.isEmpty()) { return; }
+        if (url.isEmpty())
+        {
+            return;
+        }
         m_downloadUrl = url;
     }
 
@@ -56,7 +59,10 @@ namespace swift::misc::db
 
     QVariant CDistribution::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         if (IDatastoreObjectWithIntegerKey::canHandleIndex(index))
         {
             return IDatastoreObjectWithIntegerKey::propertyByIndex(index);
@@ -122,7 +128,10 @@ namespace swift::misc::db
         {
             const QString key = "url" + QString::number(i);
             const QString url = json.value(key).toString();
-            if (url.isEmpty()) { continue; }
+            if (url.isEmpty())
+            {
+                continue;
+            }
             distribution.setDownloadUrl(CUrl(url));
         }
         return distribution;

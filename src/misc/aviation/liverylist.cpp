@@ -17,20 +17,35 @@ namespace swift::misc::aviation
     CLiveryList CLiveryList::findByAirlineIcaoDesignator(const QString &icao) const
     {
         QString icaoCode(icao.trimmed().toUpper());
-        if (icaoCode.isEmpty()) { return {}; }
+        if (icaoCode.isEmpty())
+        {
+            return {};
+        }
         return this->findBy(&CLivery::getAirlineIcaoCodeDesignator, icaoCode);
     }
 
     CLivery CLiveryList::findStdLiveryByAirlineIcaoVDesignator(const CAirlineIcaoCode &icao) const
     {
-        if (this->isEmpty() || !icao.hasValidDesignator()) { return {}; }
+        if (this->isEmpty() || !icao.hasValidDesignator())
+        {
+            return {};
+        }
         CLiveryList candidates;
         for (const CLivery &livery : *this)
         {
-            if (!livery.isAirlineStandardLivery()) { continue; }
+            if (!livery.isAirlineStandardLivery())
+            {
+                continue;
+            }
             const CAirlineIcaoCode livIcao = livery.getAirlineIcaoCode();
-            if (livIcao.isDbEqual(icao)) { return livery; }
-            if (livIcao.getVDesignator() != icao.getVDesignator()) { continue; }
+            if (livIcao.isDbEqual(icao))
+            {
+                return livery;
+            }
+            if (livIcao.getVDesignator() != icao.getVDesignator())
+            {
+                continue;
+            }
             if (icao.getName().size() > 5 && livery.getDescription().contains(icao.getName(), Qt::CaseInsensitive))
             {
                 return livery;
@@ -38,25 +53,40 @@ namespace swift::misc::aviation
             candidates.push_back(livery);
         }
 
-        if (candidates.size() < 2) { return candidates.frontOrDefault(); }
+        if (candidates.size() < 2)
+        {
+            return candidates.frontOrDefault();
+        }
         const CLiveryList operatingAirlines = candidates.findBy(&CLivery::isAirlineOperating, true);
-        if (!operatingAirlines.isEmpty()) { return operatingAirlines.frontOrDefault(); }
+        if (!operatingAirlines.isEmpty())
+        {
+            return operatingAirlines.frontOrDefault();
+        }
         return candidates.frontOrDefault();
     }
 
     CLivery CLiveryList::findStdLiveryByAirlineIcaoVDesignator(const QString &icao) const
     {
         const QString icaoDesignator(icao.trimmed().toUpper());
-        if (icaoDesignator.isEmpty()) { return {}; }
+        if (icaoDesignator.isEmpty())
+        {
+            return {};
+        }
         return this->findFirstByOrDefault([&](const CLivery &livery) {
-            if (!livery.isAirlineStandardLivery()) { return false; }
+            if (!livery.isAirlineStandardLivery())
+            {
+                return false;
+            }
             return livery.getAirlineIcaoCode().matchesVDesignator(icaoDesignator);
         });
     }
 
     CLiveryList CLiveryList::findStdLiveriesBySimplifiedAirlineName(const QString &containedString) const
     {
-        if (containedString.isEmpty()) { return {}; }
+        if (containedString.isEmpty())
+        {
+            return {};
+        }
         return this->findBy([&](const CLivery &livery) {
             // keep isAirlineStandardLivery first (faster)
             return livery.isAirlineStandardLivery() && livery.isContainedInSimplifiedAirlineName(containedString);
@@ -65,7 +95,10 @@ namespace swift::misc::aviation
 
     CLiveryList CLiveryList::findStdLiveriesByNamesOrTelephonyDesignator(const QString &candidate) const
     {
-        if (candidate.isEmpty()) { return {}; }
+        if (candidate.isEmpty())
+        {
+            return {};
+        }
         return this->findBy([&](const CLivery &livery) {
             // keep isAirlineStandardLivery first (faster)
             return livery.isAirlineStandardLivery() &&
@@ -75,23 +108,38 @@ namespace swift::misc::aviation
 
     CLivery CLiveryList::findColorLiveryOrDefault(const CRgbColor &fuselage, const CRgbColor &tail) const
     {
-        if (!fuselage.isValid() || !tail.isValid()) { return {}; }
+        if (!fuselage.isValid() || !tail.isValid())
+        {
+            return {};
+        }
         return this->findFirstByOrDefault([&](const CLivery &livery) {
-            if (!livery.isColorLivery()) { return false; }
+            if (!livery.isColorLivery())
+            {
+                return false;
+            }
             return livery.matchesColors(fuselage, tail);
         });
     }
 
     CLivery CLiveryList::findClosestColorLiveryOrDefault(const CRgbColor &fuselage, const CRgbColor &tail) const
     {
-        if (!fuselage.isValid() || !tail.isValid()) { return {}; }
+        if (!fuselage.isValid() || !tail.isValid())
+        {
+            return {};
+        }
         CLivery bestMatch;
         double bestDistance = 1.0;
         for (const CLivery &livery : *this)
         {
-            if (!livery.isColorLivery()) { continue; }
+            if (!livery.isColorLivery())
+            {
+                continue;
+            }
             const double d = livery.getColorDistance(fuselage, tail);
-            if (d == 0.0) { return livery; } // exact match
+            if (d == 0.0)
+            {
+                return livery;
+            } // exact match
             if (d < bestDistance)
             {
                 bestMatch = livery;
@@ -103,39 +151,63 @@ namespace swift::misc::aviation
 
     CLivery CLiveryList::findByCombinedCode(const QString &combinedCode) const
     {
-        if (!CLivery::isValidCombinedCode(combinedCode)) { return {}; }
+        if (!CLivery::isValidCombinedCode(combinedCode))
+        {
+            return {};
+        }
         return this->findFirstByOrDefault(
             [&](const CLivery &livery) { return livery.matchesCombinedCode(combinedCode); });
     }
 
     QStringList CLiveryList::getCombinedCodes(bool sort) const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         QStringList codes = this->transform(predicates::MemberTransform(&CLivery::getCombinedCode));
-        if (sort) { codes.sort(); }
+        if (sort)
+        {
+            codes.sort();
+        }
         return codes;
     }
 
     QStringList CLiveryList::getCombinedCodesPlusInfo(bool sort) const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         QStringList codes = this->transform(predicates::MemberTransform(&CLivery::getCombinedCodePlusInfo));
-        if (sort) { codes.sort(); }
+        if (sort)
+        {
+            codes.sort();
+        }
         return codes;
     }
 
     QStringList CLiveryList::getCombinedCodesPlusInfoAndId(bool sort) const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         QStringList codes = this->transform(predicates::MemberTransform(&CLivery::getCombinedCodePlusInfoAndId));
-        if (sort) { codes.sort(); }
+        if (sort)
+        {
+            codes.sort();
+        }
         return codes;
     }
 
     CAirlineIcaoCodeList CLiveryList::getAirlines() const
     {
         CAirlineIcaoCodeList icaos;
-        for (const CLivery &livery : *this) { icaos.push_back(livery.getAirlineIcaoCode()); }
+        for (const CLivery &livery : *this)
+        {
+            icaos.push_back(livery.getAirlineIcaoCode());
+        }
         return icaos;
     }
 
@@ -145,14 +217,20 @@ namespace swift::misc::aviation
         // in the future
 
         // first try on id, that would be perfect
-        if (liveryPattern.hasValidDbKey()) { return liveryPattern; }
+        if (liveryPattern.hasValidDbKey())
+        {
+            return liveryPattern;
+        }
 
         // by combined code
         if (liveryPattern.hasCombinedCode())
         {
             const QString cc(liveryPattern.getCombinedCode());
             const CLivery l(this->findByCombinedCode(cc));
-            if (l.hasCompleteData()) { return l; }
+            if (l.hasCompleteData())
+            {
+                return l;
+            }
         }
 
         // by airline
@@ -160,12 +238,18 @@ namespace swift::misc::aviation
         {
             const QString icao(liveryPattern.getAirlineIcaoCodeDesignator());
             const CLivery l(this->findStdLiveryByAirlineIcaoVDesignator(icao));
-            if (l.hasCompleteData()) { return l; }
+            if (l.hasCompleteData())
+            {
+                return l;
+            }
 
             // lenient search by assuming that a virtual airline is not annotated by "V"
             // VHDU not found, but HDU
             const CLiveryList liveries = this->findByAirlineIcaoDesignator(icao);
-            if (liveries.size() == 1) { return liveries.front(); }
+            if (liveries.size() == 1)
+            {
+                return liveries.front();
+            }
             if (liveries.size() > 1)
             {
                 if (liveryPattern.hasAirlineName())
@@ -173,7 +257,10 @@ namespace swift::misc::aviation
                     // reduce by name
                     const CLiveryList liveriesByName =
                         liveries.findStdLiveriesBySimplifiedAirlineName(liveryPattern.getAirlineName());
-                    if (!liveriesByName.isEmpty()) { return liveriesByName.front(); }
+                    if (!liveriesByName.isEmpty())
+                    {
+                        return liveriesByName.front();
+                    }
                 }
                 return liveries.front();
             }
@@ -184,7 +271,10 @@ namespace swift::misc::aviation
         {
             const QString search(liveryPattern.getAirlineIcaoCode().getSimplifiedName());
             const CLiveryList liveries(this->findStdLiveriesByNamesOrTelephonyDesignator(search));
-            if (!liveries.isEmpty()) { return liveries.front(); }
+            if (!liveries.isEmpty())
+            {
+                return liveries.front();
+            }
         }
         return {};
     }

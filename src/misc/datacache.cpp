@@ -47,7 +47,10 @@ namespace swift::misc
 
         ~LockGuard()
         {
-            if (!m_movedFrom) { m_rev->finishUpdate(m_keepPromises); }
+            if (!m_movedFrom)
+            {
+                m_rev->finishUpdate(m_keepPromises);
+            }
         }
 
         operator bool() const { return !m_movedFrom; }
@@ -137,12 +140,19 @@ namespace swift::misc
         if (future.valid())
         {
             std::future_status s {};
-            do {
+            do
+            {
                 s = future.wait_for(timeout);
             }
             while (s != ready && m_revision.isNewerValueAvailable(key, getTimestampSync(key)));
-            if (s != ready) { s = future.wait_for(zero); }
-            if (s != ready) { return false; }
+            if (s != ready)
+            {
+                s = future.wait_for(zero);
+            }
+            if (s != ready)
+            {
+                return false;
+            }
 
             //! \todo KB 2018-07 In datastore with consolidation "on" I see many of these exceptions. Is that a normal
             //! state?
@@ -186,7 +196,10 @@ namespace swift::misc
     void CDataCache::admitValue(const QString &key, bool triggerLoad)
     {
         m_revision.admitValue(key);
-        if (triggerLoad) { loadFromStoreAsync(); }
+        if (triggerLoad)
+        {
+            loadFromStoreAsync();
+        }
     }
 
     void CDataCache::sessionValue(const QString &key)
@@ -235,7 +248,10 @@ namespace swift::misc
         std::swap(m_queue, queue);
         lock.unlock();
 
-        for (const auto &pair : std::as_const(queue)) { m_page->setValuesFromCache(pair.first, pair.second); }
+        for (const auto &pair : std::as_const(queue))
+        {
+            m_page->setValuesFromCache(pair.first, pair.second);
+        }
     }
 
     void CDataPageQueue::setQueuedValueFromCache(const QString &key)
@@ -245,10 +261,16 @@ namespace swift::misc
         decltype(m_queue) filtered;
         for (auto &pair : m_queue)
         {
-            if (pair.first.contains(key)) { filtered.push_back({ pair.first.takeByKey(key), pair.second }); }
+            if (pair.first.contains(key))
+            {
+                filtered.push_back({ pair.first.takeByKey(key), pair.second });
+            }
         }
         lock.unlock();
-        for (const auto &pair : filtered) { m_page->setValuesFromCache(pair.first, pair.second); }
+        for (const auto &pair : filtered)
+        {
+            m_page->setValuesFromCache(pair.first, pair.second);
+        }
     }
 
     const QStringList &CDataCacheSerializer::getLogCategories()
@@ -275,7 +297,10 @@ namespace swift::misc
             m_deferredChanges.remove(key);
         } // ignore changes that we are about to overwrite
 
-        if (!lock) { return; }
+        if (!lock)
+        {
+            return;
+        }
         m_cache->m_revision.writeNewRevision(baseline.toTimestampMap());
 
         auto msg = m_cache->saveToFiles(persistentStore(), values, baseline.toTimestampMapString(values.keys()));
@@ -304,14 +329,20 @@ namespace swift::misc
             newValues.setTimestamps(m_cache->m_revision.newerTimestamps());
 
             auto missingKeys = m_cache->m_revision.keysWithNewerTimestamps() - newValues.keys();
-            if (!missingKeys.isEmpty()) { m_cache->m_revision.writeNewRevision({}, missingKeys); }
+            if (!missingKeys.isEmpty())
+            {
+                m_cache->m_revision.writeNewRevision({}, missingKeys);
+            }
 
             msg.setCategories(this);
             CLogMessage::preformatted(msg);
             m_deferredChanges.insert(newValues);
         }
 
-        if (!defer) { applyDeferredChanges(); }
+        if (!defer)
+        {
+            applyDeferredChanges();
+        }
         return lock;
     }
 
@@ -330,7 +361,10 @@ namespace swift::misc
     {
         QTimer::singleShot(0, Qt::PreciseTimer, this,
                            [promises = std::make_shared<decltype(i_promises)>(std::move(i_promises))]() {
-                               for (auto &promise : *promises) { promise.set_value(); }
+                               for (auto &promise : *promises)
+                               {
+                                   promise.set_value();
+                               }
                            });
     }
 
@@ -390,10 +424,16 @@ namespace swift::misc
                 QUuid id(json.value("uuid").toString());
                 if (id == m_uuid && m_admittedQueue.isEmpty())
                 {
-                    if (m_pendingWrite) { return guard; }
+                    if (m_pendingWrite)
+                    {
+                        return guard;
+                    }
                     return {};
                 }
-                if (updateUuid) { m_uuid = id; }
+                if (updateUuid)
+                {
+                    m_uuid = id;
+                }
 
                 auto timesToLive = fromJson(json.value("ttl").toObject());
                 for (auto it = m_originalTimestamps.cbegin(); it != m_originalTimestamps.cend(); ++it)
@@ -407,7 +447,10 @@ namespace swift::misc
                 }
                 if (m_timestamps.isEmpty())
                 {
-                    if (m_pendingWrite) { return guard; }
+                    if (m_pendingWrite)
+                    {
+                        return guard;
+                    }
                     return {};
                 }
 
@@ -416,13 +459,19 @@ namespace swift::misc
                     auto pins = fromJson(json.value("pins").toArray());
                     for (const auto &key : m_timestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
                     {
-                        if (!pins.contains(key)) { m_timestamps.remove(key); }
+                        if (!pins.contains(key))
+                        {
+                            m_timestamps.remove(key);
+                        }
                     }
                 }
 
                 auto deferrals = fromJson(json.value("deferrals").toArray());
                 m_admittedValues.unite(m_admittedQueue);
-                if (updateUuid) { m_admittedQueue.clear(); }
+                if (updateUuid)
+                {
+                    m_admittedQueue.clear();
+                }
                 else if (!m_admittedQueue.isEmpty())
                 {
                     m_admittedQueue.intersect(QSet<QString>(m_timestamps.keyBegin(), m_timestamps.keyEnd()));
@@ -430,7 +479,10 @@ namespace swift::misc
 
                 for (const auto &key : m_timestamps.keys()) // clazy:exclude=container-anti-pattern,range-loop
                 {
-                    if (deferrals.contains(key) && !m_admittedValues.contains(key)) { m_timestamps.remove(key); }
+                    if (deferrals.contains(key) && !m_admittedValues.contains(key))
+                    {
+                        m_timestamps.remove(key);
+                    }
                 }
 
                 m_session->updateSession();
@@ -449,10 +501,16 @@ namespace swift::misc
             {
                 CLogMessage(this).error(u"Invalid format of %1") << revisionFile.fileName();
 
-                if (m_pendingWrite) { return guard; }
+                if (m_pendingWrite)
+                {
+                    return guard;
+                }
                 return {};
             }
-            else { m_found = false; }
+            else
+            {
+                m_found = false;
+            }
         }
 
         m_pendingRead = true;
@@ -478,13 +536,22 @@ namespace swift::misc
         auto timestamps = m_originalTimestamps;
         for (auto it = i_timestamps.cbegin(); it != i_timestamps.cend(); ++it)
         {
-            if (it.value()) { timestamps.insert(it.key(), it.value()); }
+            if (it.value())
+            {
+                timestamps.insert(it.key(), it.value());
+            }
         }
-        for (const auto &key : excludeKeys) { timestamps.remove(key); }
+        for (const auto &key : excludeKeys)
+        {
+            timestamps.remove(key);
+        }
 
         for (auto it = timestamps.cbegin(); it != timestamps.cend(); ++it)
         {
-            if (m_sessionValues.contains(it.key())) { m_sessionValues[it.key()] = m_session->uuid(); }
+            if (m_sessionValues.contains(it.key()))
+            {
+                m_sessionValues[it.key()] = m_session->uuid();
+            }
         }
 
         QJsonObject json;
@@ -525,7 +592,10 @@ namespace swift::misc
         m_updateInProgress = false;
         m_pendingRead = false;
         m_pendingWrite = false;
-        if (!keepPromises) { breakPromises(); }
+        if (!keepPromises)
+        {
+            breakPromises();
+        }
         m_lockFile.unlock();
     }
 
@@ -686,7 +756,10 @@ namespace swift::misc
     {
         QMutexLocker lock(&m_mutex);
 
-        if (m_lockFile.isLocked()) { return m_originalTimestamps.value(key); }
+        if (m_lockFile.isLocked())
+        {
+            return m_originalTimestamps.value(key);
+        }
 
         if (!m_lockFile.lock())
         {
@@ -748,7 +821,10 @@ namespace swift::misc
     QJsonObject CDataCacheRevision::toJson(const QMap<QString, qint64> &timestamps)
     {
         QJsonObject result;
-        for (auto it = timestamps.begin(); it != timestamps.end(); ++it) { result.insert(it.key(), it.value()); }
+        for (auto it = timestamps.begin(); it != timestamps.end(); ++it)
+        {
+            result.insert(it.key(), it.value());
+        }
         return result;
     }
 
@@ -765,14 +841,20 @@ namespace swift::misc
     QJsonArray CDataCacheRevision::toJson(const QSet<QString> &pins)
     {
         QJsonArray result;
-        for (const auto &pin : pins) { result.push_back(pin); }
+        for (const auto &pin : pins)
+        {
+            result.push_back(pin);
+        }
         return result;
     }
 
     QSet<QString> CDataCacheRevision::fromJson(const QJsonArray &pins)
     {
         QSet<QString> result;
-        for (auto pin : pins) { result.insert(pin.toString()); }
+        for (auto pin : pins)
+        {
+            result.insert(pin.toString());
+        }
         return result;
     }
 
@@ -812,7 +894,10 @@ namespace swift::misc
                                                   QStringLiteral("Error in %1 apps object").arg(m_filename));
         apps.removeIf([](const CProcessInfo &pi) { return !pi.exists(); });
 
-        if (apps.isEmpty()) { id = CIdentifier().toUuid(); }
+        if (apps.isEmpty())
+        {
+            id = CIdentifier().toUuid();
+        }
         m_uuid = id;
 
         CProcessInfo currentProcess = CProcessInfo::currentProcess();
@@ -830,7 +915,10 @@ namespace swift::misc
                     << file.fileName() << file.errorString() << advice;
             }
         }
-        else { CLogMessage(this).error(u"Failed to write to %1: %2") << file.fileName() << file.errorString(); }
+        else
+        {
+            CLogMessage(this).error(u"Failed to write to %1: %2") << file.fileName() << file.errorString();
+        }
     }
 
 } // namespace swift::misc

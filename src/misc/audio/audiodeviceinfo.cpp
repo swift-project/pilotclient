@@ -24,9 +24,18 @@ namespace swift::misc::audio
 
     bool CAudioDeviceInfo::isDefault() const
     {
-        if (m_deviceName.isEmpty()) { return false; }
-        if (m_deviceName == "default") { return true; }
-        if (this->isInputDevice() && m_deviceName == QMediaDevices::defaultAudioInput().description()) { return true; }
+        if (m_deviceName.isEmpty())
+        {
+            return false;
+        }
+        if (m_deviceName == "default")
+        {
+            return true;
+        }
+        if (this->isInputDevice() && m_deviceName == QMediaDevices::defaultAudioInput().description())
+        {
+            return true;
+        }
         if (this->isOutputDevice() && m_deviceName == QMediaDevices::defaultAudioOutput().description())
         {
             return true;
@@ -63,7 +72,10 @@ namespace swift::misc::audio
 
     QVariant CAudioDeviceInfo::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         switch (index.frontCasted<ColumnIndex>())
         {
         case IndexDeviceType: return QVariant::fromValue(this->getType());
@@ -94,7 +106,10 @@ namespace swift::misc::audio
 
     int CAudioDeviceInfo::comparePropertyByIndex(CPropertyIndexRef index, const CAudioDeviceInfo &compareValue) const
     {
-        if (index.isMyself()) { return m_deviceName.compare(compareValue.m_deviceName, Qt::CaseInsensitive); }
+        if (index.isMyself())
+        {
+            return m_deviceName.compare(compareValue.m_deviceName, Qt::CaseInsensitive);
+        }
         switch (index.frontCasted<ColumnIndex>())
         {
         case IndexDeviceTypeAsString:
@@ -126,7 +141,10 @@ namespace swift::misc::audio
     QString CAudioDeviceInfo::convertToQString(bool i18n) const
     {
         Q_UNUSED(i18n)
-        if (!m_identifier.hasName()) { return m_deviceName; }
+        if (!m_identifier.hasName())
+        {
+            return m_deviceName;
+        }
         return m_deviceName % u" [" % this->getMachineName() % u']';
     }
 

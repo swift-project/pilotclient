@@ -96,46 +96,73 @@ namespace swift::misc::network
     CTextMessageList CTextMessageList::findByNotForRecipient(const CCallsign &recipient) const
     {
         CTextMessageList result;
-        if (recipient.isEmpty()) { return result; }
+        if (recipient.isEmpty())
+        {
+            return result;
+        }
         for (const CTextMessage &m : *this)
         {
-            if (m.getRecipientCallsign().isEmpty()) { continue; }
-            if (m.getRecipientCallsign() != recipient) { result.push_back(m); }
+            if (m.getRecipientCallsign().isEmpty())
+            {
+                continue;
+            }
+            if (m.getRecipientCallsign() != recipient)
+            {
+                result.push_back(m);
+            }
         }
         return result;
     }
 
     void CTextMessageList::toggleSenderRecipients()
     {
-        if (this->isEmpty()) { return; }
+        if (this->isEmpty())
+        {
+            return;
+        }
         std::for_each(this->begin(), this->end(), [](CTextMessage &tm) { tm.toggleSenderRecipient(); });
     }
 
     int CTextMessageList::relayedToPrivateMessages()
     {
-        if (this->isEmpty()) { return 0; }
+        if (this->isEmpty())
+        {
+            return 0;
+        }
         int c = 0;
         for (CTextMessage &m : *this)
         {
             // Turn "relay" message into private message
-            if (m.relayedMessageToPrivateMessage()) { c++; }
+            if (m.relayedMessageToPrivateMessage())
+            {
+                c++;
+            }
         }
         return c;
     }
 
     int CTextMessageList::removePrivateMessagesFromCallsign(const CCallsign &callsign)
     {
-        if (this->isEmpty()) { return 0; }
+        if (this->isEmpty())
+        {
+            return 0;
+        }
         CTextMessageList r = this->withRemovedPrivateMessagesFromCallsign(callsign);
         const int c = this->size() - r.size();
-        if (c < 1) { return 0; }
+        if (c < 1)
+        {
+            return 0;
+        }
         *this = r;
         return c;
     }
 
     CTextMessageList CTextMessageList::withRelayedToPrivateMessages() const
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         CTextMessageList copy = *this;
         copy.relayedToPrivateMessages();
         return copy;
@@ -143,12 +170,21 @@ namespace swift::misc::network
 
     CTextMessageList CTextMessageList::withRemovedPrivateMessagesFromCallsign(const CCallsign &callsign) const
     {
-        if (this->isEmpty()) { return {}; }
-        if (callsign.isEmpty()) { return *this; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
+        if (callsign.isEmpty())
+        {
+            return *this;
+        }
         CTextMessageList r;
         for (const CTextMessage &m : *this)
         {
-            if (m.isPrivateMessage() && m.getSenderCallsign() == callsign) { continue; }
+            if (m.isPrivateMessage() && m.getSenderCallsign() == callsign)
+            {
+                continue;
+            }
             r.push_back(m);
         }
         return r;
@@ -161,7 +197,10 @@ namespace swift::misc::network
 
     CTextMessageList CTextMessageList::markedAsSent()
     {
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         CTextMessageList copy = *this;
         copy.markAsSent();
         return copy;
@@ -169,10 +208,16 @@ namespace swift::misc::network
 
     void CTextMessageList::addConsolidatedTextMessage(const CTextMessage &message)
     {
-        if (message.isEmpty()) { return; }
+        if (message.isEmpty())
+        {
+            return;
+        }
         for (CTextMessage &tm : *this)
         {
-            if (tm.appendIfPossible(message)) { return; }
+            if (tm.appendIfPossible(message))
+            {
+                return;
+            }
         }
         this->push_back(message);
     }

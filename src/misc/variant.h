@@ -45,7 +45,10 @@ namespace swift::misc
     template <typename T>
     void registerMetaValueType()
     {
-        if (QMetaType::hasRegisteredConverterFunction<T, private_ns::IValueObjectMetaInfo *>()) { return; }
+        if (QMetaType::hasRegisteredConverterFunction<T, private_ns::IValueObjectMetaInfo *>())
+        {
+            return;
+        }
         bool ok = QMetaType::registerConverter<T, private_ns::IValueObjectMetaInfo *>(
             private_ns::CValueObjectMetaInfo<T>::instance);
         Q_ASSERT(ok);
@@ -347,11 +350,17 @@ namespace swift::misc
             T result;
             if (isVariantList())
             {
-                for (const auto &v : m_v.value<QVector<CVariant>>()) { result.push_back(v.value<VT>()); }
+                for (const auto &v : m_v.value<QVector<CVariant>>())
+                {
+                    result.push_back(v.value<VT>());
+                }
             }
             else
             {
-                for (const auto &v : m_v.value<QMetaSequence::Iterable>()) { result.push_back(v.value<VT>()); }
+                for (const auto &v : m_v.value<QMetaSequence::Iterable>())
+                {
+                    result.push_back(v.value<VT>());
+                }
             }
             return result;
         }

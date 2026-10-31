@@ -29,7 +29,7 @@ namespace swift::input
     //! Joystick device input/button
     struct CJoystickDeviceInput
     {
-        int m_offset; //!< Input offset
+        int m_offset{}; //!< Input offset
         swift::misc::input::CJoystickButton m_button; //!< Joystick button
     };
 

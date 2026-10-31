@@ -13,14 +13,23 @@ namespace swift::gui::settings
 {
     void CGeneralGuiSettings::setWidgetStyle(const QString &widgetStyle)
     {
-        if (this->m_widgetStyle == widgetStyle) { return; }
+        if (this->m_widgetStyle == widgetStyle)
+        {
+            return;
+        }
         const auto availableStyles = QStyleFactory::keys();
-        if (availableStyles.contains(widgetStyle)) { m_widgetStyle = widgetStyle; }
+        if (availableStyles.contains(widgetStyle))
+        {
+            m_widgetStyle = widgetStyle;
+        }
     }
 
     bool CGeneralGuiSettings::isDifferentValidWidgetStyle(const QString &style) const
     {
-        if (!QStyleFactory::keys().contains(style)) { return false; }
+        if (!QStyleFactory::keys().contains(style))
+        {
+            return false;
+        }
         return style != this->m_widgetStyle;
     }
 
@@ -42,7 +51,10 @@ namespace swift::gui::settings
 
     QVariant CGeneralGuiSettings::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {

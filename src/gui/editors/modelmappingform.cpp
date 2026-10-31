@@ -99,14 +99,20 @@ namespace swift::gui::editors
             ui->selector_ModelMode->setValue(CAircraftModel::Include);
             ui->selector_ModelMode->setReadOnly(false);
         }
-        else { ui->selector_ModelMode->setReadOnly(true); }
+        else
+        {
+            ui->selector_ModelMode->setReadOnly(true);
+        }
 
         CFormDbUser::userChanged();
     }
 
     CLength CModelMappingForm::getCGFromUI() const
     {
-        if (ui->le_CG->text().isEmpty()) { return CLength::null(); }
+        if (ui->le_CG->text().isEmpty())
+        {
+            return CLength::null();
+        }
         const QString v = ui->le_CG->text();
 
         // without unit we assume ft
@@ -114,7 +120,10 @@ namespace swift::gui::editors
         {
             bool ok {};
             const double cgv = v.toDouble(&ok);
-            if (!ok) { return CLength::null(); }
+            if (!ok)
+            {
+                return CLength::null();
+            }
             return { cgv, CLengthUnit::ft() };
         }
 
@@ -125,8 +134,14 @@ namespace swift::gui::editors
 
     void CModelMappingForm::setCGtoUI(const CLength &cg)
     {
-        if (cg.isNull()) { ui->le_CG->clear(); }
-        else { ui->le_CG->setText(cg.valueRoundedWithUnit(CLengthUnit::ft(), 1)); }
+        if (cg.isNull())
+        {
+            ui->le_CG->clear();
+        }
+        else
+        {
+            ui->le_CG->setText(cg.valueRoundedWithUnit(CLengthUnit::ft(), 1));
+        }
     }
 
     void CModelMappingForm::onCgEditFinished()

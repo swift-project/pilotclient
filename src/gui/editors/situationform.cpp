@@ -85,7 +85,10 @@ namespace swift::gui::editors
         const QString v(ui->le_Bank->text().replace(',', '.'));
         bool ok {};
         double vd = v.toDouble(&ok);
-        if (!ok) { vd = 0.0; }
+        if (!ok)
+        {
+            vd = 0.0;
+        }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
@@ -96,7 +99,10 @@ namespace swift::gui::editors
         const QString v(ui->le_Pitch->text().replace(',', '.'));
         bool ok {};
         double vd = v.toDouble(&ok);
-        if (!ok) { vd = 0.0; }
+        if (!ok)
+        {
+            vd = 0.0;
+        }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
@@ -107,7 +113,10 @@ namespace swift::gui::editors
         const QString v(ui->le_Heading->text().replace(',', '.'));
         bool ok {};
         double vd = v.toDouble(&ok);
-        if (!ok) { vd = 0.0; }
+        if (!ok)
+        {
+            vd = 0.0;
+        }
         return CAngle::normalizeDegrees180(vd, RoundDigits);
     }
 
@@ -116,7 +125,10 @@ namespace swift::gui::editors
         const QString v(ui->le_Pressure->text().replace(',', '.'));
         bool ok {};
         double vd = v.toDouble(&ok);
-        if (!ok) { vd = CAltitude::standardISASeaLevelPressure().value(CPressureUnit::mbar()); }
+        if (!ok)
+        {
+            vd = CAltitude::standardISASeaLevelPressure().value(CPressureUnit::mbar());
+        }
         return vd;
     }
 
@@ -153,7 +165,10 @@ namespace swift::gui::editors
     CStatusMessageList CSituationForm::validate(bool nested) const
     {
         CStatusMessageList ml;
-        if (nested) { ml.push_back(ui->comp_Coordinate->validate(nested)); }
+        if (nested)
+        {
+            ml.push_back(ui->comp_Coordinate->validate(nested));
+        }
         return ml;
     }
 
@@ -164,28 +179,40 @@ namespace swift::gui::editors
     void CSituationForm::bankSliderChanged(int value)
     {
         const int angle = clampAngle(qRound(this->getBankAngleDegrees()));
-        if (value == angle) { return; } // avoid roundtrips
+        if (value == angle)
+        {
+            return;
+        } // avoid roundtrips
         ui->le_Bank->setText(QString::number(value));
     }
 
     void CSituationForm::pitchSliderChanged(int value)
     {
         const int angle = clampAngle(qRound(this->getPitchAngleDegrees()));
-        if (value == angle) { return; } // avoid roundtrips
+        if (value == angle)
+        {
+            return;
+        } // avoid roundtrips
         ui->le_Pitch->setText(QString::number(value));
     }
 
     void CSituationForm::headingSliderChanged(int value)
     {
         const int angle = clampAngle(qRound(this->getHeadingAngleDegrees()));
-        if (value == angle) { return; } // avoid roundtrips
+        if (value == angle)
+        {
+            return;
+        } // avoid roundtrips
         ui->le_Heading->setText(QString::number(value));
     }
 
     void CSituationForm::pressureSliderChanged(int value)
     {
         const int pressure = qRound(this->getBarometricPressureMslMillibar());
-        if (value == pressure) { return; } // avoid roundtrips
+        if (value == pressure)
+        {
+            return;
+        } // avoid roundtrips
         ui->le_Pressure->setText(QString::number(value));
     }
 
@@ -193,10 +220,16 @@ namespace swift::gui::editors
     {
         const double ad = this->getBankAngleDegrees();
         QString n = QString::number(ad, 'g', 3 + RoundDigits);
-        if (ui->le_Pitch->validator()) { dotToLocaleDecimalPoint(n); }
+        if (ui->le_Pitch->validator())
+        {
+            dotToLocaleDecimalPoint(n);
+        }
         ui->le_Bank->setText(n);
         const int angle = clampAngle(qRound(ad));
-        if (angle == ui->hs_Bank->value()) { return; } // avoid roundtrips
+        if (angle == ui->hs_Bank->value())
+        {
+            return;
+        } // avoid roundtrips
         ui->hs_Bank->setValue(angle);
     }
 
@@ -210,10 +243,16 @@ namespace swift::gui::editors
     {
         const double ad = this->getPitchAngleDegrees();
         QString n = QString::number(ad, 'g', 3 + RoundDigits);
-        if (ui->le_Pitch->validator()) { dotToLocaleDecimalPoint(n); }
+        if (ui->le_Pitch->validator())
+        {
+            dotToLocaleDecimalPoint(n);
+        }
         ui->le_Pitch->setText(n);
         const int angle = clampAngle(qRound(ad));
-        if (angle == ui->hs_Pitch->value()) { return; } // avoid roundtrips
+        if (angle == ui->hs_Pitch->value())
+        {
+            return;
+        } // avoid roundtrips
         ui->hs_Pitch->setValue(angle);
     }
 
@@ -227,10 +266,16 @@ namespace swift::gui::editors
     {
         const double ad = this->getHeadingAngleDegrees();
         QString n = QString::number(ad, 'g', 3 + RoundDigits);
-        if (ui->le_Heading->validator()) { dotToLocaleDecimalPoint(n); }
+        if (ui->le_Heading->validator())
+        {
+            dotToLocaleDecimalPoint(n);
+        }
         ui->le_Heading->setText(n);
         const int angle = clampAngle(qRound(ad));
-        if (angle == ui->hs_Heading->value()) { return; } // avoid roundtrips
+        if (angle == ui->hs_Heading->value())
+        {
+            return;
+        } // avoid roundtrips
         ui->hs_Heading->setValue(angle);
     }
 
@@ -244,10 +289,16 @@ namespace swift::gui::editors
     {
         const double pd = this->getBarometricPressureMslMillibar();
         QString n = QString::number(pd, 'g', 4 + RoundDigits);
-        if (ui->le_Pressure->validator()) { dotToLocaleDecimalPoint(n); }
+        if (ui->le_Pressure->validator())
+        {
+            dotToLocaleDecimalPoint(n);
+        }
         ui->le_Pressure->setText(n);
         const int pi = qRound(pd);
-        if (pi == ui->hs_Pressure->value()) { return; } // avoid roundtrips
+        if (pi == ui->hs_Pressure->value())
+        {
+            return;
+        } // avoid roundtrips
         ui->hs_Pressure->setValue(pi);
     }
 
@@ -262,7 +313,10 @@ namespace swift::gui::editors
 
     void CSituationForm::presetOwnAircraftSituation()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft())
+        {
+            return;
+        }
         const CAircraftSituation s = sGui->getIContextOwnAircraft()->getOwnAircraftSituation();
         this->setSituation(s);
     }

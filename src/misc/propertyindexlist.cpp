@@ -11,7 +11,10 @@ namespace swift::misc
 
     CPropertyIndexList CPropertyIndexList::copyFrontRemoved() const
     {
-        if (this->size() < 2) { return {}; }
+        if (this->size() < 2)
+        {
+            return {};
+        }
         CPropertyIndexList copy(*this);
         copy.pop_front();
         return copy;

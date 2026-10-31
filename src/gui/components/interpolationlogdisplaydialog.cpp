@@ -19,8 +19,14 @@ namespace swift::gui::components
         ui->setupUi(this);
         this->setSimulator(simulator);
 
-        if (airspaceMonitor) { this->setAirspaceMonitor(airspaceMonitor); }
-        else { ui->comp_InterpolationLogDisplay->linkWithAirspaceMonitor(); }
+        if (airspaceMonitor)
+        {
+            this->setAirspaceMonitor(airspaceMonitor);
+        }
+        else
+        {
+            ui->comp_InterpolationLogDisplay->linkWithAirspaceMonitor();
+        }
     }
 
     CInterpolationLogDisplayDialog::~CInterpolationLogDisplayDialog()

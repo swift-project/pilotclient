@@ -19,7 +19,10 @@ namespace swift::misc
     QStringList CPlatformSet::getPlatformNames() const
     {
         QStringList names;
-        for (const CPlatform &p : *this) { names.append(p.getPlatformName()); }
+        for (const CPlatform &p : *this)
+        {
+            names.append(p.getPlatformName());
+        }
         return names;
     }
 

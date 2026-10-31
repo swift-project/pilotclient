@@ -74,7 +74,10 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::connectTo()
     {
-        if (this->isConnected()) { return true; }
+        if (this->isConnected())
+        {
+            return true;
+        }
         this->reset();
 
         const HRESULT hr = SimConnect_Open(&m_hSimConnect, sApp->swiftVersionChar(), nullptr, 0, nullptr, 0);
@@ -98,7 +101,10 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::disconnectFrom()
     {
-        if (!m_simConnected) { return true; }
+        if (!m_simConnected)
+        {
+            return true;
+        }
         m_simSimulating = false; // thread as stopped, just setting the flag here avoids overhead of on onSimStopped
         m_traceAutoUntilTs = -1;
         m_traceSendId = false;
@@ -124,7 +130,10 @@ namespace swift::simplugin::fsxcommon
     bool CSimulatorFsxCommon::updateCOMFromSwiftToSimulator(const CFrequency &newFreq, const CFrequency &lastSimFreq,
                                                             CFrequency &last25kHzSimFreq, EventIds id)
     {
-        if (newFreq == lastSimFreq) { return false; }
+        if (newFreq == lastSimFreq)
+        {
+            return false;
+        }
 
         if (CComSystem::isExclusiveWithin8_33kHzChannel(newFreq) && last25kHzSimFreq.isNull())
         {
@@ -151,8 +160,14 @@ namespace swift::simplugin::fsxcommon
     bool CSimulatorFsxCommon::updateOwnSimulatorCockpit(const CSimulatedAircraft &ownAircraft,
                                                         const CIdentifier &originator)
     {
-        if (originator == this->identifier()) { return false; }
-        if (!this->isSimulating()) { return false; }
+        if (originator == this->identifier())
+        {
+            return false;
+        }
+        if (!this->isSimulating())
+        {
+            return false;
+        }
 
         // actually those data should be the same as ownAircraft
         const CComSystem newCom1 = ownAircraft.getCom1System();
@@ -212,14 +227,20 @@ namespace swift::simplugin::fsxcommon
                                                     SIMCONNECT_OBJECT_ID_USER, SIMCONNECT_DATA_SET_FLAG_DEFAULT, 0,
                                                     sizeof(DataDefinitionMSFSTransponderMode), &t);
 
-                if (isFailure(hr)) { CLogMessage(this).warning(u"Setting transponder mode failed (MSFS)"); }
+                if (isFailure(hr))
+                {
+                    CLogMessage(this).warning(u"Setting transponder mode failed (MSFS)");
+                }
 
                 changed = true;
             }
         }
 
         // avoid changes of cockpit back to old values due to an outdated read back value
-        if (changed) { m_skipCockpitUpdateCycles = SkipUpdateCyclesForCockpit; }
+        if (changed)
+        {
+            m_skipCockpitUpdateCycles = SkipUpdateCyclesForCockpit;
+        }
 
         // bye
         return changed;
@@ -227,8 +248,14 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::updateOwnSimulatorSelcal(const CSelcal &selcal, const CIdentifier &originator)
     {
-        if (originator == this->identifier()) { return false; }
-        if (!this->isSimulating()) { return false; }
+        if (originator == this->identifier())
+        {
+            return false;
+        }
+        if (!this->isSimulating())
+        {
+            return false;
+        }
 
         //! KB 2018-11 that would need to go to updateOwnAircraftFromSimulator if the simulator ever supports SELCAL
         //! KB 2018-11 als we would need to send the value to FS9/FSX (currently we only deal with it on FS9/FSX level)
@@ -260,9 +287,18 @@ namespace swift::simplugin::fsxcommon
         m.append('\0');
 
         SIMCONNECT_TEXT_TYPE type = SIMCONNECT_TEXT_TYPE_PRINT_BLACK;
-        if (message.isSupervisorMessage()) { type = SIMCONNECT_TEXT_TYPE_PRINT_RED; }
-        else if (message.isPrivateMessage()) { type = SIMCONNECT_TEXT_TYPE_PRINT_YELLOW; }
-        else if (message.isRadioMessage()) { type = SIMCONNECT_TEXT_TYPE_PRINT_GREEN; }
+        if (message.isSupervisorMessage())
+        {
+            type = SIMCONNECT_TEXT_TYPE_PRINT_RED;
+        }
+        else if (message.isPrivateMessage())
+        {
+            type = SIMCONNECT_TEXT_TYPE_PRINT_YELLOW;
+        }
+        else if (message.isRadioMessage())
+        {
+            type = SIMCONNECT_TEXT_TYPE_PRINT_GREEN;
+        }
 
         const HRESULT hr =
             SimConnect_Text(m_hSimConnect, type, 7.5, EventTextMessage, static_cast<DWORD>(m.size()), m.data());
@@ -287,7 +323,10 @@ namespace swift::simplugin::fsxcommon
     CStatusMessageList CSimulatorFsxCommon::debugVerifyStateAfterAllAircraftRemoved() const
     {
         CStatusMessageList msgs;
-        if (!CBuildConfig::isLocalDeveloperDebugBuild()) { return msgs; }
+        if (!CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            return msgs;
+        }
         msgs = CSimulatorFsCommon::debugVerifyStateAfterAllAircraftRemoved();
         if (!m_simConnectObjects.isEmpty())
         {
@@ -326,11 +365,23 @@ namespace swift::simplugin::fsxcommon
     {
         // this is the 32bit FSX version, the P3D x64 is overridden!
 
-        if (this->isShuttingDownOrDisconnected()) { return false; }
-        if (!this->isUsingFsxTerrainProbe()) { return false; }
-        if (reference.isNull()) { return false; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        }
+        if (!this->isUsingFsxTerrainProbe())
+        {
+            return false;
+        }
+        if (reference.isNull())
+        {
+            return false;
+        }
         const CSimConnectObject simObject = m_simConnectObjects.getOldestNotPendingProbe(); // probes round robin
-        if (!simObject.isConfirmedAdded()) { return false; }
+        if (!simObject.isConfirmedAdded())
+        {
+            return false;
+        }
         m_simConnectObjects[simObject.getCallsign()].resetTimestampToNow(); // mark probe as just used
 
         CCoordinateGeodetic pos(reference);
@@ -343,17 +394,29 @@ namespace swift::simplugin::fsxcommon
                                           &position),
             simObject, "Cannot request AI elevation", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
 
-        if (isFailure(hr)) { return false; }
+        if (isFailure(hr))
+        {
+            return false;
+        }
 
         const bool ok = this->requestTerrainProbeData(simObject, aircraftCallsign);
-        if (ok) { emit this->requestedElevation(aircraftCallsign); }
+        if (ok)
+        {
+            emit this->requestedElevation(aircraftCallsign);
+        }
         return ok;
     }
 
     bool CSimulatorFsxCommon::isTracingSendId() const
     {
-        if (m_traceSendId) { return true; } // explicit
-        if (m_traceAutoUntilTs < 0) { return false; } // no auto
+        if (m_traceSendId)
+        {
+            return true;
+        } // explicit
+        if (m_traceAutoUntilTs < 0)
+        {
+            return false;
+        } // no auto
         const qint64 ts = QDateTime::currentMSecsSinceEpoch();
         const bool trace = ts <= m_traceAutoUntilTs;
         return trace;
@@ -413,14 +476,20 @@ namespace swift::simplugin::fsxcommon
         const HRESULT hr = SimConnect_SetClientData(m_hSimConnect, ClientAreaSquawkBox,
                                                     CSimConnectDefinitions::DataClientAreaSbConnected,
                                                     SIMCONNECT_CLIENT_DATA_SET_FLAG_DEFAULT, 0, 1, &sbNetworkConnected);
-        if (isFailure(hr)) { CLogMessage(this).warning(u"Setting network connected failed (SB offsets)"); }
+        if (isFailure(hr))
+        {
+            CLogMessage(this).warning(u"Setting network connected failed (SB offsets)");
+        }
 
         ISimulator::setFlightNetworkConnected(connected);
     }
 
     CStatusMessageList CSimulatorFsxCommon::getInterpolationMessages(const CCallsign &callsign) const
     {
-        if (!m_simConnectObjects.contains(callsign)) { return CStatusMessageList(); }
+        if (!m_simConnectObjects.contains(callsign))
+        {
+            return CStatusMessageList();
+        }
         const CInterpolationAndRenderingSetupPerCallsign setup =
             this->getInterpolationSetupConsolidated(callsign, false);
         return (m_simConnectObjects[callsign]).getInterpolationMessages(setup.getInterpolatorMode());
@@ -429,7 +498,10 @@ namespace swift::simplugin::fsxcommon
     bool CSimulatorFsxCommon::testSendSituationAndParts(const CCallsign &callsign, const CAircraftSituation &situation,
                                                         const CAircraftParts &parts)
     {
-        if (!m_simConnectObjects.contains(callsign)) { return false; }
+        if (!m_simConnectObjects.contains(callsign))
+        {
+            return false;
+        }
         CSimConnectObject simObject = m_simConnectObjects.value(callsign);
         int u = 0;
         if (!parts.isNull())
@@ -440,13 +512,16 @@ namespace swift::simplugin::fsxcommon
         if (!situation.isNull())
         {
             SIMCONNECT_DATA_INITPOSITION position = this->aircraftSituationToFsxPosition(situation, true);
-            const bool traceSendId = this->isTracingSendId();
+            const bool doTraceSendId = this->isTracingSendId();
             const HRESULT hr = this->logAndTraceSendId(
                 SimConnect_SetDataOnSimObject(m_hSimConnect, CSimConnectDefinitions::DataRemoteAircraftSetPosition,
                                               static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), 0, 0,
                                               sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
-                traceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
-            if (hr == S_OK) { u++; }
+                doTraceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+            if (hr == S_OK)
+            {
+                u++;
+            }
         }
         return u > 0;
     }
@@ -454,7 +529,10 @@ namespace swift::simplugin::fsxcommon
     CSimConnectDefinitions::SimObjectRequest CSimulatorFsxCommon::requestToSimObjectRequest(DWORD requestId)
     {
         DWORD v = static_cast<DWORD>(CSimConnectDefinitions::SimObjectEndMarker);
-        if (isRequestForSimObjAircraft(requestId)) { v = (requestId - RequestSimObjAircraftStart) / MaxSimObjAircraft; }
+        if (isRequestForSimObjAircraft(requestId))
+        {
+            v = (requestId - RequestSimObjAircraftStart) / MaxSimObjAircraft;
+        }
         else if (isRequestForSimObjTerrainProbe(requestId))
         {
             v = (requestId - RequestSimObjTerrainProbeStart) / MaxSimObjProbes;
@@ -484,7 +562,10 @@ namespace swift::simplugin::fsxcommon
         // this is a trick and I re-init again after a while (which is not really expensive)
         const QPointer<CSimulatorFsxCommon> myself(this);
         QTimer::singleShot(2500, this, [myself] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->initSimulatorInternals();
         });
     }
@@ -493,7 +574,10 @@ namespace swift::simplugin::fsxcommon
     {
         const QPointer<CSimulatorFsxCommon> myself(this);
         QTimer::singleShot(DeferSimulatingFlagMs, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             m_simulatingChangedTs = QDateTime::currentMSecsSinceEpoch();
             this->onSimRunningDeferred(m_simulatingChangedTs);
         });
@@ -501,8 +585,14 @@ namespace swift::simplugin::fsxcommon
 
     void CSimulatorFsxCommon::onSimRunningDeferred(qint64 referenceTs)
     {
-        if (m_simSimulating) { return; } // already simulatig
-        if (referenceTs != m_simulatingChangedTs) { return; } // changed, so no longer valid
+        if (m_simSimulating)
+        {
+            return;
+        } // already simulatig
+        if (referenceTs != m_simulatingChangedTs)
+        {
+            return;
+        } // changed, so no longer valid
         m_simSimulating = true; // only place where this should be set to true
         m_simConnected = true;
 
@@ -552,7 +642,10 @@ namespace swift::simplugin::fsxcommon
                 "Cannot request MSFS transponder data", Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
         }
 
-        if (isFailure(hr)) { return; }
+        if (isFailure(hr))
+        {
+            return;
+        }
         this->emitSimulatorCombinedStatus(); // force sending status
     }
 
@@ -568,11 +661,17 @@ namespace swift::simplugin::fsxcommon
 
     void CSimulatorFsxCommon::onSimFrame()
     {
-        if (m_updateRemoteAircraftInProgress) { return; }
+        if (m_updateRemoteAircraftInProgress)
+        {
+            return;
+        }
         QPointer<CSimulatorFsxCommon> myself(this);
         QTimer::singleShot(0, this, [=] {
             // run decoupled from simconnect event queue
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->updateRemoteAircraft();
         });
     }
@@ -588,7 +687,10 @@ namespace swift::simplugin::fsxcommon
         // if called from dispatch function, avoid that SimConnectProc disconnects itself while in SimConnectProc
         QPointer<CSimulatorFsxCommon> myself(this);
         QTimer::singleShot(0, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             this->disconnectFrom();
         });
     }
@@ -596,14 +698,20 @@ namespace swift::simplugin::fsxcommon
     SIMCONNECT_DATA_REQUEST_ID CSimulatorFsxCommon::obtainRequestIdForSimObjAircraft()
     {
         const SIMCONNECT_DATA_REQUEST_ID id = m_requestIdSimObjAircraft++;
-        if (id > RequestSimObjAircraftEnd) { m_requestIdSimObjAircraft = RequestSimObjAircraftStart; }
+        if (id > RequestSimObjAircraftEnd)
+        {
+            m_requestIdSimObjAircraft = RequestSimObjAircraftStart;
+        }
         return id;
     }
 
     SIMCONNECT_DATA_REQUEST_ID CSimulatorFsxCommon::obtainRequestIdForSimObjTerrainProbe()
     {
         const SIMCONNECT_DATA_REQUEST_ID id = m_requestIdSimObjTerrainProbe++;
-        if (id > RequestSimObjTerrainProbeEnd) { m_requestIdSimObjTerrainProbe = RequestSimObjTerrainProbeStart; }
+        if (id > RequestSimObjTerrainProbeEnd)
+        {
+            m_requestIdSimObjTerrainProbe = RequestSimObjTerrainProbeStart;
+        }
         return id;
     }
 
@@ -634,9 +742,18 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::isValidSimObjectNotPendingRemoved(const CSimConnectObject &simObject) const
     {
-        if (!simObject.hasValidRequestAndObjectId()) { return false; }
-        if (simObject.isPendingRemoved()) { return false; }
-        if (!m_simConnectObjects.contains(simObject.getCallsign())) { return false; } // removed in meantime
+        if (!simObject.hasValidRequestAndObjectId())
+        {
+            return false;
+        }
+        if (simObject.isPendingRemoved())
+        {
+            return false;
+        }
+        if (!m_simConnectObjects.contains(simObject.getCallsign()))
+        {
+            return false;
+        } // removed in meantime
         return true;
     }
 
@@ -664,11 +781,20 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::triggerAutoTraceSendId(qint64 traceTimeMs)
     {
-        if (m_traceSendId) { return false; } // no need
-        if (this->isShuttingDownOrDisconnected()) { return false; }
+        if (m_traceSendId)
+        {
+            return false;
+        } // no need
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        }
         const qint64 ts = QDateTime::currentMSecsSinceEpoch();
         const qint64 traceUntil = traceTimeMs + ts;
-        if (traceUntil <= m_traceAutoUntilTs) { return false; }
+        if (traceUntil <= m_traceAutoUntilTs)
+        {
+            return false;
+        }
         m_traceAutoUntilTs = traceUntil;
 
         static const QString format("hh:mm:ss.zzz");
@@ -677,9 +803,18 @@ namespace swift::simplugin::fsxcommon
         const QPointer<CSimulatorFsxCommon> myself(this);
         QTimer::singleShot(traceTimeMs * 1.2, this, [=] {
             // triggered by mself (ts check), otherwise ignore
-            if (!myself) { return; }
-            if (m_traceAutoUntilTs > QDateTime::currentMSecsSinceEpoch()) { return; }
-            if (m_traceAutoUntilTs < 0) { return; } // alread off
+            if (!myself)
+            {
+                return;
+            }
+            if (m_traceAutoUntilTs > QDateTime::currentMSecsSinceEpoch())
+            {
+                return;
+            }
+            if (m_traceAutoUntilTs < 0)
+            {
+                return;
+            } // alread off
             CLogMessage(this).info(u"Auto trace id off");
             m_traceAutoUntilTs = -1;
         });
@@ -799,11 +934,23 @@ namespace swift::simplugin::fsxcommon
                 com1.getFrequencyStandby() != m_lastCom1Standby;
 
             // Avoid overwrite of 8.33 kHz frequency with data from simulator
-            if (!changedCom1Active) { com1.setFrequencyActive(myAircraft.getCom1System().getFrequencyActive()); }
-            else { m_lastCom1Active.setNull(); }
+            if (!changedCom1Active)
+            {
+                com1.setFrequencyActive(myAircraft.getCom1System().getFrequencyActive());
+            }
+            else
+            {
+                m_lastCom1Active.setNull();
+            }
 
-            if (!changedCom1Standby) { com1.setFrequencyStandby(myAircraft.getCom1System().getFrequencyStandby()); }
-            else { m_lastCom1Standby.setNull(); }
+            if (!changedCom1Standby)
+            {
+                com1.setFrequencyStandby(myAircraft.getCom1System().getFrequencyStandby());
+            }
+            else
+            {
+                m_lastCom1Standby.setNull();
+            }
 
             const bool changedCom1 = myAircraft.getCom1System() != com1;
 
@@ -827,11 +974,23 @@ namespace swift::simplugin::fsxcommon
                 com2.getFrequencyStandby() != m_lastCom2Standby;
 
             // Avoid overwrite of 8.33 kHz frequency with data from simulator
-            if (!changedCom2Active) { com2.setFrequencyActive(myAircraft.getCom2System().getFrequencyActive()); }
-            else { m_lastCom2Active.setNull(); }
+            if (!changedCom2Active)
+            {
+                com2.setFrequencyActive(myAircraft.getCom2System().getFrequencyActive());
+            }
+            else
+            {
+                m_lastCom2Active.setNull();
+            }
 
-            if (!changedCom2Standby) { com2.setFrequencyStandby(myAircraft.getCom2System().getFrequencyStandby()); }
-            else { m_lastCom2Standby.setNull(); }
+            if (!changedCom2Standby)
+            {
+                com2.setFrequencyStandby(myAircraft.getCom2System().getFrequencyStandby());
+            }
+            else
+            {
+                m_lastCom2Standby.setNull();
+            }
 
             const bool changedCom2 = myAircraft.getCom2System() != com2;
 
@@ -853,7 +1012,10 @@ namespace swift::simplugin::fsxcommon
                 this->updateCockpit(com1, com2, transponder, identifier());
             }
         }
-        else { --m_skipCockpitUpdateCycles; }
+        else
+        {
+            --m_skipCockpitUpdateCycles;
+        }
 
         // slower updates
         if (m_ownAircraftUpdateCycles % 10 == 0)
@@ -886,10 +1048,16 @@ namespace swift::simplugin::fsxcommon
     void CSimulatorFsxCommon::triggerUpdateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
                                                                        const DataDefinitionPosData &remoteAircraftData)
     {
-        if (this->isShuttingDownOrDisconnected()) { return; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return;
+        }
         QPointer<CSimulatorFsxCommon> myself(this);
         QTimer::singleShot(0, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->updateRemoteAircraftFromSimulator(simObject, remoteAircraftData);
         });
     }
@@ -897,10 +1065,16 @@ namespace swift::simplugin::fsxcommon
     void CSimulatorFsxCommon::triggerUpdateRemoteAircraftFromSimulator(
         const CSimConnectObject &simObject, const DataDefinitionRemoteAircraftModel &remoteAircraftModel)
     {
-        if (this->isShuttingDownOrDisconnected()) { return; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return;
+        }
         QPointer<CSimulatorFsxCommon> myself(this);
         QTimer::singleShot(0, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->updateRemoteAircraftFromSimulator(simObject, remoteAircraftModel);
         });
     }
@@ -908,7 +1082,10 @@ namespace swift::simplugin::fsxcommon
     void CSimulatorFsxCommon::updateRemoteAircraftFromSimulator(const CSimConnectObject &simObject,
                                                                 const DataDefinitionPosData &remoteAircraftData)
     {
-        if (this->isShuttingDownOrDisconnected()) { return; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return;
+        }
 
         // Near ground we use faster updates
         const CCallsign cs(simObject.getCallsign());
@@ -962,9 +1139,15 @@ namespace swift::simplugin::fsxcommon
                                                            const DataDefinitionRemoteAircraftModel &remoteAircraftModel)
     {
         const CCallsign cs(simObject.getCallsign());
-        if (!m_simConnectObjects.contains(cs)) { return; } // no longer existing
+        if (!m_simConnectObjects.contains(cs))
+        {
+            return;
+        } // no longer existing
         CSimConnectObject &so = m_simConnectObjects[cs];
-        if (so.isPendingRemoved()) { return; }
+        if (so.isPendingRemoved())
+        {
+            return;
+        }
 
         const QString modelString(remoteAircraftModel.title);
         const CLength cg(remoteAircraftModel.cgToGroundFt, CLengthUnit::ft());
@@ -987,10 +1170,16 @@ namespace swift::simplugin::fsxcommon
 
     void CSimulatorFsxCommon::updateOwnAircraftFromSimulator(const DataDefinitionClientAreaSb &sbDataArea)
     {
-        if (m_skipCockpitUpdateCycles > 0) { return; }
+        if (m_skipCockpitUpdateCycles > 0)
+        {
+            return;
+        }
 
         // log SB offset
-        if (m_logSbOffsets) { CLogMessage(this).info(u"SB from sim: " % sbDataArea.toQString()); }
+        if (m_logSbOffsets)
+        {
+            CLogMessage(this).info(u"SB from sim: " % sbDataArea.toQString());
+        }
 
         // SB XPDR mode
         CTransponder::TransponderMode newMode = CTransponder::StateIdent;
@@ -1000,7 +1189,10 @@ namespace swift::simplugin::fsxcommon
         }
         const CSimulatedAircraft myAircraft(this->getOwnAircraft());
         const bool changed = (myAircraft.getTransponderMode() != newMode);
-        if (!changed) { return; }
+        if (!changed)
+        {
+            return;
+        }
         CTransponder xpdr = myAircraft.getTransponder();
         xpdr.setTransponderMode(newMode);
         this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), xpdr, this->identifier());
@@ -1008,10 +1200,16 @@ namespace swift::simplugin::fsxcommon
 
     void CSimulatorFsxCommon::updateTransponderMode(const CTransponder::TransponderMode xpdrMode)
     {
-        if (m_skipCockpitUpdateCycles > 0) { return; }
+        if (m_skipCockpitUpdateCycles > 0)
+        {
+            return;
+        }
         const CSimulatedAircraft myAircraft(this->getOwnAircraft());
         const bool changed = (myAircraft.getTransponderMode() != xpdrMode);
-        if (!changed) { return; }
+        if (!changed)
+        {
+            return;
+        }
         CTransponder myXpdr = myAircraft.getTransponder();
         myXpdr.setTransponderMode(xpdrMode);
         this->updateCockpit(myAircraft.getCom1System(), myAircraft.getCom2System(), myXpdr, this->identifier());
@@ -1030,10 +1228,16 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::simulatorReportedObjectAdded(DWORD objectId)
     {
-        if (this->isShuttingDownOrDisconnected()) { return true; } // pretend everything is fine
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return true;
+        } // pretend everything is fine
         const CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectId);
         const CCallsign callsign(simObject.getCallsign());
-        if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty()) { return false; }
+        if (!simObject.hasValidRequestAndObjectId() || callsign.isEmpty())
+        {
+            return false;
+        }
 
         // we know the object has been created. But it can happen it is directly removed afterwards
         const CSimulatedAircraft verifyAircraft(simObject.getAircraft());
@@ -1041,7 +1245,10 @@ namespace swift::simplugin::fsxcommon
         QTimer::singleShot(1000, this, [=] {
             // verify aircraft and also triggers new add if required
             // do not do this in the event loop, so we do this deferred
-            if (!myself || this->isShuttingDownOrDisconnected()) { return; }
+            if (!myself || this->isShuttingDownOrDisconnected())
+            {
+                return;
+            }
             this->verifyAddedRemoteAircraft(verifyAircraft);
         });
         return true;
@@ -1049,7 +1256,10 @@ namespace swift::simplugin::fsxcommon
 
     void CSimulatorFsxCommon::verifyAddedRemoteAircraft(const CSimulatedAircraft &remoteAircraftIn)
     {
-        if (this->isShuttingDownOrDisconnected()) { return; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return;
+        }
         if (remoteAircraftIn.isTerrainProbe())
         {
             this->verifyAddedTerrainProbe(remoteAircraftIn);
@@ -1060,7 +1270,8 @@ namespace swift::simplugin::fsxcommon
         CSimulatedAircraft remoteAircraft = remoteAircraftIn;
         const CCallsign callsign(remoteAircraft.getCallsign());
 
-        do {
+        do
+        {
             // no callsign
             if (callsign.isEmpty())
             {
@@ -1160,7 +1371,10 @@ namespace swift::simplugin::fsxcommon
         }
 
         // trigger adding pending aircraft if there are any
-        if (!m_addPendingAircraft.isEmpty()) { this->addPendingAircraftAfterAdded(); }
+        if (!m_addPendingAircraft.isEmpty())
+        {
+            this->addPendingAircraftAfterAdded();
+        }
     }
 
     void CSimulatorFsxCommon::addingAircraftFailed(const CSimConnectObject &simObject)
@@ -1169,7 +1383,10 @@ namespace swift::simplugin::fsxcommon
         {
             Q_ASSERT_X(simObject.isAircraft(), Q_FUNC_INFO, "Need aircraft");
         }
-        if (!simObject.isAircraft()) { return; }
+        if (!simObject.isAircraft())
+        {
+            return;
+        }
 
         // clean up
         m_simConnectObjects.removeByOtherSimObject(simObject);
@@ -1179,7 +1396,10 @@ namespace swift::simplugin::fsxcommon
             << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
         CStatusMessage verifyMsg;
         const bool verifiedAircraft = this->verifyFailedAircraftInfo(simObject, verifyMsg); // aircraft.cfg existing?
-        if (!verifyMsg.isEmpty()) { CLogMessage::preformatted(verifyMsg); }
+        if (!verifyMsg.isEmpty())
+        {
+            CLogMessage::preformatted(verifyMsg);
+        }
 
         CSimConnectObject simObjAddAgain(simObject);
         simObjAddAgain.increaseAddingExceptions();
@@ -1208,8 +1428,14 @@ namespace swift::simplugin::fsxcommon
                 << simObject.getAircraftModelString() << simObject.getAircraft().toQString(true);
             QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(2000, this, [=] {
-                if (!myself) { return; }
-                if (this->isShuttingDownOrDisconnected()) { return; }
+                if (!myself)
+                {
+                    return;
+                }
+                if (this->isShuttingDownOrDisconnected())
+                {
+                    return;
+                }
                 m_addPendingAircraft.insert(simObjAddAgain, true); // add failed object
             });
         }
@@ -1272,7 +1498,10 @@ namespace swift::simplugin::fsxcommon
     {
         CStatusMessage m;
         const bool r = verifyFailedAircraftInfo(simObject, m);
-        if (!m.isEmpty()) { CLogMessage::preformatted(m); }
+        if (!m.isEmpty())
+        {
+            CLogMessage::preformatted(m);
+        }
         return r;
     }
 
@@ -1303,13 +1532,19 @@ namespace swift::simplugin::fsxcommon
         }
 
         // trigger new adding from pending if any
-        if (!m_addPendingAircraft.isEmpty()) { this->addPendingAircraftAfterAdded(); }
+        if (!m_addPendingAircraft.isEmpty())
+        {
+            this->addPendingAircraftAfterAdded();
+        }
     }
 
     void CSimulatorFsxCommon::timerBasedObjectAddOrRemove()
     {
         this->addPendingAircraft(AddByTimer);
-        if (!this->isTestMode()) { this->physicallyRemoveAircraftNotInProvider(); }
+        if (!this->isTestMode())
+        {
+            this->physicallyRemoveAircraftNotInProvider();
+        }
     }
 
     void CSimulatorFsxCommon::addPendingAircraftAfterAdded()
@@ -1319,7 +1554,10 @@ namespace swift::simplugin::fsxcommon
 
     void CSimulatorFsxCommon::addPendingAircraft(AircraftAddMode mode)
     {
-        if (m_addPendingAircraft.isEmpty()) { return; }
+        if (m_addPendingAircraft.isEmpty())
+        {
+            return;
+        }
         const CCallsignSet aircraftCallsignsInRange(this->getAircraftInRangeCallsigns());
         CSimulatedAircraftList toBeAddedAircraft; // aircraft still to be added
         CCallsignSet toBeRemovedCallsigns;
@@ -1327,12 +1565,18 @@ namespace swift::simplugin::fsxcommon
         for (const CSimConnectObject &pendingSimObj : std::as_const(m_addPendingAircraft))
         {
             SWIFT_VERIFY_X(pendingSimObj.hasCallsign(), Q_FUNC_INFO, "missing callsign");
-            if (!pendingSimObj.hasCallsign()) { continue; }
+            if (!pendingSimObj.hasCallsign())
+            {
+                continue;
+            }
             if (pendingSimObj.isTerrainProbe() || aircraftCallsignsInRange.contains(pendingSimObj.getCallsign()))
             {
                 toBeAddedAircraft.push_back(pendingSimObj.getAircraft());
             }
-            else { toBeRemovedCallsigns.push_back(pendingSimObj.getCallsign()); }
+            else
+            {
+                toBeRemovedCallsigns.push_back(pendingSimObj.getCallsign());
+            }
         }
 
         // no longer required to be added
@@ -1348,8 +1592,14 @@ namespace swift::simplugin::fsxcommon
             {
                 const QPointer<CSimulatorFsxCommon> myself(this);
                 QTimer::singleShot(100, this, [=] {
-                    if (!myself) { return; }
-                    if (this->isShuttingDownDisconnectedOrNoAircraft(nextPendingAircraft.isTerrainProbe())) { return; }
+                    if (!myself)
+                    {
+                        return;
+                    }
+                    if (this->isShuttingDownDisconnectedOrNoAircraft(nextPendingAircraft.isTerrainProbe()))
+                    {
+                        return;
+                    }
                     this->physicallyAddRemoteAircraftImpl(nextPendingAircraft, mode, oldestSimObject);
                 });
             }
@@ -1364,7 +1614,10 @@ namespace swift::simplugin::fsxcommon
     CSimConnectObject CSimulatorFsxCommon::removeFromAddPendingAndAddAgainAircraft(const CCallsign &callsign)
     {
         CSimConnectObject simObjectOld;
-        if (callsign.isEmpty()) { return simObjectOld; }
+        if (callsign.isEmpty())
+        {
+            return simObjectOld;
+        }
 
         m_addAgainAircraftWhenRemoved.removeByCallsign(callsign);
         if (m_addPendingAircraft.contains(callsign))
@@ -1377,9 +1630,15 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::simulatorReportedObjectRemoved(DWORD objectID)
     {
-        if (this->isShuttingDownOrDisconnected()) { return false; }
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        }
         CSimConnectObject simObject = m_simConnectObjects.getSimObjectForObjectId(objectID);
-        if (!simObject.hasValidRequestAndObjectId()) { return false; } // object id from somewhere else
+        if (!simObject.hasValidRequestAndObjectId())
+        {
+            return false;
+        } // object id from somewhere else
 
         const CCallsign callsign(simObject.getCallsign());
         Q_ASSERT_X(!callsign.isEmpty(), Q_FUNC_INFO, "Missing callsign for removed object");
@@ -1434,14 +1693,20 @@ namespace swift::simplugin::fsxcommon
             this->logVerifyFailedAircraftInfo(simObject);
 
             // relay messages
-            if (!msg.isEmpty()) { emit this->driverMessages(msg); }
+            if (!msg.isEmpty())
+            {
+                emit this->driverMessages(msg);
+            }
         }
 
         // in all cases we remove the object
         const int c = m_simConnectObjects.remove(callsign);
         const bool removedAny = (c > 0);
         const bool updated = this->updateAircraftRendered(simObject.getCallsign(), false);
-        if (updated) { emit this->aircraftRenderingChanged(simObject.getAircraft()); }
+        if (updated)
+        {
+            emit this->aircraftRenderingChanged(simObject.getAircraft());
+        }
 
         // models we have to add again after removing
         if (m_addAgainAircraftWhenRemoved.containsCallsign(callsign))
@@ -1450,8 +1715,14 @@ namespace swift::simplugin::fsxcommon
             m_addAgainAircraftWhenRemoved.removeByCallsign(callsign);
             QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(2500, this, [=] {
-                if (!myself) { return; }
-                if (this->isShuttingDownOrDisconnected()) { return; }
+                if (!myself)
+                {
+                    return;
+                }
+                if (this->isShuttingDownOrDisconnected())
+                {
+                    return;
+                }
                 myself->physicallyAddRemoteAircraftImpl(aircraftAddAgain, AddedAfterRemoved);
             });
         }
@@ -1465,14 +1736,20 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::setCurrentLights(const CCallsign &callsign, const CAircraftLights &lights)
     {
-        if (!m_simConnectObjects.contains(callsign)) { return false; }
+        if (!m_simConnectObjects.contains(callsign))
+        {
+            return false;
+        }
         m_simConnectObjects[callsign].setCurrentLightsInSimulator(lights);
         return true;
     }
 
     bool CSimulatorFsxCommon::setLightsAsSent(const CCallsign &callsign, const CAircraftLights &lights)
     {
-        if (!m_simConnectObjects.contains(callsign)) { return false; }
+        if (!m_simConnectObjects.contains(callsign))
+        {
+            return false;
+        }
         m_simConnectObjects[callsign].setLightsAsSent(lights);
         return true;
     }
@@ -1480,7 +1757,10 @@ namespace swift::simplugin::fsxcommon
     void CSimulatorFsxCommon::timerEvent(QTimerEvent *event)
     {
         Q_UNUSED(event)
-        if (this->isShuttingDown()) { return; }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
         this->dispatch();
     }
 
@@ -1534,7 +1814,10 @@ namespace swift::simplugin::fsxcommon
     CCallsign CSimulatorFsxCommon::getCallsignForPendingProbeRequests(DWORD requestId, bool remove)
     {
         const CCallsign cs = m_pendingProbeRequests.value(requestId);
-        if (remove) { m_pendingProbeRequests.remove(requestId); }
+        if (remove)
+        {
+            m_pendingProbeRequests.remove(requestId);
+        }
         return cs;
     }
 
@@ -1572,7 +1855,7 @@ namespace swift::simplugin::fsxcommon
 
         // statistics
         const qint64 end = QDateTime::currentMSecsSinceEpoch();
-        m_dispatchTimeMs = end - start;
+        m_dispatchTimeMs = end - start; // cppcheck-suppress duplicateExpression
         if (m_dispatchMaxTimeMs < m_dispatchTimeMs)
         {
             m_dispatchMaxTimeMs = m_dispatchTimeMs;
@@ -1650,7 +1933,10 @@ namespace swift::simplugin::fsxcommon
             }
 
             // if this aircraft is also outdated, ignore
-            if (callsigns.contains(newRemoteAircraft.getCallsign())) { return false; }
+            if (callsigns.contains(newRemoteAircraft.getCallsign()))
+            {
+                return false;
+            }
         }
 
         const bool hasPendingAdded = m_simConnectObjects.containsPendingAdded();
@@ -1690,7 +1976,10 @@ namespace swift::simplugin::fsxcommon
                 // we restore rendered flag in case we are sure we are rendered
                 // this is used with rematching
                 const bool rendered = simObject.isConfirmedAdded() && simObject.isPending();
-                if (rendered) { this->updateAircraftRendered(callsign, rendered); }
+                if (rendered)
+                {
+                    this->updateAircraftRendered(callsign, rendered);
+                }
                 return true;
             }
 
@@ -1852,8 +2141,14 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::physicallyAddAITerrainProbe(const ICoordinateGeodetic &coordinate, int number)
     {
-        if (coordinate.isNull()) { return false; }
-        if (!this->isUsingFsxTerrainProbe()) { return false; }
+        if (coordinate.isNull())
+        {
+            return false;
+        }
+        if (!this->isUsingFsxTerrainProbe())
+        {
+            return false;
+        }
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "thread");
 
         // static const QString modelString("OrcaWhale");
@@ -1880,15 +2175,24 @@ namespace swift::simplugin::fsxcommon
 
     int CSimulatorFsxCommon::physicallyInitAITerrainProbes(const ICoordinateGeodetic &coordinate, int number)
     {
-        if (number < 1) { return 0; }
-        if (m_initFsxTerrainProbes) { return m_addedProbes; }
+        if (number < 1)
+        {
+            return 0;
+        }
+        if (m_initFsxTerrainProbes)
+        {
+            return m_addedProbes;
+        }
         m_initFsxTerrainProbes = true; // no multiple inits
         this->triggerAutoTraceSendId();
 
         int c = 0;
         for (int n = 0; n < number; ++n)
         {
-            if (this->physicallyAddAITerrainProbe(coordinate, n)) { c++; }
+            if (this->physicallyAddAITerrainProbe(coordinate, n))
+            {
+                c++;
+            }
         }
 
         CLogMessage(this).info(u"Adding %1 FSX terrain probes") << number;
@@ -1900,16 +2204,28 @@ namespace swift::simplugin::fsxcommon
     {
         // only remove from sim
         Q_ASSERT_X(CThreadUtils::isInThisThread(this), Q_FUNC_INFO, "wrong thread");
-        if (callsign.isEmpty()) { return false; } // can happen if an object is not an aircraft
+        if (callsign.isEmpty())
+        {
+            return false;
+        } // can happen if an object is not an aircraft
 
         // clean up anyway
         this->removeFromAddPendingAndAddAgainAircraft(callsign);
 
         // really remove from simulator
-        if (!m_simConnectObjects.contains(callsign)) { return false; } // already fully removed or not yet added
+        if (!m_simConnectObjects.contains(callsign))
+        {
+            return false;
+        } // already fully removed or not yet added
         CSimConnectObject &simObject = m_simConnectObjects[callsign];
-        if (simObject.isPendingRemoved()) { return true; }
-        if (simObject.isTerrainProbe()) { return false; }
+        if (simObject.isPendingRemoved())
+        {
+            return true;
+        }
+        if (simObject.isTerrainProbe())
+        {
+            return false;
+        }
 
         // check for pending objects
         m_addPendingAircraft.remove(callsign); // just in case still in list of pending aircraft
@@ -1926,7 +2242,10 @@ namespace swift::simplugin::fsxcommon
             simObject.setRemovedWhileAdding(true); // next time kill
             QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(2000, this, [=] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 CLogMessage(this).info(u"Next trial to remove '%1'") << callsign.asString();
                 myself->physicallyRemoveRemoteAircraft(callsign);
             });
@@ -1954,9 +2273,15 @@ namespace swift::simplugin::fsxcommon
             m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(simObject.getObjectId()), requestId);
         if (isOk(result))
         {
-            if (this->isTracingSendId()) { this->traceSendId(simObject, Q_FUNC_INFO); }
+            if (this->isTracingSendId())
+            {
+                this->traceSendId(simObject, Q_FUNC_INFO);
+            }
         }
-        else { CLogMessage(this).warning(u"Removing aircraft '%1' from simulator failed") << callsign.asString(); }
+        else
+        {
+            CLogMessage(this).warning(u"Removing aircraft '%1' from simulator failed") << callsign.asString();
+        }
 
         // mark in provider
         const bool updated = this->updateAircraftRendered(callsign, false);
@@ -1986,7 +2311,10 @@ namespace swift::simplugin::fsxcommon
         const CCallsignSet callsigns = m_simConnectObjects.getAllCallsigns();
         for (const CCallsign &cs : callsigns)
         {
-            if (this->physicallyRemoveRemoteAircraft(cs)) { r++; }
+            if (this->physicallyRemoveRemoteAircraft(cs))
+            {
+                r++;
+            }
         }
 
         CSimulatorFsCommon::physicallyRemoveAllRemoteAircraft();
@@ -2126,20 +2454,29 @@ namespace swift::simplugin::fsxcommon
         const QList<CSimConnectObject> simObjects(m_simConnectObjects.values());
 
         uint32_t simObjectNumber = 0;
-        const bool traceSendId = this->isTracingSendId();
+        const bool doTraceSendId = this->isTracingSendId();
         const bool updateAllAircraft = this->isUpdateAllRemoteAircraft(currentTimestamp);
         for (const CSimConnectObject &simObject : simObjects)
         {
             // happening if aircraft is not yet added to simulator or to be deleted
-            if (!simObject.isReadyToSend()) { continue; }
-            if (!simObject.hasCurrentLightsInSimulator()) { continue; } // wait until we have light state
+            if (!simObject.isReadyToSend())
+            {
+                continue;
+            }
+            if (!simObject.hasCurrentLightsInSimulator())
+            {
+                continue;
+            } // wait until we have light state
 
             const CCallsign callsign(simObject.getCallsign());
             const bool hasCs = !callsign.isEmpty();
             const bool hasValidIds = simObject.hasValidRequestAndObjectId();
             SWIFT_VERIFY_X(hasCs, Q_FUNC_INFO, "missing callsign");
             SWIFT_AUDIT_X(hasValidIds, Q_FUNC_INFO, "Missing ids");
-            if (!hasCs || !hasValidIds) { continue; } // not supposed to happen
+            if (!hasCs || !hasValidIds)
+            {
+                continue;
+            } // not supposed to happen
             const DWORD objectId = simObject.getObjectId();
 
             // setup
@@ -2172,7 +2509,7 @@ namespace swift::simplugin::fsxcommon
                                                       CSimConnectDefinitions::DataRemoteAircraftSetPosition,
                                                       static_cast<SIMCONNECT_OBJECT_ID>(objectId), 0, 0,
                                                       sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
-                        traceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+                        doTraceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
                     if (isOk(hr))
                     {
                         this->rememberLastSent(result); // remember situation
@@ -2198,11 +2535,20 @@ namespace swift::simplugin::fsxcommon
     bool CSimulatorFsxCommon::updateRemoteAircraftParts(const CSimConnectObject &simObject,
                                                         const CInterpolationResult &result, bool forcedUpdate)
     {
-        if (!simObject.hasValidRequestAndObjectId()) { return false; }
-        if (!simObject.isConfirmedAdded()) { return false; }
+        if (!simObject.hasValidRequestAndObjectId())
+        {
+            return false;
+        }
+        if (!simObject.isConfirmedAdded())
+        {
+            return false;
+        }
 
         const CAircraftParts parts = result;
-        if (parts.isNull()) { return false; }
+        if (parts.isNull())
+        {
+            return false;
+        }
         if (parts.getPartsDetails() != CAircraftParts::GuessedParts && !result.getPartsStatus().isSupportingParts())
         {
             return false;
@@ -2215,7 +2561,10 @@ namespace swift::simplugin::fsxcommon
         }
 
         const bool ok = this->sendRemoteAircraftPartsToSimulator(simObject, parts);
-        if (ok) { this->rememberLastSent(parts, cs); }
+        if (ok)
+        {
+            this->rememberLastSent(parts, cs);
+        }
         return ok;
     }
 
@@ -2223,7 +2572,10 @@ namespace swift::simplugin::fsxcommon
                                                                  const CAircraftParts &parts)
     {
         Q_ASSERT(m_hSimConnect);
-        if (!simObject.isReadyToSend()) { return false; }
+        if (!simObject.isReadyToSend())
+        {
+            return false;
+        }
 
         const DWORD objectId = simObject.getObjectId();
         const bool traceId = this->isTracingSendId();
@@ -2279,8 +2631,14 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::sendRemoteAircraftAtcDataToSimulator(const CSimConnectObject &simObject)
     {
-        if (!simObject.isReadyToSend()) { return false; }
-        if (simObject.isTerrainProbe()) { return false; }
+        if (!simObject.isReadyToSend())
+        {
+            return false;
+        }
+        if (simObject.isTerrainProbe())
+        {
+            return false;
+        }
         // if (simObject.getType() != CSimConnectObject::AircraftNonAtc) { return false; } // otherwise errors
 
         const DWORD objectId = simObject.getObjectId();
@@ -2309,11 +2667,20 @@ namespace swift::simplugin::fsxcommon
     void CSimulatorFsxCommon::sendToggledLightsToSimulator(const CSimConnectObject &simObj,
                                                            const CAircraftLights &lightsWanted, bool force)
     {
-        if (!simObj.isReadyToSend()) { return; } // stale
+        if (!simObj.isReadyToSend())
+        {
+            return;
+        } // stale
 
         const CAircraftLights lightsIsState = simObj.getCurrentLightsInSimulator();
-        if (lightsWanted == lightsIsState) { return; }
-        if (!force && lightsWanted == simObj.getLightsAsSent()) { return; }
+        if (lightsWanted == lightsIsState)
+        {
+            return;
+        }
+        if (!force && lightsWanted == simObj.getLightsAsSent())
+        {
+            return;
+        }
         const CCallsign callsign(simObj.getCallsign());
 
         // Update data
@@ -2384,10 +2751,19 @@ namespace swift::simplugin::fsxcommon
 
         const QPointer<CSimulatorFsxCommon> myself(this);
         QTimer::singleShot(DeferResendingLights, this, [=] {
-            if (!myself) { return; }
-            if (!m_simConnectObjects.contains(callsign)) { return; }
+            if (!myself)
+            {
+                return;
+            }
+            if (!m_simConnectObjects.contains(callsign))
+            {
+                return;
+            }
             const CSimConnectObject currentSimObject = m_simConnectObjects[callsign];
-            if (!currentSimObject.isReadyToSend()) { return; } // stale
+            if (!currentSimObject.isReadyToSend())
+            {
+                return;
+            } // stale
             if (lightsWanted != currentSimObject.getLightsAsSent())
             {
                 return;
@@ -2433,7 +2809,10 @@ namespace swift::simplugin::fsxcommon
             // here we handle them her with DWORD (unsigned)
             position.Airspeed = 0U;
         }
-        else { position.Airspeed = static_cast<DWORD>(qRound(gsKts)); }
+        else
+        {
+            position.Airspeed = static_cast<DWORD>(qRound(gsKts));
+        }
 
         // send GND flag also when underflow detection is available
         if ((sendGnd || forceUnderflowDetection) && situation.isOnGroundInfoAvailable())
@@ -2448,7 +2827,8 @@ namespace swift::simplugin::fsxcommon
         {
             // logical resolution failed so far, likely we have no CG or elevantion
             // primitive guessing
-            do {
+            do
+            {
                 if (position.Airspeed < 2)
                 {
                     position.OnGround = 1U;
@@ -2514,22 +2894,52 @@ namespace swift::simplugin::fsxcommon
         // DWORD   OnGround;   // 1=force to be on the ground | DWORD   Airspeed;   // knots
         // https://www.prepar3d.com/SDKv4/sdk/simconnect_api/references/simobject_functions.html
         // examples show heaading 180 => we assume values +-180deg
-        if (!isValid180Deg(fsxPos.Pitch)) { return false; }
-        if (!isValid180Deg(fsxPos.Bank)) { return false; }
-        if (!isValid180Deg(fsxPos.Heading)) { return false; }
-        if (!isValid180Deg(fsxPos.Latitude)) { return false; }
-        if (!isValid180Deg(fsxPos.Longitude)) { return false; }
+        if (!isValid180Deg(fsxPos.Pitch))
+        {
+            return false;
+        }
+        if (!isValid180Deg(fsxPos.Bank))
+        {
+            return false;
+        }
+        if (!isValid180Deg(fsxPos.Heading))
+        {
+            return false;
+        }
+        if (!isValid180Deg(fsxPos.Latitude))
+        {
+            return false;
+        }
+        if (!isValid180Deg(fsxPos.Longitude))
+        {
+            return false;
+        }
         return true;
     }
 
     bool CSimulatorFsxCommon::requestPositionDataForSimObject(const CSimConnectObject &simObject,
                                                               SIMCONNECT_PERIOD period)
     {
-        if (this->isShuttingDownOrDisconnected()) { return false; }
-        if (!simObject.hasValidRequestAndObjectId()) { return false; }
-        if (simObject.isPending()) { return false; } // wait until confirmed
-        if (simObject.getSimDataPeriod() == period) { return true; } // already queried like this
-        if (!m_simConnectObjects.contains(simObject.getCallsign())) { return false; } // removed in meantime
+        if (this->isShuttingDownOrDisconnected())
+        {
+            return false;
+        }
+        if (!simObject.hasValidRequestAndObjectId())
+        {
+            return false;
+        }
+        if (simObject.isPending())
+        {
+            return false;
+        } // wait until confirmed
+        if (simObject.getSimDataPeriod() == period)
+        {
+            return true;
+        } // already queried like this
+        if (!m_simConnectObjects.contains(simObject.getCallsign()))
+        {
+            return false;
+        } // removed in meantime
 
         // always request, not only when something has changed
         const SIMCONNECT_DATA_REQUEST_ID reqId = static_cast<SIMCONNECT_DATA_REQUEST_ID>(
@@ -2562,14 +2972,23 @@ namespace swift::simplugin::fsxcommon
                                               static_cast<SIMCONNECT_OBJECT_ID>(objectId), SIMCONNECT_PERIOD_ONCE),
             simObject, w.arg(requestId), Q_FUNC_INFO, "SimConnect_RequestDataOnSimObject");
         const bool ok = isOk(result);
-        if (ok) { m_pendingProbeRequests.insert(requestId, aircraftCallsign); }
+        if (ok)
+        {
+            m_pendingProbeRequests.insert(requestId, aircraftCallsign);
+        }
         return ok;
     }
 
     bool CSimulatorFsxCommon::requestLightsForSimObject(const CSimConnectObject &simObject)
     {
-        if (!this->isValidSimObjectNotPendingRemoved(simObject)) { return false; }
-        if (!m_hSimConnect) { return false; }
+        if (!this->isValidSimObjectNotPendingRemoved(simObject))
+        {
+            return false;
+        }
+        if (!m_hSimConnect)
+        {
+            return false;
+        }
 
         // always request, not only when something has changed
         const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectLights);
@@ -2583,8 +3002,14 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::requestModelInfoForSimObject(const CSimConnectObject &simObject)
     {
-        if (!this->isValidSimObjectNotPendingRemoved(simObject)) { return false; }
-        if (!m_hSimConnect) { return false; }
+        if (!this->isValidSimObjectNotPendingRemoved(simObject))
+        {
+            return false;
+        }
+        if (!m_hSimConnect)
+        {
+            return false;
+        }
 
         // always request, not only when something has changed
         const SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectModel);
@@ -2598,8 +3023,14 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommon::stopRequestingDataForSimObject(const CSimConnectObject &simObject)
     {
-        if (!simObject.hasValidRequestAndObjectId()) { return false; }
-        if (!m_hSimConnect) { return false; }
+        if (!simObject.hasValidRequestAndObjectId())
+        {
+            return false;
+        }
+        if (!m_hSimConnect)
+        {
+            return false;
+        }
 
         // stop by setting SIMCONNECT_PERIOD_NEVER
         SIMCONNECT_DATA_REQUEST_ID requestId = simObject.getRequestId(CSimConnectDefinitions::SimObjectPositionData);
@@ -2667,7 +3098,10 @@ namespace swift::simplugin::fsxcommon
             QPointer<CSimulatorFsxCommon> myself(this);
             QTimer::singleShot(2000, this, [=] {
                 // Shutdown or unloaded
-                if (this->isShuttingDown() || !myself) { return; }
+                if (this->isShuttingDown() || !myself)
+                {
+                    return;
+                }
                 m_initFsxTerrainProbes = false; // probes will re-init
             });
         }
@@ -2695,7 +3129,10 @@ namespace swift::simplugin::fsxcommon
 
     CCallsignSet CSimulatorFsxCommon::getCallsignsMissingInProvider() const
     {
-        if (m_simConnectObjects.isEmpty()) { return CCallsignSet(); }
+        if (m_simConnectObjects.isEmpty())
+        {
+            return CCallsignSet();
+        }
         const CCallsignSet simObjectCallsigns(m_simConnectObjects.getAllCallsigns(true));
         const CCallsignSet providerCallsigns(this->getAircraftInRangeCallsigns());
         return simObjectCallsigns.difference(providerCallsigns);
@@ -2704,12 +3141,24 @@ namespace swift::simplugin::fsxcommon
     void CSimulatorFsxCommon::traceSendId(const CSimConnectObject &simObject, const QString &functionName,
                                           const QString &details, bool forceTrace)
     {
-        if (!forceTrace && !this->isTracingSendId()) { return; }
-        if (MaxSendIdTraces < 1) { return; } // cppcheck-suppress knownConditionTrueFalse
+        if (!forceTrace && !this->isTracingSendId())
+        {
+            return;
+        }
+        if (MaxSendIdTraces < 1)
+        {
+            return;
+        } // cppcheck-suppress knownConditionTrueFalse
         DWORD dwLastId = 0;
         const HRESULT hr = SimConnect_GetLastSentPacketID(m_hSimConnect, &dwLastId);
-        if (isFailure(hr)) { return; }
-        if (m_sendIdTraces.size() > MaxSendIdTraces) { m_sendIdTraces.removeLast(); }
+        if (isFailure(hr))
+        {
+            return;
+        }
+        if (m_sendIdTraces.size() > MaxSendIdTraces)
+        {
+            m_sendIdTraces.removeLast();
+        }
         const TraceFsxSendId trace(dwLastId, simObject,
                                    details.isEmpty() ? functionName : details % u", " % functionName);
         m_sendIdTraces.push_front(trace);
@@ -2730,13 +3179,22 @@ namespace swift::simplugin::fsxcommon
                                        functionDetails);
     }
 
-    HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject,
+    HRESULT CSimulatorFsxCommon::logAndTraceSendId(HRESULT hr, bool doTraceSendId, const CSimConnectObject &simObject,
                                                    const QString &warningMsg, const QString &functionName,
                                                    const QString &functionDetails)
     {
-        if (traceSendId) { this->traceSendId(simObject, functionName, functionDetails); }
-        if (isOk(hr)) { return hr; }
-        if (!warningMsg.isEmpty()) { CLogMessage(this).warning(warningMsg % u" SimObject: " % simObject.toQString()); }
+        if (doTraceSendId)
+        {
+            this->traceSendId(simObject, functionName, functionDetails);
+        }
+        if (isOk(hr))
+        {
+            return hr;
+        }
+        if (!warningMsg.isEmpty())
+        {
+            CLogMessage(this).warning(warningMsg % u" SimObject: " % simObject.toQString());
+        }
         this->triggerAutoTraceSendId();
         return hr;
     }
@@ -2747,7 +3205,10 @@ namespace swift::simplugin::fsxcommon
     {
         for (const TraceFsxSendId &trace : m_sendIdTraces)
         {
-            if (trace.sendId == sendId) { return trace; }
+            if (trace.sendId == sendId)
+            {
+                return trace;
+            }
         }
         return TraceFsxSendId::invalid();
     }
@@ -2755,14 +3216,20 @@ namespace swift::simplugin::fsxcommon
     QString CSimulatorFsxCommon::getSendIdTraceDetails(DWORD sendId) const
     {
         const TraceFsxSendId trace = this->getSendIdTrace(sendId);
-        if (trace.sendId == sendId) { return this->getSendIdTraceDetails(trace); }
+        if (trace.sendId == sendId)
+        {
+            return this->getSendIdTraceDetails(trace);
+        }
         return {};
     }
 
     QString CSimulatorFsxCommon::getSendIdTraceDetails(const TraceFsxSendId &trace) const
     {
         static const QString d("Send id: %1 obj.id.: %2 SimObj: %3 | '%4'");
-        if (trace.isInvalid()) { return QString(); }
+        if (trace.isInvalid())
+        {
+            return QString();
+        }
 
         // update with latest sim object
         const CSimConnectObject simObject = this->getSimObjectForTrace(trace);
@@ -2771,18 +3238,27 @@ namespace swift::simplugin::fsxcommon
 
     int CSimulatorFsxCommon::removeAllProbes()
     {
-        if (!m_hSimConnect) { return 0; } // already disconnected
+        if (!m_hSimConnect)
+        {
+            return 0;
+        } // already disconnected
         const QList<CSimConnectObject> probes = m_simConnectObjects.getProbes();
 
         int c = 0;
         for (const CSimConnectObject &probeSimObject : probes)
         {
-            if (!probeSimObject.isConfirmedAdded()) { continue; }
+            if (!probeSimObject.isConfirmedAdded())
+            {
+                continue;
+            }
             const SIMCONNECT_DATA_REQUEST_ID requestId =
                 probeSimObject.getRequestId(CSimConnectDefinitions::SimObjectRemove);
             const HRESULT result = SimConnect_AIRemoveObject(
                 m_hSimConnect, static_cast<SIMCONNECT_OBJECT_ID>(probeSimObject.getObjectId()), requestId);
-            if (isOk(result)) { c++; }
+            if (isOk(result))
+            {
+                c++;
+            }
             else
             {
                 CLogMessage(this).warning(u"Removing probe '%1' from simulator failed") << probeSimObject.getObjectId();
@@ -2881,8 +3357,14 @@ namespace swift::simplugin::fsxcommon
     CCallsignSet CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider()
     {
         const CCallsignSet callsignsToBeRemoved(this->getCallsignsMissingInProvider());
-        if (callsignsToBeRemoved.isEmpty()) { return callsignsToBeRemoved; }
-        for (const CCallsign &callsign : callsignsToBeRemoved) { this->physicallyRemoveRemoteAircraft(callsign); }
+        if (callsignsToBeRemoved.isEmpty())
+        {
+            return callsignsToBeRemoved;
+        }
+        for (const CCallsign &callsign : callsignsToBeRemoved)
+        {
+            this->physicallyRemoveRemoteAircraft(callsign);
+        }
 
         if (this->showDebugLogMessage())
         {
@@ -2896,7 +3378,10 @@ namespace swift::simplugin::fsxcommon
     {
         const QPointer<CSimulatorFsxCommon> myself(this);
         QTimer::singleShot(100, this, [=] {
-            if (!myself || this->isShuttingDown()) { return; }
+            if (!myself || this->isShuttingDown())
+            {
+                return;
+            }
             CSimulatorFsxCommon::physicallyRemoveAircraftNotInProvider();
         });
     }
@@ -2927,12 +3412,21 @@ namespace swift::simplugin::fsxcommon
 
     void CSimulatorFsxCommonListener::checkImpl()
     {
-        if (!m_timer.isActive()) { return; }
-        if (this->isShuttingDown()) { return; }
+        if (!m_timer.isActive())
+        {
+            return;
+        }
+        if (this->isShuttingDown())
+        {
+            return;
+        }
 
         QPointer<CSimulatorFsxCommonListener> myself(this);
         QTimer::singleShot(0, this, [=] {
-            if (!myself || !sApp || sApp->isShuttingDown()) { return; }
+            if (!myself || !sApp || sApp->isShuttingDown())
+            {
+                return;
+            }
             this->checkConnection();
         });
 
@@ -2942,7 +3436,10 @@ namespace swift::simplugin::fsxcommon
 
     QString CSimulatorFsxCommonListener::backendInfo() const
     {
-        if (m_simulatorName.isEmpty()) { return ISimulatorListener::backendInfo(); }
+        if (m_simulatorName.isEmpty())
+        {
+            return ISimulatorListener::backendInfo();
+        }
         return m_simulatorDetails;
     }
 
@@ -2960,10 +3457,14 @@ namespace swift::simplugin::fsxcommon
         QElapsedTimer t;
         t.start();
         bool check = false;
-        do {
+        do
+        {
             // if we can connect, but not dispatch, it can mean a previously started FSX/P3D
             // blocks remote calls -> RESTART
-            if (!this->connectToSimulator()) { break; }
+            if (!this->connectToSimulator())
+            {
+                break;
+            }
 
             // check if we have the right sim.
             // this check on a remote FSX/P3D not running/existing might TAKE LONG!
@@ -2977,13 +3478,19 @@ namespace swift::simplugin::fsxcommon
                 return;
             }
 
-            if (isFailure(result)) { break; } // means serious failure
+            if (isFailure(result))
+            {
+                break;
+            } // means serious failure
             check = this->checkVersionAndSimulator();
         }
         while (false);
 
         this->adjustTimerInterval(t.elapsed());
-        if (check) { emit this->simulatorStarted(this->getPluginInfo()); }
+        if (check)
+        {
+            emit this->simulatorStarted(this->getPluginInfo());
+        }
     }
 
     void CSimulatorFsxCommonListener::adjustTimerInterval(qint64 checkTimeMs)
@@ -2995,11 +3502,17 @@ namespace swift::simplugin::fsxcommon
             const int newIntervalMs = qRound(1.2 * checkTimeMs / 1000.0) * 1000;
             CLogMessage(this).debug(u"Check for simulator sim.'%1' connection in %2ms, too slow. Setting %3ms")
                 << sim << checkTimeMs << newIntervalMs;
-            if (m_timer.interval() != newIntervalMs) { m_timer.setInterval(newIntervalMs); }
+            if (m_timer.interval() != newIntervalMs)
+            {
+                m_timer.setInterval(newIntervalMs);
+            }
         }
         else
         {
-            if (m_timer.interval() != MinQueryIntervalMs) { m_timer.setInterval(MinQueryIntervalMs); }
+            if (m_timer.interval() != MinQueryIntervalMs)
+            {
+                m_timer.setInterval(MinQueryIntervalMs);
+            }
         }
 
         // restart
@@ -3011,7 +3524,10 @@ namespace swift::simplugin::fsxcommon
         const CSimulatorInfo pluginSim(getPluginInfo().getIdentifier());
         const QString connectedSimName = m_simulatorName.toLower().trimmed();
 
-        if (connectedSimName.isEmpty()) { return false; }
+        if (connectedSimName.isEmpty())
+        {
+            return false;
+        }
         if (pluginSim.isP3D())
         {
             // P3D drivers only works with P3D
@@ -3034,13 +3550,19 @@ namespace swift::simplugin::fsxcommon
     bool CSimulatorFsxCommonListener::checkSimConnectDll() const
     {
         static const CWinDllUtils::DLLInfo simConnectInfo = CSimConnectUtilities::simConnectDllInfo();
-        if (!simConnectInfo.errorMsg.isEmpty()) { return false; }
+        if (!simConnectInfo.errorMsg.isEmpty())
+        {
+            return false;
+        }
         return true;
     }
 
     bool CSimulatorFsxCommonListener::connectToSimulator()
     {
-        if (m_simConnected) { return true; }
+        if (m_simConnected)
+        {
+            return true;
+        }
         const HRESULT result = SimConnect_Open(&m_hSimConnect, sApp->swiftVersionChar(), nullptr, 0, nullptr, 0);
         const bool ok = isOk(result);
         m_simConnected = ok;
@@ -3049,7 +3571,10 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimulatorFsxCommonListener::disconnectFromSimulator()
     {
-        if (!m_simConnected) { return false; }
+        if (!m_simConnected)
+        {
+            return false;
+        }
         SimConnect_Close(m_hSimConnect);
         m_hSimConnect = nullptr;
         m_simConnected = false;

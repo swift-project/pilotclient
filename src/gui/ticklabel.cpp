@@ -19,7 +19,10 @@ namespace swift::gui
 
     void CTickLabel::setTicked(bool ticked)
     {
-        if (m_isPixmapTicked == ticked) { return; }
+        if (m_isPixmapTicked == ticked)
+        {
+            return;
+        }
         this->m_isPixmapTicked = ticked;
         this->setLabel();
 

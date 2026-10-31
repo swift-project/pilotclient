@@ -104,7 +104,10 @@ namespace swift::misc
         //! Destructor. The original object will be overwritten by the new one stored in the writer.
         ~LockFreeUniqueWriter()
         {
-            if (m_ptr.use_count() == 0) { return; } // *this has been moved from
+            if (m_ptr.use_count() == 0)
+            {
+                return;
+            } // *this has been moved from
 
 #ifdef __cpp_lib_atomic_shared_ptr // atomic shared pointer is currently not supported by clang
             bool success = m_now->compare_exchange_strong(m_old, std::shared_ptr<const T>(m_ptr));

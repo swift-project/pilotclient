@@ -21,7 +21,10 @@ namespace swift::misc
 
     CPixmap &CPixmap::operator=(const CPixmap &other)
     {
-        if (this == &other) { return *this; }
+        if (this == &other)
+        {
+            return *this;
+        }
 
         QReadLocker readLock(&other.m_lock);
         auto tuple = std::make_tuple(other.m_pixmap, other.m_hasCachedPixmap, other.m_array);
@@ -35,12 +38,18 @@ namespace swift::misc
     const QPixmap &CPixmap::pixmap() const
     {
         QWriteLocker lock(&this->m_lock);
-        if (this->m_hasCachedPixmap) { return this->m_pixmap; }
+        if (this->m_hasCachedPixmap)
+        {
+            return this->m_pixmap;
+        }
 
         // this part here becomes relevant when marshalling via DBus is used
         // in this case only the array is transferred
         this->m_hasCachedPixmap = true;
-        if (this->m_array.isEmpty()) { return this->m_pixmap; }
+        if (this->m_array.isEmpty())
+        {
+            return this->m_pixmap;
+        }
         bool s = this->m_pixmap.loadFromData(this->m_array, "PNG");
         Q_ASSERT(s);
         Q_UNUSED(s);
@@ -50,7 +59,10 @@ namespace swift::misc
     bool CPixmap::isNull() const
     {
         QReadLocker lock(&this->m_lock);
-        if (this->m_hasCachedPixmap) { return false; }
+        if (this->m_hasCachedPixmap)
+        {
+            return false;
+        }
         return (this->m_array.isEmpty() || this->m_array.isNull());
     }
 

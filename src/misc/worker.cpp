@@ -73,7 +73,10 @@ namespace swift::misc
         worker->setStarted();
         auto *thread = new CRegularThread(owner);
 
-        if (typeId != QMetaType::Void) { worker->m_result = QVariant(QMetaType(typeId), nullptr); }
+        if (typeId != QMetaType::Void)
+        {
+            worker->m_result = QVariant(QMetaType(typeId), nullptr);
+        }
 
         const QString ownerName =
             owner->objectName().isEmpty() ? owner->metaObject()->className() : owner->objectName();
@@ -140,13 +143,19 @@ namespace swift::misc
 
     void CWorkerBase::abandon() noexcept
     {
-        if (thread() != thread()->thread()) { thread()->requestInterruption(); }
+        if (thread() != thread()->thread())
+        {
+            thread()->requestInterruption();
+        }
         quit();
     }
 
     void CWorkerBase::abandonAndWait() noexcept
     {
-        if (thread() != thread()->thread()) { thread()->requestInterruption(); }
+        if (thread() != thread()->thread())
+        {
+            thread()->requestInterruption();
+        }
         quitAndWait();
     }
 
@@ -165,7 +174,10 @@ namespace swift::misc
     void CContinuousWorker::start(QThread::Priority priority)
     {
         SWIFT_VERIFY_X(!hasStarted(), Q_FUNC_INFO, "Tried to start a worker that was already started");
-        if (hasStarted()) { return; }
+        if (hasStarted())
+        {
+            return;
+        }
 
         // avoid message "QObject: Cannot create children for a parent that is in a different thread"
         Q_ASSERT_X(CThreadUtils::isInThisThread(m_owner), Q_FUNC_INFO, "Needs to be started in owner thread");
@@ -193,7 +205,10 @@ namespace swift::misc
         this->setEnabled(false);
 
         // already in owner's thread? then return
-        if (this->thread() == m_owner->thread()) { return; }
+        if (this->thread() == m_owner->thread())
+        {
+            return;
+        }
 
         // remark: cannot stop timer here, as I am normally not in the correct thread
         this->beforeQuit();
@@ -205,10 +220,16 @@ namespace swift::misc
         this->setEnabled(false);
 
         // already in owner's thread? then return
-        if (this->thread() == m_owner->thread()) { return; }
+        if (this->thread() == m_owner->thread())
+        {
+            return;
+        }
 
         // called by own thread, will deadlock, return
-        if (CThreadUtils::isInThisThread(this)) { return; }
+        if (CThreadUtils::isInThisThread(this))
+        {
+            return;
+        }
 
         QThread *workerThread = thread(); // must be before quit()
         this->quit();

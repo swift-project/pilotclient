@@ -13,8 +13,14 @@ namespace swift::misc::simulation::settings
 
     QVariant CXSwiftBusSettings::propertyByIndex(CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
-        if (ITimestampBased::canHandleIndex(index)) { return ITimestampBased::propertyByIndex(index); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            return ITimestampBased::propertyByIndex(index);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -38,7 +44,10 @@ namespace swift::misc::simulation::settings
             (*this) = variant.value<CXSwiftBusSettings>();
             return;
         }
-        if (ITimestampBased::canHandleIndex(index)) { ITimestampBased::setPropertyByIndex(index, variant); }
+        if (ITimestampBased::canHandleIndex(index))
+        {
+            ITimestampBased::setPropertyByIndex(index, variant);
+        }
 
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)

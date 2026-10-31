@@ -17,7 +17,7 @@ namespace swift::core::afv::crypto
         QBuffer buffer(&data);
         buffer.open(QIODevice::ReadOnly);
 
-        buffer.read((char *)&m_headerLength, sizeof(m_headerLength));
+        buffer.read(reinterpret_cast<char *>(&m_headerLength), sizeof(m_headerLength));
 
         QByteArray headerBuffer = buffer.read(m_headerLength);
 
@@ -45,8 +45,14 @@ namespace swift::core::afv::crypto
             decryptedPayload.fill(0, mlen);
 
             QByteArray key;
-            if (loopback) { key = channel.getTransmitKey(CryptoDtoMode::AEAD_ChaCha20Poly1305); }
-            else { key = channel.getReceiveKey(CryptoDtoMode::AEAD_ChaCha20Poly1305); }
+            if (loopback)
+            {
+                key = channel.getTransmitKey(CryptoDtoMode::AEAD_ChaCha20Poly1305);
+            }
+            else
+            {
+                key = channel.getReceiveKey(CryptoDtoMode::AEAD_ChaCha20Poly1305);
+            }
             Q_ASSERT_X(key.size() == crypto_aead_chacha20poly1305_IETF_KEYBYTES, Q_FUNC_INFO, "");
             int result = crypto_aead_chacha20poly1305_ietf_decrypt(
                 reinterpret_cast<unsigned char *>(decryptedPayload.data()), &mlen, nullptr,
@@ -64,10 +70,10 @@ namespace swift::core::afv::crypto
 
                 QBuffer decryptedPayloadBuffer(&decryptedPayload);
                 decryptedPayloadBuffer.open(QIODevice::ReadOnly);
-                decryptedPayloadBuffer.read((char *)&m_dtoNameLength, sizeof(m_dtoNameLength));
+                decryptedPayloadBuffer.read(reinterpret_cast<char *>(&m_dtoNameLength), sizeof(m_dtoNameLength));
                 m_dtoNameBuffer = decryptedPayloadBuffer.read(m_dtoNameLength);
 
-                decryptedPayloadBuffer.read((char *)&m_dataLength, sizeof(m_dataLength));
+                decryptedPayloadBuffer.read(reinterpret_cast<char *>(&m_dataLength), sizeof(m_dataLength));
                 m_dataBuffer = decryptedPayloadBuffer.read(m_dataLength);
                 m_verified = true;
             }

@@ -38,7 +38,10 @@ namespace XSwiftBus
     private:
         static int callback(XPLMCommandRef, XPLMCommandPhase phase, void *refcon)
         {
-            if (phase == xplm_CommandBegin) { (static_cast<CCommand *>(refcon)->m_handler)(); }
+            if (phase == xplm_CommandBegin)
+            {
+                (static_cast<CCommand *>(refcon)->m_handler)();
+            }
             return 1;
         }
 

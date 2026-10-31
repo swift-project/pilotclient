@@ -74,10 +74,16 @@ namespace swift::core::db
         auto *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType, this);
         multiPart->append(CDatabaseUtils::getJsonTextMultipart(models.toDatabaseJson(), compress));
 
-        if (sApp->getGlobalSetup().dbDebugFlag()) { multiPart->append(CDatabaseUtils::getMultipartWithDebugFlag()); }
+        if (sApp->getGlobalSetup().dbDebugFlag())
+        {
+            multiPart->append(CDatabaseUtils::getMultipartWithDebugFlag());
+        }
 
         QUrl url(m_modelPublishUrl.toQUrl());
-        if (compress) { url.setQuery(CDatabaseUtils::getCompressedQuery()); }
+        if (compress)
+        {
+            url.setQuery(CDatabaseUtils::getCompressedQuery());
+        }
         QNetworkRequest request(url);
         const QByteArray eInfo = extraInfo.toLatin1();
         request.setRawHeader(QByteArray("swift-extrainfo"), eInfo);
@@ -116,7 +122,10 @@ namespace swift::core::db
         // QUrl url("https://192.168.0.153/service/publishauto.php");
         QUrl url(m_autoPublishUrl.toQUrl());
         QUrlQuery query;
-        if (compress) { query = CDatabaseUtils::getCompressedQuery(); }
+        if (compress)
+        {
+            query = CDatabaseUtils::getCompressedQuery();
+        }
         url.setQuery(query);
 
         QNetworkRequest request(url);
@@ -179,7 +188,10 @@ namespace swift::core::db
 
             emit this->publishedModels(modelsPublished, modelsSkipped, msgs, sendingSuccessful, directWrite);
 
-            if (!modelsPublished.isEmpty()) { emit this->publishedModelsSimplified(modelsPublished, directWrite); }
+            if (!modelsPublished.isEmpty())
+            {
+                emit this->publishedModelsSimplified(modelsPublished, directWrite);
+            }
             Q_UNUSED(c);
         }
         else
@@ -216,14 +228,20 @@ namespace swift::core::db
         {
             // no error
         }
-        else { msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"HTTP error: " % error)); }
+        else
+        {
+            msgs.push_back(CStatusMessage(cats, CStatusMessage::SeverityError, u"HTTP error: " % error));
+        }
 
         emit this->autoPublished(ok, urlString, msgs);
     }
 
     bool CDatabaseWriter::killPendingModelReply()
     {
-        if (!m_pendingModelPublishReply) { return false; }
+        if (!m_pendingModelPublishReply)
+        {
+            return false;
+        }
         m_pendingModelPublishReply->abort();
         m_pendingModelPublishReply = nullptr;
         m_modelReplyPendingSince = -1;
@@ -232,7 +250,10 @@ namespace swift::core::db
 
     bool CDatabaseWriter::isModelReplyOverdue() const
     {
-        if (m_modelReplyPendingSince < 0 || !m_pendingModelPublishReply) { return false; }
+        if (m_modelReplyPendingSince < 0 || !m_pendingModelPublishReply)
+        {
+            return false;
+        }
         const qint64 ms = QDateTime::currentMSecsSinceEpoch() - m_modelReplyPendingSince;
         return ms > 7500;
     }
@@ -249,7 +270,10 @@ namespace swift::core::db
 
     QList<QByteArray> CDatabaseWriter::splitData(const QByteArray &data, int size)
     {
-        if (data.size() <= size) { return QList<QByteArray>({ data }); }
+        if (data.size() <= size)
+        {
+            return QList<QByteArray>({ data });
+        }
         int pos = 0, arrsize = data.size();
         QList<QByteArray> arrays;
         while (pos < arrsize)

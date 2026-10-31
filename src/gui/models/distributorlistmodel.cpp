@@ -22,17 +22,14 @@ namespace swift::gui::models
         : COrderableListModelDbObjects("ModelDistributorList", parent)
     {
         this->setDistributorMode(Normal);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ModelDistributorList", "key");
-        (void)QT_TRANSLATE_NOOP("ModelDistributorList", "description");
-        (void)QT_TRANSLATE_NOOP("ModelDistributorList", "alias1");
-        (void)QT_TRANSLATE_NOOP("ModelDistributorList", "alias2");
     }
 
     void CDistributorListModel::setDistributorMode(CDistributorListModel::DistributorMode distributorMode)
     {
-        if (m_distributorMode == distributorMode) { return; }
+        if (m_distributorMode == distributorMode)
+        {
+            return;
+        }
         m_distributorMode = distributorMode;
         m_columns.clear();
         switch (distributorMode)

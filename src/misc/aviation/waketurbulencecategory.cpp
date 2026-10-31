@@ -12,10 +12,22 @@ namespace swift::misc::aviation
     CWakeTurbulenceCategory::CWakeTurbulenceCategory(QChar letter)
     {
         letter = letter.toUpper();
-        if (letter == 'L') { m_wtc = LIGHT; }
-        else if (letter == 'M') { m_wtc = MEDIUM; }
-        else if (letter == 'H') { m_wtc = HEAVY; }
-        else if (letter == 'J') { m_wtc = SUPER; }
+        if (letter == 'L')
+        {
+            m_wtc = LIGHT;
+        }
+        else if (letter == 'M')
+        {
+            m_wtc = MEDIUM;
+        }
+        else if (letter == 'H')
+        {
+            m_wtc = HEAVY;
+        }
+        else if (letter == 'J')
+        {
+            m_wtc = SUPER;
+        }
         else
         {
             // This includes "-" which is used in the database for aircraft with unknown wake turbulence category

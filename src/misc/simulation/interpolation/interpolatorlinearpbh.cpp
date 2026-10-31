@@ -33,8 +33,14 @@ namespace swift::misc::simulation
         //  170 -> -170 =>  -340 (via 180)
         // -170 ->  170 =>   340 (via 180)
         double deltaDeg = (end - begin).value(CAngleUnit::deg());
-        if (deltaDeg > 180.0) { deltaDeg -= 360; }
-        else if (deltaDeg < -180.0) { deltaDeg += 360; }
+        if (deltaDeg > 180.0)
+        {
+            deltaDeg -= 360;
+        }
+        else if (deltaDeg < -180.0)
+        {
+            deltaDeg += 360;
+        }
 
         if (CBuildConfig::isLocalDeveloperDebugBuild())
         {
@@ -42,8 +48,14 @@ namespace swift::misc::simulation
         }
 
         //! make sure to not end up we extrapolation
-        if (timeFraction0to1 >= 1.0) { return begin + CAngle(deltaDeg, CAngleUnit::deg()); }
-        if (timeFraction0to1 <= 0.0) { return begin; }
+        if (timeFraction0to1 >= 1.0)
+        {
+            return begin + CAngle(deltaDeg, CAngleUnit::deg());
+        }
+        if (timeFraction0to1 <= 0.0)
+        {
+            return begin;
+        }
         return begin + CAngle(timeFraction0to1 * deltaDeg, CAngleUnit::deg());
     }
 

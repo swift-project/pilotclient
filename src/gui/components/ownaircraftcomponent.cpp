@@ -86,23 +86,38 @@ namespace swift::gui::components
 
     void COwnAircraftComponent::setUser(const CUser &user)
     {
-        if (user.hasCallsign()) { ui->le_Callsign->setText(user.getCallsign().asString()); }
-        else if (CBuildConfig::isLocalDeveloperDebugBuild()) { ui->le_Callsign->setText("SWIFT"); }
+        if (user.hasCallsign())
+        {
+            ui->le_Callsign->setText(user.getCallsign().asString());
+        }
+        else if (CBuildConfig::isLocalDeveloperDebugBuild())
+        {
+            ui->le_Callsign->setText("SWIFT");
+        }
         this->validate();
     }
 
     void COwnAircraftComponent::onSimulatorModelChanged(const CAircraftModel &model)
     {
-        if (!sGui || !sGui->getIContextNetwork() || sApp->isShuttingDown()) { return; }
+        if (!sGui || !sGui->getIContextNetwork() || sApp->isShuttingDown())
+        {
+            return;
+        }
         const bool isNetworkConnected = sGui && sGui->getIContextNetwork()->isConnected();
-        if (isNetworkConnected) { return; }
+        if (isNetworkConnected)
+        {
+            return;
+        }
 
         // update with latest DB data
         CAircraftModel reverseModel(model);
         if (sGui->hasWebDataServices())
         {
             reverseModel = sGui->getWebDataServices()->getModelForModelString(model.getModelString());
-            if (!reverseModel.isLoadedFromDb()) { reverseModel = model; } // reset if not found
+            if (!reverseModel.isLoadedFromDb())
+            {
+                reverseModel = model;
+            } // reset if not found
         }
 
         const QString modelStr(reverseModel.hasModelString() ? reverseModel.getModelString() : "<unknown>");
@@ -120,10 +135,19 @@ namespace swift::gui::components
 
     void COwnAircraftComponent::onModelStringSendChanged()
     {
-        if (!this->hasValidContexts()) { return; }
-        if (!sGui->hasWebDataServices()) { return; }
+        if (!this->hasValidContexts())
+        {
+            return;
+        }
+        if (!sGui->hasWebDataServices())
+        {
+            return;
+        }
         const QString modelString = ui->comp_ModelStringCompleter->getModelString();
-        if (modelString.isEmpty()) { return; } // keep last values
+        if (modelString.isEmpty())
+        {
+            return;
+        } // keep last values
         const CAircraftModel model = sGui->getWebDataServices()->getModelForModelString(modelString);
         this->setGuiIcaoValues(model, false);
     }
@@ -132,7 +156,10 @@ namespace swift::gui::components
     {
         auto s = static_cast<ISimulator::SimulatorStatus>(status);
         Q_UNUSED(s);
-        if (!this->hasValidContexts()) { return; }
+        if (!this->hasValidContexts())
+        {
+            return;
+        }
         if (sGui->getIContextNetwork()->isConnected())
         {
             // void
@@ -153,7 +180,10 @@ namespace swift::gui::components
 
         const bool validCombinedType = CAircraftIcaoCode::isValidCombinedType(values.ownAircraftCombinedType);
         ui->lblp_AircraftCombinedType->setTicked(validCombinedType);
-        if (!validCombinedType) { msgs.addValidationMessage("Invalid combined type", CStatusMessage::SeverityError); }
+        if (!validCombinedType)
+        {
+            msgs.addValidationMessage("Invalid combined type", CStatusMessage::SeverityError);
+        }
 
         // airline is optional, e.g. C172 has no airline
         const bool validAirlineDesignator =
@@ -173,7 +203,10 @@ namespace swift::gui::components
 
         const bool validCallsign = CCallsign::isValidAircraftCallsign(values.ownCallsign);
         ui->lblp_Callsign->setTicked(validCallsign);
-        if (!validCallsign) { msgs.addValidationMessage("Invalid callsign", CStatusMessage::SeverityError); }
+        if (!validCallsign)
+        {
+            msgs.addValidationMessage("Invalid callsign", CStatusMessage::SeverityError);
+        }
 
         // model intentionally ignored
         // return validCombinedType && validAirlineDesignator && validAircraftDesignator && validCallsign;
@@ -183,7 +216,10 @@ namespace swift::gui::components
 
     void COwnAircraftComponent::changedAircraftIcao(const CAircraftIcaoCode &icao)
     {
-        if (icao.isLoadedFromDb()) { ui->le_AircraftCombinedType->setText(icao.getCombinedType()); }
+        if (icao.isLoadedFromDb())
+        {
+            ui->le_AircraftCombinedType->setText(icao.getCombinedType());
+        }
         this->validate();
     }
 
@@ -251,19 +287,43 @@ namespace swift::gui::components
 
     void COwnAircraftComponent::highlightModelField(const CAircraftModel &model)
     {
-        if (!model.hasModelString()) { ui->le_SimulatorModel->setProperty("validation", "error"); }
-        else if (!model.isLoadedFromDb()) { ui->le_SimulatorModel->setProperty("validation", "warning"); }
-        else { ui->le_SimulatorModel->setProperty("validation", "ok"); }
+        if (!model.hasModelString())
+        {
+            ui->le_SimulatorModel->setProperty("validation", "error");
+        }
+        else if (!model.isLoadedFromDb())
+        {
+            ui->le_SimulatorModel->setProperty("validation", "warning");
+        }
+        else
+        {
+            ui->le_SimulatorModel->setProperty("validation", "ok");
+        }
         ui->le_SimulatorModel->setStyleSheet(""); // force update
     }
 
     bool COwnAircraftComponent::hasValidContexts() const
     {
-        if (!sGui || !sGui->supportsContexts()) { return false; }
-        if (sGui->isShuttingDown()) { return false; }
-        if (!sGui->getIContextSimulator()) { return false; }
-        if (!sGui->getIContextNetwork()) { return false; }
-        if (!sGui->getIContextOwnAircraft()) { return false; }
+        if (!sGui || !sGui->supportsContexts())
+        {
+            return false;
+        }
+        if (sGui->isShuttingDown())
+        {
+            return false;
+        }
+        if (!sGui->getIContextSimulator())
+        {
+            return false;
+        }
+        if (!sGui->getIContextNetwork())
+        {
+            return false;
+        }
+        if (!sGui->getIContextOwnAircraft())
+        {
+            return false;
+        }
         return true;
     }
 
@@ -272,19 +332,28 @@ namespace swift::gui::components
     CAircraftModel COwnAircraftComponent::getPrefillModel() const
     {
         const CAircraftModel model = m_lastAircraftModel.get();
-        if (model.hasAircraftDesignator()) { return model; }
+        if (model.hasAircraftDesignator())
+        {
+            return model;
+        }
         return IContextOwnAircraft::getDefaultOwnAircraftModel();
     }
 
     void COwnAircraftComponent::setOwnModelAndIcaoValues(const CAircraftModel &ownModel)
     {
-        if (!this->hasValidContexts()) { return; }
+        if (!this->hasValidContexts())
+        {
+            return;
+        }
         CAircraftModel model = ownModel;
         const bool simulating = sGui->getIContextSimulator() &&
                                 (sGui->getIContextSimulator()->getSimulatorStatus() & ISimulator::Simulating);
         if (simulating)
         {
-            if (!model.hasModelString()) { model = sGui->getIContextOwnAircraft()->getOwnAircraft().getModel(); }
+            if (!model.hasModelString())
+            {
+                model = sGui->getIContextOwnAircraft()->getOwnAircraft().getModel();
+            }
             const QString modelAndKey(model.getModelStringAndDbKey());
 
             ui->le_SimulatorModel->setText(modelAndKey);
@@ -301,7 +370,10 @@ namespace swift::gui::components
         }
         else
         {
-            if (!model.hasModelString()) { model = this->getPrefillModel(); }
+            if (!model.hasModelString())
+            {
+                model = this->getPrefillModel();
+            }
             ui->le_SimulatorModel->clear();
             this->highlightModelField();
         }
@@ -330,7 +402,10 @@ namespace swift::gui::components
 
     bool COwnAircraftComponent::updateOwnAircaftIcaoValuesFromGuiValues()
     {
-        if (!this->hasValidContexts()) { return false; }
+        if (!this->hasValidContexts())
+        {
+            return false;
+        }
         const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
         const CGuiAircraftValues aircraftValues = this->getAircraftValuesFromGui();
 
@@ -349,7 +424,10 @@ namespace swift::gui::components
             changedIcaoCodes = true;
         }
 
-        if (changedIcaoCodes) { sGui->getIContextOwnAircraft()->updateOwnIcaoCodes(aircraftCode, airlineCode); }
+        if (changedIcaoCodes)
+        {
+            sGui->getIContextOwnAircraft()->updateOwnIcaoCodes(aircraftCode, airlineCode);
+        }
 
         return changedIcaoCodes;
     }

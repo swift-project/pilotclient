@@ -46,7 +46,10 @@ namespace swift::misc::input
 
     QVariant CJoystickButton::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -68,10 +71,16 @@ namespace swift::misc::input
 
     int CJoystickButton::buttonIndexFromString(const QString &buttonName)
     {
-        if (!buttonName.startsWith(buttonIndentifier())) { return getInvalidIndex(); }
+        if (!buttonName.startsWith(buttonIndentifier()))
+        {
+            return getInvalidIndex();
+        }
         QString name(buttonName);
         name.remove(buttonIndentifier());
-        if (name.contains('-')) { name = name.mid(0, name.indexOf('-')); }
+        if (name.contains('-'))
+        {
+            name = name.mid(0, name.indexOf('-'));
+        }
         return name.trimmed().toInt();
     }
 

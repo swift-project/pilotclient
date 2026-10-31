@@ -14,7 +14,7 @@ concurrency:
 
 env:
   do_symbols:    ${{ github.event_name == 'merge_group' }}
-  qt_version:    &qt_version 6.11.2
+  qt_version:    &qt_version 6.11.3
   bitrock_version: qt-professional-25.10.1
   bitrock_url:     https://releases.installbuilder.com/installbuilder
   installbuilder_hash_win: f92b1741c78b8f024473f55057b26107c8ed9cc1ca583eb9323d0023a8024e00
@@ -54,7 +54,7 @@ jobs:
     uses: ./.github/workflows/reusable_checks.yml
 
   clang-tidy:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -291,7 +291,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       SCCACHE_S3_NO_CREDENTIALS: false
-      SCCACHE_LOG: debug
     steps:
       - name: Setup WireGuard
         shell: pwsh

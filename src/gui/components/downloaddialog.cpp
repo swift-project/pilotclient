@@ -41,7 +41,10 @@ namespace swift::gui::components
     {
         const QPointer<CDownloadDialog> guard(this);
         QTimer::singleShot(0, this, [=, this] {
-            if (guard.isNull()) { return; }
+            if (guard.isNull())
+            {
+                return;
+            }
             ui->comp_Download->triggerDownloadingOfFiles(2500);
         });
         this->show();
@@ -60,7 +63,10 @@ namespace swift::gui::components
                 this->done(CDownloadDialog::Rejected);
             }
         }
-        else { this->done(CDownloadDialog::Accepted); }
+        else
+        {
+            this->done(CDownloadDialog::Accepted);
+        }
     }
 
 } // namespace swift::gui::components

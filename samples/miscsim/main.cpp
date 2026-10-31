@@ -50,11 +50,26 @@ int main(int argc, char *argv[])
         QString i = streamIn.readLine().toLower().trimmed();
 
         t.start();
-        if (i.startsWith("1")) { CSamplesFsCommon::samples(streamOut, streamIn); }
-        else if (i.startsWith("2")) { CSamplesFsx::samplesMisc(streamOut); }
-        else if (i.startsWith("3")) { CSamplesModelMapping::samples(streamOut, streamIn); }
-        else if (i.startsWith("4")) { CSamplesVPilotRules::samples(streamOut, streamIn); }
-        else if (i.startsWith("5")) { CSamplesP3D::samplesMisc(streamOut); }
+        if (i.startsWith("1"))
+        {
+            CSamplesFsCommon::samples(streamOut, streamIn);
+        }
+        else if (i.startsWith("2"))
+        {
+            CSamplesFsx::samplesMisc(streamOut);
+        }
+        else if (i.startsWith("3"))
+        {
+            CSamplesModelMapping::samples(streamOut, streamIn);
+        }
+        else if (i.startsWith("4"))
+        {
+            CSamplesVPilotRules::samples(streamOut, streamIn);
+        }
+        else if (i.startsWith("5"))
+        {
+            CSamplesP3D::samplesMisc(streamOut);
+        }
         else if (i.startsWith("x"))
         {
             run = false;

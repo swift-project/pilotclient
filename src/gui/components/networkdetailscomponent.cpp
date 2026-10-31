@@ -72,8 +72,14 @@ namespace swift::gui::components
 
     void CNetworkDetailsComponent::setLoginMode(CLoginMode mode)
     {
-        if (mode == CLoginMode::Observer) { ui->cb_observer->setChecked(true); }
-        else { ui->cb_observer->setChecked(false); }
+        if (mode == CLoginMode::Observer)
+        {
+            ui->cb_observer->setChecked(true);
+        }
+        else
+        {
+            ui->cb_observer->setChecked(false);
+        }
     }
 
     bool CNetworkDetailsComponent::isVatsimServerSelected() const
@@ -96,7 +102,10 @@ namespace swift::gui::components
     void CNetworkDetailsComponent::onServerTabWidgetChanged(int index)
     {
         Q_UNUSED(index)
-        if (!m_updatePilotOnServerChanges) { return; }
+        if (!m_updatePilotOnServerChanges)
+        {
+            return;
+        }
         const bool vatsim = this->isVatsimServerSelected();
         const CServer server = vatsim ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();
         emit this->overridePilot(server.getUser());
@@ -104,21 +113,30 @@ namespace swift::gui::components
 
     void CNetworkDetailsComponent::onSelectedServerChanged(const CServer &server)
     {
-        if (!m_updatePilotOnServerChanges) { return; }
+        if (!m_updatePilotOnServerChanges)
+        {
+            return;
+        }
         emit this->overridePilot(server.getUser());
     }
 
     void CNetworkDetailsComponent::onWebServiceDataRead(CEntityFlags::Entity entity, CEntityFlags::ReadState state,
                                                         int number, const QUrl &url)
     {
-        if (!CEntityFlags::isFinishedReadState(state)) { return; }
+        if (!CEntityFlags::isFinishedReadState(state))
+        {
+            return;
+        }
         Q_UNUSED(number)
         Q_UNUSED(url)
 
         if (entity == CEntityFlags::VatsimDataFile)
         {
             CServerList vatsimFsdServers = sGui->getIContextNetwork()->getVatsimFsdServers();
-            if (vatsimFsdServers.isEmpty()) { return; }
+            if (vatsimFsdServers.isEmpty())
+            {
+                return;
+            }
             vatsimFsdServers.sortBy(&CServer::getName);
             const CServer currentServer = m_networkSetup.getLastVatsimServer();
             ui->comp_VatsimServers->setServers(vatsimFsdServers);
@@ -149,7 +167,10 @@ namespace swift::gui::components
 
     CCallsign CNetworkDetailsComponent::getPartnerCallsign() const
     {
-        if (ui->le_PartnerCallsign->text().isEmpty()) { return {}; }
+        if (ui->le_PartnerCallsign->text().isEmpty())
+        {
+            return {};
+        }
         return { ui->le_PartnerCallsign->text(), CCallsign::Aircraft };
     }
 

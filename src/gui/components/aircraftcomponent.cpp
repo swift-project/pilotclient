@@ -82,7 +82,10 @@ namespace swift::gui::components
 
     void CAircraftComponent::update()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         // count < 1 checks if view already has been updated
         if (sGui->getIContextNetwork()->isConnected())
@@ -105,7 +108,10 @@ namespace swift::gui::components
 
     void CAircraftComponent::updateViews()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork() || !sGui->getIContextSimulator()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork() || !sGui->getIContextSimulator())
+        {
+            return;
+        }
         ui->tvp_AircraftInRange->updateContainerMaybeAsync(sGui->getIContextNetwork()->getAircraftInRange());
     }
 
@@ -119,7 +125,10 @@ namespace swift::gui::components
         // here I know I am the selected widget, update, but keep GUI responsive (hence I use a timer)
         QPointer<CAircraftComponent> myself(this);
         QTimer::singleShot(1000, this, [=] {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             myself->update();
         });
         Q_UNUSED(index)
@@ -137,7 +146,10 @@ namespace swift::gui::components
     void CAircraftComponent::onConnectionStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         Q_UNUSED(from)
-        if (to.isDisconnected()) { ui->tvp_AircraftInRange->clear(); }
+        if (to.isDisconnected())
+        {
+            ui->tvp_AircraftInRange->clear();
+        }
         else if (to.isConnected())
         {
             if (sGui && sGui->getIContextNetwork())

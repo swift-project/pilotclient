@@ -26,7 +26,10 @@ namespace swift::misc
     CPropertyIndex CPropertyIndex::copyFrontRemoved() const
     {
         SWIFT_VERIFY_X(!this->isEmpty(), Q_FUNC_INFO, "Empty index");
-        if (this->isEmpty()) { return {}; }
+        if (this->isEmpty())
+        {
+            return {};
+        }
         CPropertyIndex copy = *this;
         copy.m_indexes.pop_front();
         return copy;
@@ -45,7 +48,10 @@ namespace swift::misc
         for (const int i : m_indexes)
         {
             Q_ASSERT(i >= static_cast<int>(CPropertyIndexRef::GlobalIndexCValueObject));
-            if (!s.isEmpty()) { s.append(";"); }
+            if (!s.isEmpty())
+            {
+                s.append(";");
+            }
             s.append(QString::number(i));
         }
         return s;
@@ -54,10 +60,16 @@ namespace swift::misc
     void CPropertyIndex::parseFromString(const QString &indexes)
     {
         m_indexes.clear();
-        if (indexes.isEmpty()) { return; }
+        if (indexes.isEmpty())
+        {
+            return;
+        }
         for (const auto &index : QStringView { indexes }.split(';'))
         {
-            if (index.isEmpty()) { continue; }
+            if (index.isEmpty())
+            {
+                continue;
+            }
             bool ok {};
             int i = index.toInt(&ok);
             Q_ASSERT(ok);
@@ -76,7 +88,10 @@ namespace swift::misc
     void CPropertyIndex::convertFromJson(const QJsonObject &json)
     {
         const QJsonValue value = json.value(QLatin1String("indexes"));
-        if (!value.isString()) { throw CJsonException("'indexes' missing or not a string"); }
+        if (!value.isString())
+        {
+            throw CJsonException("'indexes' missing or not a string");
+        }
         this->parseFromString(value.toString());
     }
 
@@ -94,7 +109,10 @@ namespace swift::misc
 
     bool CPropertyIndex::startsWith(int index) const
     {
-        if (this->isEmpty()) { return false; }
+        if (this->isEmpty())
+        {
+            return false;
+        }
         return this->frontToInt() == index;
     }
 } // namespace swift::misc

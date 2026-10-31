@@ -208,7 +208,7 @@ namespace XSwiftBus
         {
             static_assert(DataRefTraits::writable, "read-only dataref");
             assert((s.size() + 1) <= (DataRefTraits::size - offset));
-            XPLMSetDatab(m_ref, (void *)s.c_str(), (int)offset, (int)s.size() + 1);
+            XPLMSetDatab(m_ref, static_cast<void*>(s.c_str()), (int)offset, (int)s.size() + 1);
         }
 
         //! Get the value of part of the string
@@ -253,7 +253,10 @@ namespace XSwiftBus
                                                  nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
                                                  readData, nullptr, this, nullptr);
             }
-            else { static_assert(dependent_false<typename DataRefTraits::type>, "Unsupported custom dataref type"); }
+            else
+            {
+                static_assert(dependent_false<typename DataRefTraits::type>, "Unsupported custom dataref type");
+            }
             if (!m_ref)
             {
                 XPLMDebugString("Missing dataref:");
@@ -268,7 +271,10 @@ namespace XSwiftBus
         CustomDataRef &operator=(CustomDataRef &&other) = delete;
         ~CustomDataRef()
         {
-            if (m_ref) { XPLMUnregisterDataAccessor(m_ref); }
+            if (m_ref)
+            {
+                XPLMUnregisterDataAccessor(m_ref);
+            }
         }
 
         //! Read integer

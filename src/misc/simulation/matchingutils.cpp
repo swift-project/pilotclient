@@ -22,7 +22,10 @@ namespace swift::misc::simulation
 
     CLogCategoryList CMatchingUtils::categories(const QStringList &extraCategories)
     {
-        if (extraCategories.isEmpty()) { return defaultCategories(); }
+        if (extraCategories.isEmpty())
+        {
+            return defaultCategories();
+        }
         CLogCategoryList cats(defaultCategories());
         cats.push_back(CLogCategoryList::fromQStringList(extraCategories));
         return cats;

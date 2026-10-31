@@ -36,7 +36,10 @@ namespace XSwiftBus
 
     void CDBusServer::close()
     {
-        if (m_server) { dbus_server_disconnect(m_server.get()); }
+        if (m_server)
+        {
+            dbus_server_disconnect(m_server.get());
+        }
     }
 
     void CDBusServer::setDispatcher(CDBusDispatcher *dispatcher)

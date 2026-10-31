@@ -302,8 +302,14 @@ namespace swift::misc
         template <typename T>
         int CValueObjectMetaInfo<T>::getMetaTypeId() const
         {
-            if constexpr (QMetaTypeId<T>::Defined) { return qMetaTypeId<T>(); }
-            else { return QMetaType::UnknownType; }
+            if constexpr (QMetaTypeId<T>::Defined)
+            {
+                return qMetaTypeId<T>();
+            }
+            else
+            {
+                return QMetaType::UnknownType;
+            }
         }
         template <typename T>
         const void *CValueObjectMetaInfo<T>::upCastTo(const void *object, int metaTypeId) const
@@ -396,8 +402,14 @@ namespace swift::misc
         {
             static constexpr int maybeGetMetaTypeId()
             {
-                if constexpr (QMetaTypeId<T>::Defined) { return qMetaTypeId<T>(); }
-                else { return QMetaType::UnknownType; }
+                if constexpr (QMetaTypeId<T>::Defined)
+                {
+                    return qMetaTypeId<T>();
+                }
+                else
+                {
+                    return QMetaType::UnknownType;
+                }
             }
             static void maybeRegisterMetaType();
             static void maybeRegisterMetaList();

@@ -100,14 +100,23 @@ namespace swift::gui::components
         // remark: the actions will be set from the main UI
         for (QAction *action : this->actions())
         {
-            if (!action) { continue; }
+            if (!action)
+            {
+                continue;
+            }
             auto *tb = new QToolButton(ui->fr_NavigatorDialogInner);
             tb->setDefaultAction(action);
             tb->setObjectName(this->objectName() % u':' % action->objectName());
-            if (!action->text().isEmpty()) { tb->setToolTip(action->text()); }
+            if (!action->text().isEmpty())
+            {
+                tb->setToolTip(action->text());
+            }
             gridLayout->addWidget(tb, r, c++);
             tb->show();
-            if (c < columns) { continue; }
+            if (c < columns)
+            {
+                continue;
+            }
             c = 0;
             r++;
         }
@@ -141,8 +150,14 @@ namespace swift::gui::components
         QGuiApplication::setQuitOnLastWindowClosed(
             visible ? false : m_originalQuitOnLastWindow); // avoid issues with a dialog closing everything
 
-        if (visible) { m_watchdog.start(4000); }
-        else { m_watchdog.stop(); }
+        if (visible)
+        {
+            m_watchdog.start(4000);
+        }
+        else
+        {
+            m_watchdog.stop();
+        }
     }
 
     void CNavigatorDialog::toggleNavigatorVisibility()
@@ -155,7 +170,10 @@ namespace swift::gui::components
     {
         const CNavigatorSettings s = m_settings.get();
         this->setContentsMargins(s.getMargins());
-        if (this->isFrameless() != s.isFramless()) { this->toggleFrameless(); }
+        if (this->isFrameless() != s.isFramless())
+        {
+            this->toggleFrameless();
+        }
         this->buildNavigator(s.getColumns());
         const QByteArray geo(s.getGeometry());
         this->restoreGeometry(geo);
@@ -169,12 +187,18 @@ namespace swift::gui::components
         s.setGeometry(this->saveGeometry());
         s.setColumns(m_currentColumns);
         const CStatusMessage m = m_settings.setAndSave(s);
-        if (!m.isSuccess()) { CLogMessage::preformatted(m); }
+        if (!m.isSuccess())
+        {
+            CLogMessage::preformatted(m);
+        }
     }
 
     void CNavigatorDialog::onStyleSheetsChanged()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         const QString fn(CStyleSheetUtility::fileNameNavigator());
         const QString qss(sGui->getStyleSheetUtility().style(fn));
         this->setStyleSheet("");
@@ -185,7 +209,10 @@ namespace swift::gui::components
 
     void CNavigatorDialog::mouseMoveEvent(QMouseEvent *event)
     {
-        if (handleMouseMoveEvent(event)) { return; }
+        if (handleMouseMoveEvent(event))
+        {
+            return;
+        }
 
         // frameless has moving already, but here we also do it dor dialog
         if (!this->isFrameless())
@@ -203,7 +230,10 @@ namespace swift::gui::components
 
     void CNavigatorDialog::mousePressEvent(QMouseEvent *event)
     {
-        if (handleMousePressEvent(event)) { return; }
+        if (handleMousePressEvent(event))
+        {
+            return;
+        }
 
         // frameless has moving already, but here we also do it dor dialog
         if (!this->isFrameless())
@@ -232,19 +262,28 @@ namespace swift::gui::components
             evt->ignore();
             hide();
         }
-        else { QDialog::changeEvent(evt); }
+        else
+        {
+            QDialog::changeEvent(evt);
+        }
     }
 
     void CNavigatorDialog::windowFlagsChanged()
     {
-        if (m_firstBuild) { return; }
+        if (m_firstBuild)
+        {
+            return;
+        }
         this->buildNavigator(m_currentColumns);
     }
 
     void CNavigatorDialog::paintEvent(QPaintEvent *event)
     {
         const bool s = CStyleSheetUtility::useStyleSheetInDerivedWidget(this, QStyle::PE_Widget);
-        if (s) { return; }
+        if (s)
+        {
+            return;
+        }
         QDialog::paintEvent(event);
     }
 
@@ -267,12 +306,27 @@ namespace swift::gui::components
     void CNavigatorDialog::changeLayout()
     {
         auto *a = qobject_cast<QAction *>(QObject::sender());
-        if (!a) { return; }
+        if (!a)
+        {
+            return;
+        }
         QString v(a->data().toString());
-        if (v == "1c") { buildNavigator(1); }
-        else if (v == "2c") { buildNavigator(2); }
-        else if (v == "1r") { buildNavigator(columnsForRows(1)); }
-        else if (v == "2r") { buildNavigator(columnsForRows(2)); }
+        if (v == "1c")
+        {
+            buildNavigator(1);
+        }
+        else if (v == "2c")
+        {
+            buildNavigator(2);
+        }
+        else if (v == "1r")
+        {
+            buildNavigator(columnsForRows(1));
+        }
+        else if (v == "2r")
+        {
+            buildNavigator(columnsForRows(2));
+        }
     }
 
     void CNavigatorDialog::menuChangeMargins(const QMargins &margins)

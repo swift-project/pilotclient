@@ -46,7 +46,10 @@ namespace swift::simplugin::xplane
 
     void CSimulatorXPlaneConfigWindow::onSettingsAccepted()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         const CXSwiftBusSettings s = m_xSwiftBusServerSettings.getThreadLocal();
         const CXSwiftBusSettings changed = this->getSettingsFromUI();
@@ -146,7 +149,10 @@ namespace swift::simplugin::xplane
 
     int CSimulatorXPlaneConfigWindow::marginToInt(const QString &text, int defaultValue)
     {
-        if (text.isEmpty()) { return defaultValue; }
+        if (text.isEmpty())
+        {
+            return defaultValue;
+        }
         bool ok {};
         const int v = text.toInt(&ok);
         return ok ? v : defaultValue;

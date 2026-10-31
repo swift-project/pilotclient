@@ -132,7 +132,10 @@ namespace MiscTest
     template <typename F>
     void singleShotAndWait(QObject *object, F task)
     {
-        if (object->thread() == QThread::currentThread()) { task(); }
+        if (object->thread() == QThread::currentThread())
+        {
+            task();
+        }
         else
         {
             QTimer::singleShot(0, object, task);
@@ -162,7 +165,10 @@ namespace MiscTest
     void CTestValueCache::localOnly()
     {
         CValueCache cache(1);
-        for (int i = 0; i < 2; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
+        for (int i = 0; i < 2; ++i)
+        {
+            QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value"));
+        }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
         testCommon(user1, user2);
@@ -171,7 +177,10 @@ namespace MiscTest
     void CTestValueCache::localOnlyWithThreads()
     {
         CValueCache cache(1);
-        for (int i = 0; i < 2; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
+        for (int i = 0; i < 2; ++i)
+        {
+            QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value"));
+        }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
         CRegularThread thread;
@@ -203,7 +212,10 @@ namespace MiscTest
                                       [=, &otherCache] { otherCache.changeValuesFromRemote(values, thisProcess); });
         });
 
-        for (int i = 0; i < 4; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
+        for (int i = 0; i < 4; ++i)
+        {
+            QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value"));
+        }
         CValueCacheUser thisUser(&thisCache);
         CValueCacheUser otherUser(&otherCache);
 
@@ -224,7 +236,10 @@ namespace MiscTest
     void CTestValueCache::batched()
     {
         CValueCache cache(1);
-        for (int i = 0; i < 2; ++i) { QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value")); }
+        for (int i = 0; i < 2; ++i)
+        {
+            QTest::ignoreMessage(QtDebugMsg, QRegularExpression("Empty cache value"));
+        }
         CValueCacheUser user1(&cache);
         CValueCacheUser user2(&cache);
 
@@ -269,7 +284,10 @@ namespace MiscTest
         cache.insertValues({ testData, QDateTime::currentMSecsSinceEpoch() });
 
         QDir dir(QDir::currentPath() + "/testcache");
-        if (dir.exists()) { dir.removeRecursively(); }
+        if (dir.exists())
+        {
+            dir.removeRecursively();
+        }
 
         auto status = cache.saveToFiles(dir.absolutePath());
         QVERIFY(status.isSuccess());

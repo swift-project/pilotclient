@@ -45,10 +45,16 @@ namespace swift::simplugin::xplane
 
     void CXSwiftBusServiceProxy::getOwnAircraftSituationDataAsync(XPlaneData *o_xplaneData)
     {
-        if (!o_xplaneData) { return; }
+        if (!o_xplaneData)
+        {
+            return;
+        }
         QPointer<CXSwiftBusServiceProxy> myself(this);
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             QDBusPendingReply<double, double, double, double, double, double, double, double> reply = *watcher;
             if (!reply.isError())
             {
@@ -68,10 +74,16 @@ namespace swift::simplugin::xplane
 
     void CXSwiftBusServiceProxy::getOwnAircraftVelocityDataAsync(XPlaneData *o_xplaneData)
     {
-        if (!o_xplaneData) { return; }
+        if (!o_xplaneData)
+        {
+            return;
+        }
         QPointer<CXSwiftBusServiceProxy> myself(this);
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             QDBusPendingReply<double, double, double, double, double, double> reply = *watcher;
             if (!reply.isError())
             {
@@ -88,10 +100,16 @@ namespace swift::simplugin::xplane
 
     void CXSwiftBusServiceProxy::getOwnAircraftCom1DataAsync(XPlaneData *o_xplaneData)
     {
-        if (!o_xplaneData) { return; }
+        if (!o_xplaneData)
+        {
+            return;
+        }
         QPointer<CXSwiftBusServiceProxy> myself(this);
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             QDBusPendingReply<int, int, double, bool, bool> reply = *watcher;
             if (!reply.isError())
             {
@@ -108,10 +126,16 @@ namespace swift::simplugin::xplane
 
     void CXSwiftBusServiceProxy::getOwnAircraftCom2DataAsync(XPlaneData *o_xplaneData)
     {
-        if (!o_xplaneData) { return; }
+        if (!o_xplaneData)
+        {
+            return;
+        }
         QPointer<CXSwiftBusServiceProxy> myself(this);
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             QDBusPendingReply<int, int, double, bool, bool> reply = *watcher;
             if (!reply.isError())
             {
@@ -128,10 +152,16 @@ namespace swift::simplugin::xplane
 
     void CXSwiftBusServiceProxy::getOwnAircraftXpdrAsync(XPlaneData *o_xplaneData)
     {
-        if (!o_xplaneData) { return; }
+        if (!o_xplaneData)
+        {
+            return;
+        }
         QPointer<CXSwiftBusServiceProxy> myself(this);
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             QDBusPendingReply<int, int, bool> reply = *watcher;
             if (!reply.isError())
             {
@@ -146,10 +176,16 @@ namespace swift::simplugin::xplane
 
     void CXSwiftBusServiceProxy::getOwnAircraftLightsAsync(XPlaneData *o_xplaneData)
     {
-        if (!o_xplaneData) { return; }
+        if (!o_xplaneData)
+        {
+            return;
+        }
         QPointer<CXSwiftBusServiceProxy> myself(this);
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             QDBusPendingReply<bool, bool, bool, bool, bool> reply = *watcher;
             if (!reply.isError())
             {
@@ -166,10 +202,16 @@ namespace swift::simplugin::xplane
 
     void CXSwiftBusServiceProxy::getOwnAircraftPartsAsync(XPlaneData *o_xplaneData)
     {
-        if (!o_xplaneData) { return; }
+        if (!o_xplaneData)
+        {
+            return;
+        }
         QPointer<CXSwiftBusServiceProxy> myself(this);
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             QDBusPendingReply<double, double, double, QList<double>> reply = *watcher;
             if (!reply.isError())
             {
@@ -185,10 +227,16 @@ namespace swift::simplugin::xplane
 
     void CXSwiftBusServiceProxy::getOwnAircraftModelDataAsync(XPlaneData *o_xplaneData)
     {
-        if (!o_xplaneData) { return; }
+        if (!o_xplaneData)
+        {
+            return;
+        }
         QPointer<CXSwiftBusServiceProxy> myself(this);
         std::function<void(QDBusPendingCallWatcher *)> callback = [=](QDBusPendingCallWatcher *watcher) {
-            if (!myself) { return; }
+            if (!myself)
+            {
+                return;
+            }
             QDBusPendingReply<QString, QString> reply = *watcher;
             if (!reply.isError())
             {

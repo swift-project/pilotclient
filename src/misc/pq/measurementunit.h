@@ -366,18 +366,27 @@ namespace swift::misc::physical_quantities
         template <class U>
         static U unitFromSymbol(const QString &symbol, bool strict = true)
         {
-            if (symbol.isEmpty()) { return U::defaultUnit(); }
+            if (symbol.isEmpty())
+            {
+                return U::defaultUnit();
+            }
 
             static const bool cs = hasCaseSensitiveSymbols<U>();
             for (const auto &unit : U::allUnits())
             {
                 if (strict && cs)
                 {
-                    if (unit.getSymbol() == symbol) { return unit; }
+                    if (unit.getSymbol() == symbol)
+                    {
+                        return unit;
+                    }
                 }
                 else
                 {
-                    if (stringCompare(unit.getSymbol(), symbol, Qt::CaseInsensitive)) { return unit; }
+                    if (stringCompare(unit.getSymbol(), symbol, Qt::CaseInsensitive))
+                    {
+                        return unit;
+                    }
                 }
             }
             if (strict) qFatal("Illegal unit name");
@@ -392,7 +401,10 @@ namespace swift::misc::physical_quantities
         {
             static const QStringList symbols = [] {
                 QStringList s;
-                for (const auto &unit : U::allUnits()) { s.push_back(unit.getSymbol()); }
+                for (const auto &unit : U::allUnits())
+                {
+                    s.push_back(unit.getSymbol());
+                }
                 return s;
             }();
             return symbols;
@@ -406,7 +418,10 @@ namespace swift::misc::physical_quantities
         {
             static const QStringList symbols = [] {
                 QSet<QString> s;
-                for (const QString &symbol : allSymbols<U>()) { s.insert(symbol.toLower()); }
+                for (const QString &symbol : allSymbols<U>())
+                {
+                    s.insert(symbol.toLower());
+                }
                 return s.values();
             }();
             return symbols;
@@ -460,7 +475,10 @@ namespace swift::misc::physical_quantities
             if (candidate.isEmpty()) return false;
             for (const auto &unit : U::allUnits())
             {
-                if (candidate.contains(unit.getSymbol(), caseSensitivity)) { return true; }
+                if (candidate.contains(unit.getSymbol(), caseSensitivity))
+                {
+                    return true;
+                }
             }
             return false;
         }

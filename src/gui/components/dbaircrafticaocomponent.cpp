@@ -52,7 +52,10 @@ namespace swift::gui::components
 
     bool CDbAircraftIcaoComponent::selectAircraftIcao(const CAircraftIcaoCode &icao)
     {
-        if (!icao.isLoadedFromDb()) { return false; }
+        if (!icao.isLoadedFromDb())
+        {
+            return false;
+        }
         return ui->tvp_AircraftIcao->selectDbKey(icao.getDbKey());
     }
 
@@ -61,8 +64,14 @@ namespace swift::gui::components
         using namespace std::chrono_literals;
 
         Q_UNUSED(count);
-        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices()) { return; }
-        if (!entity.testFlag(CEntityFlags::AircraftIcaoEntity)) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getWebDataServices())
+        {
+            return;
+        }
+        if (!entity.testFlag(CEntityFlags::AircraftIcaoEntity))
+        {
+            return;
+        }
 
         if (CEntityFlags::isFinishedReadState(readState))
         {
@@ -82,14 +91,20 @@ namespace swift::gui::components
     {
         using namespace std::chrono_literals;
 
-        if (CEntityFlags::AircraftIcaoEntity != entity) { return; }
+        if (CEntityFlags::AircraftIcaoEntity != entity)
+        {
+            return;
+        }
         this->showDownloadProgress(progress, current, max, url, 5s);
         Q_UNUSED(logId);
     }
 
     void CDbAircraftIcaoComponent::onReload()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         sGui->getWebDataServices()->triggerLoadingDirectlyFromDb(CEntityFlags::AircraftIcaoEntity, QDateTime());
     }
 } // namespace swift::gui::components

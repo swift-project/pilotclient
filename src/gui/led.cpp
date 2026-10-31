@@ -46,7 +46,10 @@ namespace swift::gui
     void CLedWidget::setLed(LedColor ledColor)
     {
         Q_ASSERT_X(!m_renderer.isNull(), Q_FUNC_INFO, "no renderer");
-        if (!m_renderer) { return; }
+        if (!m_renderer)
+        {
+            return;
+        }
 
         // load image, init renderer
         QString ledShapeAndColor(shapes().at(static_cast<int>(m_shape)));
@@ -97,7 +100,10 @@ namespace swift::gui
         m_whRatio = s.width() / s.height();
 
         // size
-        if (m_widthTarget < 0) { m_widthTarget = widths().at(static_cast<int>(m_shape)); }
+        if (m_widthTarget < 0)
+        {
+            m_widthTarget = widths().at(static_cast<int>(m_shape));
+        }
         const double h = m_widthTarget / m_whRatio;
         m_heightCalculated = qRound(h);
 
@@ -123,13 +129,19 @@ namespace swift::gui
     const QString &CLedWidget::colorString(CLedWidget::LedColor color)
     {
         static const QString empty;
-        if (color == NoColor) { return empty; }
+        if (color == NoColor)
+        {
+            return empty;
+        }
         return colorFiles().at(static_cast<int>(color));
     }
 
     void CLedWidget::resetState()
     {
-        if (m_value == m_blinkState) { return; }
+        if (m_value == m_blinkState)
+        {
+            return;
+        }
         m_blinkState = m_value;
         this->setLed();
     }
@@ -230,7 +242,10 @@ namespace swift::gui
         {
             QPointer<CLedWidget> myself(this);
             QTimer::singleShot(resetTimeMs, this, [=, this] {
-                if (!myself) { return; }
+                if (!myself)
+                {
+                    return;
+                }
                 this->resetState();
             });
         }
@@ -239,7 +254,10 @@ namespace swift::gui
             m_resetTimer.stop();
             m_value = s;
         }
-        if (m_blinkState == s) { return; }
+        if (m_blinkState == s)
+        {
+            return;
+        }
         m_blinkState = s;
         this->setLed();
     }
@@ -252,13 +270,19 @@ namespace swift::gui
 
     void CLedWidget::setTriState(int resetTimeMs)
     {
-        if (resetTimeMs > 0) { QTimer::singleShot(resetTimeMs, this, &CLedWidget::resetState); }
+        if (resetTimeMs > 0)
+        {
+            QTimer::singleShot(resetTimeMs, this, &CLedWidget::resetState);
+        }
         else
         {
             m_resetTimer.stop();
             m_value = TriState;
         }
-        if (m_blinkState == TriState) { return; }
+        if (m_blinkState == TriState)
+        {
+            return;
+        }
         m_blinkState = TriState;
         this->setLed();
     }
@@ -289,7 +313,10 @@ namespace swift::gui
             emit clicked();
             event->accept();
         }
-        else { QWidget::mousePressEvent(event); }
+        else
+        {
+            QWidget::mousePressEvent(event);
+        }
     }
 
     const QStringList &CLedWidget::shapes()

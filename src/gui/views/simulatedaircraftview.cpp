@@ -183,14 +183,20 @@ namespace swift::gui::views
     void CSimulatedAircraftView::requestTextMessage()
     {
         const CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
+        if (aircraft.getCallsign().isEmpty())
+        {
+            return;
+        }
         emit this->requestTextMessageWidget(aircraft.getCallsign());
     }
 
     void CSimulatedAircraftView::toggleEnabledAircraft()
     {
         CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
+        if (aircraft.getCallsign().isEmpty())
+        {
+            return;
+        }
         aircraft.setEnabled(!aircraft.isEnabled());
         this->updateAircraftEnabled(aircraft);
     }
@@ -198,7 +204,10 @@ namespace swift::gui::views
     void CSimulatedAircraftView::toggleFastPositionUpdates()
     {
         CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
+        if (aircraft.getCallsign().isEmpty())
+        {
+            return;
+        }
         aircraft.toggleFastPositionUpdates();
         this->enableFastPositionUpdates(aircraft);
     }
@@ -206,7 +215,10 @@ namespace swift::gui::views
     void CSimulatedAircraftView::toggleSupportingGndFlag()
     {
         CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
+        if (aircraft.getCallsign().isEmpty())
+        {
+            return;
+        }
         aircraft.setSupportingGndFlag(!aircraft.isSupportingGndFlag());
         this->updateAircraftSupportingGndFLag(aircraft);
     }
@@ -214,42 +226,63 @@ namespace swift::gui::views
     void CSimulatedAircraftView::requestFollowInSimulator()
     {
         const CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
+        if (aircraft.getCallsign().isEmpty())
+        {
+            return;
+        }
         this->followAircraftInSimulator(aircraft);
     }
 
     void CSimulatedAircraftView::requestEnableParts()
     {
         const CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
+        if (aircraft.getCallsign().isEmpty())
+        {
+            return;
+        }
         this->enableParts(aircraft, true);
     }
 
     void CSimulatedAircraftView::requestDisableParts()
     {
         const CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
+        if (aircraft.getCallsign().isEmpty())
+        {
+            return;
+        }
         this->enableParts(aircraft, false);
     }
 
     void CSimulatedAircraftView::request0PitchOnGround()
     {
         const CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
+        if (aircraft.getCallsign().isEmpty())
+        {
+            return;
+        }
         this->setPitchOnGround(aircraft, CAngle(0, CAngleUnit::deg()));
     }
 
     void CSimulatedAircraftView::requestNullPitchOnGround()
     {
         const CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
+        if (aircraft.getCallsign().isEmpty())
+        {
+            return;
+        }
         this->setPitchOnGround(aircraft, CAngle::null());
     }
 
     void CSimulatedAircraftView::requestTempDisable()
     {
-        if (!m_menus.testFlag(MenuDisableModelsTemp)) { return; }
-        if (!this->hasSelection()) { return; }
+        if (!m_menus.testFlag(MenuDisableModelsTemp))
+        {
+            return;
+        }
+        if (!this->hasSelection())
+        {
+            return;
+        }
         const CAircraftModelList models(this->selectedObjects().getModels());
         emit this->requestTempDisableModelsForMatching(models);
         sGui->displayInStatusBar(CStatusMessage(CStatusMessage::SeverityInfo,
@@ -259,9 +292,15 @@ namespace swift::gui::views
     void CSimulatedAircraftView::showPositionLogInSimulator()
     {
         IContextSimulator *simContext = simulatorContext();
-        if (!simContext) { return; }
+        if (!simContext)
+        {
+            return;
+        }
         const CSimulatedAircraft aircraft(this->selectedObject());
-        if (aircraft.getCallsign().isEmpty()) { return; }
+        if (aircraft.getCallsign().isEmpty())
+        {
+            return;
+        }
 
         const CIdentifier i(this->objectName());
         const QString dotCmd(".drv pos " + aircraft.getCallsignAsString());
@@ -270,35 +309,53 @@ namespace swift::gui::views
 
     void CSimulatedAircraftView::enableAllDisabledAircraft()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         const CSimulatedAircraftList aircraft = this->container().findByEnabled(false);
         this->enableOrDisableAircraft(aircraft, true);
     }
 
     void CSimulatedAircraftView::disableAllEnabledAircraft()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         const CSimulatedAircraftList aircraft = this->container().findByEnabled(true);
         this->enableOrDisableAircraft(aircraft, false);
     }
 
     void CSimulatedAircraftView::reEnableAllUnrenderedAircraft()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         const CSimulatedAircraftList aircraft = this->container().findByRendered(false);
         this->enableOrDisableAircraft(aircraft, true);
     }
 
     void CSimulatedAircraftView::enableOrDisableAircraft(const CSimulatedAircraftList &aircraft, bool newEnabled)
     {
-        if (aircraft.isEmpty()) { return; }
+        if (aircraft.isEmpty())
+        {
+            return;
+        }
 
         const QPointer<CSimulatedAircraftView> myself(this);
         for (const CSimulatedAircraft &sa : aircraft)
         {
             QTimer::singleShot(10, this, [=, this] {
-                if (!myself) { return; }
-                if (!sGui || sGui->isShuttingDown()) { return; }
+                if (!myself)
+                {
+                    return;
+                }
+                if (!sGui || sGui->isShuttingDown())
+                {
+                    return;
+                }
                 CSimulatedAircraft enabledAircraft(sa);
                 enabledAircraft.setEnabled(newEnabled);
                 this->updateAircraftEnabled(enabledAircraft);
@@ -309,17 +366,26 @@ namespace swift::gui::views
     void CSimulatedAircraftView::followAircraftInSimulator(const CSimulatedAircraft &aircraft)
     {
         IContextSimulator *simContext = simulatorContext();
-        if (!simContext) { return; }
+        if (!simContext)
+        {
+            return;
+        }
         simContext->followAircraft(aircraft.getCallsign());
     }
 
     void CSimulatedAircraftView::enableParts(const CSimulatedAircraft &aircraft, bool enabled)
     {
         IContextSimulator *simContext = simulatorContext();
-        if (!simContext || !aircraft.hasCallsign()) { return; }
+        if (!simContext || !aircraft.hasCallsign())
+        {
+            return;
+        }
         CInterpolationAndRenderingSetupPerCallsign setup =
             simContext->getInterpolationAndRenderingSetupPerCallsignOrDefault(aircraft.getCallsign());
-        if (setup.isAircraftPartsEnabled() == enabled) { return; }
+        if (setup.isAircraftPartsEnabled() == enabled)
+        {
+            return;
+        }
         setup.setEnabledAircraftParts(enabled);
         setup.setCallsign(aircraft.getCallsign());
         simContext->setInterpolationAndRenderingSetupsPerCallsign(setup, true);
@@ -329,10 +395,16 @@ namespace swift::gui::views
                                                   const physical_quantities::CAngle &pitch)
     {
         IContextSimulator *simContext = simulatorContext();
-        if (!simContext || !aircraft.hasCallsign()) { return; }
+        if (!simContext || !aircraft.hasCallsign())
+        {
+            return;
+        }
         CInterpolationAndRenderingSetupPerCallsign setup =
             simContext->getInterpolationAndRenderingSetupPerCallsignOrDefault(aircraft.getCallsign());
-        if (setup.getPitchOnGround() == pitch) { return; }
+        if (setup.getPitchOnGround() == pitch)
+        {
+            return;
+        }
         setup.setPitchOnGround(pitch);
         setup.setCallsign(aircraft.getCallsign());
         simContext->setInterpolationAndRenderingSetupsPerCallsign(setup, true);
@@ -341,21 +413,30 @@ namespace swift::gui::views
     bool CSimulatedAircraftView::isSupportingAircraftParts(const CCallsign &cs) const
     {
         const IContextNetwork *netContext = networkContext();
-        if (!netContext) { return false; }
+        if (!netContext)
+        {
+            return false;
+        }
         return netContext->isRemoteAircraftSupportingParts(cs);
     }
 
     void CSimulatedAircraftView::recalculateAllAircraft()
     {
         IContextSimulator *simContext = simulatorContext();
-        if (!simContext) { return; }
+        if (!simContext)
+        {
+            return;
+        }
         simContext->recalculateAllAircraft();
     }
 
     void CSimulatedAircraftView::doMatchingsAgain()
     {
         IContextSimulator *simContext = simulatorContext();
-        if (!simContext) { return; }
+        if (!simContext)
+        {
+            return;
+        }
         const int rematchedNumber = simContext->doMatchingsAgain();
         CLogMessage(this).info(u"Triggered re-matching of %1 aircraft") << rematchedNumber;
     }
@@ -363,8 +444,14 @@ namespace swift::gui::views
     void CSimulatedAircraftView::doMatchingsAgainForSelected()
     {
         IContextSimulator *simContext = simulatorContext();
-        if (!simContext) { return; }
-        if (!this->hasSelection()) { return; }
+        if (!simContext)
+        {
+            return;
+        }
+        if (!this->hasSelection())
+        {
+            return;
+        }
         const CCallsign cs = this->selectedObject().getCallsign();
         if (simContext->doMatchingAgain(cs))
         {
@@ -375,46 +462,73 @@ namespace swift::gui::views
     void CSimulatedAircraftView::enableFastPositionUpdates(const CSimulatedAircraft &aircraft)
     {
         IContextNetwork *nwContext = networkContext();
-        if (!nwContext) { return; }
+        if (!nwContext)
+        {
+            return;
+        }
         nwContext->updateFastPositionEnabled(aircraft.getCallsign(), aircraft.fastPositionUpdates());
     }
 
     void CSimulatedAircraftView::updateAircraftEnabled(const CSimulatedAircraft &aircraft)
     {
         IContextNetwork *nwContext = networkContext();
-        if (!nwContext) { return; }
+        if (!nwContext)
+        {
+            return;
+        }
         nwContext->updateAircraftEnabled(aircraft.getCallsign(), aircraft.isEnabled());
     }
 
     void CSimulatedAircraftView::updateAircraftSupportingGndFLag(const CSimulatedAircraft &aircraft)
     {
         IContextNetwork *nwContext = networkContext();
-        if (!nwContext) { return; }
+        if (!nwContext)
+        {
+            return;
+        }
         nwContext->updateAircraftSupportingGndFLag(aircraft.getCallsign(), aircraft.isSupportingGndFlag());
     }
 
     void CSimulatedAircraftView::showFlightPlanDialog()
     {
-        if (!m_withMenuFlightPlan) { return; }
-        if (!networkContext() || !networkContext()->isConnected()) { return; }
+        if (!m_withMenuFlightPlan)
+        {
+            return;
+        }
+        if (!networkContext() || !networkContext()->isConnected())
+        {
+            return;
+        }
 
         const CSimulatedAircraft aircraft = this->selectedObject();
-        if (!aircraft.hasCallsign()) { return; }
+        if (!aircraft.hasCallsign())
+        {
+            return;
+        }
 
         const CCallsign cs = aircraft.getCallsign();
-        if (!m_fpDialog) { m_fpDialog = new CFlightPlanDialog(this); }
+        if (!m_fpDialog)
+        {
+            m_fpDialog = new CFlightPlanDialog(this);
+        }
         m_fpDialog->showFlightPlan(cs);
     }
 
     IContextSimulator *CSimulatedAircraftView::simulatorContext()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator()) { return nullptr; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextSimulator())
+        {
+            return nullptr;
+        }
         return sGui->getIContextSimulator();
     }
 
     IContextNetwork *CSimulatedAircraftView::networkContext()
     {
-        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork()) { return nullptr; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextNetwork())
+        {
+            return nullptr;
+        }
         return sGui->getIContextNetwork();
     }
 } // namespace swift::gui::views

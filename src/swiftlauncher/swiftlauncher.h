@@ -135,7 +135,7 @@ private:
     bool setSwiftCoreExecutable();
 
     //! Set executable for swift data
-    bool setSwiftDataExecutable();
+    void setSwiftDataExecutable();
 
     //! Set executable for swift GUI
     bool setSwiftGuiExecutable();

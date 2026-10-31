@@ -22,13 +22,19 @@ namespace swift::misc::simulation
 {
     void CAutoPublishData::insert(const QString &modelString, const physical_quantities::CLength &cg)
     {
-        if (cg.isNull() || modelString.isEmpty()) { return; }
+        if (cg.isNull() || modelString.isEmpty())
+        {
+            return;
+        }
         m_modelStringVsCG.insert(modelString.toUpper(), cg);
     }
 
     void CAutoPublishData::insert(const QString &modelString, const CSimulatorInfo &simulator)
     {
-        if (!simulator.isSingleSimulator() || modelString.isEmpty()) { return; }
+        if (!simulator.isSingleSimulator() || modelString.isEmpty())
+        {
+            return;
+        }
         m_modelStringVsSimulatorInfo.insert(modelString.toUpper(), simulator);
     }
 
@@ -61,35 +67,56 @@ namespace swift::misc::simulation
                     .arg(string, sim.toQString(false));
         }
 
-        if (json.isEmpty()) { return {}; }
+        if (json.isEmpty())
+        {
+            return {};
+        }
         json.chop(2); // remove 2 chars at end
         return u"[\n" % json % u"\n]\n";
     }
 
     int CAutoPublishData::fromDatabaseJson(const QString &jsonData, bool clear)
     {
-        if (clear) { this->clear(); }
-        if (jsonData.isEmpty()) { return 0; }
+        if (clear)
+        {
+            this->clear();
+        }
+        if (jsonData.isEmpty())
+        {
+            return 0;
+        }
         const QJsonArray array = json::jsonArrayFromString(jsonData);
-        if (array.isEmpty()) { return 0; }
+        if (array.isEmpty())
+        {
+            return 0;
+        }
 
         for (const QJsonValue &value : array)
         {
             const QJsonObject obj = value.toObject();
             const QString t = obj["type"].toString();
             const QString m = obj["modelstring"].toString();
-            if (m.isEmpty()) { continue; }
+            if (m.isEmpty())
+            {
+                continue;
+            }
 
             if (t.startsWith("simulator", Qt::CaseInsensitive))
             {
                 const QString simulator = obj["simulator"].toString();
                 const CSimulatorInfo si(simulator);
-                if (si.isSingleSimulator()) { this->insert(m, si); }
+                if (si.isSingleSimulator())
+                {
+                    this->insert(m, si);
+                }
             }
             else if (t.startsWith("cg", Qt::CaseInsensitive))
             {
                 const double cgFt = obj["cgft"].toDouble(-1);
-                if (cgFt < 0) { continue; }
+                if (cgFt < 0)
+                {
+                    continue;
+                }
                 this->insert(m, CLength(cgFt, CLengthUnit::ft()));
             }
         }
@@ -99,7 +126,10 @@ namespace swift::misc::simulation
 
     bool CAutoPublishData::writeJsonToFile() const
     {
-        if (this->isEmpty()) { return false; }
+        if (this->isEmpty())
+        {
+            return false;
+        }
         const QString fn =
             fileBaseName() % u'_' % QDateTime::currentDateTimeUtc().toString("yyyyMMddHHmmss") % fileAppendix();
         return this->writeJsonToFile(CFileUtils::appendFilePaths(CSwiftDirectories::logDirectory(), fn));
@@ -107,7 +137,10 @@ namespace swift::misc::simulation
 
     bool CAutoPublishData::writeJsonToFile(const QString &pathAndFile) const
     {
-        if (this->isEmpty()) { return false; }
+        if (this->isEmpty())
+        {
+            return false;
+        }
         const QString json = this->toDatabaseJson();
         return CFileUtils::writeStringToFile(json, pathAndFile);
     }
@@ -115,7 +148,10 @@ namespace swift::misc::simulation
     bool CAutoPublishData::readFromJsonFile(const QString &fileAndPath, bool clear)
     {
         const QString json = CFileUtils::readFileToString(fileAndPath);
-        if (json.isEmpty()) { return false; }
+        if (json.isEmpty())
+        {
+            return false;
+        }
         this->fromDatabaseJson(json, clear);
         return true;
     }
@@ -123,14 +159,20 @@ namespace swift::misc::simulation
     int CAutoPublishData::readFromJsonFiles(const QString &dirPath)
     {
         const QStringList fileList = findAndCleanupPublishFiles(dirPath);
-        if (fileList.isEmpty()) { return 0; }
+        if (fileList.isEmpty())
+        {
+            return 0;
+        }
         this->clear();
 
         int c = 0;
         for (const QString &file : fileList)
         {
             // read from file
-            if (this->readFromJsonFile(CFileUtils::appendFilePaths(dirPath, file), false)) { c++; }
+            if (this->readFromJsonFile(CFileUtils::appendFilePaths(dirPath, file), false))
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -138,8 +180,14 @@ namespace swift::misc::simulation
     CStatusMessageList CAutoPublishData::analyzeAgainstDBData(const CAircraftModelList &dbModels)
     {
         static const CLogCategoryList cats({ CLogCategories::mapping(), CLogCategories::webservice() });
-        if (dbModels.isEmpty()) { return CStatusMessage(this).validationError(u"No DB data"); }
-        if (this->isEmpty()) { return CStatusMessage(this).validationWarning(u"No data"); }
+        if (dbModels.isEmpty())
+        {
+            return CStatusMessage(this).validationError(u"No DB data");
+        }
+        if (this->isEmpty())
+        {
+            return CStatusMessage(this).validationWarning(u"No data");
+        }
 
         CStatusMessageList msgs;
         msgs.push_back(CStatusMessage(cats).validationInfo(u"DB models: %1") << dbModels.size());
@@ -150,7 +198,10 @@ namespace swift::misc::simulation
             const CAircraftModel dbModel = dbModels.findFirstByModelStringOrDefault(modelString);
             if (dbModel.hasValidDbKey())
             {
-                if (dbModel.getCG() == m_modelStringVsCG[modelString]) { unchangedCG.insert(modelString); }
+                if (dbModel.getCG() == m_modelStringVsCG[modelString])
+                {
+                    unchangedCG.insert(modelString);
+                }
             }
         }
 
@@ -173,7 +224,10 @@ namespace swift::misc::simulation
             QList<QString> unchangedCGList = std::move(unchangedCG);
             msgs.push_back(CStatusMessage(cats).validationInfo(u"Removing unchanged CGs: %1")
                            << unchangedCGList.size());
-            for (const QString &m : unchangedCGList) { m_modelStringVsCG.remove(m); }
+            for (const QString &m : unchangedCGList)
+            {
+                m_modelStringVsCG.remove(m);
+            }
         }
 
         if (!unchangedSim.isEmpty())
@@ -181,7 +235,10 @@ namespace swift::misc::simulation
             QList<QString> unchangedSimList = std::move(unchangedSim);
             msgs.push_back(CStatusMessage(cats).validationInfo(u"Removing unchanged simulators: %1")
                            << unchangedSimList.size());
-            for (const QString &m : unchangedSimList) { m_modelStringVsSimulatorInfo.remove(m); }
+            for (const QString &m : unchangedSimList)
+            {
+                m_modelStringVsSimulatorInfo.remove(m);
+            }
         }
 
         msgs.push_back(CStatusMessage(this).validationInfo(this->getSummary()));
@@ -241,15 +298,24 @@ namespace swift::misc::simulation
     int CAutoPublishData::deleteAutoPublishFiles(const QString &dirPath)
     {
         const QStringList fileList = findAndCleanupPublishFiles(dirPath);
-        if (fileList.isEmpty()) { return 0; }
+        if (fileList.isEmpty())
+        {
+            return 0;
+        }
 
         int c = 0;
         for (const QString &file : fileList)
         {
             const QString fn = CFileUtils::appendFilePaths(dirPath, file);
             QFile f(fn);
-            if (!f.exists()) { continue; }
-            if (f.remove()) { c++; }
+            if (!f.exists())
+            {
+                continue;
+            }
+            if (f.remove())
+            {
+                c++;
+            }
         }
         return c;
     }
@@ -257,14 +323,20 @@ namespace swift::misc::simulation
     QStringList CAutoPublishData::findAndCleanupPublishFiles(const QString &dirPath)
     {
         QDir dir(dirPath);
-        if (!dir.exists()) { return {}; }
+        if (!dir.exists())
+        {
+            return {};
+        }
 
         const QString filter = fileBaseName() % u'*' % fileAppendix();
         const QStringList filters({ filter });
         dir.setNameFilters(filters);
         dir.setFilter(QDir::Files | QDir::NoDotAndDotDot | QDir::NoSymLinks);
         const QStringList fileList = dir.entryList();
-        if (fileList.isEmpty()) { return fileList; }
+        if (fileList.isEmpty())
+        {
+            return fileList;
+        }
 
         // avoid outdated files (e.g. if format changes)
         QStringList correctedList;
@@ -273,9 +345,15 @@ namespace swift::misc::simulation
         {
             const QFileInfo fi(
                 fn.contains(dir.absolutePath()) ? fn : CFileUtils::appendFilePathsAndFixUnc(dir.absolutePath(), fn));
-            if (!fi.exists()) { continue; }
+            if (!fi.exists())
+            {
+                continue;
+            }
             const QDateTime created = fi.birthTime().toUTC();
-            if (deadline < created) { correctedList << fn; }
+            if (deadline < created)
+            {
+                correctedList << fn;
+            }
             else
             {
                 QFile deleteFile(fn);

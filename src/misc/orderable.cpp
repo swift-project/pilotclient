@@ -17,7 +17,10 @@ namespace swift::misc
 
     QString IOrderable::getOrderAsString() const
     {
-        if (this->hasValidOrder()) { return QString::number(this->getOrder()); }
+        if (this->hasValidOrder())
+        {
+            return QString::number(this->getOrder());
+        }
         return QStringLiteral("-");
     }
 
@@ -30,7 +33,10 @@ namespace swift::misc
 
     bool IOrderable::canHandleIndex(CPropertyIndexRef index)
     {
-        if (index.isEmpty()) { return false; }
+        if (index.isEmpty())
+        {
+            return false;
+        }
         const int i = index.frontCasted<int>();
         return isAnyOrderIndex(i);
     }

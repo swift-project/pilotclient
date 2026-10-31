@@ -33,22 +33,34 @@ namespace swift::core::context
 
     swift::misc::CValueCachePacket CContextApplication::getAllSettings() const
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO;
+        }
         return CSettingsCache::instance()->getAllValuesWithTimestamps();
     }
 
     QStringList CContextApplication::getUnsavedSettingsKeys() const
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO;
+        }
         return CSettingsCache::instance()->getAllUnsavedKeys();
     }
 
     CSettingsDictionary CContextApplication::getUnsavedSettingsKeysDescribed() const
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO;
+        }
         const QStringList keys = CSettingsCache::instance()->getAllUnsavedKeys();
         CSettingsDictionary result;
-        for (const QString &key : keys) { result.insert(key, CSettingsCache::instance()->getHumanReadableName(key)); }
+        for (const QString &key : keys)
+        {
+            result.insert(key, CSettingsCache::instance()->getHumanReadableName(key));
+        }
         return result;
     }
 
@@ -59,7 +71,10 @@ namespace swift::core::context
 
     swift::misc::CStatusMessage CContextApplication::saveSettings(const QString &keyPrefix)
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keyPrefix; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO << keyPrefix;
+        }
         return CSettingsCache::instance()->saveToStore(keyPrefix);
     }
 
@@ -74,7 +89,10 @@ namespace swift::core::context
 
     swift::misc::CStatusMessage CContextApplication::loadSettings()
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO;
+        }
         return CSettingsCache::instance()->loadFromStore();
     }
 
@@ -94,7 +112,10 @@ namespace swift::core::context
         else
         {
             // action came from a different process but on the same machine. Ignore
-            if (origin.isFromLocalMachine()) { return; }
+            if (origin.isFromLocalMachine())
+            {
+                return;
+            }
 
             // Different process and different machine. Process it.
             // However, it should not emit a remote action itself.
@@ -128,7 +149,10 @@ namespace swift::core::context
         }
         int r = m_registeredApplications.remove(application);
         this->cleanupRegisteredApplications();
-        if (r > 0) { emit registrationChanged(); }
+        if (r > 0)
+        {
+            emit registrationChanged();
+        }
     }
 
     void CContextApplication::cleanupRegisteredApplications()
@@ -139,7 +163,10 @@ namespace swift::core::context
 
     CIdentifierList CContextApplication::getRegisteredApplications() const
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO;
+        }
         // static const int outdatedMs = qRound(1.5 * PingIdentifiersMs);
         // return m_registeredApplications.findAfterNowMinusOffset(outdatedMs);
         return m_registeredApplications;
@@ -147,7 +174,10 @@ namespace swift::core::context
 
     CIdentifier CContextApplication::getApplicationIdentifier() const
     {
-        if (isDebugEnabled()) { CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO; }
+        if (isDebugEnabled())
+        {
+            CLogMessage(this, CLogCategories::contextSlot()).debug() << Q_FUNC_INFO;
+        }
         return this->identifier();
     }
 } // namespace swift::core::context

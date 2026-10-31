@@ -132,7 +132,10 @@ namespace swift::input
 
     CKeyboardWindows::~CKeyboardWindows()
     {
-        if (m_keyboardHook) { UnhookWindowsHookEx(m_keyboardHook); }
+        if (m_keyboardHook)
+        {
+            UnhookWindowsHookEx(m_keyboardHook);
+        }
     }
 
     bool CKeyboardWindows::init()
@@ -159,17 +162,26 @@ namespace swift::input
         if ((event == WM_KEYDOWN) || (event == WM_SYSKEYDOWN))
         {
             auto key = keyMapping().value(static_cast<int>(vkcode));
-            if (key == Key_Unknown) { return; }
+            if (key == Key_Unknown)
+            {
+                return;
+            }
             m_keyCombination.addKeyboardKey(CKeyboardKey(key));
         }
         else if ((event == WM_KEYUP) || (event == WM_SYSKEYUP))
         {
             auto key = keyMapping().value(static_cast<int>(vkcode));
-            if (key == Key_Unknown) { return; }
+            if (key == Key_Unknown)
+            {
+                return;
+            }
             m_keyCombination.removeKeyboardKey(CKeyboardKey(key));
         }
 
-        if (oldCombination != m_keyCombination) { emit keyCombinationChanged(m_keyCombination); }
+        if (oldCombination != m_keyCombination)
+        {
+            emit keyCombinationChanged(m_keyCombination);
+        }
     }
 
     void CKeyboardWindows::pollKeyboardState()
@@ -182,7 +194,10 @@ namespace swift::input
             {
                 // key down
                 auto key = keyMapping().value(vkey);
-                if (key == Key_Unknown) { return; }
+                if (key == Key_Unknown)
+                {
+                    return;
+                }
                 m_pressedKeys.push_back(vkey);
                 m_keyCombination.addKeyboardKey(CKeyboardKey(key));
             }
@@ -190,20 +205,26 @@ namespace swift::input
             {
                 // key up
                 auto key = keyMapping().value(vkey);
-                if (key == Key_Unknown) { return; }
+                if (key == Key_Unknown)
+                {
+                    return;
+                }
                 m_pressedKeys.removeAll(vkey);
                 m_keyCombination.removeKeyboardKey(CKeyboardKey(key));
             }
         }
 
-        if (oldCombination != m_keyCombination) { emit keyCombinationChanged(m_keyCombination); }
+        if (oldCombination != m_keyCombination)
+        {
+            emit keyCombinationChanged(m_keyCombination);
+        }
     }
 
     LRESULT CALLBACK CKeyboardWindows::keyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
     {
         if (nCode == HC_ACTION)
         {
-            KBDLLHOOKSTRUCT *keyboardEvent = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
+            const KBDLLHOOKSTRUCT *keyboardEvent = reinterpret_cast<KBDLLHOOKSTRUCT *>(lParam);
             DWORD vkCode = keyboardEvent->vkCode;
             g_keyboardWindows->processKeyEvent(vkCode, wParam);
         }

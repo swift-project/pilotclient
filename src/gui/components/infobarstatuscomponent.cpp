@@ -91,7 +91,10 @@ namespace swift::gui::components
 
         QPointer<CInfoBarStatusComponent> myself(this);
         QTimer::singleShot(5000, this, [=, this] {
-            if (!sGui || sGui->isShuttingDown() || !myself) { return; }
+            if (!sGui || sGui->isShuttingDown() || !myself)
+            {
+                return;
+            }
             this->updateValues();
         });
     }
@@ -132,7 +135,10 @@ namespace swift::gui::components
 
     void CInfoBarStatusComponent::setSpacing(int spacing)
     {
-        if (this->layout()) { this->layout()->setSpacing(spacing); }
+        if (this->layout())
+        {
+            this->layout()->setSpacing(spacing);
+        }
     }
 
     void CInfoBarStatusComponent::resizeEvent(QResizeEvent *event)
@@ -143,7 +149,10 @@ namespace swift::gui::components
 
     void CInfoBarStatusComponent::onSimulatorStatusChanged(int status)
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
         const ISimulator::SimulatorStatus simStatus = static_cast<ISimulator::SimulatorStatus>(status);
         if (simStatus.testFlag(ISimulator::Connected))
         {
@@ -168,7 +177,10 @@ namespace swift::gui::components
                 ui->led_Simulator->setTriStateToolTip(s);
             }
         }
-        else { ui->led_Simulator->setOn(false); }
+        else
+        {
+            ui->led_Simulator->setOn(false);
+        }
 
         // simulator status has impact on model set available
         this->onMapperReady();
@@ -206,7 +218,10 @@ namespace swift::gui::components
 
     void CInfoBarStatusComponent::onMapperReady()
     {
-        if (sGui && sGui->isShuttingDown()) { return; }
+        if (sGui && sGui->isShuttingDown())
+        {
+            return;
+        }
         if (!sGui || !sGui->getIContextSimulator())
         {
             ui->led_MapperReady->setOn(false);
@@ -227,17 +242,26 @@ namespace swift::gui::components
 
     void CInfoBarStatusComponent::updateValues()
     {
-        if (!sGui || sGui->isShuttingDown()) { return; }
+        if (!sGui || sGui->isShuttingDown())
+        {
+            return;
+        }
 
         const IContextSimulator *simCon = sGui->getIContextSimulator();
         if (simCon)
         {
 
             this->onSimulatorStatusChanged(simCon->getSimulatorStatus());
-            if (simCon->getModelSetCount() > 0) { this->onMapperReady(); }
+            if (simCon->getModelSetCount() > 0)
+            {
+                this->onMapperReady();
+            }
         }
 
-        if (sGui->getIContextNetwork()) { ui->led_Network->setOn(sGui->getIContextNetwork()->isConnected()); }
+        if (sGui->getIContextNetwork())
+        {
+            ui->led_Network->setOn(sGui->getIContextNetwork()->isConnected());
+        }
 
         if (sGui->getIContextApplication())
         {
@@ -250,7 +274,10 @@ namespace swift::gui::components
 
     void CInfoBarStatusComponent::updateSpacing()
     {
-        if (!sGui || sGui->isShuttingDown() || !CGuiApplication::mainApplicationWidget()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !CGuiApplication::mainApplicationWidget())
+        {
+            return;
+        }
         const int w = CGuiApplication::mainApplicationWidget()->width();
         const int s = (w >= 400) ? 6 : 2;
         this->setSpacing(s);
@@ -258,8 +285,14 @@ namespace swift::gui::components
 
     bool CInfoBarStatusComponent::isAudioAvailableAndNotMuted()
     {
-        if (!sGui || !sGui->getCContextAudioBase() || sGui->isShuttingDown()) { return false; }
-        if (!sGui->getCContextAudioBase()->isAudioStarted()) { return false; }
+        if (!sGui || !sGui->getCContextAudioBase() || sGui->isShuttingDown())
+        {
+            return false;
+        }
+        if (!sGui->getCContextAudioBase()->isAudioStarted())
+        {
+            return false;
+        }
         return !sGui->getCContextAudioBase()->isOutputMuted();
     }
 } // namespace swift::gui::components

@@ -127,7 +127,10 @@ namespace swift::core::db
 
     void CInfoDataReader::readInfoData()
     {
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
 
         const CUrl url(this->getInfoObjectsUrl());
         const CUrlLogList urlLogList(this->getUrlLogList()); // thread safe copy
@@ -142,7 +145,10 @@ namespace swift::core::db
             this->getFromNetworkAndLog(url, { this, &CInfoDataReader::parseInfoObjectsData });
             emit this->dataRead(this->getEntityForMode(), CEntityFlags::ReadStarted, 0, url);
         }
-        else { this->logNoWorkingUrl(this->getEntityForMode()); }
+        else
+        {
+            this->logNoWorkingUrl(this->getEntityForMode());
+        }
     }
 
     void CInfoDataReader::parseInfoObjectsData(QNetworkReply *nwReplyPtr)
@@ -150,7 +156,10 @@ namespace swift::core::db
         // wrap pointer, make sure any exit cleans up reply
         // required to use delete later as object is created in a different thread
         QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
-        if (!this->doWorkCheck()) { return; }
+        if (!this->doWorkCheck())
+        {
+            return;
+        }
 
         const CDatabaseReader::JsonDatastoreResponse res =
             this->setStatusAndTransformReplyIntoDatastoreResponse(nwReply.data());
@@ -191,8 +200,14 @@ namespace swift::core::db
 
     CEntityFlags::EntityFlag CInfoDataReader::getEntityForMode() const
     {
-        if (m_mode == CDbFlags::DbReading) { return CEntityFlags::DbInfoObjectEntity; }
-        if (m_mode == CDbFlags::Shared) { return CEntityFlags::SharedInfoObjectEntity; }
+        if (m_mode == CDbFlags::DbReading)
+        {
+            return CEntityFlags::DbInfoObjectEntity;
+        }
+        if (m_mode == CDbFlags::Shared)
+        {
+            return CEntityFlags::SharedInfoObjectEntity;
+        }
         qFatal("Wrong mode");
         return CEntityFlags::NoEntity;
     }

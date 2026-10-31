@@ -60,7 +60,10 @@ namespace swift::gui::components
     {
         this->selectArea(InfoAreaLog);
         SWIFT_VERIFY_X(this->getLogComponent(), Q_FUNC_INFO, "No log component");
-        if (!this->getLogComponent()) { return; }
+        if (!this->getLogComponent())
+        {
+            return;
+        }
         this->getLogComponent()->displayLog();
     }
 

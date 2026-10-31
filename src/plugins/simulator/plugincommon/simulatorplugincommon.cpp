@@ -50,7 +50,10 @@ namespace swift::simplugin::common
             m_interpolationDisplayDialog->setModal(false);
         }
 
-        if (m_interpolationDisplayDialog) { m_interpolationDisplayDialog->show(); }
+        if (m_interpolationDisplayDialog)
+        {
+            m_interpolationDisplayDialog->show();
+        }
     }
 
     bool CSimulatorPluginCommon::parseDetails(const CSimpleCommandParser &parser)
@@ -78,7 +81,10 @@ namespace swift::simplugin::common
 
     void CSimulatorPluginCommon::registerHelp()
     {
-        if (CSimpleCommandParser::registered("swift::simplugin::common::CSimulatorPluginCommon")) { return; }
+        if (CSimpleCommandParser::registered("swift::simplugin::common::CSimulatorPluginCommon"))
+        {
+            return;
+        }
         CSimpleCommandParser::registerCommand({ ".drv intdisplay", "interpolation display" });
     }
 } // namespace swift::simplugin::common

@@ -69,7 +69,10 @@ namespace swift::misc::simulation
         if (avoidDuplicates)
         {
             const bool didIncrease = this->increaseCountIfFound(type, sessionId, aircraftDesignator);
-            if (didIncrease) { return; }
+            if (didIncrease)
+            {
+                return;
+            }
         }
         this->push_back(CMatchingStatisticsEntry(type, sessionId, modelSetId, description, aircraftDesignator));
     }
@@ -83,7 +86,10 @@ namespace swift::misc::simulation
         if (avoidDuplicates)
         {
             const bool didIncrease = this->increaseCountIfFound(type, sessionId, aircraftDesignator, airlineDesignator);
-            if (didIncrease) { return; }
+            if (didIncrease)
+            {
+                return;
+            }
         }
         this->push_back(
             CMatchingStatisticsEntry(type, sessionId, modelSetId, description, aircraftDesignator, airlineDesignator));

@@ -22,7 +22,10 @@ namespace swift::misc
 
     CPlatform::PlatformFlag CPlatform::getPlatformFlag() const
     {
-        if (this->isSinglePlatform()) { return static_cast<PlatformFlag>(m_platform); }
+        if (this->isSinglePlatform())
+        {
+            return static_cast<PlatformFlag>(m_platform);
+        }
         return UnknownOs;
     }
 
@@ -70,7 +73,10 @@ namespace swift::misc
 
     QVariant CPlatform::propertyByIndex(swift::misc::CPropertyIndexRef index) const
     {
-        if (index.isMyself()) { return QVariant::fromValue(*this); }
+        if (index.isMyself())
+        {
+            return QVariant::fromValue(*this);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -96,7 +102,10 @@ namespace swift::misc
 
     int CPlatform::comparePropertyByIndex(CPropertyIndexRef index, const CPlatform &compareValue) const
     {
-        if (index.isMyself()) { return Compare::compare(m_platform, compareValue.m_platform); }
+        if (index.isMyself())
+        {
+            return Compare::compare(m_platform, compareValue.m_platform);
+        }
         const auto i = index.frontCasted<ColumnIndex>();
         switch (i)
         {
@@ -149,8 +158,14 @@ namespace swift::misc
                 return wordSize == 64 ? CPlatform::win64Platform() : CPlatform::win32Platform();
             }
 
-            if (CBuildConfig::isRunningOnLinuxPlatform()) { return CPlatform::linuxPlatform(); }
-            if (CBuildConfig::isRunningOnMacOSPlatform()) { return CPlatform::macOSPlatform(); }
+            if (CBuildConfig::isRunningOnLinuxPlatform())
+            {
+                return CPlatform::linuxPlatform();
+            }
+            if (CBuildConfig::isRunningOnMacOSPlatform())
+            {
+                return CPlatform::macOSPlatform();
+            }
             return CPlatform::unknownOs();
         }
     } // namespace private_ns
@@ -163,7 +178,10 @@ namespace swift::misc
 
     bool CPlatform::isCurrentPlatform(const QString &platform)
     {
-        if (platform.isEmpty()) { return false; }
+        if (platform.isEmpty())
+        {
+            return false;
+        }
         return isCurrentPlatform(CPlatform::stringToPlatform(platform));
     }
 
@@ -171,10 +189,22 @@ namespace swift::misc
 
     bool CPlatform::canRunOnCurrentPlatform(const CPlatform &platform)
     {
-        if (platform == currentPlatform()) { return true; }
-        if (platform.isAnyWindows() && currentPlatform().isAnyWindows()) { return true; }
-        if (platform == CPlatform::allOs()) { return true; }
-        if (platform == CPlatform::independent()) { return true; }
+        if (platform == currentPlatform())
+        {
+            return true;
+        }
+        if (platform.isAnyWindows() && currentPlatform().isAnyWindows())
+        {
+            return true;
+        }
+        if (platform == CPlatform::allOs())
+        {
+            return true;
+        }
+        if (platform == CPlatform::independent())
+        {
+            return true;
+        }
         return false;
     }
 

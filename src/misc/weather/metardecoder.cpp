@@ -65,12 +65,16 @@ namespace swift::misc::weather
             // Loop stop condition:
             // - Invalid data
             // - One match found and token not repeatable
-            do {
+            do
+            {
                 QRegularExpressionMatch match = re.match(metarString);
                 if (match.hasMatch())
                 {
                     // If invalid data, we return straight away
-                    if (!validateAndSet(match, metar)) { return false; }
+                    if (!validateAndSet(match, metar))
+                    {
+                        return false;
+                    }
 
                     // Remove the captured part
                     metarString.replace(re, QString());
@@ -79,7 +83,10 @@ namespace swift::misc::weather
                 else
                 {
                     // No (more) match found.
-                    if (!isMandatory()) { isValid = true; }
+                    if (!isMandatory())
+                    {
+                        isValid = true;
+                    }
                     break;
                 }
             }
@@ -110,7 +117,10 @@ namespace swift::misc::weather
         bool validateAndSet(const QRegularExpressionMatch &match, CMetar &metar) const override
         {
             QString reportTypeAsString = match.captured("reporttype");
-            if (reportTypeAsString.isEmpty() || !getReportTypeHash().contains(reportTypeAsString)) { return false; }
+            if (reportTypeAsString.isEmpty() || !getReportTypeHash().contains(reportTypeAsString))
+            {
+                return false;
+            }
 
             metar.setReportType(getReportTypeHash().value(reportTypeAsString));
             return true;
@@ -119,7 +129,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        const QHash<QString, CMetar::ReportType> &getReportTypeHash() const
+        static const QHash<QString, CMetar::ReportType> &getReportTypeHash()
         {
             static const QHash<QString, CMetar::ReportType> hash = { { "METAR", CMetar::METAR },
                                                                      { "SPECI", CMetar::SPECI } };
@@ -205,9 +215,18 @@ namespace swift::misc::weather
                 metar.setAutomated(true);
                 return true;
             }
-            else if (match.captured(1) == "NIL") { return true; }
-            else if (match.captured(1).size() == 3) { return true; }
-            else { return false; }
+            else if (match.captured(1) == "NIL")
+            {
+                return true;
+            }
+            else if (match.captured(1).size() == 3)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         bool isMandatory() const override { return false; }
@@ -219,7 +238,7 @@ namespace swift::misc::weather
         QString getDecoderType() const override { return "Wind"; }
 
     protected:
-        const QHash<QString, CSpeedUnit> &getWindUnitHash() const
+        static const QHash<QString, CSpeedUnit> &getWindUnitHash()
         {
             static const QHash<QString, CSpeedUnit> hash = { { "KT", CSpeedUnit::kts() },
                                                              { "MPS", CSpeedUnit::m_s() },
@@ -241,7 +260,10 @@ namespace swift::misc::weather
             if (directionAsString == "///") return true;
             int direction = 0;
             bool directionVariable = false;
-            if (directionAsString == "VRB") { directionVariable = true; }
+            if (directionAsString == "VRB")
+            {
+                directionVariable = true;
+            }
             else
             {
                 direction = directionAsString.toInt(&ok);
@@ -324,7 +346,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // <from>V in degrees
             const QString directionFrom("(?<direction_from>\\d{3})V");
@@ -342,7 +364,7 @@ namespace swift::misc::weather
         QString getDecoderType() const override { return "Visibility"; }
 
     protected:
-        const QHash<QString, QString> &getCardinalDirections() const
+        static const QHash<QString, QString> &getCardinalDirections()
         {
             static const QHash<QString, QString> hash = {
                 { "N", "north" }, { "NE", "north-east" }, { "E", "east" }, { "SE", "south-east" },
@@ -467,7 +489,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // 10 Minute RVR value: Reported in hundreds of feet if visibility is ≤ one statute mile
             // or RVR is ≤ 6000 feet. Group ends with FT to indicate feet. For example, R06L/2000FT.
@@ -496,7 +518,7 @@ namespace swift::misc::weather
         QString getDecoderType() const override { return "PresentWeather"; }
 
     protected:
-        const QHash<QString, CPresentWeather::Intensity> &getIntensityHash() const
+        static const QHash<QString, CPresentWeather::Intensity> &getIntensityHash()
         {
             static const QHash<QString, CPresentWeather::Intensity> hash = { { "-", CPresentWeather::Light },
                                                                              { "+", CPresentWeather::Heavy },
@@ -504,7 +526,7 @@ namespace swift::misc::weather
             return hash;
         }
 
-        const QHash<QString, CPresentWeather::Descriptor> &getDescriptorHash() const
+        static const QHash<QString, CPresentWeather::Descriptor> &getDescriptorHash()
         {
             static const QHash<QString, CPresentWeather::Descriptor> hash = {
                 { "MI", CPresentWeather::Shallow },      { "BC", CPresentWeather::Patches },
@@ -515,7 +537,7 @@ namespace swift::misc::weather
             return hash;
         }
 
-        const QHash<QString, CPresentWeather::WeatherPhenomenon> &getWeatherPhenomenaHash() const
+        static const QHash<QString, CPresentWeather::WeatherPhenomenon> &getWeatherPhenomenaHash()
         {
             static const QHash<QString, CPresentWeather::WeatherPhenomenon> hash = {
                 { "DZ", CPresentWeather::Drizzle },
@@ -557,18 +579,30 @@ namespace swift::misc::weather
         {
             QString intensityAsString = match.captured("intensity");
             CPresentWeather::Intensity itensity = CPresentWeather::Moderate;
-            if (!intensityAsString.isEmpty()) { itensity = getIntensityHash().value(intensityAsString); }
+            if (!intensityAsString.isEmpty())
+            {
+                itensity = getIntensityHash().value(intensityAsString);
+            }
 
             QString descriptorAsString = match.captured("descriptor");
             CPresentWeather::Descriptor descriptor = CPresentWeather::None;
-            if (!descriptorAsString.isEmpty()) { descriptor = getDescriptorHash().value(descriptorAsString); }
+            if (!descriptorAsString.isEmpty())
+            {
+                descriptor = getDescriptorHash().value(descriptorAsString);
+            }
 
             int weatherPhenomena = 0;
             QString wp1AsString = match.captured("wp1");
-            if (!wp1AsString.isEmpty()) { weatherPhenomena |= getWeatherPhenomenaHash().value(wp1AsString); }
+            if (!wp1AsString.isEmpty())
+            {
+                weatherPhenomena |= getWeatherPhenomenaHash().value(wp1AsString);
+            }
 
             QString wp2AsString = match.captured("wp2");
-            if (!wp2AsString.isEmpty()) { weatherPhenomena |= getWeatherPhenomenaHash().value(wp2AsString); }
+            if (!wp2AsString.isEmpty())
+            {
+                weatherPhenomena |= getWeatherPhenomenaHash().value(wp2AsString);
+            }
 
             CPresentWeather presentWeather(itensity, descriptor, weatherPhenomena);
             metar.addPresentWeather(presentWeather);
@@ -607,13 +641,13 @@ namespace swift::misc::weather
         QString getDecoderType() const override { return "Cloud"; }
 
     protected:
-        const QStringList &getClearSkyTokens() const
+        static const QStringList &getClearSkyTokens()
         {
             static const QStringList list = { "SKC", "NSC", "CLR", "NCD" };
             return list;
         }
 
-        const QHash<QString, CCloudLayer::Coverage> &getCoverage() const
+        static const QHash<QString, CCloudLayer::Coverage> &getCoverage()
         {
             static const QHash<QString, CCloudLayer::Coverage> hash = { { "///", CCloudLayer::None },
                                                                         { "FEW", CCloudLayer::Few },
@@ -656,7 +690,9 @@ namespace swift::misc::weather
                                    getCoverage().value(coverageAsString));
             metar.addCloudLayer(cloudLayer);
             QString cb_tcu = match.captured("cb_tcu");
-            if (!cb_tcu.isEmpty()) {}
+            if (!cb_tcu.isEmpty())
+            {
+            }
             return true;
         }
 
@@ -701,7 +737,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // Vertical visibility
             const QString verticalVisibility = QStringLiteral("VV(?<vertical_visibility>\\d{3}|///)");
@@ -746,11 +782,17 @@ namespace swift::misc::weather
             }
 
             int temperature = temperatureAsString.toInt();
-            if (temperatureNegative) { temperature *= -1; }
+            if (temperatureNegative)
+            {
+                temperature *= -1;
+            }
             metar.setTemperature(CTemperature(temperature, CTemperatureUnit::C()));
 
             int dewPoint = dewPointAsString.toInt();
-            if (dewPointNegative) { dewPoint *= -1; }
+            if (dewPointNegative)
+            {
+                dewPoint *= -1;
+            }
             metar.setDewPoint(CTemperature(dewPoint, CTemperatureUnit::C()));
 
             return true;
@@ -759,7 +801,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // Tmperature
             const QString temperature = QStringLiteral("(?<temperature>M?\\d{2}|//)");
@@ -779,7 +821,7 @@ namespace swift::misc::weather
         QString getDecoderType() const override { return "Pressure"; }
 
     protected:
-        const QHash<QString, CPressureUnit> &getPressureUnits() const
+        static const QHash<QString, CPressureUnit> &getPressureUnits()
         {
             static const QHash<QString, CPressureUnit> hash = { { "Q", CPressureUnit::hPa() },
                                                                 { "A", CPressureUnit::inHg() } };
@@ -825,7 +867,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // Q => QNH comes in hPa
             // A => QNH comes in inches of Mercury
@@ -909,7 +951,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // Wind shear on all runways
             const QString wsAllRwy = QStringLiteral("WS ALL RWY");
