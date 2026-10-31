@@ -45,12 +45,10 @@ namespace swift::misc::simulation
 
         bool hasSignificantVelocity(const CAircraftVelocity &velocity)
         {
-            const double v = std::sqrt(velocity.getVelocityX(CSpeedUnit::m_s()) *
-                                           velocity.getVelocityX(CSpeedUnit::m_s()) +
-                                       velocity.getVelocityY(CSpeedUnit::m_s()) *
-                                           velocity.getVelocityY(CSpeedUnit::m_s()) +
-                                       velocity.getVelocityZ(CSpeedUnit::m_s()) *
-                                           velocity.getVelocityZ(CSpeedUnit::m_s()));
+            const double v =
+                std::sqrt(velocity.getVelocityX(CSpeedUnit::m_s()) * velocity.getVelocityX(CSpeedUnit::m_s()) +
+                          velocity.getVelocityY(CSpeedUnit::m_s()) * velocity.getVelocityY(CSpeedUnit::m_s()) +
+                          velocity.getVelocityZ(CSpeedUnit::m_s()) * velocity.getVelocityZ(CSpeedUnit::m_s()));
             if (v > c_minLinearVelocityM_s && v < c_maxLinearVelocityM_s) { return true; }
             return std::abs(velocity.getPitchVelocity(CAngleUnit::rad(), CTimeUnit::s())) > c_minAngularVelocityRad_s ||
                    std::abs(velocity.getRollVelocity(CAngleUnit::rad(), CTimeUnit::s())) > c_minAngularVelocityRad_s ||
@@ -90,12 +88,13 @@ namespace swift::misc::simulation
     } // namespace
 
     CInterpolatorVelocity::CInterpolant::CInterpolant(const CAircraftSituation &situation, const CHeading &heading,
-                                                      const CAngle &pitch, const CAngle &bank, const CSpeed &groundspeed,
-                                                      qint64 interpolatedTime)
+                                                      const CAngle &pitch, const CAngle &bank,
+                                                      const CSpeed &groundspeed, qint64 interpolatedTime)
         : IInterpolant(interpolatedTime), m_situation(situation), m_pbh(situation, heading, pitch, bank, groundspeed)
     {}
 
-    std::tuple<CCoordinateGeodetic, CAltitude> CInterpolatorVelocity::CInterpolant::interpolatePositionAndAltitude() const
+    std::tuple<CCoordinateGeodetic, CAltitude>
+    CInterpolatorVelocity::CInterpolant::interpolatePositionAndAltitude() const
     {
         return { m_situation.getPosition(), m_situation.getAltitude() };
     }
@@ -173,9 +172,9 @@ namespace swift::misc::simulation
                                       -c_maxCorrectionDegrees, c_maxCorrectionDegrees);
         segment.bankDeg = clampValue(-centeredDegrees(newest.getBank().value(CAngleUnit::deg()) - predicted.bankDeg),
                                      -c_maxCorrectionDegrees, c_maxCorrectionDegrees);
-        segment.headingDeg = clampValue(
-            -centeredDegrees(newest.getHeading().value(CAngleUnit::deg()) - predicted.headingDeg),
-            -c_maxCorrectionDegrees, c_maxCorrectionDegrees);
+        segment.headingDeg =
+            clampValue(-centeredDegrees(newest.getHeading().value(CAngleUnit::deg()) - predicted.headingDeg),
+                       -c_maxCorrectionDegrees, c_maxCorrectionDegrees);
 
         m_corrPrev = m_corrCurr;
         m_corrCurr = segment;
@@ -215,8 +214,8 @@ namespace swift::misc::simulation
         }
     }
 
-    CInterpolatorVelocity::SExtrapolated CInterpolatorVelocity::extrapolateFrom(
-        const CAircraftSituation &anchor, qint64 adjustedTimeMs) const
+    CInterpolatorVelocity::SExtrapolated CInterpolatorVelocity::extrapolateFrom(const CAircraftSituation &anchor,
+                                                                                qint64 adjustedTimeMs) const
     {
         Q_ASSERT_X(!anchor.isNull(), Q_FUNC_INFO, "No anchor");
         const CAircraftVelocity velocity = anchor.getVelocity();
@@ -230,8 +229,9 @@ namespace swift::misc::simulation
 
         const double dEastM = velocity.getVelocityX(CSpeedUnit::m_s()) * dtSec + segment->eastM * factor;
         const double dNorthM = velocity.getVelocityZ(CSpeedUnit::m_s()) * dtSec + segment->northM * factor;
-        const double dUpM =
-            anchor.isOnGround() ? segment->upM * factor : velocity.getVelocityY(CSpeedUnit::m_s()) * dtSec + segment->upM * factor;
+        const double dUpM = anchor.isOnGround() ?
+                                segment->upM * factor :
+                                velocity.getVelocityY(CSpeedUnit::m_s()) * dtSec + segment->upM * factor;
 
         const double anchorLatDeg = anchor.latitude().value(CAngleUnit::deg());
         const double anchorLonDeg = anchor.longitude().value(CAngleUnit::deg());
@@ -248,10 +248,10 @@ namespace swift::misc::simulation
         e.bankDeg = anchor.getBank().value(CAngleUnit::deg()) +
                     velocity.getRollVelocity(CAngleUnit::rad(), CTimeUnit::s()) * dtSec * c_radToDeg +
                     segment->bankDeg * factor;
-        e.headingDeg = normalizedDegrees(anchor.getHeading().value(CAngleUnit::deg()) +
-                                         velocity.getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s()) * dtSec *
-                                             c_radToDeg +
-                                         segment->headingDeg * factor);
+        e.headingDeg =
+            normalizedDegrees(anchor.getHeading().value(CAngleUnit::deg()) +
+                              velocity.getHeadingVelocity(CAngleUnit::rad(), CTimeUnit::s()) * dtSec * c_radToDeg +
+                              segment->headingDeg * factor);
         e.realTimeMs = anchor.getMSecsSinceEpoch() + qRound(dtSec * 1000.0);
         return e;
     }
@@ -376,10 +376,10 @@ namespace swift::misc::simulation
         const SExtrapolated extrapolated = this->extrapolateFrom(renderAnchor, m_currentTimeMsSinceEpoch);
 
         CAircraftSituation situation(renderAnchor); // copies callsign, ground info, elevation
-        situation.setPosition(CCoordinateGeodetic(CLatitude(extrapolated.latitudeDeg, CAngleUnit::deg()),
-                                                  CLongitude(extrapolated.longitudeDeg, CAngleUnit::deg()),
-                                                  CAltitude(extrapolated.altitudeM, CAltitude::MeanSeaLevel,
-                                                            CLengthUnit::m())));
+        situation.setPosition(
+            CCoordinateGeodetic(CLatitude(extrapolated.latitudeDeg, CAngleUnit::deg()),
+                                CLongitude(extrapolated.longitudeDeg, CAngleUnit::deg()),
+                                CAltitude(extrapolated.altitudeM, CAltitude::MeanSeaLevel, CLengthUnit::m())));
         situation.setHeading(CHeading(normalizedDegrees(extrapolated.headingDeg), CHeading::True, CAngleUnit::deg()));
         situation.setPitch(CAngle(extrapolated.pitchDeg, CAngleUnit::deg()));
         situation.setBank(CAngle(extrapolated.bankDeg, CAngleUnit::deg()));
@@ -388,8 +388,8 @@ namespace swift::misc::simulation
         if (groundspeed.isNull())
         {
             const CAircraftVelocity velocity = renderAnchor.getVelocity();
-            const double gs = std::hypot(velocity.getVelocityX(CSpeedUnit::m_s()),
-                                         velocity.getVelocityZ(CSpeedUnit::m_s()));
+            const double gs =
+                std::hypot(velocity.getVelocityX(CSpeedUnit::m_s()), velocity.getVelocityZ(CSpeedUnit::m_s()));
             groundspeed = CSpeed(gs, CSpeedUnit::m_s());
         }
 
