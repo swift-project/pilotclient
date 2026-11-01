@@ -21,7 +21,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install Qt docs
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06
         with:
           version: ${{ inputs.qt_version }}
           no-qt-binaries: true
