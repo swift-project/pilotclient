@@ -2509,7 +2509,8 @@ namespace swift::simplugin::fsxcommon
                                                       CSimConnectDefinitions::DataRemoteAircraftSetPosition,
                                                       static_cast<SIMCONNECT_OBJECT_ID>(objectId), 0, 0,
                                                       sizeof(SIMCONNECT_DATA_INITPOSITION), &position),
-                        doTraceSendId, simObject, "Failed to set position", Q_FUNC_INFO, "SimConnect_SetDataOnSimObject");
+                        doTraceSendId, simObject, "Failed to set position", Q_FUNC_INFO,
+                        "SimConnect_SetDataOnSimObject");
                     if (isOk(hr))
                     {
                         this->rememberLastSent(result); // remember situation

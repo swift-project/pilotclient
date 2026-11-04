@@ -35,7 +35,8 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const Ping &lhs, const Ping &rhs)
     {
-        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() && lhs.m_timestamp == rhs.m_timestamp;
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() &&
+               lhs.m_timestamp == rhs.m_timestamp;
     }
 
     //! Not equal to operator

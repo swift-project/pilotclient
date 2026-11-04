@@ -1357,8 +1357,8 @@ namespace swift::core::fsd
             // * non-VATSIM server. VATSIM has a specific ATIS message
             // * Receiver callsign must be owner callsign and not any type of broadcast.
             // * We have requested the ATIS of this controller before.
-            if (m_server.getEcosystem() != CEcosystem::vatsim() && m_ownCallsign.asString() == textMessage.getReceiver() &&
-                m_pendingAtisQueries.contains(sender))
+            if (m_server.getEcosystem() != CEcosystem::vatsim() &&
+                m_ownCallsign.asString() == textMessage.getReceiver() && m_pendingAtisQueries.contains(sender))
             {
                 maybeHandleAtisReply(sender, receiver, textMessage.m_message);
                 return;
