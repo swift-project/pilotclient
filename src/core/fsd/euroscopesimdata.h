@@ -56,8 +56,8 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const EuroscopeSimData &lhs, const EuroscopeSimData &rhs)
     {
-        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() && lhs.m_model == rhs.m_model &&
-               lhs.m_livery == rhs.m_livery && lhs.m_timestamp == rhs.m_timestamp &&
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() &&
+               lhs.m_model == rhs.m_model && lhs.m_livery == rhs.m_livery && lhs.m_timestamp == rhs.m_timestamp &&
                qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) && qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) &&
                qFuzzyCompare(lhs.m_altitude, rhs.m_altitude) && qFuzzyCompare(lhs.m_heading, rhs.m_heading) &&
                lhs.m_bank == rhs.m_bank && lhs.m_pitch == rhs.m_pitch && lhs.m_groundSpeed == rhs.m_groundSpeed &&

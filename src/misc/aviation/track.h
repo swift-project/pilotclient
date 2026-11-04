@@ -76,16 +76,10 @@ namespace swift::misc::aviation
         {}
 
         //! \brief Magnetic Track?
-        bool isMagneticTrack() const
-        {
-            return Magnetic == this->m_north;
-        }
+        bool isMagneticTrack() const { return Magnetic == this->m_north; }
 
         //! \brief True Track?
-        bool isTrueTrack() const
-        {
-            return True == this->m_north;
-        }
+        bool isTrueTrack() const { return True == this->m_north; }
 
         //! \brief Get reference north (magnetic or true)
         ReferenceNorth getReferenceNorth() const { return m_north; }

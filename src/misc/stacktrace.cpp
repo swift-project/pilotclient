@@ -61,7 +61,7 @@ namespace swift::misc
         struct
         {
             SYMBOL_INFO info;
-            std::array<char, 256> name{};
+            std::array<char, 256> name {};
         } symbol;
         symbol.info.MaxNameLen = static_cast<ULONG>(symbol.name.size() - 1);
         symbol.info.SizeOfStruct = sizeof(symbol.info);

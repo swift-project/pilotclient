@@ -44,8 +44,8 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const ClientResponse &lhs, const ClientResponse &rhs)
     {
-        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() && lhs.m_queryType == rhs.m_queryType &&
-               lhs.m_responseData == rhs.m_responseData;
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() &&
+               lhs.m_queryType == rhs.m_queryType && lhs.m_responseData == rhs.m_responseData;
     }
 
     //! Not equal to operator
