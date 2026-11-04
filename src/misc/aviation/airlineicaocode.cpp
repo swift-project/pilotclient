@@ -3,6 +3,9 @@
 
 #include "misc/aviation/airlineicaocode.h"
 
+#include <algorithm>
+#include <ranges>
+
 #include <QDir>
 #include <QStringBuilder>
 #include <Qt>
@@ -166,11 +169,10 @@ namespace swift::misc::aviation
         {
             return false;
         }
-        auto simplifiedName =
-            makeRange(getName().begin(), getName().end()).findBy([](QChar c) { return c.isLetter(); });
-        auto it = std::search(simplifiedName.begin(), simplifiedName.end(), candidate.begin(), candidate.end(),
-                              [](QChar a, QChar b) { return a.toUpper() == b.toUpper(); });
-        return it != simplifiedName.end();
+        auto simplifiedName = getName() | std::views::filter([](QChar c) { return c.isLetter(); });
+        const auto match =
+            std::ranges::search(simplifiedName, candidate, [](QChar a, QChar b) { return a.toUpper() == b.toUpper(); });
+        return !match.empty();
     }
 
     bool CAirlineIcaoCode::hasSimplifiedName() const { return this->hasName() && !this->getSimplifiedName().isEmpty(); }

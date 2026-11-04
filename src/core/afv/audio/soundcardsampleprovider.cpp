@@ -3,6 +3,8 @@
 
 #include "core/afv/audio/soundcardsampleprovider.h"
 
+#include <algorithm>
+
 #include "config/buildconfig.h"
 #include "misc/metadatautils.h"
 
@@ -59,15 +61,16 @@ namespace swift::core::afv::audio
                 QVector<TxTransceiverDto> txTransceiversFiltered = txTransceivers;
 
                 txTransceiversFiltered.erase(
-                    std::remove_if(txTransceiversFiltered.begin(), txTransceiversFiltered.end(),
-                                   [this](const TxTransceiverDto &d) { return !m_receiverIDs.contains(d.id); }),
+                    std::ranges::remove_if(txTransceiversFiltered,
+                                           [this](const TxTransceiverDto &d) { return !m_receiverIDs.contains(d.id); })
+                        .begin(),
                     txTransceiversFiltered.end());
 
                 for (const TxTransceiverDto &txTransceiver : txTransceiversFiltered)
                 {
-                    auto it = std::find_if(
-                        m_receiverInputs.begin(), m_receiverInputs.end(),
-                        [txTransceiver](const CReceiverSampleProvider *p) { return p->getId() == txTransceiver.id; });
+                    auto it = std::ranges::find_if(m_receiverInputs, [txTransceiver](const CReceiverSampleProvider *p) {
+                        return p->getId() == txTransceiver.id;
+                    });
 
                     if (it != m_receiverInputs.end())
                     {
@@ -96,14 +99,15 @@ namespace swift::core::afv::audio
         QVector<RxTransceiverDto> rxTransceiversFilteredAndSorted = rxTransceivers;
 
         rxTransceiversFilteredAndSorted.erase(
-            std::remove_if(rxTransceiversFilteredAndSorted.begin(), rxTransceiversFilteredAndSorted.end(),
-                           [this](const RxTransceiverDto &r) { return !m_receiverIDs.contains(r.id); }),
+            std::ranges::remove_if(rxTransceiversFilteredAndSorted,
+                                   [this](const RxTransceiverDto &r) { return !m_receiverIDs.contains(r.id); })
+                .begin(),
             rxTransceiversFilteredAndSorted.end());
 
-        std::sort(rxTransceiversFilteredAndSorted.begin(), rxTransceiversFilteredAndSorted.end(),
-                  [](const RxTransceiverDto &a, const RxTransceiverDto &b) -> bool {
-                      return a.distanceRatio > b.distanceRatio;
-                  });
+        std::ranges::sort(rxTransceiversFilteredAndSorted,
+                          [](const RxTransceiverDto &a, const RxTransceiverDto &b) -> bool {
+                              return a.distanceRatio > b.distanceRatio;
+                          });
 
         if (!rxTransceiversFilteredAndSorted.isEmpty())
         {
@@ -116,9 +120,9 @@ namespace swift::core::afv::audio
                     handledTransceiverIDs.push_back(rxTransceiver.id);
 
                     CReceiverSampleProvider *receiverInput = nullptr;
-                    auto it = std::find_if(
-                        m_receiverInputs.begin(), m_receiverInputs.end(),
-                        [rxTransceiver](const CReceiverSampleProvider *p) { return p->getId() == rxTransceiver.id; });
+                    auto it = std::ranges::find_if(m_receiverInputs, [rxTransceiver](const CReceiverSampleProvider *p) {
+                        return p->getId() == rxTransceiver.id;
+                    });
 
                     if (it != m_receiverInputs.end())
                     {
@@ -158,9 +162,9 @@ namespace swift::core::afv::audio
     {
         for (const TransceiverDto &radioTransceiver : radioTransceivers)
         {
-            auto it = std::find_if(
-                m_receiverInputs.begin(), m_receiverInputs.end(),
-                [radioTransceiver](const CReceiverSampleProvider *p) { return p->getId() == radioTransceiver.id; });
+            auto it = std::ranges::find_if(m_receiverInputs, [radioTransceiver](const CReceiverSampleProvider *p) {
+                return p->getId() == radioTransceiver.id;
+            });
 
             if (it != m_receiverInputs.end())
             {
@@ -171,8 +175,8 @@ namespace swift::core::afv::audio
         for (CReceiverSampleProvider *receiverInput : std::as_const(m_receiverInputs))
         {
             const quint16 transceiverID = receiverInput->getId();
-            const bool contains = std::any_of(radioTransceivers.cbegin(), radioTransceivers.cend(),
-                                              [transceiverID](const auto &tx) { return transceiverID == tx.id; });
+            const bool contains = std::ranges::any_of(
+                radioTransceivers, [transceiverID](const auto &tx) { return transceiverID == tx.id; });
             if (!contains)
             {
                 receiverInput->setFrequency(0);
@@ -187,8 +191,8 @@ namespace swift::core::afv::audio
 
     bool CSoundcardSampleProvider::setGainRatioForTransceiver(quint16 transceiverID, double gainRatio)
     {
-        auto receiverInput = std::find_if(m_receiverInputs.begin(), m_receiverInputs.end(),
-                                          [&](const auto receiver) { return receiver->getId() == transceiverID; });
+        auto receiverInput = std::ranges::find_if(
+            m_receiverInputs, [&](const auto receiver) { return receiver->getId() == transceiverID; });
         if (receiverInput == m_receiverInputs.end())
         {
             return false;

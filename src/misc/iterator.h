@@ -49,8 +49,8 @@ namespace swift::misc::Iterators
         OutputIterator &operator*() { return *this; }
 
         //! Assignment operator performs the output
-        template <typename T, std::enable_if_t<!std::is_convertible_v<T, OutputIterator>, int> = 0>
-        OutputIterator &operator=(T &&value)
+        template <typename T>
+        OutputIterator &operator=(T &&value) requires(!std::is_convertible_v<T, OutputIterator>)
         {
             m_func(std::forward<T>(value));
             return *this;

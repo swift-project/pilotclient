@@ -38,7 +38,9 @@ namespace swift::core::afv::crypto
                                     uint sequenceToBeSent, T dto)
         {
             Q_ASSERT_X(transmitKey.size() == crypto_aead_chacha20poly1305_IETF_KEYBYTES, Q_FUNC_INFO, "");
-            const CryptoDtoHeaderDto header = { channelTag.toStdString(), sequenceToBeSent, mode };
+            const CryptoDtoHeaderDto header = { .ChannelTag = channelTag.toStdString(),
+                                                .Sequence = sequenceToBeSent,
+                                                .Mode = mode };
 
             QBuffer headerBuffer;
             headerBuffer.open(QIODevice::WriteOnly);

@@ -3,6 +3,7 @@
 
 #include "misc/simulation/distributorlist.h"
 
+#include <algorithm>
 #include <tuple>
 
 #include "misc/simulation/aircraftmodel.h"
@@ -102,8 +103,8 @@ namespace swift::misc::simulation
 
     bool CDistributorList::matchesAnyKeyOrAlias(const QString &keyOrAlias) const
     {
-        return std::any_of(cbegin(), cend(),
-                           [&](const CDistributor &distributor) { return distributor.matchesKeyOrAlias(keyOrAlias); });
+        return std::ranges::any_of(
+            *this, [&](const CDistributor &distributor) { return distributor.matchesKeyOrAlias(keyOrAlias); });
     }
 
     QStringList CDistributorList::getDbKeysAndAliases(bool sort) const

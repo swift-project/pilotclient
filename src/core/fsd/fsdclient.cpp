@@ -3,6 +3,8 @@
 
 #include "core/fsd/fsdclient.h"
 
+#include <algorithm>
+
 #include <QHostAddress>
 #include <QMetaEnum>
 #include <QNetworkReply>
@@ -2444,7 +2446,7 @@ namespace swift::core::fsd
         }
 
         // sorted by value
-        std::sort(transformed.begin(), transformed.end(), std::greater<>());
+        std::ranges::sort(transformed, std::greater<>());
         QString stats;
         for (const auto &pair : transformed)
         {

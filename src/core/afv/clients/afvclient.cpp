@@ -3,6 +3,8 @@
 
 #include "core/afv/clients/afvclient.h"
 
+#include <algorithm>
+
 #ifdef Q_OS_WIN
 #    include "comdef.h"
 #endif
@@ -78,7 +80,18 @@ namespace swift::core::afv::clients
     {
         {
             QMutexLocker lock(&m_mutexTransceivers);
-            m_transceivers = { { 0, UniCom, 48.5, 11.5, 1000.0, 1000.0 }, { 1, UniCom, 48.5, 11.5, 1000.0, 1000.0 } };
+            m_transceivers = { { .id = 0,
+                                 .frequencyHz = UniCom,
+                                 .LatDeg = 48.5,
+                                 .LonDeg = 11.5,
+                                 .HeightMslM = 1000.0,
+                                 .HeightAglM = 1000.0 },
+                               { .id = 1,
+                                 .frequencyHz = UniCom,
+                                 .LatDeg = 48.5,
+                                 .LonDeg = 11.5,
+                                 .HeightMslM = 1000.0,
+                                 .HeightAglM = 1000.0 } };
 
             m_enabledTransceivers = { 0, 1 };
             m_transmittingTransceivers = { { 0 } }; // TxTransceiverDto
@@ -545,8 +558,7 @@ namespace swift::core::afv::clients
         }
 
         const auto transceivers = this->getTransceivers(); // threadsafe
-        return std::any_of(transceivers.cbegin(), transceivers.cend(),
-                           [&id](const TransceiverDto &dto) { return dto.id == id; });
+        return std::ranges::any_of(transceivers, [&id](const TransceiverDto &dto) { return dto.id == id; });
     }
 
     bool CAfvClient::isEnabledComUnit(CComSystem::ComUnit comUnit) const
@@ -678,8 +690,8 @@ namespace swift::core::afv::clients
     bool CAfvClient::isTransmittingTransceiver(quint16 id) const
     {
         QMutexLocker lock(&m_mutexTransceivers);
-        return std::any_of(m_transmittingTransceivers.cbegin(), m_transmittingTransceivers.cend(),
-                           [&id](const TxTransceiverDto &dto) { return dto.id == id; });
+        return std::ranges::any_of(m_transmittingTransceivers,
+                                   [&id](const TxTransceiverDto &dto) { return dto.id == id; });
     }
 
     bool CAfvClient::isTransmittingComUnit(CComSystem::ComUnit comUnit) const
@@ -1026,8 +1038,12 @@ namespace swift::core::afv::clients
             audioData.lastPacket = false;
             audioData.sequenceCounter = 0;
 
-            const RxTransceiverDto com1 = { 0, transceivers.size() > 0 ? transceivers[0].frequencyHz : UniCom, 1.0 };
-            const RxTransceiverDto com2 = { 1, transceivers.size() > 1 ? transceivers[1].frequencyHz : UniCom, 1.0 };
+            const RxTransceiverDto com1 = { .id = 0,
+                                            .frequency = transceivers.size() > 0 ? transceivers[0].frequencyHz : UniCom,
+                                            .distanceRatio = 1.0 };
+            const RxTransceiverDto com2 = { .id = 1,
+                                            .frequency = transceivers.size() > 1 ? transceivers[1].frequencyHz : UniCom,
+                                            .distanceRatio = 1.0 };
 
             QMutexLocker lock(&m_mutexSampleProviders);
             m_soundcardSampleProvider->addOpusSamples(audioData, { com1, com2 });

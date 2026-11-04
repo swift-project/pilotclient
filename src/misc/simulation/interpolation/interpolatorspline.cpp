@@ -3,6 +3,8 @@
 
 #include "misc/simulation/interpolation/interpolatorspline.h"
 
+#include <algorithm>
+
 #include "config/buildconfig.h"
 #include "misc/logmessage.h"
 #include "misc/network/fsdsetup.h"
@@ -316,14 +318,13 @@ namespace swift::misc::simulation
 
     bool CInterpolatorSpline::areAnyElevationsMissing() const
     {
-        return std::any_of(m_s.begin(), m_s.end(),
-                           [](const auto &situation) { return !situation.hasGroundElevation(); });
+        return std::ranges::any_of(m_s, [](const auto &situation) { return !situation.hasGroundElevation(); });
     }
 
     bool CInterpolatorSpline::isAnySituationNearGroundRelevant() const
     {
-        return std::any_of(m_s.begin(), m_s.end(),
-                           [](const auto &situation) { return !situation.canLikelySkipNearGroundInterpolation(); });
+        return std::ranges::any_of(
+            m_s, [](const auto &situation) { return !situation.canLikelySkipNearGroundInterpolation(); });
     }
 
     CInterpolatorSpline::CInterpolant::CInterpolant(const CInterpolatorSpline::PosArray &pa,

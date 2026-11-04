@@ -3,6 +3,8 @@
 
 #include "core/afv/model/afvmapreader.h"
 
+#include <algorithm>
+
 #include <QEventLoop>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -93,8 +95,9 @@ namespace swift::core::afv::model
                 return;
             }
             transceivers.erase(
-                std::remove_if(transceivers.begin(), transceivers.end(),
-                               [this](const CSampleAtcStation &s) { return s.callsign() == m_callsign; }),
+                std::ranges::remove_if(transceivers,
+                                       [this](const CSampleAtcStation &s) { return s.callsign() == m_callsign; })
+                    .begin(),
                 transceivers.end());
             m_model->updateAtcStations(transceivers);
         }

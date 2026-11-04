@@ -3,6 +3,8 @@
 
 #include "misc/simulation/interpolation/interpolationsetupprovider.h"
 
+#include <algorithm>
+
 using namespace swift::misc::aviation;
 
 namespace swift::misc::simulation
@@ -220,9 +222,9 @@ namespace swift::misc::simulation
         {
             return false;
         }
-        return std::any_of(
-            setupsCopy.cbegin(), setupsCopy.cend(),
-            [](const CInterpolationAndRenderingSetupPerCallsign &setup) { return setup.logInterpolation(); });
+        return std::ranges::any_of(setupsCopy, [](const CInterpolationAndRenderingSetupPerCallsign &setup) {
+            return setup.logInterpolation();
+        });
     }
 
     IInterpolationSetupProvider::SetupsPerCallsign IInterpolationSetupProvider::getSetupsPerCallsign() const

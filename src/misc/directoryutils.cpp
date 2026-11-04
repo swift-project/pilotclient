@@ -5,6 +5,8 @@
 
 #include "misc/directoryutils.h"
 
+#include <algorithm>
+
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
@@ -73,7 +75,7 @@ namespace swift::misc
             return false;
         }
         const QStringList relSubDirs = CDirectoryUtils::getRelativeSubDirectories(dir);
-        return std::any_of(relSubDirs.cbegin(), relSubDirs.cend(), [&](const QString &relSubDir) {
+        return std::ranges::any_of(relSubDirs, [&](const QString &relSubDir) {
             const QString absSubDir = CFileUtils::appendFilePaths(directory.absolutePath(), relSubDir);
             return CDirectoryUtils::containsFileInDir(absSubDir, filter, recursively);
         });

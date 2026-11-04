@@ -231,7 +231,8 @@ namespace swift::core::afv::audio
             m_maxSampleInput = 0;
         }
 
-        OpusDataAvailableArgs opusDataAvailableArgs = { m_audioSequenceCounter++, encodedBuffer };
+        OpusDataAvailableArgs opusDataAvailableArgs = { .sequenceCounter = m_audioSequenceCounter++,
+                                                        .audio = encodedBuffer };
         emit opusDataAvailable(opusDataAvailableArgs);
     }
 

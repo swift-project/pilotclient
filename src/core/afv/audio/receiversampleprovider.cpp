@@ -5,6 +5,8 @@
 
 #include "core/afv/audio/receiversampleprovider.h"
 
+#include <algorithm>
+
 #include <QStringBuilder>
 
 #include "misc/logmessage.h"
@@ -119,7 +121,8 @@ namespace swift::core::afv::audio
 
             m_receivingCallsignsString = receivingCallsigns.join(',');
             m_receivingCallsigns = CCallsignSet(receivingCallsigns);
-            const TransceiverReceivingCallsignsChangedArgs args = { m_id, receivingCallsigns };
+            const TransceiverReceivingCallsignsChangedArgs args = { .transceiverID = m_id,
+                                                                    .receivingCallsigns = receivingCallsigns };
             emit receivingCallsignsChanged(args);
         }
         m_lastNumberOfInUseInputs = numberOfInUseInputs;
@@ -134,9 +137,8 @@ namespace swift::core::afv::audio
         } // Lag in the backend means we get the tail end of a transmission
         CCallsignSampleProvider *voiceInput = nullptr;
 
-        auto it =
-            std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(),
-                         [audioDto](const CCallsignSampleProvider *p) { return p->callsign() == audioDto.callsign; });
+        auto it = std::ranges::find_if(
+            m_voiceInputs, [audioDto](const CCallsignSampleProvider *p) { return p->callsign() == audioDto.callsign; });
 
         if (it != m_voiceInputs.end())
         {
@@ -145,8 +147,7 @@ namespace swift::core::afv::audio
 
         if (!voiceInput)
         {
-            it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(),
-                              [](const CCallsignSampleProvider *p) { return !p->inUse(); });
+            it = std::ranges::find_if(m_voiceInputs, [](const CCallsignSampleProvider *p) { return !p->inUse(); });
             if (it != m_voiceInputs.end())
             {
                 voiceInput = *it;
@@ -173,9 +174,8 @@ namespace swift::core::afv::audio
         } // Lag in the backend means we get the tail end of a transmission
 
         CCallsignSampleProvider *voiceInput = nullptr;
-        auto it =
-            std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(),
-                         [audioDto](const CCallsignSampleProvider *p) { return p->callsign() == audioDto.callsign; });
+        auto it = std::ranges::find_if(
+            m_voiceInputs, [audioDto](const CCallsignSampleProvider *p) { return p->callsign() == audioDto.callsign; });
 
         if (it != m_voiceInputs.end())
         {
@@ -184,8 +184,7 @@ namespace swift::core::afv::audio
 
         if (!voiceInput)
         {
-            it = std::find_if(m_voiceInputs.begin(), m_voiceInputs.end(),
-                              [](const CCallsignSampleProvider *p) { return !p->inUse(); });
+            it = std::ranges::find_if(m_voiceInputs, [](const CCallsignSampleProvider *p) { return !p->inUse(); });
             if (it != m_voiceInputs.end())
             {
                 voiceInput = *it;

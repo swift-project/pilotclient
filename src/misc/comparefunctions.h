@@ -14,8 +14,8 @@
 namespace swift::misc::Compare
 {
     //! Compare arithmetic values
-    template <typename T, std::enable_if_t<std::is_arithmetic_v<T>, int> = 0>
-    int compare(T a, T b)
+    template <typename T>
+    int compare(T a, T b) requires(std::is_arithmetic_v<T>)
     {
         if (a < b)
         {
@@ -29,8 +29,8 @@ namespace swift::misc::Compare
     }
 
     //! Compare enumerators
-    template <typename T, std::enable_if_t<std::is_enum_v<T>, int> = 0>
-    int compare(T a, T b)
+    template <typename T>
+    int compare(T a, T b) requires(std::is_enum_v<T>)
     {
         using UT = std::underlying_type_t<T>;
         return compare(static_cast<UT>(a), static_cast<UT>(b));

@@ -3,6 +3,8 @@
 
 #include "core/pluginmanager.h"
 
+#include <algorithm>
+
 #include <QDir>
 #include <QDirIterator>
 #include <QJsonValue>
@@ -61,8 +63,7 @@ namespace swift::core
         }
 
         auto iids = acceptedIids();
-        return std::any_of(iids.cbegin(), iids.cend(),
-                           [&](const QString &iid) { return metadata["IID"].toString() == iid; });
+        return std::ranges::any_of(iids, [&](const QString &iid) { return metadata["IID"].toString() == iid; });
     }
 
     QString IPluginManager::pluginIdentifier(const QJsonObject &metadata) const

@@ -3,6 +3,8 @@
 
 #include "misc/statusmessage.h"
 
+#include <algorithm>
+
 #include <QMetaEnum>
 #include <QStringBuilder>
 #include <QThreadStorage>
@@ -427,9 +429,9 @@ namespace swift::misc
         {
             return {};
         }
-        auto minmax = std::minmax_element(severities.begin(), severities.end());
-        auto min = *minmax.first;
-        auto max = *minmax.second;
+        auto minmax = std::ranges::minmax_element(severities);
+        auto min = *minmax.min;
+        auto max = *minmax.max;
         if (min == SeverityDebug && max == SeverityError)
         {
             static const QString all("all severities");
@@ -444,9 +446,9 @@ namespace swift::misc
             return u"at or above " % severityToString(min);
         }
         auto list = severities.values();
-        std::sort(list.begin(), list.end());
+        std::ranges::sort(list);
         QStringList ret;
-        std::transform(list.cbegin(), list.cend(), std::back_inserter(ret), severityToString);
+        std::ranges::transform(list, std::back_inserter(ret), severityToString);
         return ret.join("|");
     }
 

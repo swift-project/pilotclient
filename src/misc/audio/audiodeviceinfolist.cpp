@@ -166,7 +166,7 @@ namespace swift::misc::audio
         {
             return false;
         }
-        return std::all_of(cbegin(), cend(), [&](const CAudioDeviceInfo &d) {
+        return std::ranges::all_of(*this, [&](const CAudioDeviceInfo &d) {
             return compareDevices.findRegisteredDeviceOrDefault(d).isValid();
         });
     }

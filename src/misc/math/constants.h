@@ -6,10 +6,12 @@
 #ifndef SWIFT_MISC_MATH_CONSTANTS_H
 #define SWIFT_MISC_MATH_CONSTANTS_H
 
+#include <numbers>
+
 namespace swift::misc::math
 {
     //! PI
-    constexpr double c_pi = 3.1415926535897932;
+    constexpr double c_pi = std::numbers::pi;
 
     //! PI / 2
     constexpr double c_pihalf = c_pi / 2;

@@ -3,6 +3,8 @@
 
 #include "misc/simulation/aircraftmodel.h"
 
+#include <algorithm>
+
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -1302,7 +1304,7 @@ namespace swift::misc::simulation
             return {};
         }
         QString pc = removeChars(p.toUpper(), [](QChar c) { return !supportedParts().contains(c); });
-        std::sort(pc.begin(), pc.end());
+        std::ranges::sort(pc);
         return pc;
     }
 

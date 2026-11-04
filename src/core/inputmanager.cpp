@@ -3,6 +3,7 @@
 
 #include "core/inputmanager.h"
 
+#include <algorithm>
 #include <climits>
 
 #include <QtGlobal>
@@ -44,8 +45,8 @@ namespace swift::core
 
     void CInputManager::unbind(int index)
     {
-        auto info = std::find_if(m_boundActions.begin(), m_boundActions.end(),
-                                 [index](const BindInfo &info) { return info.m_index == index; });
+        auto info =
+            std::ranges::find_if(m_boundActions, [index](const BindInfo &info) { return info.m_index == index; });
         if (info != m_boundActions.end())
         {
             m_boundActions.erase(info);

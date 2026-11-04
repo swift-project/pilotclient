@@ -191,7 +191,7 @@ namespace swift::misc
 
         QString rows;
         QList<CommandHtmlHelp> cmds(s_commands);
-        std::sort(cmds.begin(), cmds.end(), CommandHtmlHelp::less);
+        std::ranges::sort(cmds, CommandHtmlHelp::less);
 
         static const QString cmdCol(QString().fill('-', 20));
         static const QString textCol(QString().fill('-', 40));

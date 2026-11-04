@@ -3,6 +3,8 @@
 
 #include "core/context/contextaudioimpl.h"
 
+#include <algorithm>
+
 #include <QPointer>
 #include <QTimer>
 #include <QtGlobal>
@@ -56,8 +58,7 @@ namespace swift::core::context
 
     bool CContextAudio::hasRegisteredAudioCallsign(const CCallsign &callsign) const
     {
-        return std::any_of(m_registeredCallsigns.begin(), m_registeredCallsigns.end(),
-                           [&](const CCallsign &cs) { return callsign == cs; });
+        return std::ranges::any_of(m_registeredCallsigns, [&](const CCallsign &cs) { return callsign == cs; });
     }
 
     CAudioDeviceInfoList CContextAudio::getRegisteredDevices() const { return m_registeredDevices; }

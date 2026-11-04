@@ -6,6 +6,8 @@
 #ifndef SWIFT_CORE_APPLICATION_APPLICATIONSETTINGS_H
 #define SWIFT_CORE_APPLICATION_APPLICATIONSETTINGS_H
 
+#include <algorithm>
+
 #include <QStringList>
 
 #include "misc/input/actionhotkeylist.h"
@@ -30,7 +32,7 @@ namespace swift::core::application
         //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const misc::input::CActionHotkeyList &value, QString &)
         {
-            return std::all_of(value.cbegin(), value.cend(), [](const auto &actionHotkey) {
+            return std::ranges::all_of(value, [](const auto &actionHotkey) {
                 return !actionHotkey.getApplicableMachine().getMachineName().isEmpty() &&
                        !actionHotkey.getAction().isEmpty() && !actionHotkey.getCombination().isEmpty();
             });
@@ -61,7 +63,7 @@ namespace swift::core::application
         //! \copydoc swift::misc::TSettingTrait::isValid
         static bool isValid(const QStringList &pluginIdentifiers, QString &)
         {
-            return std::all_of(pluginIdentifiers.cbegin(), pluginIdentifiers.cend(), [](const auto &pluginIdentifier) {
+            return std::ranges::all_of(pluginIdentifiers, [](const auto &pluginIdentifier) {
                 return misc::simulation::CSimulatorPluginInfo::allIdentifiers().contains(pluginIdentifier);
             });
         }

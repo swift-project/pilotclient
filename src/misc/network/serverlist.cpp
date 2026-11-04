@@ -3,6 +3,8 @@
 
 #include "misc/network/serverlist.h"
 
+#include <algorithm>
+
 SWIFT_DEFINE_SEQUENCE_MIXINS(swift::misc::network, CServer, CServerList)
 
 namespace swift::misc::network
@@ -11,7 +13,7 @@ namespace swift::misc::network
 
     bool CServerList::containsName(const QString &name) const
     {
-        return std::any_of(cbegin(), cend(), [&](const CServer &s) { return s.matchesName(name); });
+        return std::ranges::any_of(*this, [&](const CServer &s) { return s.matchesName(name); });
     }
 
     bool CServerList::removeByName(const QString &name)
@@ -44,7 +46,7 @@ namespace swift::misc::network
 
     bool CServerList::containsAddressPort(const CServer &server)
     {
-        return std::any_of(cbegin(), cend(), [&](const CServer &s) { return s.matchesAddressPort(server); });
+        return std::ranges::any_of(*this, [&](const CServer &s) { return s.matchesAddressPort(server); });
     }
 
     void CServerList::addIfAddressNotExists(const CServer &server)

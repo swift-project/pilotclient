@@ -387,8 +387,7 @@ namespace swift::misc::simulation::xplane
             return false;
         }
 
-        auto p = std::find_if(m_cslPackages.cbegin(), m_cslPackages.cend(),
-                              [&tokens](const CSLPackage &p) { return p.name == tokens[1]; });
+        auto p = std::ranges::find_if(m_cslPackages, [&tokens](const CSLPackage &p) { return p.name == tokens[1]; });
         if (p == m_cslPackages.cend())
         {
             package.path = path;
@@ -798,8 +797,7 @@ namespace swift::misc::simulation::xplane
         }
 
         // Remove all planes with errors
-        auto it = std::remove_if(package.planes.begin(), package.planes.end(),
-                                 [](const CSLPlane &plane) { return plane.hasErrors; });
+        auto it = std::ranges::remove_if(package.planes, [](const CSLPlane &plane) { return plane.hasErrors; }).begin();
         package.planes.erase(it, package.planes.end());
     }
 

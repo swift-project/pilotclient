@@ -64,8 +64,8 @@ namespace swift::misc
          *                It is legal to pass static_cast<T>(nullptr), but in member functions passing the <tt>this</tt>
          * pointer is easier.
          */
-        template <typename T, typename = std::enable_if_t<std::is_class_v<T>>>
-        CLogCategoryList(const T *pointer) : CLogCategoryList(fromClass(pointer))
+        template <typename T>
+        CLogCategoryList(const T *pointer) requires(std::is_class_v<T>) : CLogCategoryList(fromClass(pointer))
         {}
 
         //! Return a copy with another category appended.

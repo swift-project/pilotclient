@@ -3,6 +3,8 @@
 
 #include "misc/simulation/fscommon/aircraftcfgentrieslist.h"
 
+#include <algorithm>
+
 #include "misc/predicates.h"
 #include "misc/range.h"
 #include "misc/setbuilder.h"
@@ -84,7 +86,7 @@ namespace swift::misc::simulation::fscommon
         {
             return false;
         }
-        return std::any_of(cbegin(), cend(), [&](const CAircraftCfgEntries &entries) {
+        return std::ranges::any_of(*this, [&](const CAircraftCfgEntries &entries) {
             return stringCompare(entries.getTitle(), title, Qt::CaseInsensitive);
         });
     }
