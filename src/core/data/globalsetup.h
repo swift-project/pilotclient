@@ -116,7 +116,7 @@ namespace swift::core::data
         //! Predefined servers
         const swift::misc::network::CServerList &getPredefinedServers() const { return m_predefinedServers; }
 
-        //! Predefined plus hardcoded
+        //! Fixed servers (FSC, ES tower) followed by the predefined servers
         swift::misc::network::CServerList getPredefinedServersPlusHardcodedServers() const;
 
         //! Creating mappings requires at least this version or higher

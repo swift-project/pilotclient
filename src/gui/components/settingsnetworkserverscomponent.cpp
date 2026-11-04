@@ -9,7 +9,6 @@
 
 #include "ui_settingsnetworkserverscomponent.h"
 
-#include "config/buildconfig.h"
 #include "core/context/contextapplication.h"
 #include "core/data/globalsetup.h"
 #include "gui/editors/serverform.h"
@@ -50,12 +49,8 @@ namespace swift::gui::components
     {
         CServerList serverList(m_trafficNetworkServers.get());
 
-        // add swift test servers in case we have no servers:
-        // this is debug/bootstrap feature we can continue to test when something goes wrong
-        if (serverList.isEmpty() && CBuildConfig::isLocalDeveloperDebugBuild())
-        {
-            serverList.push_back(sGui->getGlobalSetup().getPredefinedServersPlusHardcodedServers());
-        }
+        // fixed and predefined servers are always listed, also next to custom servers
+        serverList.addIfAddressNotExists(sGui->getGlobalSetup().getPredefinedServersPlusHardcodedServers());
         ui->tvp_Servers->updateContainer(serverList);
     }
 

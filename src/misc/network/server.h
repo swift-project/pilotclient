@@ -164,9 +164,6 @@ namespace swift::misc::network
         //! \copydoc swift::misc::mixin::String::toQString()
         QString convertToQString(bool i18n = false) const;
 
-        //! FSC server
-        static const CServer &fscFsdServer();
-
         //! ES tower server
         static const CServer &esTowerView();
 

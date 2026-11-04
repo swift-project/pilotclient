@@ -3,10 +3,8 @@
 
 #include "core/data/networksetup.h"
 
-#include "config/buildconfig.h"
 #include "core/application.h"
 
-using namespace swift::config;
 using namespace swift::misc;
 using namespace swift::misc::network;
 
@@ -28,14 +26,7 @@ namespace swift::core::data
         CServerList otherServers(this->getOtherServers());
         if (sApp)
         {
-            if (otherServers.isEmpty() && CBuildConfig::isLocalDeveloperDebugBuild())
-            {
-                otherServers.addIfAddressNotExists(sApp->getGlobalSetup().getPredefinedServersPlusHardcodedServers());
-            }
-            else
-            {
-                otherServers.addIfAddressNotExists(sApp->getGlobalSetup().getPredefinedServers());
-            }
+            otherServers.addIfAddressNotExists(sApp->getGlobalSetup().getPredefinedServersPlusHardcodedServers());
         }
         return otherServers;
     }
