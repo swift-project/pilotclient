@@ -39,7 +39,7 @@ namespace swift::misc::network
     QString CFsdSetup::sendReceiveDetailsToString(SendReceiveDetails details)
     {
         static const QString ds(
-            "Send parts; %1 gnd: %2 interim: %3 Receive parts: %4 gnd: %5 interim: %6 3letter: %7 ICAO equipment %8");
+            "Send parts; %1 gnd: %2 interim: %3 Visual pos %4 Receive parts: %5 gnd: %6 interim: %7 3letter: %8 ICAO equipment %9");
         return ds.arg(
             boolToYesNo(details.testFlag(SendAircraftParts)), boolToYesNo(details.testFlag(SendGndFlag)),
             boolToYesNo(details.testFlag(SendInterimPositions)), boolToYesNo(details.testFlag(SendVisualPositions)),
