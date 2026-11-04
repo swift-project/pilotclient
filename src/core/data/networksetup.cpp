@@ -48,5 +48,12 @@ namespace swift::core::data
         return server.getEcosystem() == CEcosystem::privateFsd();
     }
 
+    bool CNetworkSetup::wasLastSelectedTabOtherServer() const { return m_lastServerTabOther.get(); }
+
+    CStatusMessage CNetworkSetup::setLastSelectedTabOtherServer(bool otherServerTabSelected)
+    {
+        return m_lastServerTabOther.set(otherServerTabSelected);
+    }
+
     void CNetworkSetup::onSettingsChanged() { emit this->setupChanged(); }
 } // namespace swift::core::data

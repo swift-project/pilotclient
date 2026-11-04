@@ -77,6 +77,16 @@ namespace swift::gui::components
         //! Login requested
         void toggleNetworkConnection();
 
+        //! Is the network currently connected (FSD)?
+        bool isNetworkConnected() const { return m_networkConnected; }
+
+        //! Does the currently set own aircraft model satisfy the "advanced model" (green frame) requirement?
+        bool hasValidModelForConnect() const { return m_hasAdvancedModel; }
+
+        //! Make the disconnect button flash several times in red to catch the user's attention
+        //! (e.g. when the user tries to close the application while still connected).
+        void blinkDisconnectButton() { this->blinkConnectButton(); }
+
     signals:
         //! Login
         void loginOrLogoffSuccessful();
@@ -92,6 +102,9 @@ namespace swift::gui::components
 
         //! Relevant login data changed (digest version)
         void loginDataChangedDigest();
+
+        //! Forwarded from COwnAircraftComponent: model validity (green/orange/red frame) changed
+        void modelValidityChanged(bool hasAdvancedModel);
 
     private:
         // -------------- values from GUI -----------------
@@ -149,6 +162,9 @@ namespace swift::gui::components
         //! Make disconnect button flash briefly to catch the user's attention
         void blinkConnectButton();
 
+        //! Reacts to a changed "advanced model" (green frame) state of the own aircraft component
+        void onAdvancedModelStateChanged(bool hasAdvancedModel);
+
         //! Set OK button string
         void setOkButtonString(bool connected);
 
@@ -186,6 +202,7 @@ namespace swift::gui::components
         bool m_updatePilotOnServerChanges = true;
         bool m_networkConnected = false;
         bool m_simulatorConnected = false;
+        bool m_hasAdvancedModel = false; //!< mirrors COwnAircraftComponent's green/orange/red frame state
         const QIcon m_iconPlay { ":/pastel/icons/pastel/16/control-play.png" };
         const QIcon m_iconPause { ":/pastel/icons/pastel/16/control-pause.png" };
         std::chrono::seconds m_logoffIntervalSeconds = LogoffIntervalSeconds;

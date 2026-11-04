@@ -319,6 +319,14 @@ add_library(gui SHARED
         components/matchingstatisticscomponent.cpp
         components/matchingstatisticscomponent.h
         components/matchingstatisticscomponent.ui
+        components/miniatcstationwidget.cpp
+        components/miniatcstationwidget.h
+        components/minicockpitwidget.cpp
+        components/minicockpitwidget.h
+        components/miniclientswidget.cpp
+        components/miniclientswidget.h
+        components/miniradarwidget.cpp
+        components/miniradarwidget.h
         components/modelbrowsercomponent.cpp
         components/modelbrowsercomponent.h
         components/modelbrowsercomponent.ui

@@ -9,6 +9,7 @@ add_subdirectory(input)
 add_subdirectory(sound)
 
 add_subdirectory(swiftguistandard)
+add_subdirectory(swiftguimini)
 add_subdirectory(swiftdata)
 add_subdirectory(swiftcore)
 add_subdirectory(swiftlauncher)

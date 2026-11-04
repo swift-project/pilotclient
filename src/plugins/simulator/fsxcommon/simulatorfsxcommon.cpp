@@ -170,6 +170,20 @@ namespace swift::simplugin::fsxcommon
         changed |= updateCOMFromSwiftToSimulator(newCom2.getFrequencyStandby(), m_simCom2.getFrequencyStandby(),
                                                  m_lastCom2Standby, EventSetCom2Standby);
 
+        // Transponder code: an den Simulator senden, wenn er sich von unserem zuletzt bekannten Sim-Wert
+        // unterscheidet. Ohne dies wird ein neu per GUI gesetzter Code vom naechsten Lesezyklus
+        // (updateOwnAircraftFromSimulator) sofort wieder mit dem alten Sim-Wert ueberschrieben.
+        if (newTransponder.getTransponderCode() != m_simTransponder.getTransponderCode())
+        {
+            const DWORD bcdCode = static_cast<DWORD>(CBcdConversions::transponderCodeToBcd(newTransponder));
+            const HRESULT hr = SimConnect_TransmitClientEvent(m_hSimConnect, 0, EventSetTransponderCode, bcdCode,
+                                                              SIMCONNECT_GROUP_PRIORITY_HIGHEST,
+                                                              SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+            if (isFailure(hr)) { CLogMessage(this).warning(u"Setting transponder code failed"); }
+            else { m_simTransponder.setTransponderCode(newTransponder.getTransponderCode()); }
+            changed = true;
+        }
+
         if (newTransponder.getTransponderMode() != m_simTransponder.getTransponderMode())
         {
             if (m_useSbOffsets)
@@ -3079,15 +3093,11 @@ namespace swift::simplugin::fsxcommon
             simListener->m_simulatorDetails = QStringLiteral("Name: '%1' Version: %2 SimConnect: %3")
                                                   .arg(simListener->m_simulatorName, simListener->m_simulatorVersion,
                                                        simListener->m_simConnectVersion);
-            const CStatusMessage msg = CStatusMessage(simListener).info(u"Connect to %1: '%2'")
-                                       << simListener->getPluginInfo().getIdentifier() << simListener->backendInfo();
 
-            // avoid the same message over and over again
-            if (msg.getMessage() != simListener->m_lastMessage.getMessage())
-            {
-                CLogMessage::preformatted(msg);
-                simListener->m_lastMessage = msg;
-            }
+            simListener->m_lastMessage = CStatusMessage(simListener).info(u"Connect to %1: '%2'")
+                                         << simListener->getPluginInfo().getIdentifier() << simListener->backendInfo();
+            CLogMessage::preformatted(simListener->m_lastMessage);
+
             break;
         }
         case SIMCONNECT_RECV_ID_EXCEPTION: break;

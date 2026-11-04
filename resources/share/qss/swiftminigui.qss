@@ -1,0 +1,155 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (C) swift Project Community / Contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later OR LicenseRef-swift-pilot-client-1
+ */
+
+/** Stylesheet fuer die swift Mini-GUI: dunkles "Glascockpit"-Thema **/
+
+QMainWindow, QTabWidget::pane {
+    background-color: #1e1e1e;
+}
+
+QTabWidget::pane {
+    border: 1px solid #444;
+}
+
+QTabBar::tab {
+    background-color: #2b2b2b;
+    color: #ccc;
+    padding: 6px 14px;
+    border: 1px solid #444;
+    border-bottom: none;
+}
+
+QTabBar::tab:selected {
+    background-color: #39ff6a;
+    color: #101a10;
+    font-weight: bold;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: #3a3a3a;
+}
+
+QWidget {
+    background-color: #1e1e1e;
+    color: #ddd;
+}
+
+QFrame {
+    background-color: #242424;
+}
+
+QPushButton {
+    background-color: #333;
+    color: #ddd;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 4px 10px;
+}
+
+QPushButton:hover {
+    background-color: #444;
+}
+
+QPushButton:pressed {
+    background-color: #222;
+}
+
+QPushButton:disabled {
+    color: #666;
+    background-color: #2a2a2a;
+    border: 1px solid #3a3a3a;
+}
+
+/** Blinkender Disconnect-Button, siehe CLoginComponent::blinkConnectButton() / blinkOn-Property **/
+QPushButton[blinkOn="true"] {
+    background-color: #ff3333;
+    color: white;
+    border: 1px solid #ff6666;
+}
+
+QLineEdit, QComboBox {
+    background-color: #2b2b2b;
+    color: #ddd;
+    border: 1px solid #555;
+    border-radius: 3px;
+    padding: 2px 4px;
+}
+
+QLineEdit:focus, QComboBox:focus {
+    border: 1px solid #39ff6a;
+}
+
+QMenuBar {
+    background-color: #2b2b2b;
+    color: #ddd;
+}
+
+QMenuBar::item:selected {
+    background-color: #39ff6a;
+    color: #101a10;
+}
+
+QMenu {
+    background-color: #2b2b2b;
+    color: #ddd;
+    border: 1px solid #555;
+}
+
+QMenu::item:selected {
+    background-color: #39ff6a;
+    color: #101a10;
+}
+
+QStatusBar {
+    background-color: #2b2b2b;
+    color: #ccc;
+}
+
+/** ------------------------------------------------------------------ **/
+/** Cockpit-Panel (COM1/COM2/XPDR/SELCAL), siehe CMiniCockpitWidget     **/
+/** ------------------------------------------------------------------ **/
+
+QFrame#radioStackPanel {
+    background-color: #2b2b2b;
+    border: 2px solid #555;
+    border-radius: 6px;
+}
+
+QLabel#cockpitPanelTitle {
+    color: #ddd;
+    font-weight: bold;
+}
+
+QLabel#lcdActiveLabel {
+    background-color: #101a10;
+    color: #39ff6a;
+    font-family: "Consolas", monospace;
+    font-size: 22px;
+    font-weight: bold;
+    border: 2px solid #444;
+    border-radius: 4px;
+    padding: 4px 10px;
+}
+
+QLabel#lcdStandbyLabel {
+    background-color: #101a10;
+    color: #7fbf8f;
+    font-family: "Consolas", monospace;
+    font-size: 16px;
+    border: 2px solid #333;
+    border-radius: 4px;
+    padding: 3px 8px;
+}
+
+QLineEdit#lcdActiveLineEdit {
+    background-color: #101a10;
+    color: #39ff6a;
+    font-family: "Consolas", monospace;
+    font-size: 22px;
+    font-weight: bold;
+    border: 2px solid #444;
+    border-radius: 4px;
+    padding: 4px 10px;
+}

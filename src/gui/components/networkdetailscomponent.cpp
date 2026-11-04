@@ -48,7 +48,10 @@ namespace swift::gui::components
         ui->le_PartnerCallsign->setMaxLength(MaxLength);
         ui->le_PartnerCallsign->setValidator(ucv);
 
-        const int tab = m_networkSetup.wasLastUsedWithOtherServer() ? LoginOthers : LoginVATSIM;
+        // Letzten tatsaechlich im UI gewaehlten Tab wiederherstellen (unabhaengig von einem
+        // erfolgreichen Login), damit die Auswahl auch bei reinem Tab-Wechsel ohne Verbindungsaufbau
+        // dauerhaft gemerkt wird.
+        const int tab = m_networkSetup.wasLastSelectedTabOtherServer() ? LoginOthers : LoginVATSIM;
         ui->tw_Network->setCurrentIndex(tab);
 
         connect(
@@ -96,6 +99,12 @@ namespace swift::gui::components
     void CNetworkDetailsComponent::onServerTabWidgetChanged(int index)
     {
         Q_UNUSED(index)
+
+        // Tab-Auswahl sofort persistieren, unabhaengig davon, ob sich der Benutzer
+        // danach tatsaechlich verbindet. So wird beim naechsten Programmstart
+        // immer der zuletzt im UI angezeigte Tab wiederhergestellt.
+        m_networkSetup.setLastSelectedTabOtherServer(this->isOtherServerSelected());
+
         if (!m_updatePilotOnServerChanges) { return; }
         const bool vatsim = this->isVatsimServerSelected();
         const CServer server = vatsim ? this->getCurrentVatsimServer() : this->getCurrentOtherServer();

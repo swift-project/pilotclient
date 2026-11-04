@@ -67,9 +67,16 @@ namespace swift::gui::components
         //! Values from GUI
         CGuiAircraftValues getAircraftValuesFromGui() const;
 
+        //! Is the currently displayed model an "Advanced Model" (valid model string AND loaded from DB)?
+        //! \remarks Same criterion used for the green frame highlight, so this reflects the UI state 1:1.
+        bool hasAdvancedModel() const { return m_hasAdvancedModel; }
+
     signals:
         //! Changed values
         void aircraftDataChanged();
+
+        //! Whether the current model is a valid/advanced model has changed (reflects frame color)
+        void advancedModelStateChanged(bool hasAdvancedModel);
 
     private:
         //! Simulator model has been changed
@@ -94,6 +101,11 @@ namespace swift::gui::components
         //! Highlight model field according to model data
         void highlightModelField(const swift::misc::simulation::CAircraftModel &model = {});
 
+        //! Faerbt den Rahmen dieser Komponente ("Own aircraft") abhaengig davon,
+        //! ob es sich um ein "Advanced Model" handelt (Modell mit gueltigem Modelstring,
+        //! aus der DB geladen) oder nicht.
+        void highlightOwnAircraftFrame(const swift::misc::simulation::CAircraftModel &model);
+
         //! Has contexts?
         bool hasValidContexts() const;
 
@@ -102,6 +114,8 @@ namespace swift::gui::components
 
         //! Get a prefill model
         swift::misc::simulation::CAircraftModel getPrefillModel() const;
+
+        bool m_hasAdvancedModel = false; //!< mirrors the green/orange/red frame state
 
         swift::misc::CData<swift::misc::simulation::data::TLastModel> m_lastAircraftModel {
             this

@@ -81,6 +81,8 @@ namespace swift::gui::components
                 &CLoginComponent::requestNetworkSettings, Qt::QueuedConnection);
         connect(ui->comp_NetworkDetails, &CNetworkDetailsComponent::currentServerChanged, this,
                 &CLoginComponent::onSelectedServerChanged, Qt::QueuedConnection);
+        connect(ui->comp_OwnAircraft, &COwnAircraftComponent::advancedModelStateChanged, this,
+                &CLoginComponent::onAdvancedModelStateChanged, Qt::QueuedConnection);
 
         // overlay
         this->setOverlaySizeFactors(0.8, 0.5);
@@ -119,6 +121,10 @@ namespace swift::gui::components
 
         // inital setup, if data already available
         ui->form_Pilot->validate();
+
+        // Initialer Zustand des Modell-Rahmens (gruen/orange/rot), damit der Connect-Button
+        // von Anfang an korrekt (de-)aktiviert ist.
+        m_hasAdvancedModel = ui->comp_OwnAircraft->hasAdvancedModel();
 
         if (sGui && sGui->getIContextSimulator())
         {
@@ -326,11 +332,9 @@ namespace swift::gui::components
     void CLoginComponent::onNetworkStatusChanged(const CConnectionStatus &from, const CConnectionStatus &to)
     {
         Q_UNUSED(from)
-        if (to != CConnectionStatus::Connected) { return; }
-
-        m_networkConnected = true;
+        m_networkConnected = (to == CConnectionStatus::Connected);
         this->updateUiConnectState();
-        this->updateGui();
+        if (m_networkConnected) { this->updateGui(); }
     }
 
     void CLoginComponent::onServerTabWidgetChanged(int index)
@@ -507,7 +511,19 @@ namespace swift::gui::components
         ui->pb_Ok->setText(s);
 
         if (m_networkConnected) { ui->pb_Ok->setDisabled(false); }
-        else { ui->pb_Ok->setDisabled(!m_simulatorConnected); }
+        else
+        {
+            // Connect-Button nur aktivieren, wenn Simulator verbunden UND das Modell
+            // gueltig/"advanced" ist (gruener Rahmen bei COwnAircraftComponent).
+            ui->pb_Ok->setDisabled(!m_simulatorConnected || !m_hasAdvancedModel);
+        }
+    }
+
+    void CLoginComponent::onAdvancedModelStateChanged(bool hasAdvancedModel)
+    {
+        m_hasAdvancedModel = hasAdvancedModel;
+        this->updateUiConnectState();
+        emit this->modelValidityChanged(hasAdvancedModel);
     }
 
     void CLoginComponent::blinkConnectButton()

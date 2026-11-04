@@ -102,6 +102,12 @@ namespace swift::gui
         //! Full file path and name for swift standard GUI
         static const QString &fileNameAndPathSwiftStandardGui();
 
+        //! File name swift mini GUI
+        static const QString &fileNameSwiftMiniGui();
+
+        //! Full file path and name for swift mini GUI
+        static const QString &fileNameAndPathSwiftMiniGui();
+
         //! File name swiftcore.qss
         static const QString &fileNameSwiftCore();
 

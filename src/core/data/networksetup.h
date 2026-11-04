@@ -20,6 +20,24 @@
 
 namespace swift::core::data
 {
+    //! Trait for the last selected network tab (VATSIM or other servers), persisted independently
+    //! from an actual successful login so the UI can restore the tab the user looked at last.
+    struct TLastServerTabOther : public swift::misc::TDataTrait<bool>
+    {
+        //! \copydoc swift::misc::TDataTrait::key
+        static const char *key() { return "lastservertabother"; }
+
+        //! \copydoc swift::misc::TDataTrait::isPinned
+        static constexpr bool isPinned() { return true; }
+
+        //! \copydoc swift::misc::TDataTrait::humanReadable
+        static const QString &humanReadable()
+        {
+            static const QString name("Last selected network tab was other servers");
+            return name;
+        }
+    };
+
     //! Remembering the last servers and ecosystem.
     class SWIFT_CORE_EXPORT CNetworkSetup : public QObject
     {
@@ -59,6 +77,12 @@ namespace swift::core::data
         //! Used with an other server (i.e. non VATSIM)
         bool wasLastUsedWithOtherServer() const;
 
+        //! Was the "Other Servers" tab the last one selected in the UI (independent of login)?
+        bool wasLastSelectedTabOtherServer() const;
+
+        //! Persist which network tab was last selected in the UI (VATSIM or other servers)
+        swift::misc::CStatusMessage setLastSelectedTabOtherServer(bool otherServerTabSelected);
+
     signals:
         //! Setup changed
         void setupChanged();
@@ -76,6 +100,9 @@ namespace swift::core::data
         swift::misc::CData<swift::core::data::TVatsimLastServer> m_lastVatsimServer {
             this, &CNetworkSetup::onSettingsChanged
         }; //!< recently used VATSIM server
+        swift::misc::CData<TLastServerTabOther> m_lastServerTabOther {
+            this, &CNetworkSetup::onSettingsChanged
+        }; //!< last selected network tab (VATSIM/other), independent of login
     };
 } // namespace swift::core::data
 

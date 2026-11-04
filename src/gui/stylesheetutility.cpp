@@ -323,6 +323,19 @@ namespace swift::gui
         return fn;
     }
 
+    const QString &CStyleSheetUtility::fileNameSwiftMiniGui()
+    {
+        static const QString f(getQssFileName("swiftminigui"));
+        return f;
+    }
+
+    const QString &CStyleSheetUtility::fileNameAndPathSwiftMiniGui()
+    {
+        static const QString fn = CFileUtils::appendFilePaths(CSwiftDirectories::stylesheetsDirectory(),
+                                                              CStyleSheetUtility::fileNameSwiftMiniGui());
+        return fn;
+    }
+
     const QString &CStyleSheetUtility::fileNameInfoBar()
     {
         static const QString f(getQssFileName("infobar"));

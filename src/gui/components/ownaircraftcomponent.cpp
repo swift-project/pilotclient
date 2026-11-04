@@ -46,6 +46,9 @@ namespace swift::gui::components
         ui->lblp_AircraftIcao->setToolTips("ok", "wrong");
         ui->lblp_Callsign->setToolTips("ok", "wrong");
 
+        // Rahmenfarbe anfangs neutral (kein Modell geladen)
+        this->highlightOwnAircraftFrame({});
+
         constexpr int MaxLength = 10;
         constexpr int MinLength = 0;
         auto *ucv = new CUpperCaseValidator(MinLength, MaxLength, ui->le_Callsign);
@@ -255,6 +258,37 @@ namespace swift::gui::components
         else if (!model.isLoadedFromDb()) { ui->le_SimulatorModel->setProperty("validation", "warning"); }
         else { ui->le_SimulatorModel->setProperty("validation", "ok"); }
         ui->le_SimulatorModel->setStyleSheet(""); // force update
+
+        this->highlightOwnAircraftFrame(model);
+    }
+
+    void COwnAircraftComponent::highlightOwnAircraftFrame(const CAircraftModel &model)
+    {
+        // "Advanced Model" = Modell mit gueltigem Modelstring UND aus der DB geladen
+        // (identische Definition wie bei highlightModelField/le_SimulatorModel)
+        const bool isAdvancedModel = model.hasModelString() && model.isLoadedFromDb();
+
+        QString borderColor;
+        if (!model.hasModelString()) { borderColor = "red"; } // kein Modell gesetzt
+        else if (!isAdvancedModel) { borderColor = "orange"; } // einfaches Modell, nicht aus DB
+        else { borderColor = "green"; } // Advanced Model
+
+        // Wichtig: ein reines setStyleSheet("border: ...") OHNE Selektor wuerde auch auf alle
+        // Kind-Widgets kaskadieren, die selbst von QFrame erben (z.B. die ICAO-Selektoren,
+        // den Modelstring-Completer usw.) und so deren Rahmen mit einfaerben.
+        // Daher wird ein Objektname-basierter Selektor verwendet, der NUR auf dieses eine
+        // Widget (COwnAircraftComponent selbst) zutrifft, nicht auf dessen Kinder.
+        if (this->objectName().isEmpty()) { this->setObjectName(QStringLiteral("COwnAircraftComponent")); }
+
+        const QString style = QStringLiteral("QFrame#%1 { border: 2px solid %2; border-radius: 3px; }")
+                                  .arg(this->objectName(), borderColor);
+        this->setStyleSheet(style);
+
+        if (m_hasAdvancedModel != isAdvancedModel)
+        {
+            m_hasAdvancedModel = isAdvancedModel;
+            emit this->advancedModelStateChanged(m_hasAdvancedModel);
+        }
     }
 
     bool COwnAircraftComponent::hasValidContexts() const
@@ -288,70 +322,16 @@ namespace swift::gui::components
             const QString modelAndKey(model.getModelStringAndDbKey());
 
             ui->le_SimulatorModel->setText(modelAndKey);
-            ui->le_SimulatorModel->home(false);
-            this->highlightModelField(model);
-
-            const CSimulatorInfo sim = sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulator();
-            ui->comp_ModelStringCompleter->setSimulator(sim);
-            m_lastAircraftModel.set(model);
-
-            const CSimulatorInternals simulatorInternals = sGui->getIContextSimulator()->getSimulatorInternals();
-            const QString simStr = sim.toQString() + QStringLiteral(" ") + simulatorInternals.getSimulatorVersion();
-            CCrashHandler::instance()->crashAndLogInfoSimulator(simStr);
         }
-        else
-        {
-            if (!model.hasModelString()) { model = this->getPrefillModel(); }
-            ui->le_SimulatorModel->clear();
-            this->highlightModelField();
-        }
-        ui->le_SimulatorModel->setToolTip(model.asHtmlSummary());
-        ui->comp_ModelStringCompleter->setText(model.getModelString());
-        ui->le_SendLivery->setText(model.getSwiftLiveryString());
-
-        // reset the model
-        if (model.isLoadedFromDb() ||
-            (model.getAircraftIcaoCode().isLoadedFromDb() && model.getLivery().isLoadedFromDb()))
-        {
-            // full model from DB, take all values
-            this->setGuiIcaoValues(model, false);
-        }
-        else
-        {
-            if (sGui->getIContextSimulator()->isSimulatorAvailable())
-            {
-                // sim. attached, but no model data from DB
-                ui->le_AircraftCombinedType->clear();
-                ui->selector_AircraftIcao->clear();
-                ui->selector_AirlineIcao->clear();
-            }
-        }
+        this->setGuiIcaoValues(model, false);
+        this->highlightModelField(model);
+        m_lastAircraftModel.set(model);
     }
 
     bool COwnAircraftComponent::updateOwnAircaftIcaoValuesFromGuiValues()
     {
         if (!this->hasValidContexts()) { return false; }
-        const CSimulatedAircraft ownAircraft(sGui->getIContextOwnAircraft()->getOwnAircraft());
-        const CGuiAircraftValues aircraftValues = this->getAircraftValuesFromGui();
-
-        CAircraftIcaoCode aircraftCode(ownAircraft.getAircraftIcaoCode());
-        CAirlineIcaoCode airlineCode(ownAircraft.getAirlineIcaoCode());
-
-        bool changedIcaoCodes = false;
-        if (aircraftValues.ownAircraftIcao.hasValidDesignator() && aircraftValues.ownAircraftIcao != aircraftCode)
-        {
-            aircraftCode = aircraftValues.ownAircraftIcao;
-            changedIcaoCodes = true;
-        }
-        if (aircraftValues.ownAirlineIcao.hasValidDesignator() && aircraftValues.ownAirlineIcao != airlineCode)
-        {
-            airlineCode = aircraftValues.ownAirlineIcao;
-            changedIcaoCodes = true;
-        }
-
-        if (changedIcaoCodes) { sGui->getIContextOwnAircraft()->updateOwnIcaoCodes(aircraftCode, airlineCode); }
-
-        return changedIcaoCodes;
+        const CGuiAircraftValues values = this->getAircraftValuesFromGui();
+        return sGui->getIContextOwnAircraft()->updateOwnIcaoCodes(values.ownAircraftIcao, values.ownAirlineIcao);
     }
-
 } // namespace swift::gui::components
