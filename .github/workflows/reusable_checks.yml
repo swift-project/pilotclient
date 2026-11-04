@@ -36,6 +36,7 @@ jobs:
                    --enable=style,unusedFunction \
                    -i src/plugins/weatherdata/gfs/g2clib \
                    -i src/xswiftbus/xplanemp2 \
+                   -i third_party \
                    -DCPPCHECK --force \
                    --suppressions-list=cppcheck.supp \
                    --library=qt.cfg --library=posix.cfg .
