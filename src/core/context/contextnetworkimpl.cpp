@@ -447,7 +447,7 @@ namespace swift::core::context
 
     bool CContextNetwork::parseCommandLine(const QString &commandLine, const CIdentifier &originator)
     {
-        Q_UNUSED(originator;)
+        Q_UNUSED(originator);
 
         if (!this->canUseAirspaceMonitor())
         {

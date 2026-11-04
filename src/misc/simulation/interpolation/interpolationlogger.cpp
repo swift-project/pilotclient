@@ -79,11 +79,13 @@ namespace swift::misc::simulation
             logs.entryList(QStringList({ filePatternInterpolationLog() }), QDir::NoFilter, QDir::Time);
         if (!interpolations.isEmpty())
         {
+            // cppcheck-suppress containerOutOfBounds
             files[0] = CFileUtils::appendFilePaths(logDir, interpolations.first());
         }
         const QStringList parts = logs.entryList(QStringList({ filePatternPartsLog() }), QDir::NoFilter, QDir::Time);
         if (!parts.isEmpty())
         {
+            // cppcheck-suppress containerOutOfBounds
             files[1] = CFileUtils::appendFilePaths(logDir, parts.first());
         }
         return files;

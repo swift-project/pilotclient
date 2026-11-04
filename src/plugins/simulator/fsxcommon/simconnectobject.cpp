@@ -296,7 +296,7 @@ namespace swift::simplugin::fsxcommon
 
     bool CSimConnectObject::isAircraft(CSimConnectObject::SimObjectType type)
     {
-        return CSimConnectObject::AircraftNonAtc == type || CSimConnectObject::AircraftSimulatedObject;
+        return CSimConnectObject::AircraftNonAtc == type || CSimConnectObject::AircraftSimulatedObject == type;
     }
 
     bool CSimConnectObjects::insert(const CSimConnectObject &simObject, bool updateTimestamp)
@@ -631,7 +631,7 @@ namespace swift::simplugin::fsxcommon
 
     CSimConnectObjects CSimConnectObjects::removeOutdatedPendingAdded(CSimConnectObject::SimObjectType type)
     {
-        CCallsignSet removeCallsigns;
+        CCallsignSet removeCallsignsSet;
         CSimConnectObjects removedObjects;
 
         const qint64 ts = QDateTime::currentMSecsSinceEpoch();
@@ -647,11 +647,11 @@ namespace swift::simplugin::fsxcommon
                 continue;
             }
             removedObjects.insert(simObject);
-            removeCallsigns.insert(simObject.getCallsign());
+            removeCallsignsSet.insert(simObject.getCallsign());
         }
-        if (!removeCallsigns.isEmpty())
+        if (!removeCallsignsSet.isEmpty())
         {
-            this->removeCallsigns(removeCallsigns);
+            this->removeCallsigns(removeCallsignsSet);
         }
         return removedObjects;
     }

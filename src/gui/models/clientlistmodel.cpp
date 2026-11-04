@@ -33,13 +33,6 @@ namespace swift::gui::models
                                     { CClient::IndexModelString, CAircraftModel::IndexHasQueriedModelString },
                                     new CBoolIconFormatter("queried", "not queried")));
         m_columns.addColumn(CColumn::standardString("server", CClient::IndexServer));
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ViewClientList", "callsign");
-        (void)QT_TRANSLATE_NOOP("ViewClientList", "realname");
-        (void)QT_TRANSLATE_NOOP("ViewClientList", "userid");
-        (void)QT_TRANSLATE_NOOP("ViewClientList", "modelstring");
-        (void)QT_TRANSLATE_NOOP("ViewClientList", "server");
     }
 
     QVariant CClientListModel::data(const QModelIndex &index, int role) const

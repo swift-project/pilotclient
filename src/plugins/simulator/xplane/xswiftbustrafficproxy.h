@@ -161,7 +161,7 @@ namespace swift::simplugin::xplane
     //! Multiplayer Acquire Info
     struct MultiplayerAcquireInfo
     {
-        bool hasAcquired; //!< Has xswiftbus acquired multiplayer planes?
+        bool hasAcquired{}; //!< Has xswiftbus acquired multiplayer planes?
         QString owner; //!< Name of the plugin having multiplayer planes acquired
     };
 

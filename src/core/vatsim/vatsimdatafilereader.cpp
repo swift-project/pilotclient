@@ -195,12 +195,12 @@ namespace swift::core::vatsim
         }
 
         this->logNetworkReplyReceived(nwReplyPtr);
-        QStringList illegalEquipmentCodes;
         const QUrl url = nwReply->url();
         const QString urlString = url.toString();
 
         if (nwReply->error() == QNetworkReply::NoError)
         {
+            QStringList illegalEquipmentCodes;
             const QString dataFileData = nwReply->readAll();
             nwReply->close(); // close asap
 

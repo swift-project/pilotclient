@@ -770,13 +770,13 @@ namespace swift::gui::components
 
     const QString &CInterpolationLogDisplay::startText()
     {
-        static const QString start("start");
-        return start;
+        static const QString startString("start");
+        return startString;
     }
 
     const QString &CInterpolationLogDisplay::stopText()
     {
-        static const QString stop("stop");
-        return stop;
+        static const QString stopString("stop");
+        return stopString;
     }
 } // namespace swift::gui::components

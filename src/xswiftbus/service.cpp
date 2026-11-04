@@ -126,9 +126,9 @@ namespace XSwiftBus
 
     void CService::onSceneryLoaded() { emitSceneryLoaded(); }
 
-    std::string CService::getVersionNumber() const { return XSWIFTBUS_VERSION; }
+    std::string CService::getVersionNumber() { return XSWIFTBUS_VERSION; }
 
-    std::string CService::getCommitHash() const { return XSWIFTBUS_COMMIT; }
+    std::string CService::getCommitHash() { return XSWIFTBUS_COMMIT; }
 
     std::tuple<double, double, double, double> CService::getFrameStats()
     {
@@ -197,7 +197,7 @@ namespace XSwiftBus
         }
     }
 
-    std::string CService::getAircraftModelPath() const
+    std::string CService::getAircraftModelPath()
     {
         char filename[256];
         char path[512];
@@ -205,7 +205,7 @@ namespace XSwiftBus
         return path;
     }
 
-    std::string CService::getAircraftModelFilename() const
+    std::string CService::getAircraftModelFilename()
     {
         char filename[256];
         char path[512];
@@ -213,7 +213,7 @@ namespace XSwiftBus
         return filename;
     }
 
-    std::string CService::getAircraftModelString() const
+    std::string CService::getAircraftModelString()
     {
         char filename[256];
         char path[512];
@@ -222,7 +222,7 @@ namespace XSwiftBus
         return acfProperties.modelString;
     }
 
-    std::string CService::getAircraftName() const
+    std::string CService::getAircraftName()
     {
         char filename[256];
         char path[512];
@@ -244,7 +244,7 @@ namespace XSwiftBus
         return getFileName(liveryPath);
     }
 
-    int CService::getXPlaneVersionMajor() const
+    int CService::getXPlaneVersionMajor()
     {
         int version;
         XPLMGetVersions(&version, nullptr, nullptr);
@@ -255,7 +255,7 @@ namespace XSwiftBus
         return version / 100;
     }
 
-    int CService::getXPlaneVersionMinor() const
+    int CService::getXPlaneVersionMinor()
     {
         int version;
         XPLMGetVersions(&version, nullptr, nullptr);
@@ -266,14 +266,14 @@ namespace XSwiftBus
         return version % 100;
     }
 
-    std::string CService::getXPlaneInstallationPath() const
+    std::string CService::getXPlaneInstallationPath()
     {
         char path[512];
         XPLMGetSystemPath(path);
         return path;
     }
 
-    std::string CService::getXPlanePreferencesPath() const
+    std::string CService::getXPlanePreferencesPath()
     {
         char path[512];
         XPLMGetPrefsPath(path);

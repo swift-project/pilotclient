@@ -299,6 +299,7 @@ namespace swift::simplugin::emulated
         return CSimulatorPluginCommon::parseCommandLine(commandLine, originator);
     }
 
+    // cppcheck-suppress duplInheritedMember
     void CSimulatorEmulated::registerHelp()
     {
         if (CSimpleCommandParser::registered("swift::simplugin::emulated::CSimulatorEmulated"))

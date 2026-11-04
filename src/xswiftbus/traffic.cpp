@@ -53,7 +53,7 @@ namespace XSwiftBus
             surfaces.lights.strbLights = 1;
 
         std::strncpy(label, callsign.c_str(), sizeof(label));
-        for (auto &position : positions)
+        for (auto &position : positions) // cppcheck-suppress constVariableReference
         {
             memcpy(position.label, label, sizeof(label));
         }
@@ -382,7 +382,7 @@ namespace XSwiftBus
 
         // Create view menu item
         CMenuItem planeViewMenuItem =
-            m_followPlaneViewSubMenu.item(callsign, [this, callsign] { switchToFollowPlaneView(callsign); });
+            m_followPlaneViewSubMenu.appendItem(callsign, [this, callsign] { switchToFollowPlaneView(callsign); });
         m_followPlaneViewMenuItems[callsign] = planeViewMenuItem;
         m_followPlaneViewSequence.push_back(callsign);
 
@@ -437,10 +437,11 @@ namespace XSwiftBus
         m_followPlaneViewSequence.clear();
     }
 
-    void CTraffic::setPlanesPositions(const std::vector<std::string> &callsigns, std::vector<double> latitudesDeg,
-                                      std::vector<double> longitudesDeg, std::vector<double> altitudesFt,
-                                      std::vector<double> pitchesDeg, std::vector<double> rollsDeg,
-                                      std::vector<double> headingsDeg, const std::vector<bool> &onGrounds)
+    void CTraffic::setPlanesPositions(const std::vector<std::string> &callsigns,
+                                      const std::vector<double> &latitudesDeg, const std::vector<double> &longitudesDeg,
+                                      const std::vector<double> &altitudesFt, const std::vector<double> &pitchesDeg,
+                                      const std::vector<double> &rollsDeg, const std::vector<double> &headingsDeg,
+                                      const std::vector<bool> &onGrounds)
     {
         const bool setOnGround = onGrounds.size() == callsigns.size();
         for (size_t i = 0; i < callsigns.size(); i++)
@@ -652,6 +653,7 @@ namespace XSwiftBus
 
     static const char *introspection_traffic = DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE
 #include "org.swift_project.xswiftbus.traffic.xml"
+
         ;
 
     DBusHandlerResult CTraffic::dbusMessageHandler(const CDBusMessage &message_)
@@ -706,7 +708,7 @@ namespace XSwiftBus
                 std::string defaultIcao;
                 message.beginArgumentRead();
                 message.getArgument(defaultIcao);
-                queueDBusCall([=, this]() { setDefaultIcao(defaultIcao); });
+                queueDBusCall([=]() { setDefaultIcao(defaultIcao); });
             }
             else if (message.getMethodName() == "setMaxPlanes")
             {

@@ -25,8 +25,8 @@ namespace XSwiftBus
 
     void CMessageBox::draw()
     {
-        static const int lineHeight = CMessageBox::lineHeight();
-        static const int lineSpace = lineHeight / 3;
+        static const int fixedLineHeight = CMessageBox::lineHeight();
+        static const int lineSpace = fixedLineHeight / 3;
 
         const int messageCount = static_cast<int>(m_messages.size());
 
@@ -39,12 +39,12 @@ namespace XSwiftBus
         if (m_boxTop >= 0)
         {
             boxTop = screenHeight - m_boxTop;
-            boxBottom = boxTop - lineSpace * 2 - (lineHeight + lineSpace) * messageCount;
+            boxBottom = boxTop - lineSpace * 2 - (fixedLineHeight + lineSpace) * messageCount;
         }
         else
         {
             boxBottom = m_boxBottom >= 0 ? m_boxBottom : 20;
-            boxTop = boxBottom + lineSpace * 2 + (lineHeight + lineSpace) * messageCount;
+            boxTop = boxBottom + lineSpace * 2 + (fixedLineHeight + lineSpace) * messageCount;
         }
 
         if (boxTop > screenHeight)
@@ -72,12 +72,12 @@ namespace XSwiftBus
         }
         if (m_downArrow)
         {
-            const int y = boxTop - (lineHeight + lineSpace) * messageCount;
+            const int y = boxTop - (fixedLineHeight + lineSpace) * messageCount;
             XPDrawElement(x, y, x + arrowWidth, y + arrowHeight, xpElement_LittleDownArrow, 0);
         }
         for (int i = 0; i < messageCount; ++i)
         {
-            const int y = boxTop - (lineHeight + lineSpace) * (i + 1);
+            const int y = boxTop - (fixedLineHeight + lineSpace) * (i + 1);
             const size_t ii = static_cast<size_t>(i);
             XPLMDrawString(m_messages[ii].m_rgb.data(), x + arrowWidth + arrowWidth / 2, y,
                            const_cast<char *>(reinterpret_cast<const char *>(m_messages[ii].m_text.c_str())), nullptr,

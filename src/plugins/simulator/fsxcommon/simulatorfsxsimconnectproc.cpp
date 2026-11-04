@@ -425,7 +425,7 @@ namespace swift::simplugin::fsxcommon
 
         // performance stats
         const qint64 procTimeEnd = QDateTime::currentMSecsSinceEpoch();
-        simulatorFsxP3D->m_dispatchProcTimeMs = procTimeEnd - procTimeStart;
+        simulatorFsxP3D->m_dispatchProcTimeMs = procTimeEnd - procTimeStart; // cppcheck-suppress duplicateExpression
         if (simulatorFsxP3D->m_dispatchProcTimeMs > simulatorFsxP3D->m_dispatchProcMaxTimeMs)
         {
             simulatorFsxP3D->m_dispatchProcMaxTimeMs = simulatorFsxP3D->m_dispatchProcTimeMs;

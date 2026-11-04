@@ -68,7 +68,7 @@ namespace MiscTest
         bool matches(const swift::misc::CVariant &) const { return true; }
 
         // methods needed for metatype registration
-        QString toQString(bool) const { return {}; }
+        QString toQString(bool) const { return {}; } // cppcheck-suppress functionStatic
         friend QDBusArgument &operator<<(QDBusArgument &arg, const CTestMatcher &) { return arg; }
         friend const QDBusArgument &operator>>(const QDBusArgument &arg, CTestMatcher &) { return arg; }
         friend QDataStream &operator<<(QDataStream &ds, const CTestMatcher &) { return ds; }
@@ -126,32 +126,32 @@ namespace MiscTest
     void CTestVariantAndMap::variantList()
     {
         const CSequence<int> ints { 1, 2, 3 };
-        CVariant variant = CVariant::fromValue(ints);
-        QVERIFY2(variant.canConvert<CVariantList>(), "Variant containing list can convert to CVariantList");
-        QVERIFY2(variant.convert(qMetaTypeId<CVariantList>()), "Variant containing list can convert to CVariantList");
-        const auto variantInts = variant.value<CVariantList>();
+        CVariant listVar = CVariant::fromValue(ints);
+        QVERIFY2(listVar.canConvert<CVariantList>(), "Variant containing list can convert to CVariantList");
+        QVERIFY2(listVar.convert(qMetaTypeId<CVariantList>()), "Variant containing list can convert to CVariantList");
+        const auto variantInts = listVar.value<CVariantList>();
         QVERIFY2(ints.size() == variantInts.size(), "Variant list has same size as original list");
         QVERIFY2(ints[0] == variantInts[0].value<int>(), "Variant list has same element");
-        QVERIFY2(variant.canConvert<CSequence<int>>(), "Variant containing can convert back");
-        QVERIFY2(ints == variant.value<CSequence<int>>(), "Variant list converted back compares equal");
+        QVERIFY2(listVar.canConvert<CSequence<int>>(), "Variant containing can convert back");
+        QVERIFY2(ints == listVar.value<CSequence<int>>(), "Variant list converted back compares equal");
 
         const CAirlineIcaoCodeList list { CAirlineIcaoCode("BAW"), CAirlineIcaoCode("DLH"), CAirlineIcaoCode("AAL") };
-        variant = CVariant::fromValue(list);
-        QVERIFY2(variant.canConvert<CVariantList>(), "Variant containing list can convert to CVariantList");
-        QVERIFY2(variant.convert(qMetaTypeId<CVariantList>()), "Variant containing list can convert to CVariantList");
-        auto variantList = variant.value<CVariantList>();
+        listVar = CVariant::fromValue(list);
+        QVERIFY2(listVar.canConvert<CVariantList>(), "Variant containing list can convert to CVariantList");
+        QVERIFY2(listVar.convert(qMetaTypeId<CVariantList>()), "Variant containing list can convert to CVariantList");
+        auto variantList = listVar.value<CVariantList>();
         QVERIFY2(list.size() == variantList.size(), "Variant list has same size as original list");
         QVERIFY2(list[0] == variantList[0].value<CAirlineIcaoCode>(), "Variant list has same element");
-        QVERIFY2(variant.canConvert<CAirlineIcaoCodeList>(), "Variant containing can convert back");
-        QVERIFY2(list == variant.value<CAirlineIcaoCodeList>(), "Variant list converted back compares equal");
+        QVERIFY2(listVar.canConvert<CAirlineIcaoCodeList>(), "Variant containing can convert back");
+        QVERIFY2(list == listVar.value<CAirlineIcaoCodeList>(), "Variant list converted back compares equal");
     }
 
     void CTestVariantAndMap::matches()
     {
         CTestMatcher::registerMetadata();
         const CTestMatcher matcher {};
-        const CVariant variant = CVariant::fromValue(matcher);
-        QVERIFY2(variant.matches(CVariant()), "Variant provides access to stored object's matches() method");
+        const CVariant matcherVariant = CVariant::fromValue(matcher);
+        QVERIFY2(matcherVariant.matches(CVariant()), "Variant provides access to stored object's matches() method");
     }
 
     void CTestVariantAndMap::valueMap()

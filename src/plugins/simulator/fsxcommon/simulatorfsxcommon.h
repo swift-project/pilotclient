@@ -301,7 +301,7 @@ namespace swift::simplugin::fsxcommon
                                   const QString &functionName, const QString &functionDetails = {});
 
         //! Trace if required, log errors
-        HRESULT logAndTraceSendId(HRESULT hr, bool traceSendId, const CSimConnectObject &simObject,
+        HRESULT logAndTraceSendId(HRESULT hr, bool doTraceSendId, const CSimConnectObject &simObject,
                                   const QString &warningMsg, const QString &functionName,
                                   const QString &functionDetails = {});
 
@@ -567,7 +567,7 @@ namespace swift::simplugin::fsxcommon
         swift::misc::aviation::CCallsignSet getCallsignsMissingInProvider() const;
 
         //! Set tracing on/off
-        void setTraceSendId(bool traceSendId) { m_traceSendId = traceSendId; }
+        void setTraceSendId(bool enable) { m_traceSendId = enable; }
 
         //! Trace the send id
         void traceSendId(const CSimConnectObject &simObject, const QString &functionName, const QString &details = {},

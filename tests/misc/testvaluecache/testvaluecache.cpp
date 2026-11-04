@@ -193,9 +193,9 @@ namespace MiscTest
     {
         CIdentifier thisProcess;
         CIdentifier otherProcess;
-        auto json = otherProcess.toJson();
-        json.insert("processId", otherProcess.getProcessId() + 1);
-        otherProcess.convertFromJson(json);
+        auto processJson = otherProcess.toJson();
+        processJson.insert("processId", otherProcess.getProcessId() + 1);
+        otherProcess.convertFromJson(processJson);
 
         CValueCache thisCache(1);
         CValueCache otherCache(1);

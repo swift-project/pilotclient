@@ -78,14 +78,12 @@ namespace swift::misc::aviation
         //! \brief Magnetic Track?
         bool isMagneticTrack() const
         {
-            (void)QT_TRANSLATE_NOOP("Aviation", "magnetic");
             return Magnetic == this->m_north;
         }
 
         //! \brief True Track?
         bool isTrueTrack() const
         {
-            (void)QT_TRANSLATE_NOOP("Aviation", "true");
             return True == this->m_north;
         }
 

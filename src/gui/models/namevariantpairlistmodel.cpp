@@ -21,10 +21,6 @@ namespace swift::gui::models
         : CListModelBase("ViewNameVariantPairList", parent)
     {
         this->setIconMode(withIcon);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ViewNameVariantPairList", "name");
-        (void)QT_TRANSLATE_NOOP("ViewNameVariantPairList", "value");
     }
 
     void CNameVariantPairModel::setIconMode(bool withIcon)

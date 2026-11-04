@@ -62,25 +62,25 @@ namespace XSwiftBus
         void onSceneryLoaded();
 
         //! Returns the xswiftbus version number
-        std::string getVersionNumber() const;
+        static std::string getVersionNumber();
 
         //! Returns the SHA1 of the last commit that could influence xswiftbus.
-        std::string getCommitHash() const;
+        static std::string getCommitHash();
 
         //! Add a text message to the on-screen display, with RGB components in the range [0,1]
         void addTextMessage(const std::string &text, double red, double green, double blue);
 
         //! Get full path to current aircraft model
-        std::string getAircraftModelPath() const;
+        static std::string getAircraftModelPath();
 
         //! Get base filename of current aircraft model
-        std::string getAircraftModelFilename() const;
+        static std::string getAircraftModelFilename();
 
         //! Get canonical swift model string of current aircraft model
-        std::string getAircraftModelString() const;
+        static std::string getAircraftModelString();
 
         //! Get name of current aircraft model
-        std::string getAircraftName() const;
+        static std::string getAircraftName();
 
         //! Get current aircraft livery
         std::string getAircraftLivery() const;
@@ -92,16 +92,16 @@ namespace XSwiftBus
         std::string getAircraftDescription() const { return m_descrip.get(); }
 
         //! Get major version number
-        int getXPlaneVersionMajor() const;
+        static int getXPlaneVersionMajor();
 
         //! Get minor version number
-        int getXPlaneVersionMinor() const;
+        static int getXPlaneVersionMinor();
 
         //! Get root of X-Plane install path
-        std::string getXPlaneInstallationPath() const;
+        static std::string getXPlaneInstallationPath();
 
         //! Get full path to X-Plane preferences file
-        std::string getXPlanePreferencesPath() const;
+        static std::string getXPlanePreferencesPath();
 
         //! True if sim is paused
         bool isPaused() const { return m_paused.get(); }

@@ -122,7 +122,7 @@ namespace swift::simplugin::emulated
         bool isInterpolatorFetching() const;
 
         //! Register help
-        static void registerHelp();
+        static void registerHelp(); // cppcheck-suppress duplInheritedMember
 
     signals:
         //! Internal aircraft changed

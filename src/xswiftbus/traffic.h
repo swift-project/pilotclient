@@ -71,7 +71,7 @@ namespace XSwiftBus
         std::string loadPlanesPackage(const std::string &path);
 
         //! Set the ICAO code to use for aircraft without a model match
-        void setDefaultIcao(const std::string &defaultIcao);
+        static void setDefaultIcao(const std::string &defaultIcao);
 
         //! Set whether the plugin draws type and callsign labels above aircraft
         void setDrawingLabels(bool drawing, int rgb = -1);
@@ -96,10 +96,10 @@ namespace XSwiftBus
         void removeAllPlanes();
 
         //! Set the position of multiple traffic aircrafts
-        void setPlanesPositions(const std::vector<std::string> &callsigns, std::vector<double> latitudesDeg,
-                                std::vector<double> longitudesDeg, std::vector<double> altitudesFt,
-                                std::vector<double> pitchesDeg, std::vector<double> rollsDeg,
-                                std::vector<double> headingsDeg, const std::vector<bool> &onGrounds);
+        void setPlanesPositions(const std::vector<std::string> &callsigns, const std::vector<double> &latitudesDeg,
+                                const std::vector<double> &longitudesDeg, const std::vector<double> &altitudesFt,
+                                const std::vector<double> &pitchesDeg, const std::vector<double> &rollsDeg,
+                                const std::vector<double> &headingsDeg, const std::vector<bool> &onGrounds);
 
         //! Set the flight control surfaces and lights of multiple traffic aircrafts
         void setPlanesSurfaces(const std::vector<std::string> &callsigns, const std::vector<double> &gears,
@@ -283,7 +283,7 @@ namespace XSwiftBus
 
         std::vector<XPMPUpdate_t> m_updates;
         void doPlaneUpdates();
-        void interpolatePosition(Plane *);
+        static void interpolatePosition(Plane *);
         void interpolateGear(Plane *);
     };
 } // namespace XSwiftBus

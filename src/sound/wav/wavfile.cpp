@@ -83,12 +83,12 @@ namespace swift::sound::wav
                 {
                     // Extended data available
                     quint16 extraFormatBytes {};
-                    if (peek((char *)&extraFormatBytes, sizeof(quint16)) != sizeof(quint16)) return false;
+                    if (peek(reinterpret_cast<char *>(&extraFormatBytes), sizeof(quint16)) != sizeof(quint16)) return false;
                     const qint64 throwAwayBytes = sizeof(quint16) + qFromLittleEndian<quint16>(extraFormatBytes);
                     if (read(throwAwayBytes).size() != throwAwayBytes) return false;
                 }
 
-                if (read((char *)&dataHeader, sizeof(DATAHeader)) != sizeof(DATAHeader)) return false;
+                if (read(reinterpret_cast<char *>(&dataHeader), sizeof(DATAHeader)) != sizeof(DATAHeader)) return false;
 
                 // Establish format
                 int bps = qFromLittleEndian<quint16>(header.wave.bitsPerSample);

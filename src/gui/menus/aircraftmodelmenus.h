@@ -32,9 +32,6 @@ namespace swift::gui
             //! Constructor
             IAircraftModelViewMenu(swift::gui::views::CAircraftModelView *modelView) : IMenuDelegate(modelView) {}
 
-            //! Log.categories
-            static const QStringList &getLogCategories();
-
         protected:
             //! Model view
             swift::gui::views::CAircraftModelView *modelView() const;
@@ -58,9 +55,6 @@ namespace swift::gui
         public:
             //! Constructor
             CShowSimulatorFileMenu(views::CAircraftModelView *modelView, COverlayMessagesFrame *messageFrame);
-
-            //! Log.categories
-            static const QStringList &getLogCategories();
 
             //! \copydoc IMenuDelegate::customMenu
             void customMenu(CMenuActions &menuActions) override;

@@ -185,9 +185,9 @@ namespace swift::gui::views
         return c;
     }
 
-    void CAircraftModelView::setHighlightModelStrings(const QStringList &highlightModels)
+    void CAircraftModelView::setHighlightModelStrings(const QStringList &highlightModelsStrings)
     {
-        this->derivedModel()->setHighlightModelStrings(highlightModels);
+        this->derivedModel()->setHighlightModelStrings(highlightModelsStrings);
     }
 
     void CAircraftModelView::setHighlightModelsForInvalidModels()
@@ -207,9 +207,9 @@ namespace swift::gui::views
         }
     }
 
-    void CAircraftModelView::setHighlightModels(const CAircraftModelList &highlightModels)
+    void CAircraftModelView::setHighlightModels(const CAircraftModelList &highlightModelsList)
     {
-        this->derivedModel()->setHighlightModels(highlightModels);
+        this->derivedModel()->setHighlightModels(highlightModelsList);
     }
 
     void CAircraftModelView::setHighlight(bool highlight) { this->derivedModel()->setHighlight(highlight); }

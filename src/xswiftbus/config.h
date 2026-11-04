@@ -40,7 +40,7 @@ namespace XSwiftBus
         DBusMode getDBusMode() const { return m_dbusMode; }
 
         //! Get current DBus server address
-        std::string getDBusAddress() const { return m_dbusAddress; }
+        const std::string &getDBusAddress() const { return m_dbusAddress; }
 
         //! Get current DBus server port
         int getDBusPort() const { return m_dbusPort; }

@@ -149,6 +149,7 @@ namespace XSwiftBus
         dbus_connection_unref(m_connection.get());
     }
 
+    // cppcheck-suppress functionStatic
     void CDBusConnection::setDispatchStatus(DBusConnection *connection, DBusDispatchStatus status)
     {
         if (dbus_connection_get_is_connected(connection) == FALSE)

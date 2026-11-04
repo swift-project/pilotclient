@@ -69,7 +69,7 @@ namespace XSwiftBus
         static CMenu mainMenu();
 
         //! Appends an item to the menu and returns it.
-        CMenuItem item(const std::string &name, std::function<void()> callback);
+        CMenuItem appendItem(const std::string &name, std::function<void()> callback);
 
         //! Appends a checkbox item to the menu and returns it.
         CMenuItem checkableItem(const std::string &name, bool checked, std::function<void(bool)> callback);
