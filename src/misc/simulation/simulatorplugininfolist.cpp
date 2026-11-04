@@ -14,7 +14,7 @@ namespace swift::misc::simulation
 {
     bool CSimulatorPluginInfoList::supportsSimulator(const QString &simulator) const
     {
-        return std::find_if(begin(), end(), [&simulator](const CSimulatorPluginInfo &info) {
+        return std::ranges::find_if(*this, [&simulator](const CSimulatorPluginInfo &info) {
                    return info.getSimulator() == simulator;
                }) != end();
     }

@@ -289,8 +289,7 @@ namespace swift::misc
         int d2 = 0;
         dirs1Cleaned.sort(cs);
         dirs2Cleaned.sort(cs);
-        return std::all_of(dirs1.cbegin(), dirs1.cend(),
-                           [&](const QString &d1) { return stringCompare(d1, dirs2.at(d2), cs); });
+        return std::ranges::all_of(dirs1, [&](const QString &d1) { return stringCompare(d1, dirs2.at(d2), cs); });
     }
 
     Qt::CaseSensitivity CFileUtils::osFileNameCaseSensitivity()
@@ -339,8 +338,8 @@ namespace swift::misc
         {
             return false;
         }
-        return std::any_of(excludeDirectories.cbegin(), excludeDirectories.cend(),
-                           [&](const QString &ex) { return matchesExcludeDirectory(directoryPath, ex, cs); });
+        return std::ranges::any_of(excludeDirectories,
+                                   [&](const QString &ex) { return matchesExcludeDirectory(directoryPath, ex, cs); });
     }
 
     QStringList CFileUtils::removeSubDirectories(const QStringList &directories, Qt::CaseSensitivity cs)
@@ -407,7 +406,7 @@ namespace swift::misc
         const QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {
-            auto it = std::find_if(result.cbegin(), result.cend(), predicate);
+            auto it = std::ranges::find_if(result, predicate);
             if (it != result.cend())
             {
                 return it->filePath();
@@ -470,7 +469,7 @@ namespace swift::misc
         QFileInfoList result = dir.entryInfoList(nameFilters, QDir::Files);
         if (predicate)
         {
-            result.erase(std::remove_if(result.begin(), result.end(), [=](const auto &f) { return !predicate(f); }),
+            result.erase(std::ranges::remove_if(result, [=](const auto &f) { return !predicate(f); }).begin(),
                          result.end());
         }
         if (recursive)
@@ -500,9 +499,8 @@ namespace swift::misc
             return {};
         }
 
-        auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo &a, const QFileInfo &b) {
-            return a.lastModified() < b.lastModified();
-        });
+        auto it = std::ranges::max_element(
+            files, [](const QFileInfo &a, const QFileInfo &b) { return a.lastModified() < b.lastModified(); });
         return *it;
     }
 
@@ -519,9 +517,8 @@ namespace swift::misc
             return {};
         }
 
-        auto it = std::max_element(files.cbegin(), files.cend(), [](const QFileInfo &a, const QFileInfo &b) {
-            return a.birthTime() < b.birthTime();
-        });
+        auto it = std::ranges::max_element(
+            files, [](const QFileInfo &a, const QFileInfo &b) { return a.birthTime() < b.birthTime(); });
         return *it;
     }
 

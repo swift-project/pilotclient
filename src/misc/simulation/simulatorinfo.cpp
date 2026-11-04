@@ -388,9 +388,9 @@ namespace swift::misc::simulation
                this->getCount(CSimulatorInfo::msfs2024());
     }
 
-    int CCountPerSimulator::getMaximum() const { return *std::min_element(m_counts.begin(), m_counts.end()); }
+    int CCountPerSimulator::getMaximum() const { return *std::ranges::min_element(m_counts); }
 
-    int CCountPerSimulator::getMinimum() const { return *std::max_element(m_counts.begin(), m_counts.end()); }
+    int CCountPerSimulator::getMinimum() const { return *std::ranges::max_element(m_counts); }
 
     int CCountPerSimulator::simulatorsRepresented() const
     {

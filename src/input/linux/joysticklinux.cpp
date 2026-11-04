@@ -7,6 +7,9 @@
 #include <linux/joystick.h>
 #include <unistd.h>
 
+#include <algorithm>
+#include <utility>
+
 #include <QDir>
 #include <QFile>
 #include <QFileSystemWatcher>
@@ -41,7 +44,7 @@ namespace swift::input
 
         /* Forward */
         struct js_event event;
-        while (m_fd->read(reinterpret_cast<char *>(&event), sizeof(event)) == sizeof(event))
+        while (std::cmp_equal(m_fd->read(reinterpret_cast<char *>(&event), sizeof(event)), sizeof(event)))
         {
         }
         auto notifier = new QSocketNotifier(m_fd->handle(), QSocketNotifier::Read, m_fd);
@@ -61,7 +64,7 @@ namespace swift::input
     void CJoystickDevice::processInput()
     {
         struct js_event event;
-        while (m_fd->read(reinterpret_cast<char *>(&event), sizeof(event)) == sizeof(event))
+        while (std::cmp_equal(m_fd->read(reinterpret_cast<char *>(&event), sizeof(event)), sizeof(event)))
         {
             switch (event.type & ~JS_EVENT_INIT)
             {
@@ -154,8 +157,8 @@ namespace swift::input
         for (const auto &entry : dir.entryInfoList())
         {
             QString f = entry.absoluteFilePath();
-            auto it = std::find_if(m_joystickDevices.begin(), m_joystickDevices.end(),
-                                   [path](const CJoystickDevice *device) { return device->getPath() == path; });
+            auto it = std::ranges::find_if(m_joystickDevices,
+                                           [path](const CJoystickDevice *device) { return device->getPath() == path; });
             if (it == m_joystickDevices.end())
             {
                 addJoystickDevice(f);

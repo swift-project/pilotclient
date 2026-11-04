@@ -239,8 +239,8 @@ namespace swift::misc
         }
 
         //! Implicit conversion to any container of value_type which supports push_back. This will copy elements.
-        template <class T, class = std::enable_if_t<std::is_convertible_v<value_type, typename T::value_type>>>
-        operator T() const
+        template <class T>
+        operator T() const requires(std::is_convertible_v<value_type, typename T::value_type>)
         {
             return to<T>();
         }

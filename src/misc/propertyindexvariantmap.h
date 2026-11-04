@@ -104,8 +104,8 @@ namespace swift::misc
         bool matchesVariant(const CVariant &value) const;
 
         //! True if this map matches the value
-        template <typename T, typename = std::enable_if_t<!std::is_same_v<T, CVariant>>>
-        bool matches(const T &value) const
+        template <typename T>
+        bool matches(const T &value) const requires(!std::is_same_v<T, CVariant>)
         {
             return matchesVariant(CVariant::fromValue(value));
         }

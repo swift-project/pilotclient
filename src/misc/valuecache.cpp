@@ -5,6 +5,7 @@
 
 #include "misc/valuecache.h"
 
+#include <algorithm>
 #include <atomic>
 #include <exception>
 #include <functional>
@@ -679,8 +680,7 @@ namespace swift::misc
     CValuePage &CValuePage::getPageFor(QObject *parent, CValueCache *cache)
     {
         auto pages = parent->findChildren<CValuePage *>("", Qt::FindDirectChildrenOnly);
-        auto it =
-            std::find_if(pages.cbegin(), pages.cend(), [cache](CValuePage *page) { return page->m_cache == cache; });
+        auto it = std::ranges::find_if(pages, [cache](CValuePage *page) { return page->m_cache == cache; });
         if (it == pages.cend())
         {
             return *new CValuePage(parent, cache);

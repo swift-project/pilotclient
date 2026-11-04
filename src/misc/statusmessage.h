@@ -319,8 +319,8 @@ namespace swift::misc
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
         //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.
         //! \see QString::arg
-        template <class T, std::enable_if_t<TParameter<std::decay_t<T>>::passBy == ParameterPassBy::Value, int> = 0>
-        Derived &operator<<(T v)
+        template <class T>
+        Derived &operator<<(T v) requires(TParameter<std::decay_t<T>>::passBy == ParameterPassBy::Value)
         {
             return arg(TString<T>::toQString(v));
         }
@@ -329,8 +329,8 @@ namespace swift::misc
         //! \details If the format string is empty, the message will consist of all streamed values separated by spaces.
         //!          Otherwise, the streamed values will replace the place markers %1, %2, %3... in the format string.
         //! \see QString::arg
-        template <class T, std::enable_if_t<TParameter<std::decay_t<T>>::passBy == ParameterPassBy::ConstRef, int> = 0>
-        Derived &operator<<(const T &v)
+        template <class T>
+        Derived &operator<<(const T &v) requires(TParameter<std::decay_t<T>>::passBy == ParameterPassBy::ConstRef)
         {
             return arg(TString<T>::toQString(v));
         }

@@ -211,11 +211,11 @@ namespace swift::misc
         case Everything: return true;
         case ExactMatch: return message.getCategories().contains(getString());
         case AnyOf:
-            return std::any_of(m_strings.begin(), m_strings.end(),
-                               [&](const QString &s) { return message.getCategories().contains(s); });
+            return std::ranges::any_of(m_strings,
+                                       [&](const QString &s) { return message.getCategories().contains(s); });
         case AllOf:
-            return std::all_of(m_strings.begin(), m_strings.end(),
-                               [&](const QString &s) { return message.getCategories().contains(s); });
+            return std::ranges::all_of(m_strings,
+                                       [&](const QString &s) { return message.getCategories().contains(s); });
         case StartsWith:
             return message.getCategories().containsBy(
                 [this](const CLogCategory &cat) { return cat.startsWith(getPrefix()); });
@@ -295,14 +295,13 @@ namespace swift::misc
             {
             case AnyOf: return other.m_strings.contains(m_strings) && other.m_strings.size() > m_strings.size();
             case StartsWith:
-                return std::all_of(m_strings.begin(), m_strings.end(),
-                                   [&](const QString &s) { return s.startsWith(other.getPrefix()); });
+                return std::ranges::all_of(m_strings,
+                                           [&](const QString &s) { return s.startsWith(other.getPrefix()); });
             case EndsWith:
-                return std::all_of(m_strings.begin(), m_strings.end(),
-                                   [&](const QString &s) { return s.endsWith(other.getSuffix()); });
+                return std::ranges::all_of(m_strings, [&](const QString &s) { return s.endsWith(other.getSuffix()); });
             case Contains:
-                return std::all_of(m_strings.begin(), m_strings.end(),
-                                   [&](const QString &s) { return s.contains(other.getSubstring()); });
+                return std::ranges::all_of(m_strings,
+                                           [&](const QString &s) { return s.contains(other.getSubstring()); });
             default:;
             }
             break;
@@ -313,14 +312,13 @@ namespace swift::misc
             case AnyOf: return !(m_strings & other.m_strings).isEmpty();
             case AllOf: return m_strings.contains(other.m_strings) && m_strings.size() > other.m_strings.size();
             case StartsWith:
-                return std::any_of(m_strings.begin(), m_strings.end(),
-                                   [&](const QString &s) { return s.startsWith(other.getPrefix()); });
+                return std::ranges::any_of(m_strings,
+                                           [&](const QString &s) { return s.startsWith(other.getPrefix()); });
             case EndsWith:
-                return std::any_of(m_strings.begin(), m_strings.end(),
-                                   [&](const QString &s) { return s.endsWith(other.getSuffix()); });
+                return std::ranges::any_of(m_strings, [&](const QString &s) { return s.endsWith(other.getSuffix()); });
             case Contains:
-                return std::any_of(m_strings.begin(), m_strings.end(),
-                                   [&](const QString &s) { return s.contains(other.getSubstring()); });
+                return std::ranges::any_of(m_strings,
+                                           [&](const QString &s) { return s.contains(other.getSubstring()); });
             default:;
             }
             break;

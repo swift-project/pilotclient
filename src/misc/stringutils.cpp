@@ -5,6 +5,7 @@
 
 #include "misc/stringutils.h"
 
+#include <algorithm>
 #include <any>
 
 #include <QChar>
@@ -628,7 +629,7 @@ namespace swift::misc
         {
             return false;
         }
-        return std::any_of(any.begin(), any.end(), [&](const QString &a) { return testString.contains(a, cs); });
+        return std::ranges::any_of(any, [&](const QString &a) { return testString.contains(a, cs); });
     }
 
     bool hasBalancedQuotes(const QString &in, char quote)

@@ -3,6 +3,7 @@
 
 #include "misc/simulation/aircraftmodellist.h"
 
+#include <algorithm>
 #include <tuple>
 
 #include <QDir>
@@ -40,15 +41,14 @@ namespace swift::misc::simulation
 
     bool CAircraftModelList::containsModelString(const QString &modelString, Qt::CaseSensitivity sensitivity) const
     {
-        return std::any_of(cbegin(), cend(), [&](const CAircraftModel &model) {
-            return model.matchesModelString(modelString, sensitivity);
-        });
+        return std::ranges::any_of(
+            *this, [&](const CAircraftModel &model) { return model.matchesModelString(modelString, sensitivity); });
     }
 
     bool CAircraftModelList::containsModelStringOrDbKey(const CAircraftModel &model,
                                                         Qt::CaseSensitivity sensitivity) const
     {
-        return std::any_of(cbegin(), cend(), [&](const CAircraftModel &m) {
+        return std::ranges::any_of(*this, [&](const CAircraftModel &m) {
             return (m.hasValidDbKey() && m.getDbKey() == model.getDbKey()) ||
                    m.matchesModelString(model.getModelString(), sensitivity);
         });
@@ -687,7 +687,7 @@ namespace swift::misc::simulation
             return ac.firstKey();
         }
         const QList<int> values = ac.values();
-        const int max = *std::max_element(values.begin(), values.end());
+        const int max = *std::ranges::max_element(values);
         return ac.key(max);
     }
 

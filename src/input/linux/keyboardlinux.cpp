@@ -8,6 +8,8 @@
 #include <fcntl.h>
 #include <linux/input.h>
 
+#include <utility>
+
 #include <QDebug>
 #include <QHash>
 #include <QSocketNotifier>
@@ -164,7 +166,8 @@ namespace swift::input
 
         bool found = false;
 
-        while (fileInput->read(reinterpret_cast<char *>(&eventInput), sizeof(eventInput)) == sizeof(eventInput))
+        while (std::cmp_equal(fileInput->read(reinterpret_cast<char *>(&eventInput), sizeof(eventInput)),
+                              sizeof(eventInput)))
         {
             found = true;
             if (eventInput.type != EV_KEY) continue;

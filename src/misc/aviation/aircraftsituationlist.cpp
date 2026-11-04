@@ -3,6 +3,8 @@
 
 #include "misc/aviation/aircraftsituationlist.h"
 
+#include <algorithm>
+
 #include <QList>
 
 #include "misc/geo/elevationplane.h"
@@ -88,14 +90,14 @@ namespace swift::misc::aviation
 
     bool CAircraftSituationList::containsOnGroundDetails(COnGroundInfo::OnGroundDetails details) const
     {
-        return std::any_of(begin(), end(), [&details](const CAircraftSituation &sit) {
+        return std::ranges::any_of(*this, [&details](const CAircraftSituation &sit) {
             return sit.getOnGroundInfo().getGroundDetails() == details;
         });
     }
 
     bool CAircraftSituationList::areAllOnGroundDetailsSame(COnGroundInfo::OnGroundDetails details) const
     {
-        return std::all_of(cbegin(), cend(), [&](const CAircraftSituation &situation) {
+        return std::ranges::all_of(*this, [&](const CAircraftSituation &situation) {
             return situation.getOnGroundInfo().getGroundDetails() == details;
         });
     }
@@ -110,7 +112,7 @@ namespace swift::misc::aviation
         {
             return false;
         }
-        return std::all_of(begin(), end(), [](const CAircraftSituation &situation) { return situation.isOnGround(); });
+        return std::ranges::all_of(*this, [](const CAircraftSituation &situation) { return situation.isOnGround(); });
     }
 
     bool CAircraftSituationList::isConstNotOnGround() const
@@ -123,7 +125,7 @@ namespace swift::misc::aviation
         {
             return false;
         }
-        return std::all_of(begin(), end(), [](const CAircraftSituation &situation) {
+        return std::ranges::all_of(*this, [](const CAircraftSituation &situation) {
             return situation.getOnGroundInfo().getOnGround() == COnGroundInfo::NotOnGround;
         });
     }
@@ -336,7 +338,7 @@ namespace swift::misc::aviation
 
     bool CAircraftSituationList::containsPushBack() const
     {
-        return std::any_of(cbegin(), cend(), [](const CAircraftSituation &situation) {
+        return std::ranges::any_of(*this, [](const CAircraftSituation &situation) {
             return situation.getGroundSpeed().isNegativeWithEpsilonConsidered();
         });
     }

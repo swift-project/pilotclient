@@ -66,15 +66,14 @@ SWIFT_MISC_EXPORT QJsonValueRef operator>>(QJsonValueRef json, QByteArray &value
 //! \remarks needs to be in global namespace
 //! \ingroup JSON
 template <class ENUM>
-std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject> &operator<<(QJsonObject &json,
-                                                                std::pair<QString, const ENUM &> value)
+QJsonObject &operator<<(QJsonObject &json, std::pair<QString, const ENUM &> value) requires(std::is_enum_v<ENUM>)
 {
     json.insert(value.first, QJsonValue(static_cast<int>(value.second)));
     return json;
 }
 template <class ENUM>
-std::enable_if_t<std::is_enum_v<ENUM>, QJsonObject> &
-operator<<(QJsonObject &json, std::pair<swift::misc::CExplicitLatin1String, const ENUM &> value)
+QJsonObject &operator<<(QJsonObject &json, std::pair<swift::misc::CExplicitLatin1String, const ENUM &> value)
+    requires(std::is_enum_v<ENUM>)
 {
     json[value.first] = QJsonValue(static_cast<int>(value.second));
     return json;
@@ -101,7 +100,7 @@ QJsonObject &operator<<(QJsonObject &json, std::pair<swift::misc::CExplicitLatin
 //! \brief Specialized JSON deserialization for enum
 //! \ingroup JSON
 template <class ENUM>
-std::enable_if_t<std::is_enum_v<ENUM>, QJsonValue> const &operator>>(const QJsonValue &json, ENUM &value)
+QJsonValue const &operator>>(const QJsonValue &json, ENUM &value) requires(std::is_enum_v<ENUM>)
 {
     value = static_cast<ENUM>(json.toInt());
     return json;
@@ -118,8 +117,8 @@ const QJsonValue &operator>>(const QJsonValue &json, QFlags<ENUM> &value)
 
 //! \brief Specialized JSON deserialization for enum
 //! \ingroup JSON
-template <class ENUM, typename = std::enable_if_t<std::is_enum_v<ENUM>>>
-QJsonValueRef operator>>(QJsonValueRef json, ENUM &value)
+template <class ENUM>
+QJsonValueRef operator>>(QJsonValueRef json, ENUM &value) requires(std::is_enum_v<ENUM>)
 {
     value = static_cast<ENUM>(json.toInt());
     return json;

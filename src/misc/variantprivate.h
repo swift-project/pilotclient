@@ -385,9 +385,9 @@ namespace swift::misc
         }
 
         //! \cond PRIVATE
-        template <typename T, typename = std::enable_if_t<std::is_base_of_v<CSequence<typename T::value_type>, T> &&
-                                                          !std::is_same_v<typename T::value_type, CVariant>>>
-        constexpr bool canConvertVariantList(int)
+        template <typename T>
+        constexpr bool canConvertVariantList(int) requires(std::is_base_of_v<CSequence<typename T::value_type>, T> &&
+                                                           !std::is_same_v<typename T::value_type, CVariant>)
         {
             return true;
         }

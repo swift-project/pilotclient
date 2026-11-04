@@ -6,6 +6,7 @@
 #include <qendian.h>
 
 #include <limits> // Workaround for QTBUG-90395
+#include <utility>
 
 #include <QDebug>
 #include <QVector>
@@ -70,7 +71,8 @@ namespace swift::sound::wav
         seek(0);
         CombinedHeader header;
         DATAHeader dataHeader;
-        bool result = read(reinterpret_cast<char *>(&header), sizeof(CombinedHeader)) == sizeof(CombinedHeader);
+        bool result =
+            std::cmp_equal(read(reinterpret_cast<char *>(&header), sizeof(CombinedHeader)), sizeof(CombinedHeader));
         if (result)
         {
             if ((memcmp(&header.riff.descriptor.id, "RIFF", 4) == 0 ||
@@ -83,13 +85,16 @@ namespace swift::sound::wav
                 {
                     // Extended data available
                     quint16 extraFormatBytes {};
-                    if (peek(reinterpret_cast<char *>(&extraFormatBytes), sizeof(quint16)) != sizeof(quint16))
+                    if (std::cmp_not_equal(peek(reinterpret_cast<char *>(&extraFormatBytes), sizeof(quint16)),
+                                           sizeof(quint16)))
                         return false;
                     const qint64 throwAwayBytes = sizeof(quint16) + qFromLittleEndian<quint16>(extraFormatBytes);
                     if (read(throwAwayBytes).size() != throwAwayBytes) return false;
                 }
 
-                if (read(reinterpret_cast<char *>(&dataHeader), sizeof(DATAHeader)) != sizeof(DATAHeader)) return false;
+                if (std::cmp_not_equal(read(reinterpret_cast<char *>(&dataHeader), sizeof(DATAHeader)),
+                                       sizeof(DATAHeader)))
+                    return false;
 
                 // Establish format
                 int bps = qFromLittleEndian<quint16>(header.wave.bitsPerSample);

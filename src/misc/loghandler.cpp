@@ -104,7 +104,7 @@ namespace swift::misc
         auto finder = [&](const PatternPair &pair) { return pair.first == pattern; };
         auto comparator = [](const PatternPair &a, const PatternPair &b) { return a.first.isProperSubsetOf(b.first); };
 
-        auto it = std::find_if(m_patternHandlers.cbegin(), m_patternHandlers.cend(), finder);
+        auto it = std::ranges::find_if(m_patternHandlers, finder);
         if (it == m_patternHandlers.cend())
         {
             auto *handler = new CLogPatternHandler(this, pattern);
@@ -236,8 +236,8 @@ namespace swift::misc
 
     void CLogHandler::removePatternHandler(CLogPatternHandler *handler)
     {
-        auto it = std::find_if(m_patternHandlers.begin(), m_patternHandlers.end(),
-                               [handler](const PatternPair &pair) { return pair.second == handler; });
+        auto it = std::ranges::find_if(m_patternHandlers,
+                                       [handler](const PatternPair &pair) { return pair.second == handler; });
         if (it != m_patternHandlers.end())
         {
             it->second->deleteLater();

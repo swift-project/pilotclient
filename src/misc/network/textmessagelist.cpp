@@ -120,7 +120,7 @@ namespace swift::misc::network
         {
             return;
         }
-        std::for_each(this->begin(), this->end(), [](CTextMessage &tm) { tm.toggleSenderRecipient(); });
+        std::ranges::for_each(*this, [](CTextMessage &tm) { tm.toggleSenderRecipient(); });
     }
 
     int CTextMessageList::relayedToPrivateMessages()
@@ -192,7 +192,7 @@ namespace swift::misc::network
 
     void CTextMessageList::markAsSent()
     {
-        std::for_each(this->begin(), this->end(), [](CTextMessage &tm) { tm.markAsSent(); });
+        std::ranges::for_each(*this, [](CTextMessage &tm) { tm.markAsSent(); });
     }
 
     CTextMessageList CTextMessageList::markedAsSent()

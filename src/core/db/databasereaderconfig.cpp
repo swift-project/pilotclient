@@ -6,6 +6,8 @@
 
 #include "core/db/databasereaderconfig.h"
 
+#include <algorithm>
+
 #include <QStringBuilder>
 
 using namespace swift::misc;
@@ -158,26 +160,26 @@ namespace swift::core::db
 
     bool CDatabaseReaderConfigList::possiblyReadsFromSwiftDb() const
     {
-        return std::any_of(cbegin(), cend(),
-                           [](const CDatabaseReaderConfig &config) { return config.possiblyReadsFromSwiftDb(); });
+        return std::ranges::any_of(
+            *this, [](const CDatabaseReaderConfig &config) { return config.possiblyReadsFromSwiftDb(); });
     }
 
     bool CDatabaseReaderConfigList::possiblyWritesToSwiftDb() const
     {
-        return std::any_of(cbegin(), cend(),
-                           [](const CDatabaseReaderConfig &config) { return config.possiblyWritesToSwiftDb(); });
+        return std::ranges::any_of(
+            *this, [](const CDatabaseReaderConfig &config) { return config.possiblyWritesToSwiftDb(); });
     }
 
     bool CDatabaseReaderConfigList::needsSharedInfoObjects(CEntityFlags::Entity entities) const
     {
-        return std::any_of(cbegin(), cend(), [&](const CDatabaseReaderConfig &config) {
+        return std::ranges::any_of(*this, [&](const CDatabaseReaderConfig &config) {
             return config.supportsEntities(entities) && config.needsSharedInfoFile();
         });
     }
 
     bool CDatabaseReaderConfigList::needsSharedInfoFile(CEntityFlags::Entity entities) const
     {
-        return std::any_of(cbegin(), cend(), [&](const CDatabaseReaderConfig &config) {
+        return std::ranges::any_of(*this, [&](const CDatabaseReaderConfig &config) {
             return config.supportsEntities(entities) && config.needsSharedInfoFile();
         });
     }
@@ -185,16 +187,15 @@ namespace swift::core::db
     bool CDatabaseReaderConfigList::needsSharedInfoObjectsIfCachesEmpty(CEntityFlags::Entity entities,
                                                                         CEntityFlags::Entity cachedEntities) const
     {
-        return std::any_of(this->begin(), this->end(),
-                           [&entities, &cachedEntities](const CDatabaseReaderConfig &config) {
-                               if (!config.supportsEntities(entities)) return false;
-                               if (!config.needsSharedInfoFile()) return false;
-                               if (!config.getRetrievalMode().testFlag(CDbFlags::Cached)) return true;
+        return std::ranges::any_of(*this, [&entities, &cachedEntities](const CDatabaseReaderConfig &config) {
+            if (!config.supportsEntities(entities)) return false;
+            if (!config.needsSharedInfoFile()) return false;
+            if (!config.getRetrievalMode().testFlag(CDbFlags::Cached)) return true;
 
-                               const CEntityFlags::Entity configEntities = config.getEntities();
-                               const CEntityFlags::Entity configEntitiesNotCached = configEntities & ~cachedEntities;
-                               return configEntitiesNotCached != CEntityFlags::NoEntity;
-                           });
+            const CEntityFlags::Entity configEntities = config.getEntities();
+            const CEntityFlags::Entity configEntitiesNotCached = configEntities & ~cachedEntities;
+            return configEntitiesNotCached != CEntityFlags::NoEntity;
+        });
     }
 
     CEntityFlags::Entity CDatabaseReaderConfigList::getEntitesCachedOrReadFromDB() const

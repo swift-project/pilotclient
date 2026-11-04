@@ -56,11 +56,7 @@ namespace swift::core::context
             return false;
         }
         key = qEnvironmentVariable("SWIFT_VATSIM_CLIENT_KEY").toLower();
-        if (key.isEmpty())
-        {
-            return false;
-        }
-        return true;
+        return !key.isEmpty();
     }
 #endif
 

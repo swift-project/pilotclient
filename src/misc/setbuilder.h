@@ -43,13 +43,13 @@ namespace swift::misc
         operator std::set<T>() && { return convertTo<std::set>(sortAndDeduplicate(std::move(m_list))); }
         operator std::vector<T>() const & { return convertTo<std::vector>(sortAndDeduplicate(m_list)); }
         operator std::vector<T>() && { return convertTo<std::vector>(sortAndDeduplicate(std::move(m_list))); }
-        template <typename U = T, typename = std::enable_if_t<std::is_same_v<U, QString>>>
-        operator QStringList() const &
+        template <typename U = T>
+        operator QStringList() const &requires(std::is_same_v<U, QString>)
         {
             return sortAndDeduplicate(m_list);
         }
-        template <typename U = T, typename = std::enable_if_t<std::is_same_v<U, QString>>>
-        operator QStringList() &&
+        template <typename U = T>
+            operator QStringList() && requires(std::is_same_v<U, QString>)
         {
             return sortAndDeduplicate(std::move(m_list));
         }

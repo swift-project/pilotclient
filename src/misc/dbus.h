@@ -25,8 +25,8 @@ const QDBusArgument &operator>>(const QDBusArgument &arg, std::string &s);
 /*!
  * Operator for streaming enums to QDBusArgument.
  */
-template <class E, std::enable_if_t<std::is_enum_v<E>, int> = 0>
-QDBusArgument &operator<<(QDBusArgument &arg, const E &value)
+template <class E>
+QDBusArgument &operator<<(QDBusArgument &arg, const E &value) requires(std::is_enum_v<E>)
 {
     arg.beginStructure();
     arg << static_cast<int>(value);
@@ -37,8 +37,8 @@ QDBusArgument &operator<<(QDBusArgument &arg, const E &value)
 /*!
  * Operator for streaming enums from QDBusArgument.
  */
-template <class E, std::enable_if_t<std::is_enum_v<E>, int> = 0>
-const QDBusArgument &operator>>(const QDBusArgument &arg, E &value)
+template <class E>
+const QDBusArgument &operator>>(const QDBusArgument &arg, E &value) requires(std::is_enum_v<E>)
 {
     int temp {};
     arg.beginStructure();

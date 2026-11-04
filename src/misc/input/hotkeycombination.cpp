@@ -75,10 +75,10 @@ namespace swift::misc::input
 
     bool CHotkeyCombination::isSubsetOf(const CHotkeyCombination &other) const
     {
-        return std::all_of(m_keyboardKeys.begin(), m_keyboardKeys.end(),
-                           [&other](const CKeyboardKey &k) { return other.m_keyboardKeys.contains(k); }) &&
-               std::all_of(m_joystickButtons.begin(), m_joystickButtons.end(),
-                           [&other](const CJoystickButton &b) { return other.m_joystickButtons.contains(b); });
+        return std::ranges::all_of(m_keyboardKeys,
+                                   [&other](const CKeyboardKey &k) { return other.m_keyboardKeys.contains(k); }) &&
+               std::ranges::all_of(m_joystickButtons,
+                                   [&other](const CJoystickButton &b) { return other.m_joystickButtons.contains(b); });
     }
 
     CHotkeyCombination CHotkeyCombination::getDeltaComparedTo(const CHotkeyCombination &other) const

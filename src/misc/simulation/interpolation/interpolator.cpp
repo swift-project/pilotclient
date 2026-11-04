@@ -3,6 +3,8 @@
 
 #include "misc/simulation/interpolation/interpolator.h"
 
+#include <algorithm>
+
 #include <QDateTime>
 #include <QStringBuilder>
 #include <QTimer>
@@ -415,9 +417,8 @@ namespace swift::misc::simulation
         CAircraftParts currentParts;
 
         // find the first parts earlier than the current time
-        const auto pivot = std::partition_point(validParts.begin(), validParts.end(), [=, this](auto &&p) {
-            return p.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch;
-        });
+        const auto pivot = std::ranges::partition_point(
+            validParts, [=, this](auto &&p) { return p.getAdjustedMSecsSinceEpoch() > m_currentTimeMsSinceEpoch; });
         const auto partsNewer = makeRange(validParts.begin(), pivot).reverse();
         const auto partsOlder = makeRange(pivot, validParts.end());
 

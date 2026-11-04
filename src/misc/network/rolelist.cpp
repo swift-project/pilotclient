@@ -3,6 +3,8 @@
 
 #include "misc/network/rolelist.h"
 
+#include <algorithm>
+
 #include <QJsonValue>
 
 #include "misc/network/role.h"
@@ -20,7 +22,7 @@ namespace swift::misc::network
 
     bool CRoleList::hasAnyRole(const QStringList &roles) const
     {
-        return std::any_of(roles.cbegin(), roles.cend(), [&](const QString &r) { return this->hasRole(r); });
+        return std::ranges::any_of(roles, [&](const QString &r) { return this->hasRole(r); });
     }
 
     CRoleList::CRoleList(const CSequence<CRole> &other) : CSequence<CRole>(other) {}
