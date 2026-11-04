@@ -41,17 +41,6 @@ namespace swift::misc::network
                  m_fsdSetup.toQString(i18n), this->isConnected() ? this->getFormattedUtcTimestampHms() : "not con.");
     }
 
-    const CServer &CServer::fscFsdServer()
-    {
-        static const CServer fsc = [] {
-            CServer s = CServer("FSC", "FSC e.V.", "OBF:AwJIKfgkQDJEIRnno29DJlB+UK0=", 6809, CUser(), CFsdSetup(),
-                                CEcosystem(CEcosystem::privateFsd()));
-            s.removeSendReceiveDetails(CFsdSetup::AllInterimPositions);
-            return s;
-        }();
-        return fsc;
-    }
-
     const CServer &CServer::esTowerView()
     {
         static const CServer s = CServer("ES Tower", "Euroscope Tower view", "localhost", 6809, CUser(),

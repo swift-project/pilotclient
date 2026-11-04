@@ -28,6 +28,16 @@ SWIFT_DEFINE_VALUEOBJECT_MIXINS(swift::core::data, CGlobalSetup)
 
 namespace swift::core::data
 {
+    namespace
+    {
+        CServer makeFscServer(const QString &name, const QString &address)
+        {
+            CServer s(name, "FSC e.V.", address, 6809, CUser(), CFsdSetup(), CEcosystem(CEcosystem::privateFsd()));
+            s.removeSendReceiveDetails(CFsdSetup::AllInterimPositions);
+            return s;
+        }
+    } // namespace
+
     CGlobalSetup::CGlobalSetup() : CIdentifiable("CGlobalSetup") {}
 
     CUrl CGlobalSetup::getDbIcaoReaderUrl() const { return getDbRootDirectoryUrl(); }
@@ -63,10 +73,12 @@ namespace swift::core::data
 
     CServerList CGlobalSetup::getPredefinedServersPlusHardcodedServers() const
     {
-        static const CServerList hardcoded({ CServer::fscFsdServer(), CServer::esTowerView() });
-        CServerList testServers(m_predefinedServers);
-        testServers.addIfAddressNotExists(hardcoded);
-        return testServers;
+        // fixed servers in all builds, followed by the predefined servers from the bootstrap file
+        static const CServerList hardcoded({ makeFscServer("FSC 1", "server1.fsc-ev.de"),
+                                             makeFscServer("FSC 2", "server2.fsc-ev.de"), CServer::esTowerView() });
+        CServerList servers(hardcoded);
+        servers.addIfAddressNotExists(m_predefinedServers);
+        return servers;
     }
 
     bool CGlobalSetup::isSwiftVersionMinimumMappingVersion() const
