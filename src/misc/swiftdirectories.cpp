@@ -216,7 +216,8 @@ namespace swift::misc
         }
         const QFile file(
             QDir::cleanPath(d + QDir::separator() + "shared/bootstrap/" + CSwiftDirectories::bootstrapFileName()));
-        Q_ASSERT_X(file.exists(), Q_FUNC_INFO, "missing bootstrap file");
+        [[maybe_unused]] const bool exists = file.exists();
+        Q_ASSERT_X(exists, Q_FUNC_INFO, "missing bootstrap file");
         return QFileInfo(file).absoluteFilePath();
     }
 

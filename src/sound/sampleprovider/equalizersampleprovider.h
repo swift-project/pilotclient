@@ -38,7 +38,7 @@ namespace swift::sound::sample_provider
 
         //! @{
         //! Gain
-        double outputGain() const;
+        double getOutputGain() const;
         void setOutputGain(double outputGain);
         //! @}
 

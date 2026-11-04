@@ -101,7 +101,6 @@ int main(int argc, char *argv[])
 
     SWIFTTEST_INIT(SwiftCoreTest::CTestContext)
     CApplication a(CApplicationInfo::UnitTest);
-    a.addNetworkOptions();
     const bool setup = a.parseCommandLineArgsAndLoadSetup();
     if (!setup)
     {

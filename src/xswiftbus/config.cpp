@@ -132,7 +132,7 @@ namespace XSwiftBus
         // for info
         const auto clockNow = std::chrono::system_clock::now();
         const time_t now = std::chrono::system_clock::to_time_t(clockNow);
-        struct tm tms;
+        struct tm tms{};
 #if defined(IBM)
         localtime_s(&tms, &now);
 #else

@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     while (client.getConnectionStatus() == CConnectionStatus::Connected)
     {
         QThread::msleep(100);
-        if (!functionTestsDone)
+        if (!functionTestsDone) // cppcheck-suppress duplicateConditionalAssign
         {
             /*client.sendFlightPlan(FlightType::VFR, "B744", 420, "EGLL", 1530, 1535, "FL350", "KORD", 8, 15,
                                    9, 30, "NONE", "Unit Test", "EGLL.KORD");

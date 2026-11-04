@@ -61,7 +61,7 @@ namespace swift::misc
         struct
         {
             SYMBOL_INFO info;
-            std::array<char, 256> name;
+            std::array<char, 256> name{};
         } symbol;
         symbol.info.MaxNameLen = static_cast<ULONG>(symbol.name.size() - 1);
         symbol.info.SizeOfStruct = sizeof(symbol.info);
@@ -103,14 +103,14 @@ namespace swift::misc
             {
                 continue;
             }
-            auto *basenameEnd = symbol++;
+            const auto *basenameEnd = symbol++;
             auto *end = std::strrchr(symbol, ')');
             if (!end)
             {
                 continue;
             }
             auto *offset = std::strrchr(symbol, '+');
-            auto *symbolEnd = offset ? offset++ : end;
+            const auto *symbolEnd = offset ? offset++ : end;
 
             auto *temp = demangled; // avoid leaking memory if __cxa_demangle returns nullptr
 

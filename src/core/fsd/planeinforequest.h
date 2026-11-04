@@ -34,7 +34,7 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const PlaneInfoRequest &lhs, const PlaneInfoRequest &rhs)
     {
-        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver();
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver();
     }
 
     //! Not equal to operator

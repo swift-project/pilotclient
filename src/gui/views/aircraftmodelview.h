@@ -96,10 +96,10 @@ namespace swift::gui
                                              Qt::CaseSensitivity sensitivity = Qt::CaseInsensitive);
 
             //! \copydoc swift::gui::models::CAircraftModelListModel::setHighlightModels
-            void setHighlightModels(const swift::misc::simulation::CAircraftModelList &highlightModels);
+            void setHighlightModels(const swift::misc::simulation::CAircraftModelList &highlightModelsList);
 
             //! \copydoc swift::gui::models::CAircraftModelListModel::setHighlightModelStrings(const QStringList &)
-            void setHighlightModelStrings(const QStringList &highlightModels);
+            void setHighlightModelStrings(const QStringList &highlightModelsStrings);
 
             //! Set the highlight models based on the saved file
             void setHighlightModelsForInvalidModels();

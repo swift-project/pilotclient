@@ -204,15 +204,15 @@ namespace MiscTest
         QVERIFY2(corAlt == alt, "Still expect same altitude");
 
         // now we use CG underflow detection
-        const CLength cg(3, CLengthUnit::m());
-        situation.setCG(cg);
+        const CLength cgLength(3, CLengthUnit::m());
+        situation.setCG(cgLength);
         corAlt = situation.getCorrectedAltitude(true, &correction);
         QVERIFY2(correction == CAircraftSituation::Underflow, "Expect underflow correction");
         QVERIFY2(corAlt > alt, "Expect corrected altitude");
-        QVERIFY2((corAlt - cg) == alt, "Expect correction by CG");
+        QVERIFY2((corAlt - cgLength) == alt, "Expect correction by CG");
 
         // Unit of CG must be irrelevant
-        CLength cg2(cg);
+        CLength cg2(cgLength);
         cg2.switchUnit(CLengthUnit::m());
         situation.setCG(cg2);
         CAltitude corAlt2 = situation.getCorrectedAltitude(true, &correction);
@@ -227,7 +227,7 @@ namespace MiscTest
         corAlt = situation.getCorrectedAltitude(true, &correction);
         QVERIFY2(correction == CAircraftSituation::Underflow, "Expect underflow correction");
         QVERIFY2(corAlt > alt, "Expect corrected altitude");
-        QVERIFY2((corAlt - cg) == alt, "Expect correction by CG");
+        QVERIFY2((corAlt - cgLength) == alt, "Expect correction by CG");
 
         // overflow detection
         alt = CAltitude(1000, CAltitude::MeanSeaLevel, CLengthUnit::ft());
@@ -243,7 +243,7 @@ namespace MiscTest
         corAlt = situation.getCorrectedAltitude(true, &correction);
         QVERIFY2(correction == CAircraftSituation::DraggedToGround, "Expect dragged to gnd.");
         QVERIFY2(corAlt < alt, "Expect corrected altitude dragged to gnd.");
-        QVERIFY2(corAlt == (ep.getAltitude() + cg), "Expect correction by CG");
+        QVERIFY2(corAlt == (ep.getAltitude() + cgLength), "Expect correction by CG");
     }
 
     void CTestAircraftSituation::sortHint()

@@ -55,7 +55,7 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const PilotDataUpdate &lhs, const PilotDataUpdate &rhs)
     {
-        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() &&
                lhs.m_transponderMode == rhs.m_transponderMode && lhs.m_transponderCode == rhs.m_transponderCode &&
                lhs.m_rating == rhs.m_rating && qFuzzyCompare(lhs.m_latitude, rhs.m_latitude) &&
                qFuzzyCompare(lhs.m_longitude, rhs.m_longitude) && lhs.m_altitudeTrue == rhs.m_altitudeTrue &&

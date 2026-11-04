@@ -24,12 +24,6 @@ namespace swift::gui::models
         : CListModelTimestampObjects("ModelTextMessageList", parent)
     {
         this->setTextMessageMode(mode);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ModelTextMessageList", "time");
-        (void)QT_TRANSLATE_NOOP("ModelTextMessageList", "from");
-        (void)QT_TRANSLATE_NOOP("ModelTextMessageList", "to");
-        (void)QT_TRANSLATE_NOOP("ModelTextMessageList", "message");
     }
 
     void CTextMessageListModel::setTextMessageMode(CTextMessageListModel::TextMessageMode mode)

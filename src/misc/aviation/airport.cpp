@@ -91,9 +91,6 @@ namespace swift::misc::aviation
         // position
         s.append(' ').append(m_position.toQString(i18n));
         return s;
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("Aviation", "Airport");
     }
 
     CAirport CAirport::fromDatabaseJson(const QJsonObject &json, const QString &prefix)

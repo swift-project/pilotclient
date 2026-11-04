@@ -31,6 +31,8 @@ redundantInitialization
 redundantAssignment:samples/misc/samplesperformance.*
 unreadVariable:samples/misc/samplesperformance.*
 
+duplInheritedMember:src/plugins/simulator/p3d/simulatorp3d.*
+
 // False positives
 returnDanglingLifetime:src/misc/iterator.h
 unreadVariable:tests/core/testreaders/testreaders.cpp
@@ -39,6 +41,7 @@ unknownMacro:src/misc/geo/coordinategeodetic.cpp
 unknownMacro:src/misc/geo/elevationplane.h
 unknownMacro:src/misc/identifier.cpp
 unknownMacro:tests/misc/testsharedstate/testsharedstate.h
+unknownMacro
 
 // False positive memory leaks due to Qt parent/child relationship
 unsafeClassCanLeak

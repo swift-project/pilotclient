@@ -27,13 +27,13 @@ namespace swift::sound::sample_provider
 
         //! @{
         //! Looping
-        bool looping() const { return m_looping; }
+        bool isLooping() const { return m_looping; }
         void setLooping(bool looping) { m_looping = looping; }
         //! @}
 
         //! @{
         //! Gain
-        double gain() const { return m_gain; }
+        double getGain() const { return m_gain; }
         void setGain(double gain) { m_gain = gain; }
         //! @}
 

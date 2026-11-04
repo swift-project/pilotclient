@@ -22,13 +22,13 @@ namespace XSwiftBus
     CPlugin::CPlugin()
         : m_dbusConnection(std::make_shared<CDBusConnection>()), m_menu(CMenu::mainMenu().subMenu("xswiftbus"))
     {
-        m_showHideLabelsMenuItem = m_menu.item("Show/Hide Aircraft Labels",
-                                               [this] { m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels()); });
-        m_enableDisableXPlaneAtisMenuItem =
-            m_menu.item("Enable/Disable X-Plane ATIS", [this] { m_atisEnabled.set(m_atisEnabled.get() ? 0 : 1); });
+        m_showHideLabelsMenuItem = m_menu.appendItem(
+            "Show/Hide Aircraft Labels", [this] { m_traffic->setDrawingLabels(!m_traffic->isDrawingLabels()); });
+        m_enableDisableXPlaneAtisMenuItem = m_menu.appendItem(
+            "Enable/Disable X-Plane ATIS", [this] { m_atisEnabled.set(m_atisEnabled.get() ? 0 : 1); });
         m_messageWindowSubMenu = m_menu.subMenu("Message Window");
         m_toggleMessageWindowMenuItem =
-            m_messageWindowSubMenu.item("Show/Hide", [this] { m_service->toggleMessageBoxVisibility(); });
+            m_messageWindowSubMenu.appendItem("Show/Hide", [this] { m_service->toggleMessageBoxVisibility(); });
         m_popupMessageWindowMenuItem =
             m_messageWindowSubMenu.checkableItem("Pop up Window on new Message", true, [this](bool checked) {
                 m_popupMessageWindowMenuItem.setChecked(!checked);
@@ -40,7 +40,7 @@ namespace XSwiftBus
                 m_service->setDisappearMessageWindow(!checked);
             });
         m_planeViewSubMenu = m_menu.subMenu("Follow Plane View");
-        m_planeViewOwnAircraftMenuItem = m_planeViewSubMenu.item(
+        m_planeViewOwnAircraftMenuItem = m_planeViewSubMenu.appendItem(
             "Own Aircraft", [this] { m_traffic->setFollowedAircraft(CTraffic::ownAircraftString()); });
 
         /*m_dbusThread = std::thread([this]()

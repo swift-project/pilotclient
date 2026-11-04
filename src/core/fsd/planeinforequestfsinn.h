@@ -43,7 +43,7 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const PlaneInfoRequestFsinn &lhs, const PlaneInfoRequestFsinn &rhs)
     {
-        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() &&
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() &&
                lhs.m_airlineIcao == rhs.m_airlineIcao && lhs.m_aircraftIcao == rhs.m_aircraftIcao &&
                lhs.m_aircraftIcaoCombinedType == rhs.m_aircraftIcaoCombinedType &&
                lhs.m_sendMModelString == rhs.m_sendMModelString;

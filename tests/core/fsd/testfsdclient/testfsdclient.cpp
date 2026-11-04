@@ -162,7 +162,7 @@ namespace SwiftFsdTest
 
     void CTestFSDClient::cleanup() { delete m_client; }
 
-    void CTestFSDClient::testConstructor() {}
+    void CTestFSDClient::testConstructor() {} // cppcheck-suppress functionStatic
 
     void CTestFSDClient::testDeleteAtc()
     {
@@ -888,7 +888,7 @@ namespace SwiftFsdTest
         QCOMPARE(fsdMessage.getRawMessage(), "FSD Sent=>#SBABCD:EDMM_CTR:PI:GEN:EQUIPMENT=B737:AIRLINE=BER");
     }
 
-    void CTestFSDClient::testAuth()
+    void CTestFSDClient::testAuth() // cppcheck-suppress functionStatic
     {
         /** TODO RR fix with the test key
 

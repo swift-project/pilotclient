@@ -129,7 +129,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        const QHash<QString, CMetar::ReportType> &getReportTypeHash() const
+        static const QHash<QString, CMetar::ReportType> &getReportTypeHash()
         {
             static const QHash<QString, CMetar::ReportType> hash = { { "METAR", CMetar::METAR },
                                                                      { "SPECI", CMetar::SPECI } };
@@ -238,7 +238,7 @@ namespace swift::misc::weather
         QString getDecoderType() const override { return "Wind"; }
 
     protected:
-        const QHash<QString, CSpeedUnit> &getWindUnitHash() const
+        static const QHash<QString, CSpeedUnit> &getWindUnitHash()
         {
             static const QHash<QString, CSpeedUnit> hash = { { "KT", CSpeedUnit::kts() },
                                                              { "MPS", CSpeedUnit::m_s() },
@@ -346,7 +346,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // <from>V in degrees
             const QString directionFrom("(?<direction_from>\\d{3})V");
@@ -364,7 +364,7 @@ namespace swift::misc::weather
         QString getDecoderType() const override { return "Visibility"; }
 
     protected:
-        const QHash<QString, QString> &getCardinalDirections() const
+        static const QHash<QString, QString> &getCardinalDirections()
         {
             static const QHash<QString, QString> hash = {
                 { "N", "north" }, { "NE", "north-east" }, { "E", "east" }, { "SE", "south-east" },
@@ -489,7 +489,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // 10 Minute RVR value: Reported in hundreds of feet if visibility is ≤ one statute mile
             // or RVR is ≤ 6000 feet. Group ends with FT to indicate feet. For example, R06L/2000FT.
@@ -518,7 +518,7 @@ namespace swift::misc::weather
         QString getDecoderType() const override { return "PresentWeather"; }
 
     protected:
-        const QHash<QString, CPresentWeather::Intensity> &getIntensityHash() const
+        static const QHash<QString, CPresentWeather::Intensity> &getIntensityHash()
         {
             static const QHash<QString, CPresentWeather::Intensity> hash = { { "-", CPresentWeather::Light },
                                                                              { "+", CPresentWeather::Heavy },
@@ -526,7 +526,7 @@ namespace swift::misc::weather
             return hash;
         }
 
-        const QHash<QString, CPresentWeather::Descriptor> &getDescriptorHash() const
+        static const QHash<QString, CPresentWeather::Descriptor> &getDescriptorHash()
         {
             static const QHash<QString, CPresentWeather::Descriptor> hash = {
                 { "MI", CPresentWeather::Shallow },      { "BC", CPresentWeather::Patches },
@@ -537,7 +537,7 @@ namespace swift::misc::weather
             return hash;
         }
 
-        const QHash<QString, CPresentWeather::WeatherPhenomenon> &getWeatherPhenomenaHash() const
+        static const QHash<QString, CPresentWeather::WeatherPhenomenon> &getWeatherPhenomenaHash()
         {
             static const QHash<QString, CPresentWeather::WeatherPhenomenon> hash = {
                 { "DZ", CPresentWeather::Drizzle },
@@ -641,13 +641,13 @@ namespace swift::misc::weather
         QString getDecoderType() const override { return "Cloud"; }
 
     protected:
-        const QStringList &getClearSkyTokens() const
+        static const QStringList &getClearSkyTokens()
         {
             static const QStringList list = { "SKC", "NSC", "CLR", "NCD" };
             return list;
         }
 
-        const QHash<QString, CCloudLayer::Coverage> &getCoverage() const
+        static const QHash<QString, CCloudLayer::Coverage> &getCoverage()
         {
             static const QHash<QString, CCloudLayer::Coverage> hash = { { "///", CCloudLayer::None },
                                                                         { "FEW", CCloudLayer::Few },
@@ -737,7 +737,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // Vertical visibility
             const QString verticalVisibility = QStringLiteral("VV(?<vertical_visibility>\\d{3}|///)");
@@ -801,7 +801,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // Tmperature
             const QString temperature = QStringLiteral("(?<temperature>M?\\d{2}|//)");
@@ -821,7 +821,7 @@ namespace swift::misc::weather
         QString getDecoderType() const override { return "Pressure"; }
 
     protected:
-        const QHash<QString, CPressureUnit> &getPressureUnits() const
+        static const QHash<QString, CPressureUnit> &getPressureUnits()
         {
             static const QHash<QString, CPressureUnit> hash = { { "Q", CPressureUnit::hPa() },
                                                                 { "A", CPressureUnit::inHg() } };
@@ -867,7 +867,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // Q => QNH comes in hPa
             // A => QNH comes in inches of Mercury
@@ -951,7 +951,7 @@ namespace swift::misc::weather
         bool isMandatory() const override { return false; }
 
     private:
-        QString getRegExpImpl() const
+        static QString getRegExpImpl()
         {
             // Wind shear on all runways
             const QString wsAllRwy = QStringLiteral("WS ALL RWY");

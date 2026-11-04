@@ -115,7 +115,7 @@ namespace swift::misc
     {
         int n;
         bool operator<(const CNotHashable &other) const { return n < other.n; }
-        QString toQString(bool = false) const { return {}; }
+        QString toQString(bool = false) const { return {}; } // cppcheck-suppress functionStatic
         bool operator==(const CNotHashable &other) const { return n == other.n; }
     };
     inline QJsonArray &operator<<(QJsonArray &a, const CNotHashable &) { return a; }

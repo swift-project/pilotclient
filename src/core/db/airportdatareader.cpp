@@ -80,7 +80,6 @@ namespace swift::core::db
                    << CEntityFlags::entitiesToString(whatToRead);
         }
 
-        int c = 0;
         CEntityFlags::Entity reallyRead = CEntityFlags::NoEntity;
 
         CStatusMessageList msgs;
@@ -103,7 +102,7 @@ namespace swift::core::db
                 try
                 {
                     const CAirportList airports = CAirportList::fromMultipleJsonFormats(airportsJson);
-                    c = airports.size();
+                    const int c = airports.size();
                     msgs.push_back(m_airportCache.set(airports, fi.birthTime().toUTC().toMSecsSinceEpoch()));
 
                     emit dataRead(CEntityFlags::AirportEntity, CEntityFlags::ReadFinished, c, url);

@@ -35,7 +35,7 @@ namespace swift::core::fsd
     //! Equal to operator
     inline bool operator==(const Pong &lhs, const Pong &rhs)
     {
-        return lhs.sender() == rhs.sender() && lhs.receiver() == rhs.receiver() && lhs.m_timestamp == rhs.m_timestamp;
+        return lhs.getSender() == rhs.getSender() && lhs.getReceiver() == rhs.getReceiver() && lhs.m_timestamp == rhs.m_timestamp;
     }
 
     //! Not equal to operator

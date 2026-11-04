@@ -56,7 +56,7 @@ namespace swift::gui
         void destroyed();
 
         //! Set the action
-        void connectDestroy(QObject *action);
+        void connectDestroy(const QObject *action);
 
         //! Unbind this action
         void unbind();

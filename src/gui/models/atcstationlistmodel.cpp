@@ -34,13 +34,6 @@ namespace swift::gui::models
         : CListModelCallsignObjects("ModelAtcList", parent)
     {
         this->setStationMode(stationMode);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "callsign");
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "frequency");
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "distance");
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "controllername");
-        (void)QT_TRANSLATE_NOOP("ModelAtcList", "online");
     }
 
     void CAtcStationListModel::setStationMode(CAtcStationListModel::AtcStationMode stationMode)

@@ -28,11 +28,6 @@ namespace swift::gui::models
         : COrderableListModelDbObjects("CAircraftModelListModel", parent)
     {
         this->setAircraftModelMode(mode);
-
-        // force strings for translation in resource files
-        (void)QT_TRANSLATE_NOOP("CAircraftModelListModel", "callsign");
-        (void)QT_TRANSLATE_NOOP("CAircraftModelListModel", "combined type");
-        (void)QT_TRANSLATE_NOOP("CAircraftModelListModel", "model");
     }
 
     void CAircraftModelListModel::setAircraftModelMode(CAircraftModelListModel::AircraftModelMode mode)

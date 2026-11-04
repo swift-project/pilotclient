@@ -27,7 +27,7 @@ using namespace swift::misc;
 
 void CSwiftData::onMenuClicked()
 {
-    QObject *sender = QObject::sender();
+    const QObject *sender = QObject::sender();
     if (sender == ui->menu_WindowFont)
     {
         // this->ps_setMainPageToInfoArea();

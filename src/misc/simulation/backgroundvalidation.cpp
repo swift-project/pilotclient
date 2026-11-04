@@ -172,6 +172,7 @@ namespace swift::misc::simulation
                                                                    m_wasStopped, m_simDirectory);
             }
 
+            // cppcheck-suppress duplicateExpression
             const qint64 deltaTimeMs = now - started;
             msgs.push_back(CStatusMessage(this, CStatusMessage::SeverityInfo,
                                           QStringLiteral("Validated in %1ms").arg(deltaTimeMs)));

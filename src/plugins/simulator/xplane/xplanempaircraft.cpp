@@ -54,7 +54,10 @@ namespace swift::simplugin::xplane
         return this->getInterpolator() ? this->getInterpolator()->getInterpolationMessages(mode) : CStatusMessageList();
     }
 
-    CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const { return { this->keys() }; }
+    CCallsignSet CXPlaneMPAircraftObjects::getAllCallsigns() const // cppcheck-suppress functionStatic
+    {
+        return { this->keys() };
+    }
 
     QStringList CXPlaneMPAircraftObjects::getAllCallsignStrings(bool sorted) const
     {

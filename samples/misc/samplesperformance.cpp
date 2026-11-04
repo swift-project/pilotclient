@@ -290,9 +290,11 @@ namespace swift::sample
         const QString liveriesFileName = QDir(dir).filePath("liveries.json");
 
         QFile modelFile(modelFileName);
-        Q_ASSERT_X(modelFile.exists(), Q_FUNC_INFO, "Model file does not exist");
+        [[maybe_unused]] const bool existsModel = modelFile.exists();
+        Q_ASSERT_X(existsModel, Q_FUNC_INFO, "Model file does not exist");
         QFile liveryFile(liveriesFileName);
-        Q_ASSERT_X(liveryFile.exists(), Q_FUNC_INFO, "Liveries file does not exist");
+        [[maybe_unused]] const bool existsLivery = liveryFile.exists();
+        Q_ASSERT_X(existsLivery, Q_FUNC_INFO, "Liveries file does not exist");
 
         out << "Loaded DB JSON model file " << modelFile.fileName() << Qt::endl;
         const QString modelData = CFileUtils::readFileToString(modelFile.fileName());

@@ -111,7 +111,6 @@ int main(int argc, char *argv[])
     QCoreApplication app(argc, argv);
     SWIFTTEST_INIT(swiftcoretest::CTestConnectivity)
     CApplication a(CApplicationInfo::UnitTest);
-    a.addNetworkOptions();
     const bool setup = a.parseCommandLineArgsAndLoadSetup();
     if (!setup)
     {
