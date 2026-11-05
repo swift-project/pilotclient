@@ -112,7 +112,7 @@ if(MSVC)
 endif()
 
 # Find dependencies
-find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Concurrent Xml Qml Widgets Svg Test)
+find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui Multimedia Network OpenGL Concurrent Xml Qml Widgets Svg Test LinguistTools)
 find_package(Opus REQUIRED)
 find_package(libsodium REQUIRED)
 find_package(nlohmann_json REQUIRED)

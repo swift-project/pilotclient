@@ -26,14 +26,14 @@ CMiniStatusBarWidget::CMiniStatusBarWidget(QWidget *parent) : QFrame(parent)
 
     m_ledSimulator = new CLedWidget(this);
     m_ledSimulator->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, CLedWidget::Rounded,
-                              "Simulator running", "Simulator disconnected", "Simulator connected", 14);
+                              tr("Simulator running"), tr("Simulator disconnected"), tr("Simulator connected"), 14);
 
     m_ledNetwork = new CLedWidget(this);
-    m_ledNetwork->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, "Network connected",
-                            "Network disconnected", 14);
+    m_ledNetwork->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, tr("Network connected"),
+                            tr("Network disconnected"), 14);
 
-    QLabel *lblSim = new QLabel("Simulator", this);
-    QLabel *lblNet = new QLabel("FSD-Server", this);
+    QLabel *lblSim = new QLabel(tr("Simulator"), this);
+    QLabel *lblNet = new QLabel(tr("FSD-Server"), this);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(6, 2, 6, 2);
@@ -99,7 +99,8 @@ void CMiniStatusBarWidget::onNetworkStatusChanged(const CConnectionStatus &from,
     {
     case CConnectionStatus::Connected:
         m_ledNetwork->setOn(true);
-        m_ledNetwork->setOnToolTip(u"Verbunden mit: " % sGui->getIContextNetwork()->getConnectedServer().getName());
+        m_ledNetwork->setOnToolTip(
+            tr("Verbunden mit: %1").arg(sGui->getIContextNetwork()->getConnectedServer().getName()));
         break;
     case CConnectionStatus::Connecting: m_ledNetwork->setTriStateColor(CLedWidget::Yellow); break;
     default: m_ledNetwork->setOn(false); break;

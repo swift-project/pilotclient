@@ -20,7 +20,7 @@ namespace swift::gui::settings
     };
 
     //! Setting: ATC-Sortiermodus (Teil der "Miscellaneous" Einstellungen der Mini-GUI)
-    struct SWIFT_GUI_EXPORT TMiniAtcSortMode : public swift::misc::TSettingTrait<int>
+    struct TMiniAtcSortMode : public swift::misc::TSettingTrait<int>
     {
         //! \copydoc swift::misc::TSettingTrait::key
         static const char *key() { return "miniguimisc/atcsortmode"; }
@@ -36,6 +36,28 @@ namespace swift::gui::settings
         static const int &defaultValue()
         {
             static const int def = static_cast<int>(SortByDistance);
+            return def;
+        }
+    };
+
+    //! Setting: Sprache der Mini-GUI (Teil der "Miscellaneous" Einstellungen).
+    //! Wert ist entweder "system" (Systemsprache verwenden) oder ein Locale-Name wie "de_DE", "en_US".
+    struct TMiniLanguage : public swift::misc::TSettingTrait<QString>
+    {
+        //! \copydoc swift::misc::TSettingTrait::key
+        static const char *key() { return "miniguimisc/language"; }
+
+        //! \copydoc swift::misc::TSettingTrait::humanReadable
+        static const QString &humanReadable()
+        {
+            static const QString name("Mini GUI: Sprache");
+            return name;
+        }
+
+        //! \copydoc swift::misc::TSettingTrait::defaultValue
+        static const QString &defaultValue()
+        {
+            static const QString def("system");
             return def;
         }
     };

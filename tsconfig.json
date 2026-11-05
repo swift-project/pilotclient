@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "allowJs": false,
+        "checkJs": false
+    },
+    "exclude": [
+        "**/i18n/**",
+        "**/*.ts"
+    ],
+    "files": []
+}

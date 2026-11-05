@@ -11,7 +11,7 @@ using namespace swift::gui::components;
 
 CMiniFlightPlanDialog::CMiniFlightPlanDialog(QWidget *parent) : QDialog(parent)
 {
-    this->setWindowTitle("Flugplanverwaltung");
+    this->setWindowTitle(tr("Flugplanverwaltung"));
     this->resize(700, 600);
 
     m_flightPlanComponent = new CFlightPlanComponent(this);

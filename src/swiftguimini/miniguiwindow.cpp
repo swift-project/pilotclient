@@ -85,16 +85,16 @@ void CMiniGuiWindow::initTabs()
     this->setCentralWidget(central);
 
     m_loginComponent = new CMiniLoginWidget(m_tabs);
-    m_loginTabIndex = m_tabs->addTab(m_loginComponent, CIcons::globe16(), "Login");
+    m_loginTabIndex = m_tabs->addTab(m_loginComponent, CIcons::globe16(), tr("Login"));
 
     m_clientsWidget = new CMiniClientsWidget(m_tabs);
-    m_clientsTabIndex = m_tabs->addTab(m_clientsWidget, CIcons::appAtc16(), "Clients");
+    m_clientsTabIndex = m_tabs->addTab(m_clientsWidget, CIcons::appAtc16(), tr("Clients"));
 
     m_radarWidget = new CMiniRadarWidget(m_tabs);
-    m_tabs->addTab(m_radarWidget, CIcons::appRadar16(), "Radar");
+    m_tabs->addTab(m_radarWidget, CIcons::appRadar16(), tr("Radar"));
 
     m_cockpitWidget = new CMiniCockpitWidget(m_tabs);
-    m_cockpitTabIndex = m_tabs->addTab(m_cockpitWidget, CIcons::appCockpit16(), "Cockpit");
+    m_cockpitTabIndex = m_tabs->addTab(m_cockpitWidget, CIcons::appCockpit16(), tr("Cockpit"));
 }
 
 void CMiniGuiWindow::initMenus()
@@ -167,9 +167,9 @@ void CMiniGuiWindow::closeEvent(QCloseEvent *event)
         if (m_tabs && m_loginTabIndex >= 0) { m_tabs->setCurrentIndex(m_loginTabIndex); }
         if (m_loginComponent) { m_loginComponent->blinkDisconnectButton(); }
 
-        QMessageBox::warning(this, QStringLiteral("Aktive Verbindung"),
-                             QStringLiteral("Es besteht noch eine aktive FSD-Verbindung.\n"
-                                            "Bitte zuerst trennen (Disconnect), bevor das Programm beendet wird."));
+        QMessageBox::warning(this, tr("Aktive Verbindung"),
+                             tr("Es besteht noch eine aktive FSD-Verbindung.\n"
+                                "Bitte zuerst trennen (Disconnect), bevor das Programm beendet wird."));
         return;
     }
 

@@ -39,8 +39,8 @@ namespace swift::gui::components
         stack->setObjectName("radioStackPanel");
         QHBoxLayout *stackLayout = new QHBoxLayout(stack);
 
-        m_com1 = this->createComPanel(stack, "COM1", CComSystem::Com1);
-        m_com2 = this->createComPanel(stack, "COM2", CComSystem::Com2);
+        m_com1 = this->createComPanel(stack, tr("COM1"), CComSystem::Com1);
+        m_com2 = this->createComPanel(stack, tr("COM2"), CComSystem::Com2);
         this->createXpdrPanel(stack);
         this->createSelcalPanel(stack);
 
@@ -104,11 +104,11 @@ namespace swift::gui::components
         panel.standbyLabel->setObjectName("lcdStandbyLabel");
         panel.standbyLabel->setAlignment(Qt::AlignCenter);
         panel.standbyLabel->setCursor(Qt::PointingHandCursor);
-        panel.standbyLabel->setToolTip("Doppelklick: Standby-Frequenz eingeben");
+        panel.standbyLabel->setToolTip(tr("Doppelklick: Standby-Frequenz eingeben"));
         standbyRow->addWidget(panel.standbyLabel, 1);
 
         panel.swapButton = new QPushButton(QStringLiteral("\u21C6"), radio); // ⇆
-        panel.swapButton->setToolTip("Aktive und Standby-Frequenz tauschen");
+        panel.swapButton->setToolTip(tr("Aktive und Standby-Frequenz tauschen"));
         panel.swapButton->setFixedWidth(32);
         standbyRow->addWidget(panel.swapButton);
 
@@ -123,7 +123,7 @@ namespace swift::gui::components
 
         // workaround: use a lambda-based mouse-press via event filter is more work; instead use a button beneath for
         // editing
-        QPushButton *editButton = new QPushButton("Standby setzen...", radio);
+        QPushButton *editButton = new QPushButton(tr("Standby setzen..."), radio);
         connect(editButton, &QPushButton::clicked, this, [this, unit] { this->editStandbyFrequency(unit); });
         radioLayout->addWidget(editButton);
 
@@ -137,7 +137,7 @@ namespace swift::gui::components
         xpdr->setFrameShape(QFrame::StyledPanel);
         QVBoxLayout *xpdrLayout = new QVBoxLayout(xpdr);
 
-        QLabel *titleLabel = new QLabel("XPDR", xpdr);
+        QLabel *titleLabel = new QLabel(tr("XPDR"), xpdr);
         titleLabel->setObjectName("cockpitPanelTitle");
         titleLabel->setAlignment(Qt::AlignHCenter);
         xpdrLayout->addWidget(titleLabel);
@@ -151,10 +151,10 @@ namespace swift::gui::components
         connect(m_xpdrCodeEdit, &QLineEdit::editingFinished, this, &CMiniCockpitWidget::onXpdrCodeEdited);
 
         QGridLayout *modeGrid = new QGridLayout();
-        m_xpdrStandbyButton = new QPushButton("STBY", xpdr);
-        m_xpdrOnButton = new QPushButton("ON", xpdr);
-        m_xpdrAltButton = new QPushButton("ALT", xpdr);
-        m_xpdrIdentButton = new QPushButton("IDENT", xpdr);
+        m_xpdrStandbyButton = new QPushButton(tr("STBY"), xpdr);
+        m_xpdrOnButton = new QPushButton(tr("ON"), xpdr);
+        m_xpdrAltButton = new QPushButton(tr("ALT"), xpdr);
+        m_xpdrIdentButton = new QPushButton(tr("IDENT"), xpdr);
 
         modeGrid->addWidget(m_xpdrStandbyButton, 0, 0);
         modeGrid->addWidget(m_xpdrOnButton, 0, 1);
@@ -179,7 +179,7 @@ namespace swift::gui::components
         selcal->setFrameShape(QFrame::StyledPanel);
         QVBoxLayout *selcalLayout = new QVBoxLayout(selcal);
 
-        QLabel *titleLabel = new QLabel("SELCAL", selcal);
+        QLabel *titleLabel = new QLabel(tr("SELCAL"), selcal);
         titleLabel->setObjectName("cockpitPanelTitle");
         titleLabel->setAlignment(Qt::AlignHCenter);
         selcalLayout->addWidget(titleLabel);
@@ -206,18 +206,18 @@ namespace swift::gui::components
         QVBoxLayout *chatLayout = new QVBoxLayout(chat);
 
         QHBoxLayout *headerRow = new QHBoxLayout();
-        QLabel *titleLabel = new QLabel("Chat", chat);
+        QLabel *titleLabel = new QLabel(tr("Chat"), chat);
         titleLabel->setObjectName("cockpitPanelTitle");
         headerRow->addWidget(titleLabel);
 
-        QLabel *sourceLabel = new QLabel("Quelle:", chat);
+        QLabel *sourceLabel = new QLabel(tr("Quelle:"), chat);
         headerRow->addWidget(sourceLabel);
 
         m_chatSourceSelector = new QComboBox(chat);
-        m_chatSourceSelector->addItem("All", ChatAll);
-        m_chatSourceSelector->addItem("UNICOM", ChatUnicom);
-        m_chatSourceSelector->addItem("COM1", ChatCom1);
-        m_chatSourceSelector->addItem("COM2", ChatCom2);
+        m_chatSourceSelector->addItem(tr("All"), ChatAll);
+        m_chatSourceSelector->addItem(tr("UNICOM"), ChatUnicom);
+        m_chatSourceSelector->addItem(tr("COM1"), ChatCom1);
+        m_chatSourceSelector->addItem(tr("COM2"), ChatCom2);
         headerRow->addWidget(m_chatSourceSelector);
         headerRow->addStretch(1);
         chatLayout->addLayout(headerRow);
@@ -227,7 +227,7 @@ namespace swift::gui::components
         chatLayout->addWidget(m_chatTextEdit, 1);
 
         m_chatInputEdit = new QLineEdit(chat);
-        m_chatInputEdit->setPlaceholderText("Text eingeben und Enter druecken zum Senden...");
+        m_chatInputEdit->setPlaceholderText(tr("Text eingeben und Enter druecken zum Senden..."));
         chatLayout->addWidget(m_chatInputEdit);
 
         connect(m_chatInputEdit, &QLineEdit::returnPressed, this, &CMiniCockpitWidget::onChatTextEntered);
@@ -290,8 +290,8 @@ namespace swift::gui::components
         const CComSystem current = ctx->getOwnComSystem(unit);
         bool ok = false;
         const double value = QInputDialog::getDouble(
-            this, "Standby-Frequenz", "Frequenz in MHz:", current.getFrequencyStandby().value(CFrequencyUnit::MHz()),
-            118.0, 137.0, 3, &ok);
+            this, tr("Standby-Frequenz"), tr("Frequenz in MHz:"),
+            current.getFrequencyStandby().value(CFrequencyUnit::MHz()), 118.0, 137.0, 3, &ok);
         if (!ok) { return; }
 
         ctx->updateStandbyComFrequency(CFrequency(value, CFrequencyUnit::MHz()), unit, identifier());
