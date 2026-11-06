@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US" sourcelanguage="de_DE">
 <context>
-    <name>CMiniCockpitWidget</name>
+    <name>swift::gui::components::CMiniCockpitWidget</name>
     <message>
         <location filename="../../gui/components/minicockpitwidget.cpp" line="42"/>
         <location filename="../../gui/components/minicockpitwidget.cpp" line="219"/>
