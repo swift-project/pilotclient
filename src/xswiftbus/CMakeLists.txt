@@ -35,12 +35,22 @@ add_library(xswiftbus SHARED
         service.h
         settings.cpp
         settings.h
+        aircraftcategory.cpp
+        aircraftcategory.h
+        contrail.cpp
+        contrail.h
+        maplayer.cpp
+        maplayer.h
+        soundsystem.cpp
+        soundsystem.h
         terrainprobe.cpp
         terrainprobe.h
         traffic.cpp
         traffic.h
         utils.cpp
         utils.h
+        wakewriter.cpp
+        wakewriter.h
 
         xplanemp2/src/CSL.cpp
         xplanemp2/src/CSL.h
@@ -163,7 +173,7 @@ if(WIN32)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/session.conf DESTINATION xswiftbus/64/share/dbus-1/)
 endif()
 
-install(DIRECTORY LegacyData DESTINATION xswiftbus)
+install(DIRECTORY LegacyData Resources DESTINATION xswiftbus)
 install(FILES xswiftbus.conf ${CMAKE_CURRENT_BINARY_DIR}/readme.txt DESTINATION xswiftbus)
 
 if (DEFINED SWIFT_DEV_X_PLANE_PLUGINS_DIR)

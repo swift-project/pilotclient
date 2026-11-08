@@ -20,6 +20,7 @@
 #include "menus.h"
 #include "settings.h"
 #include "terrainprobe.h"
+#include "aircraftcategory.h"
 
 //! \cond PRIVATE
 #define XSWIFTBUS_TRAFFIC_INTERFACENAME "org.swift_project.xswiftbus.traffic"
@@ -28,6 +29,11 @@
 
 namespace XSwiftBus
 {
+    class CWakeWriter;
+    class CMapLayer;
+    class CSoundSystem;
+    class CContrails;
+
     /*!
      * xswiftbus service object for traffic aircraft which is accessible through DBus
      */
@@ -138,6 +144,58 @@ namespace XSwiftBus
             return o;
         }
 
+        //! Singleton access for render-thread callbacks
+        static CTraffic *instance() { return s_instance; }
+
+        //! Remote aircraft map for subsystems (wake, map layer, sounds)
+        const std::unordered_map<void *, Plane *> &getPlanesById() const { return m_planesById; }
+
+        //! Remote aircraft, filled from the Doc8643 table on addPlane
+        struct Plane
+        {
+            void *id = nullptr;
+            std::string callsign;
+            std::string aircraftIcao;
+            std::string airlineIcao;
+            std::string livery;
+            std::string modelName;
+            std::string nightTextureMode;
+            bool hasSurfaces = false;
+            bool isOnGround = false;
+            char label[32] {};
+            CTerrainProbe terrainProbe;
+            XPMPPlaneSurfaces_t surfaces;
+            float targetGearPosition = 0;
+            float targetFlapRatio = 0;
+            float targetSpoilerRatio = 0;
+            std::chrono::steady_clock::time_point prevSurfacesLerpTime;
+            std::chrono::steady_clock::time_point positionTimes[3];
+            XPMPPlanePosition_t positions[4]; // 1 as input for extrapolation, 1 as next input, 1 latest, 1 as output
+            XPMPPlaneSurveillance_t surveillance;
+
+            // classification & animation parameters (filled from the Doc8643 table)
+            std::string classification;
+            std::string wtcLetter;
+            bool flightModelFilled = false;
+            int wakeCategory = 1;
+            float gearDeflectionM = 0.5f;
+            float flapsDurationMs = 5000;
+            float gearDurationMs = 10000;
+
+            // tire/engine rotation state
+            float tireRotAngle = 0;
+            float engineRotAngle = 0;
+            float engineRotRpm = 0;
+
+            // touchdown smoke
+            bool prevNetworkOnGround = false;
+            std::chrono::steady_clock::time_point smokeStart;
+            bool smokeActive = false;
+
+            Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_,
+                  const std::string &airlineIcao_, const std::string &livery_, const std::string &modelName_);
+        };
+
     protected:
         //! Handler
         virtual void dbusDisconnectedHandler() override;
@@ -176,29 +234,17 @@ namespace XSwiftBus
         static int orbitPlaneFunc(XPLMCameraPosition_t *cameraPosition, int isLosingControl, void *refcon);
         static int followAircraftKeySniffer(char character, XPLMKeyFlags flags, char virtualKey, void *refcon);
 
-        //! Remote aircraft
-        struct Plane
-        {
-            void *id = nullptr;
-            std::string callsign;
-            std::string aircraftIcao;
-            std::string airlineIcao;
-            std::string livery;
-            std::string modelName;
-            std::string nightTextureMode;
-            bool hasSurfaces = false;
-            bool isOnGround = false;
-            char label[32] {};
-            CTerrainProbe terrainProbe;
-            XPMPPlaneSurfaces_t surfaces;
-            float targetGearPosition = 0;
-            std::chrono::steady_clock::time_point prevSurfacesLerpTime;
-            std::chrono::steady_clock::time_point positionTimes[3];
-            XPMPPlanePosition_t positions[4]; // 1 as input for extrapolation, 1 as next input, 1 latest, 1 as output
-            XPMPPlaneSurveillance_t surveillance;
-            Plane(void *id_, const std::string &callsign_, const std::string &aircraftIcao_,
-                  const std::string &airlineIcao_, const std::string &livery_, const std::string &modelName_);
-        };
+        //! Fill classification/flight model for a plane from the Doc8643 table
+        void classifyPlane(Plane *plane);
+
+        //! Interpolate flaps and spoilers toward their targets
+        void interpolateFlapsSpoilers(Plane *plane);
+
+        //! Tire and engine rotation animation
+        void updateRotations(Plane *plane);
+
+        //! Touchdown smoke detection (network on-ground + local terrain elevation)
+        void updateTouchdownSmoke(Plane *plane);
 
         //! Label renderer
         class Labels : public CDrawable
@@ -285,6 +331,12 @@ namespace XSwiftBus
         void doPlaneUpdates();
         void interpolatePosition(Plane *);
         void interpolateGear(Plane *);
+
+        //! subsystem instances (created in initialize(), destroyed in cleanup())
+        CWakeWriter *m_wakeWriter = nullptr;
+        CMapLayer *m_mapLayer = nullptr;
+        CSoundSystem *m_soundSystem = nullptr;
+        CContrails *m_contrails = nullptr;
     };
 } // namespace XSwiftBus
 

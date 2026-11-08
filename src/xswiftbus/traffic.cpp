@@ -12,6 +12,11 @@
 #include "traffic.h"
 #include "utils.h"
 #include "XPMPMultiplayer.h"
+#include "aircraftcategory.h"
+#include "contrail.h"
+#include "maplayer.h"
+#include "soundsystem.h"
+#include "wakewriter.h"
 #include <XPLM/XPLMGraphics.h>
 #include <XPLM/XPLMProcessing.h>
 #include <XPLM/XPLMUtilities.h>
@@ -24,6 +29,7 @@
 #include <ctime>
 #include <algorithm>
 #include <limits>
+#include <numeric>
 // clang-format on
 
 // clazy:excludeall=reserve-candidates
@@ -97,10 +103,28 @@ namespace XSwiftBus
             updateConfiguration();
             auto err = XPMPMultiplayerInit(&m_configuration, related.c_str(), doc8643.c_str());
             if (err && *err) { cleanup(); }
-            else { m_initialized = true; }
+            else
+            {
+                m_initialized = true;
+                this->initSubsystems();
+            }
         }
 
         return m_initialized;
+    }
+
+    void CTraffic::initSubsystems()
+    {
+        auto resourcesDir = g_xplanePath + "Resources" + g_sep + "plugins" + g_sep + "xswiftbus" + g_sep + "Resources" +
+                            g_sep;
+        if (!m_wakeWriter) { m_wakeWriter = new CWakeWriter(); }
+        m_wakeWriter->init();
+        if (!m_mapLayer) { m_mapLayer = new CMapLayer(); }
+        m_mapLayer->init(resourcesPath + "MapIcons.png");
+        if (!m_soundSystem) { m_soundSystem = new CSoundSystem(); }
+        m_soundSystem->init();
+        if (!m_contrails) { m_contrails = new CContrails(); }
+        m_contrails->init(resourcesPath);
     }
 
     bool CTraffic::acquireMultiplayerPlanes(std::string *owner)
@@ -131,6 +155,9 @@ namespace XSwiftBus
 
     void CTraffic::cleanup()
     {
+        if (m_contrails) { m_contrails->cleanup(); }
+        if (m_soundSystem) { m_soundSystem->cleanup(); }
+        if (m_mapLayer) { m_mapLayer->cleanup(); }
         removeAllPlanes();
 
         if (m_enabledMultiplayer)
@@ -314,6 +341,7 @@ namespace XSwiftBus
         }
 
         Plane *plane = new Plane(id, callsign, aircraftIcao, airlineIcao, livery, modelName);
+        this->classifyPlane(plane);
         m_planesByCallsign[callsign] = plane;
         m_planesById[id] = plane;
 
@@ -343,6 +371,8 @@ namespace XSwiftBus
             m_followPlaneViewSequence.end());
 
         Plane *plane = planeIt->second;
+        if (m_contrails) { m_contrails->removePlane(callsign); }
+        if (m_soundSystem) { m_soundSystem->removePlane(callsign); }
         m_planesByCallsign.erase(callsign);
         m_planesById.erase(plane->id);
         XPMPDestroyPlane(plane->id);
@@ -365,6 +395,8 @@ namespace XSwiftBus
             m_followPlaneViewSubMenu.removeItem(item);
         }
 
+        if (m_contrails) { m_contrails->cleanup(); }
+        if (m_soundSystem) { m_soundSystem->cleanup(); }
         m_planesByCallsign.clear();
         m_planesById.clear();
         m_followPlaneViewMenuItems.clear();
@@ -429,8 +461,8 @@ namespace XSwiftBus
 
             plane->hasSurfaces = true;
             plane->targetGearPosition = static_cast<float>(gears.at(i));
-            plane->surfaces.flapRatio = static_cast<float>(flaps.at(i));
-            plane->surfaces.spoilerRatio = static_cast<float>(spoilers.at(i));
+            plane->targetFlapRatio = static_cast<float>(flaps.at(i));
+            plane->targetSpoilerRatio = static_cast<float>(spoilers.at(i));
             plane->surfaces.speedBrakeRatio = static_cast<float>(speedBrakes.at(i));
             plane->surfaces.slatRatio = static_cast<float>(slats.at(i));
             plane->surfaces.wingSweep = static_cast<float>(wingSweeps.at(i));
@@ -819,6 +851,9 @@ namespace XSwiftBus
             Plane *plane = pair.second;
             interpolatePosition(plane);
             interpolateGear(plane);
+            this->interpolateFlapsSpoilers(plane);
+            this->updateRotations(plane);
+            this->updateTouchdownSmoke(plane);
             XPMPUpdate_t update = { plane->id, &plane->positions[3], &plane->surfaces, &plane->surveillance,
                                     plane->isOnGround };
             m_updates.push_back(update);
@@ -826,6 +861,10 @@ namespace XSwiftBus
         XPMPUpdatePlanes(m_updates.data(), sizeof(XPMPUpdate_t), m_updates.size());
 
         XPMP_PrepListHook(0, 0, 0, nullptr);
+
+        if (m_wakeWriter) { m_wakeWriter->update(m_planesById); }
+        if (m_contrails) { m_contrails->updatePositions(); }
+        if (m_soundSystem) { m_soundSystem->update(); }
     }
 
     void CTraffic::interpolatePosition(Plane *plane)
@@ -866,6 +905,105 @@ namespace XSwiftBus
             plane->surfaces.gearPosition = std::max(0.0f, std::min(plane->surfaces.gearPosition, 1.0f));
         }
         plane->prevSurfacesLerpTime = now;
+    }
+
+    void CTraffic::classifyPlane(Plane *plane)
+    {
+        const auto category = CDoc8643Database::instance().classify(plane->aircraftIcao);
+        plane->classification = category.classification;
+        plane->wtcLetter = category.wtc;
+        plane->wakeCategory = category.wakeCategory();
+        const auto fm = category.flightModel();
+        plane->flightModelFilled = true;
+        plane->gearDeflectionM = fm.gearDeflectionM;
+        plane->flapsDurationMs = fm.flapsDurationMs;
+        plane->gearDurationMs = fm.gearDurationMs;
+    }
+
+    void CTraffic::interpolateFlapsSpoilers(Plane *plane)
+    {
+        const auto now = std::chrono::steady_clock::now();
+        const auto diffMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - plane->prevSurfacesLerpTime);
+        const float dtMs = static_cast<float>(diffMs.count());
+        if (dtMs <= 0) { return; }
+
+        const float flapDiff = plane->targetFlapRatio - plane->surfaces.flapRatio;
+        if (std::fabs(flapDiff) > std::numeric_limits<float>::epsilon())
+        {
+            const float step = std::copysign(std::min(dtMs / plane->flapsDurationMs, 1.0f),
+                                             flapDiff);
+            plane->surfaces.flapRatio = std::clamp(plane->surfaces.flapRatio + step, 0.0f, 1.0f);
+            plane->surfaces.slatRatio = plane->surfaces.flapRatio;
+        }
+
+        const float spoilerDiff = plane->targetSpoilerRatio - plane->surfaces.spoilerRatio;
+        if (std::fabs(spoilerDiff) > std::numeric_limits<float>::epsilon())
+        {
+            const float step = std::copysign(std::min(dtMs / plane->flapsDurationMs, 1.0f),
+                                             spoilerDiff);
+            plane->surfaces.spoilerRatio = std::clamp(plane->surfaces.spoilerRatio + step, 0.0f, 1.0f);
+            plane->surfaces.speedBrakeRatio = plane->surfaces.spoilerRatio;
+        }
+    }
+
+    void CTraffic::updateRotations(Plane *plane)
+    {
+        const float degPerMs = 6.0f; // 360 deg per 60 s => 6 deg/s => 0.006 deg/ms for 1000rpm => scaled below
+
+        // tire rotation: only on ground and moving
+        if (plane->isOnGround)
+        {
+            const double dLat = plane->positions[2].lat - plane->positions[1].lat;
+            const double dLon = plane->positions[2].lon - plane->positions[1].lon;
+            const double groundSpeedMs = std::sqrt(dLat * dLat + dLon * dLon) * 6371000.0 * 0.017453292519943295;
+            const float tireRpm = static_cast<float>((60.0 / (2.0 * M_PI * 3.2)) * groundSpeedMs);
+            const float tireDegPerMs = tireRpm * 360.0f / 60.0f / 1000.0f;
+            plane->tireRotAngle += tireDegPerMs;
+        }
+
+        // engine fan rotation: engine running => 1200 rpm
+        if (plane->surfaces.thrust > 0.1f)
+        {
+            plane->engineRotRpm = 1200;
+            plane->engineRotAngle += plane->engineRotRpm * 360.0f / 60.0f / 1000.0f;
+        }
+        else
+        {
+            plane->engineRotRpm = 0;
+        }
+
+        // wrap angles
+        while (plane->tireRotAngle >= 360) { plane->tireRotAngle -= 360; }
+        while (plane->engineRotAngle >= 360) { plane->engineRotAngle -= 360; }
+    }
+
+    void CTraffic::updateTouchdownSmoke(Plane *plane)
+    {
+        // touchdown = network reports on ground, but our local render state hasn't caught up
+        const bool isTouchdown = plane->isOnGround && !plane->prevNetworkOnGround;
+
+        // double check with the terrain probe: is the plane actually at or below the local terrain?
+        if (isTouchdown)
+        {
+            bool isWater = false;
+            const CElevationPlane elevation = plane->terrainProbe.getElevation(
+                plane->positions[3].lat, plane->positions[3].lon,
+                plane->positions[3].elevation * 0.3048, plane->callsign, isWater);
+            if (elevation.hasMSLGeodeticHeight() &&
+                plane->positions[3].elevation * 0.3048 <= elevation.getMSLGeodeticHeight().value(CLengthUnit::m()))
+            {
+                plane->smokeActive = true;
+                plane->smokeStart = std::chrono::steady_clock::now();
+            }
+        }
+        plane->prevNetworkOnGround = plane->isOnGround;
+
+        // deactivate after 2 seconds
+        if (plane->smokeActive)
+        {
+            const auto elapsed = std::chrono::steady_clock::now() - plane->smokeStart;
+            if (elapsed > 2s) { plane->smokeActive = false; }
+        }
     }
 
     void CTraffic::Labels::draw()
