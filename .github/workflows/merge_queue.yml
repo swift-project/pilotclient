@@ -94,7 +94,7 @@ jobs:
           submodules: 'true'
       - name: Install Qt
         if: ${{ steps.check_need_clang_tidy.outputs.should_run_clang_tidy == 'true' }}
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
@@ -171,13 +171,13 @@ jobs:
           EOF
           sudo wg-quick up wg0
       - name: Install Qt
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
           aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
-      - uses: cargo-bins/cargo-binstall@b874e25ea559687bec77e281e9b271aa1367b624
+      - uses: cargo-bins/cargo-binstall@851112458b5f28a29e5bc14a690c3f283d9dcc6f
         with:
           version: "1.20.1"
       - name: Cache InstallBuilder
@@ -258,18 +258,18 @@ jobs:
         run: |
            sccache --stop-server
       - name: Upload installer
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: swiftinstaller-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: xswiftbus-thin-linux-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -324,7 +324,7 @@ jobs:
           & "C:\Program Files\WireGuard\wireguard.exe" /installtunnelservice "$env:TEMP\wg0.conf"
           Start-Sleep -Seconds 5
       - name: Install Qt
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
@@ -332,7 +332,7 @@ jobs:
           aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
       - name: Install Qt debug info
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06
         with:
           version: ${{ env.qt_version }}
           arch: win64_msvc2022_64
@@ -340,7 +340,7 @@ jobs:
           cache: true
           modules: debug_info
           extra: --archives qtbase
-      - uses: cargo-bins/cargo-binstall@b874e25ea559687bec77e281e9b271aa1367b624
+      - uses: cargo-bins/cargo-binstall@851112458b5f28a29e5bc14a690c3f283d9dcc6f
         with:
           version: "1.20.1"
       - name: Cache InstallBuilder
@@ -419,18 +419,18 @@ jobs:
         run: |
            sccache --stop-server
       - name: Upload installer
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: swiftinstaller-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: xswiftbus-thin-windows-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -469,13 +469,13 @@ jobs:
           sudo cp /tmp/wg0.conf /etc/wireguard/wg0.conf
           sudo wg-quick up wg0
       - name: Install Qt
-        uses: jurplel/install-qt-action@48d3ad6db93f3627c8ee7a0454bc6f3744f7e730
+        uses: jurplel/install-qt-action@b344308e4483fc892e0d27b3cd1b173ebdd95f06
         with:
           version: ${{ env.qt_version }}
           modules: 'qtmultimedia'
           aqtsource: 'git+https://github.com/miurahr/aqtinstall.git@8c3695d4a4e1ceabf6a74dc6c79681656dc6b74b'
           cache: true
-      - uses: cargo-bins/cargo-binstall@b874e25ea559687bec77e281e9b271aa1367b624
+      - uses: cargo-bins/cargo-binstall@851112458b5f28a29e5bc14a690c3f283d9dcc6f
         with:
           version: "1.20.1"
       - name: Cache InstallBuilder
@@ -501,7 +501,7 @@ jobs:
           EOF
         env:
           BITROCK_LICENSE: ${{ secrets.BITROCK_LICENSE }}
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: '3.13'
       - name: Install dependencies
@@ -561,18 +561,18 @@ jobs:
         run: |
            sccache --stop-server
       - name: Upload installer
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: swiftinstaller-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftinstaller-*
       - name: Upload symbols
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: ${{ env.do_symbols == 'true' }}
         with:
           name: swiftsymbols-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/swiftsymbols-*
       - name: Upload xswiftbus
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: xswiftbus-thin-macos-64-${{ needs.preBuild.outputs.version }}
           path: ${{ github.workspace }}/xswiftbus-*
@@ -589,7 +589,7 @@ jobs:
         if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
         run: exit 1
       - name: Download xswiftbus-thin
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           pattern: xswiftbus-thin-*
           merge-multiple: true
@@ -600,7 +600,7 @@ jobs:
           unzip -o xswiftbus-macos-64-*.zip
           zip -r -9 xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}.zip xswiftbus
       - name: Upload xswiftbus-fat
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: xswiftbus-fat-allos-${{ needs.preBuild.outputs.version }}
           path: xswiftbus-fat-allos-*
