@@ -10,7 +10,7 @@ using namespace swift::gui::components;
 
 CMiniSimulatorSettingsDialog::CMiniSimulatorSettingsDialog(QWidget *parent) : QDialog(parent)
 {
-    this->setWindowTitle(tr("Simulator-Konfiguration"));
+    this->setWindowTitle(tr("Simulator Configuration"));
     this->resize(700, 600);
 
     m_simSettingsComponent = new CSettingsSimulatorComponent(this);

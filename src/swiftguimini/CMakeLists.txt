@@ -17,6 +17,8 @@ add_executable(swiftguimini WIN32
         miniguiwindow.h
         miniMiscSettingsDialog.cpp
         miniMiscSettingsDialog.h
+        miniloginsettingsdialog.cpp
+        miniloginsettingsdialog.h
         minisimulatorsettingsdialog.cpp
         minisimulatorsettingsdialog.h
         ministatusbarwidget.cpp
@@ -45,8 +47,8 @@ if(APPLE)
     target_link_libraries(swiftguimini PUBLIC input)
 endif()
 
-# i18n: .ts -> .qm Uebersetzungen zur Build-Zeit erzeugen und neben die
-# ausfuehrbare Datei kopieren (main.cpp laedt sie zur Laufzeit via QTranslator).
+# i18n: generate .ts -> .qm translations at build time and copy them next to the
+# executable (main.cpp loads them at runtime via QTranslator).
 qt_add_translation(SWIFTGUIMINI_QM_FILES ${SWIFTGUIMINI_TS_FILES})
 
 add_custom_target(swiftguimini_translations ALL DEPENDS ${SWIFTGUIMINI_QM_FILES})

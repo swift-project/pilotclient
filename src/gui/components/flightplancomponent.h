@@ -94,8 +94,19 @@ namespace swift::gui::components
         //! Get sent flight plan
         const swift::misc::aviation::CFlightPlan &getSentFlightPlan() const { return m_sentFlightPlan; }
 
+        //! Validate and send the flight plan (if connected), same as pressing the "Send" button.
+        void sendFlightPlan();
+
+        //! Assemble a CFlightPlan from the current GUI values, without showing validation messages.
+        //! \remark Useful to snapshot the currently entered (possibly incomplete) flight plan, e.g. for persistence.
+        swift::misc::aviation::CFlightPlan getCurrentFlightPlanData();
+
         //! Log.categories
         static const QStringList &getLogCategories();
+
+    signals:
+        //! A flight plan has been loaded, filled in or sent (SimBrief, file, manual input or network)
+        void flightPlanDataChanged(bool available);
 
     private:
         static constexpr std::chrono::milliseconds OverlayTimeout { 5000 };
@@ -181,9 +192,6 @@ namespace swift::gui::components
 
         //! Voice combo boxes shall display the same
         void syncVoiceComboBoxes(const QString &text);
-
-        //! Send flightplan
-        void sendFlightPlan();
 
         //! Reset Flightplan
         void resetFlightPlan();

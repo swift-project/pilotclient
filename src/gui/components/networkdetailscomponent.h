@@ -10,6 +10,7 @@
 #include <QScopedPointer>
 
 #include "core/data/networksetup.h"
+#include "gui/swiftguiexport.h"
 #include "misc/network/data/lastserver.h"
 #include "misc/network/entityflags.h"
 #include "misc/network/loginmode.h"
@@ -21,7 +22,7 @@ namespace Ui
 namespace swift::gui::components
 {
     //! FSD details
-    class CNetworkDetailsComponent : public QFrame
+    class SWIFT_GUI_EXPORT CNetworkDetailsComponent : public QFrame
     {
         Q_OBJECT
 

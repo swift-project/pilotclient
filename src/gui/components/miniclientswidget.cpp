@@ -8,12 +8,15 @@
 #include <QtGlobal>
 
 #include "core/context/contextnetwork.h"
+#include "core/context/contextownaircraft.h"
 #include "gui/guiapplication.h"
 #include "gui/models/atcstationlistmodel.h"
 #include "gui/models/simulatedaircraftlistmodel.h"
 #include "gui/views/atcstationview.h"
 #include "gui/views/simulatedaircraftview.h"
+#include "misc/aviation/atcstation.h"
 #include "misc/aviation/atcstationlist.h"
+#include "misc/aviation/comsystem.h"
 #include "misc/simulation/simulatedaircraftlist.h"
 
 using namespace swift::core::context;
@@ -45,7 +48,7 @@ namespace
 
 namespace swift::gui::components
 {
-    CMiniClientsWidget::CMiniClientsWidget(QWidget *parent) : QFrame(parent)
+    CMiniClientsWidget::CMiniClientsWidget(QWidget *parent) : QFrame(parent), CIdentifiable(this)
     {
         Q_ASSERT_X(sGui, Q_FUNC_INFO, "Need sGui");
 
@@ -85,6 +88,10 @@ namespace swift::gui::components
             connect(sGui->getIContextNetwork(), &IContextNetwork::connectionStatusChanged, this,
                     &CMiniClientsWidget::onConnectionStatusChanged, Qt::QueuedConnection);
         }
+
+        // Klick auf eine ATC-Station -> Frequenz in COM1-Standby uebernehmen
+        connect(m_atcView, &CAtcStationView::objectClicked, this, &CMiniClientsWidget::onAtcStationClicked,
+                Qt::QueuedConnection);
 
         this->update();
     }
@@ -140,5 +147,16 @@ namespace swift::gui::components
             m_aircraftView->clear();
         }
         else { this->update(); }
+    }
+
+    void CMiniClientsWidget::onAtcStationClicked(const CVariant &object)
+    {
+        if (!object.isValid() || !object.canConvert<CAtcStation>()) { return; }
+        const CAtcStation station = object.valueOrDefault(CAtcStation());
+        if (station.getCallsign().isEmpty()) { return; }
+        if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
+
+        sGui->getIContextOwnAircraft()->updateStandbyComFrequency(station.getFrequency(), CComSystem::Com1,
+                                                                  identifier());
     }
 } // namespace swift::gui::components

@@ -47,7 +47,7 @@ namespace swift::gui::components
         stackLayout->addStretch(1);
         outer->addWidget(stack);
 
-        // Chatfenster ueber die volle Breite, unterhalb der Anzeigen
+        // Chat window spanning the full width, below the displays
         this->createChatPanel(this);
 
         this->forceUpdateFromContext();
@@ -104,11 +104,11 @@ namespace swift::gui::components
         panel.standbyLabel->setObjectName("lcdStandbyLabel");
         panel.standbyLabel->setAlignment(Qt::AlignCenter);
         panel.standbyLabel->setCursor(Qt::PointingHandCursor);
-        panel.standbyLabel->setToolTip(tr("Doppelklick: Standby-Frequenz eingeben"));
+        panel.standbyLabel->setToolTip(tr("Double-click: enter standby frequency"));
         standbyRow->addWidget(panel.standbyLabel, 1);
 
         panel.swapButton = new QPushButton(QStringLiteral("\u21C6"), radio); // ⇆
-        panel.swapButton->setToolTip(tr("Aktive und Standby-Frequenz tauschen"));
+        panel.swapButton->setToolTip(tr("Swap active and standby frequency"));
         panel.swapButton->setFixedWidth(32);
         standbyRow->addWidget(panel.swapButton);
 
@@ -116,14 +116,14 @@ namespace swift::gui::components
 
         connect(panel.swapButton, &QPushButton::clicked, this, [this, unit] { this->swapComFrequency(unit); });
 
-        // Doppelklick auf Standby-Anzeige -> Frequenz per Dialog setzen
+        // Double-click on standby display -> set frequency via dialog
         panel.standbyLabel->installEventFilter(this);
         connect(panel.standbyLabel, &QLabel::linkActivated, this,
                 [] {}); // placeholder, label has no native dblclick signal
 
         // workaround: use a lambda-based mouse-press via event filter is more work; instead use a button beneath for
         // editing
-        QPushButton *editButton = new QPushButton(tr("Standby setzen..."), radio);
+        QPushButton *editButton = new QPushButton(tr("Set standby..."), radio);
         connect(editButton, &QPushButton::clicked, this, [this, unit] { this->editStandbyFrequency(unit); });
         radioLayout->addWidget(editButton);
 
@@ -210,7 +210,7 @@ namespace swift::gui::components
         titleLabel->setObjectName("cockpitPanelTitle");
         headerRow->addWidget(titleLabel);
 
-        QLabel *sourceLabel = new QLabel(tr("Quelle:"), chat);
+        QLabel *sourceLabel = new QLabel(tr("Source:"), chat);
         headerRow->addWidget(sourceLabel);
 
         m_chatSourceSelector = new QComboBox(chat);
@@ -227,18 +227,18 @@ namespace swift::gui::components
         chatLayout->addWidget(m_chatTextEdit, 1);
 
         m_chatInputEdit = new QLineEdit(chat);
-        m_chatInputEdit->setPlaceholderText(tr("Text eingeben und Enter druecken zum Senden..."));
+        m_chatInputEdit->setPlaceholderText(tr("Enter text and press Enter to send..."));
         chatLayout->addWidget(m_chatInputEdit);
 
         connect(m_chatInputEdit, &QLineEdit::returnPressed, this, &CMiniCockpitWidget::onChatTextEntered);
 
-        // ueber die volle Breite (horizontale Size-Policy Expanding ist Default bei QFrame in QVBoxLayout)
+        // Full width (horizontal size policy Expanding is default for QFrame in QVBoxLayout)
         qobject_cast<QVBoxLayout *>(parent->layout())->addWidget(chat);
     }
 
     void CMiniCockpitWidget::updateFromContext(const CSimulatedAircraft &ownAircraft, const CIdentifier &originator)
     {
-        Q_UNUSED(originator) // Anzeige wird auch bei eigenen Aenderungen aktualisiert (reine Anzeige-Labels)
+        Q_UNUSED(originator) // display is also updated on own changes (purely display labels)
 
         const CComSystem com1 = ownAircraft.getCom1System();
         const CComSystem com2 = ownAircraft.getCom2System();
@@ -289,9 +289,9 @@ namespace swift::gui::components
 
         const CComSystem current = ctx->getOwnComSystem(unit);
         bool ok = false;
-        const double value = QInputDialog::getDouble(
-            this, tr("Standby-Frequenz"), tr("Frequenz in MHz:"),
-            current.getFrequencyStandby().value(CFrequencyUnit::MHz()), 118.0, 137.0, 3, &ok);
+        const double value =
+            QInputDialog::getDouble(this, tr("Standby frequency"), tr("Frequency in MHz:"),
+                                    current.getFrequencyStandby().value(CFrequencyUnit::MHz()), 118.0, 137.0, 3, &ok);
         if (!ok) { return; }
 
         ctx->updateStandbyComFrequency(CFrequency(value, CFrequencyUnit::MHz()), unit, identifier());
@@ -302,8 +302,8 @@ namespace swift::gui::components
         if (!m_xpdrCodeEdit) { return; }
         if (!sGui || sGui->isShuttingDown() || !sGui->getIContextOwnAircraft()) { return; }
 
-        // Eingabemaske "9999" kann bei unvollstaendiger Eingabe Leerzeichen enthalten
-        // (z.B. "12  " statt "0012") -> diese entfernen, bevor wir parsen
+        // Input mask "9999" can contain spaces for incomplete input
+        // (e.g. "12  " instead of "0012") -> remove these before parsing
         QString text = m_xpdrCodeEdit->text();
         text.replace(QLatin1Char(' '), QLatin1Char('0'));
 
@@ -311,7 +311,7 @@ namespace swift::gui::components
         const int code = text.toInt(&ok);
         if (!ok || !CTransponder::isValidTransponderCode(code))
         {
-            // ungueltig -> auf aktuellen Kontextwert zuruecksetzen
+            // invalid -> reset to current context value
             if (sGui->getIContextOwnAircraft())
             {
                 const int currentCode = sGui->getIContextOwnAircraft()->getOwnTransponder().getTransponderCode();
@@ -328,7 +328,7 @@ namespace swift::gui::components
 
         ctx->updateCockpit(com1, com2, transponder, identifier());
 
-        // Anzeige sofort auf formatiertes 4-stelliges Format normalisieren
+        // immediately normalize the display to the formatted 4-digit format
         m_xpdrCodeEdit->setText(QString("%1").arg(code, 4, 10, QChar('0')));
     }
 
@@ -379,7 +379,7 @@ namespace swift::gui::components
     {
         if (!m_selcalPair1 || !m_selcalPair2) { return; }
         const QString code = selcal.getCode();
-        if (code.length() != 4) { return; } // noch unvollstaendig
+        if (code.length() != 4) { return; } // still incomplete
 
         const QString s1 = code.left(2);
         const QString s2 = code.right(2);
@@ -440,7 +440,7 @@ namespace swift::gui::components
         const ChatSource source = this->currentChatSource();
         if (source == ChatAll)
         {
-            // "All" ist eine reine Anzeige-Quelle, senden erfordert COM1/COM2/UNICOM
+            // "All" is a purely display-only source, sending requires COM1/COM2/UNICOM
             return;
         }
 

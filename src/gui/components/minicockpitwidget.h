@@ -31,16 +31,16 @@ namespace swift::gui
 namespace swift::gui::components
 {
     /*!
-     * Stellt COM1, COM2, XPDR und Transponder-Mode als Abbildung eines
-     * Radio-Stacks (wie im echten Cockpit) dar: je Funkgeraet aktive/Standby
-     * Frequenz-Anzeige (LCD-Stil) plus Swap-Knopf, dazu ein XPDR-Code-Editor
-     * und Transponder-Mode-Knoepfe (STBY/ON/ALT/IDENT), ein SELCAL-Panel
-     * mit zwei Auswahlfeldern (Code-Paaren) sowie darunter ein ueber die
-     * volle Breite gehendes Chatfenster (Textmessages) mit Quellenauswahl
-     * (All/UNICOM/COM1/COM2) und einzeiligem Eingabefeld zum Senden.
-     * Komplett ohne Abhaengigkeit zu CDockWidgetInfoArea / CInfoArea,
-     * analog zu CMiniAtcStationWidget / CMiniRadarWidget / CMiniClientsWidget.
-     * \remark benoetigt sGui mit gestartetem IContextOwnAircraft / IContextNetwork
+     * Represents COM1, COM2, XPDR, and transponder mode as a radio stack
+     * (as in a real cockpit): per radio an active/standby frequency display
+     * (LCD style) plus a swap button, plus an XPDR code editor and
+     * transponder mode buttons (STBY/ON/ALT/IDENT), a SELCAL panel with two
+     * selection fields (code pairs), and below that a full-width chat window
+     * (text messages) with source selection (All/UNICOM/COM1/COM2) and a
+     * single-line input field for sending.
+     * Completely without a dependency on CDockWidgetInfoArea / CInfoArea,
+     * analogous to CMiniAtcStationWidget / CMiniRadarWidget / CMiniClientsWidget.
+     * \remark requires sGui with IContextOwnAircraft / IContextNetwork started
      */
     class SWIFT_GUI_EXPORT CMiniCockpitWidget : public QFrame, public swift::misc::CIdentifiable
     {
@@ -54,7 +54,7 @@ namespace swift::gui::components
         ~CMiniCockpitWidget() override;
 
     private:
-        //! Baut das Layout fuer ein COM-Panel (COM1 oder COM2) auf
+        //! Builds the layout for a COM panel (COM1 or COM2)
         struct SComPanel
         {
             QLabel *activeLabel = nullptr;
@@ -62,7 +62,7 @@ namespace swift::gui::components
             QPushButton *swapButton = nullptr;
         };
 
-        //! Quelle des Chats (analog zu swiftguistandard: All/UNICOM/COM1/COM2)
+        //! Chat source (analogous to swiftguistandard: All/UNICOM/COM1/COM2)
         enum ChatSource
         {
             ChatAll,
@@ -71,66 +71,66 @@ namespace swift::gui::components
             ChatCom2
         };
 
-        //! Erzeugt ein COM-Panel (Radio-Stack-Optik)
+        //! Creates a COM panel (radio stack look)
         SComPanel createComPanel(QWidget *parent, const QString &title,
                                  swift::misc::aviation::CComSystem::ComUnit unit);
 
-        //! Erzeugt das XPDR-Panel (Code + Mode-Knoepfe)
+        //! Creates the XPDR panel (code + mode buttons)
         void createXpdrPanel(QWidget *parent);
 
-        //! Erzeugt das SELCAL-Panel (zwei Auswahlfelder fuer die Code-Paare)
+        //! Creates the SELCAL panel (two selection fields for the code pairs)
         void createSelcalPanel(QWidget *parent);
 
-        //! Erzeugt das Chat-Panel (Textmessages) unterhalb der Anzeigen
+        //! Creates the chat panel (text messages) below the displays
         void createChatPanel(QWidget *parent);
 
-        //! Aktualisiert die Anzeige aus dem aktuellen eigenen Flugzeug
+        //! Updates the display from the current own aircraft
         void updateFromContext(const swift::misc::simulation::CSimulatedAircraft &ownAircraft,
                                const swift::misc::CIdentifier &originator);
 
-        //! Erzwingt ein initiales Update aus dem Kontext
+        //! Forces an initial update from the context
         void forceUpdateFromContext();
 
-        //! Tauscht aktive/Standby Frequenz eines COM-Geraets
+        //! Swaps active/standby frequency of a COM unit
         void swapComFrequency(swift::misc::aviation::CComSystem::ComUnit unit);
 
-        //! Standby-Frequenz per Dialog setzen
+        //! Set standby frequency via dialog
         void editStandbyFrequency(swift::misc::aviation::CComSystem::ComUnit unit);
 
-        //! XPDR Code wurde in der GUI geaendert
+        //! XPDR code was changed in the GUI
         void onXpdrCodeEdited();
 
-        //! Transponder-Mode-Knopf wurde geklickt
+        //! Transponder mode button was clicked
         void setTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode);
 
-        //! Aktualisiert die optische Hervorhebung der Mode-Knoepfe
+        //! Updates the visual highlighting of the mode buttons
         void highlightTransponderMode(swift::misc::aviation::CTransponder::TransponderMode mode);
 
-        //! SELCAL-Auswahlfeld wurde geaendert
+        //! SELCAL selection field was changed
         void onSelcalChanged();
 
-        //! Liefert das aktuell ausgewaehlte SELCAL
+        //! Returns the currently selected SELCAL
         swift::misc::aviation::CSelcal getSelcal() const;
 
-        //! Setzt die SELCAL-Auswahlfelder
+        //! Sets the SELCAL selection fields
         void setSelcal(const swift::misc::aviation::CSelcal &selcal);
 
-        //! Text wurde im Eingabefeld bestaetigt (Enter) -> senden
+        //! Text was confirmed in the input field (Enter) -> send
         void onChatTextEntered();
 
-        //! Empfangene Textnachrichten anzeigen (nach Quelle gefiltert einsortieren)
+        //! Display received text messages (filtered and sorted by source)
         void onTextMessagesReceived(const swift::misc::network::CTextMessageList &messages);
 
-        //! Eigene gesendete Textnachricht anzeigen
+        //! Display own sent text message
         void onTextMessageSent(const swift::misc::network::CTextMessage &sentMessage);
 
-        //! Aktuell gewaehlte Chat-Quelle
+        //! Currently selected chat source
         ChatSource currentChatSource() const;
 
-        //! Frequenz fuer die aktuell gewaehlte Quelle (ungueltig bei private/all)
+        //! Frequency for the currently selected source (invalid for private/all)
         swift::misc::physical_quantities::CFrequency frequencyForSource(ChatSource source) const;
 
-        //! Formatiert eine Frequenz fuer die LCD-Anzeige (z.B. "122.800")
+        //! Formats a frequency for the LCD display (e.g. "122.800")
         static QString formatFrequency(const swift::misc::physical_quantities::CFrequency &frequency);
 
         SComPanel m_com1;

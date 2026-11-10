@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE" sourcelanguage="de_DE">
+<TS version="2.1" language="de_DE" sourcelanguage="en_US">
 <context>
-    <name>swift::gui::components::CMiniCockpitWidget</name>
+    <name>CMiniCockpitWidget</name>
     <message>
         <location filename="../../gui/components/minicockpitwidget.cpp" line="42"/>
         <location filename="../../gui/components/minicockpitwidget.cpp" line="219"/>
@@ -17,18 +17,18 @@
     </message>
     <message>
         <location filename="../../gui/components/minicockpitwidget.cpp" line="107"/>
-        <source>Doppelklick: Standby-Frequenz eingeben</source>
-        <translation>Doppelklick: Standby-Frequenz eingeben</translation>
+        <source>Double-click: enter standby frequency</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../gui/components/minicockpitwidget.cpp" line="111"/>
-        <source>Aktive und Standby-Frequenz tauschen</source>
-        <translation>Aktive und Standby-Frequenz tauschen</translation>
+        <source>Swap active and standby frequency</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../gui/components/minicockpitwidget.cpp" line="126"/>
-        <source>Standby setzen...</source>
-        <translation>Standby setzen...</translation>
+        <source>Set standby...</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../gui/components/minicockpitwidget.cpp" line="140"/>
@@ -67,8 +67,23 @@
     </message>
     <message>
         <location filename="../../gui/components/minicockpitwidget.cpp" line="213"/>
-        <source>Quelle:</source>
-        <translation>Quelle:</translation>
+        <source>Source:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../gui/components/minicockpitwidget.cpp" line="230"/>
+        <source>Enter text and press Enter to send...</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../gui/components/minicockpitwidget.cpp" line="293"/>
+        <source>Standby frequency</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../gui/components/minicockpitwidget.cpp" line="293"/>
+        <source>Frequency in MHz:</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../gui/components/minicockpitwidget.cpp" line="217"/>
@@ -80,138 +95,184 @@
         <source>UNICOM</source>
         <translation>UNICOM</translation>
     </message>
-    <message>
-        <location filename="../../gui/components/minicockpitwidget.cpp" line="230"/>
-        <source>Text eingeben und Enter druecken zum Senden...</source>
-        <translation>Text eingeben und Enter druecken zum Senden...</translation>
-    </message>
-    <message>
-        <location filename="../../gui/components/minicockpitwidget.cpp" line="293"/>
-        <source>Standby-Frequenz</source>
-        <translation>Standby-Frequenz</translation>
-    </message>
-    <message>
-        <location filename="../../gui/components/minicockpitwidget.cpp" line="293"/>
-        <source>Frequenz in MHz:</source>
-        <translation>Frequenz in MHz:</translation>
-    </message>
 </context>
 <context>
     <name>CMiniFlightPlanDialog</name>
     <message>
-        <location filename="../miniflightplandialog.cpp" line="14"/>
-        <source>Flugplanverwaltung</source>
+        <location filename="../miniflightplandialog.cpp" line="16"/>
+        <source>Flight Plan Management</source>
         <translation>Flugplanverwaltung</translation>
     </message>
 </context>
 <context>
     <name>CMiniGuiWindow</name>
     <message>
-        <location filename="../miniguiwindow.cpp" line="88"/>
-        <source>Login</source>
-        <translation>Login</translation>
+        <location filename="../miniguiwindow.cpp" line="91"/>
+        <source>Connect</source>
+        <translation>Verbinden</translation>
     </message>
     <message>
-        <location filename="../miniguiwindow.cpp" line="91"/>
+        <location filename="../miniguiwindow.cpp" line="94"/>
         <source>Clients</source>
         <translation>Clients</translation>
     </message>
     <message>
-        <location filename="../miniguiwindow.cpp" line="94"/>
+        <location filename="../miniguiwindow.cpp" line="97"/>
         <source>Radar</source>
         <translation>Radar</translation>
     </message>
     <message>
-        <location filename="../miniguiwindow.cpp" line="97"/>
+        <location filename="../miniguiwindow.cpp" line="100"/>
         <source>Cockpit</source>
-        <translatorcomment>Cockpit</translatorcomment>
-        <translation></translation>
+        <translation>Cockpit</translation>
     </message>
     <message>
-        <location filename="../miniguiwindow.cpp" line="170"/>
-        <source>Aktive Verbindung</source>
-        <translatorcomment>Aktive Verbindung</translatorcomment>
-        <translation></translation>
+        <location filename="../miniguiwindow.cpp" line="105"/>
+        <source>Minimize</source>
+        <translation>Minimieren</translation>
     </message>
     <message>
-        <location filename="../miniguiwindow.cpp" line="171"/>
-        <source>Es besteht noch eine aktive FSD-Verbindung.
-Bitte zuerst trennen (Disconnect), bevor das Programm beendet wird.</source>
-        <translation>Es besteht noch eine aktive FSD-Verbindung.
-Bitte zuerst trennen (Disconnect), bevor das Programm beendet wird.</translation>
+        <location filename="../miniguiwindow.cpp" line="178"/>
+        <source>Settings</source>
+        <translation>Einstellungen</translation>
+    </message>
+    <message>
+        <location filename="../miniguiwindow.cpp" line="180"/>
+        <source>Login Configuration</source>
+        <translation>Login-Konfiguration</translation>
+    </message>
+    <message>
+        <location filename="../miniguiwindow.cpp" line="183"/>
+        <source>Flight Plan Management</source>
+        <translation>Flugplanverwaltung</translation>
+    </message>
+    <message>
+        <location filename="../miniguiwindow.cpp" line="186"/>
+        <source>Simulator Configuration</source>
+        <translation>Simulator-Konfiguration</translation>
+    </message>
+    <message>
+        <location filename="../miniguiwindow.cpp" line="189"/>
+        <source>Miscellaneous</source>
+        <translation>Verschiedenes</translation>
+    </message>
+    <message>
+        <location filename="../miniguiwindow.cpp" line="194"/>
+        <source>Exit</source>
+        <translation>Beenden</translation>
+    </message>
+</context>
+<context>
+    <name>CMiniLoginSettingsDialog</name>
+    <message>
+        <location filename="../miniloginsettingsdialog.cpp" line="15"/>
+        <source>Login Configuration</source>
+        <translation>Login-Konfiguration</translation>
+    </message>
+</context>
+<context>
+    <name>CMiniLoginWidget</name>
+    <message>
+        <location filename="../miniloginwidget.cpp" line="399"/>
+        <source>Callsign differs: Own Aircraft &apos;%1&apos; vs. flight plan &apos;%2&apos;</source>
+        <translation>Rufzeichen abweichend: eigenes Luftfahrzeug „%1“ vs. Flugplan „%2“</translation>
+    </message>
+    <message>
+        <location filename="../miniloginwidget.cpp" line="404"/>
+        <source>Aircraft type differs: Own Aircraft &apos;%1&apos; vs. flight plan &apos;%2&apos;</source>
+        <translation>Flugzeugtyp abweichend: eigenes Luftfahrzeug „%1“ vs. Flugplan „%2“</translation>
     </message>
 </context>
 <context>
     <name>CMiniMiscSettingsDialog</name>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="16"/>
+        <location filename="../miniMiscSettingsDialog.cpp" line="19"/>
         <source>Miscellaneous</source>
         <translation>Verschiedenes</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="19"/>
-        <source>Sortierung ATC</source>
-        <translation></translation>
+        <location filename="../miniMiscSettingsDialog.cpp" line="22"/>
+        <source>ATC sorting</source>
+        <translation>Sortierung ATC</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="20"/>
-        <source>nach Entfernung</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="23"/>
+        <source>by distance</source>
         <translation>nach Entfernung</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="21"/>
-        <source>nach Kategorie</source>
-        <translatorcomment>nach Kategorie</translatorcomment>
-        <translation></translation>
+        <location filename="../miniMiscSettingsDialog.cpp" line="24"/>
+        <source>by category</source>
+        <translation>nach Kategorie</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="28"/>
-        <source>Sprache</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="31"/>
+        <source>Language</source>
         <translation>Sprache</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="30"/>
-        <source>Nach Aenderung ist ein Neustart der Anwendung erforderlich.</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="33"/>
+        <source>A restart of the application is required after the change.</source>
         <translation>Nach Aenderung ist ein Neustart der Anwendung erforderlich.</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="33"/>
-        <source>Systemsprache</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="36"/>
+        <source>System language</source>
         <translation>Systemsprache</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="34"/>
-        <source>Deutsch</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="37"/>
+        <source>German</source>
         <translation>Deutsch</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="35"/>
-        <source>Englisch</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="38"/>
+        <source>English</source>
         <translation>Englisch</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="36"/>
-        <source>Spanisch</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="39"/>
+        <source>Spanish</source>
         <translation>Spanisch</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="37"/>
-        <source>Franzoesisch</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="40"/>
+        <source>French</source>
         <translation>Franzoesisch</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="38"/>
-        <source>Chinesisch</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="41"/>
+        <source>Chinese</source>
         <translation>Chinesisch</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="78"/>
-        <source>Sprache geaendert</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="50"/>
+        <source>Connection</source>
+        <translation>Verbindung</translation>
+    </message>
+    <message>
+        <location filename="../miniMiscSettingsDialog.cpp" line="52"/>
+        <source>Require a flight plan before connecting</source>
+        <translation>Erfordert einen Flugplan vor der Verbindung</translation>
+    </message>
+    <message>
+        <location filename="../miniMiscSettingsDialog.cpp" line="57"/>
+        <source>Minimize</source>
+        <translation>Minimieren</translation>
+    </message>
+    <message>
+        <location filename="../miniMiscSettingsDialog.cpp" line="67"/>
+        <source>Opacity:</source>
+        <translation>Transparenz:</translation>
+    </message>
+    <message>
+        <location filename="../miniMiscSettingsDialog.cpp" line="114"/>
+        <source>Language changed</source>
         <translation>Sprache geaendert</translation>
     </message>
     <message>
-        <location filename="../miniMiscSettingsDialog.cpp" line="79"/>
-        <source>Die neue Sprache wird nach einem Neustart der Anwendung aktiv.</source>
+        <location filename="../miniMiscSettingsDialog.cpp" line="115"/>
+        <source>The new language will become active after restarting the application.</source>
         <translation>Die neue Sprache wird nach einem Neustart der Anwendung aktiv.</translation>
     </message>
 </context>
@@ -219,7 +280,7 @@ Bitte zuerst trennen (Disconnect), bevor das Programm beendet wird.</translation
     <name>CMiniSimulatorSettingsDialog</name>
     <message>
         <location filename="../minisimulatorsettingsdialog.cpp" line="13"/>
-        <source>Simulator-Konfiguration</source>
+        <source>Simulator Configuration</source>
         <translation>Simulator-Konfiguration</translation>
     </message>
 </context>
@@ -242,28 +303,44 @@ Bitte zuerst trennen (Disconnect), bevor das Programm beendet wird.</translation
     </message>
     <message>
         <location filename="../ministatusbarwidget.cpp" line="32"/>
+        <location filename="../ministatusbarwidget.cpp" line="121"/>
+        <source>Flight plan loaded</source>
+        <translatorcomment>Flugplan geladen</translatorcomment>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../ministatusbarwidget.cpp" line="33"/>
+        <source>No flight plan</source>
+        <translation>Kein Flugplan vorhanden</translation>
+    </message>
+    <message>
+        <location filename="../ministatusbarwidget.cpp" line="36"/>
         <source>Network connected</source>
         <translation>Netzwerk verbunden</translation>
     </message>
     <message>
-        <location filename="../ministatusbarwidget.cpp" line="33"/>
+        <location filename="../ministatusbarwidget.cpp" line="37"/>
         <source>Network disconnected</source>
         <translation>Netzwerk nicht verbunden</translation>
     </message>
     <message>
-        <location filename="../ministatusbarwidget.cpp" line="35"/>
+        <location filename="../ministatusbarwidget.cpp" line="39"/>
         <source>Simulator</source>
-        <translatorcomment>Simulator</translatorcomment>
-        <translation></translation>
+        <translation>Simulator</translation>
     </message>
     <message>
-        <location filename="../ministatusbarwidget.cpp" line="36"/>
-        <source>FSD-Server</source>
+        <location filename="../ministatusbarwidget.cpp" line="40"/>
+        <source>Flight Plan</source>
+        <translation>Flugplan</translation>
+    </message>
+    <message>
+        <location filename="../ministatusbarwidget.cpp" line="41"/>
+        <source>FSD Server</source>
         <translation>FSD-Server</translation>
     </message>
     <message>
-        <location filename="../ministatusbarwidget.cpp" line="103"/>
-        <source>Verbunden mit: %1</source>
+        <location filename="../ministatusbarwidget.cpp" line="111"/>
+        <source>Connected to: %1</source>
         <translation>Verbunden mit %1</translation>
     </message>
 </context>

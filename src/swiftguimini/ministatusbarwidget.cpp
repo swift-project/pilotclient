@@ -28,17 +28,25 @@ CMiniStatusBarWidget::CMiniStatusBarWidget(QWidget *parent) : QFrame(parent)
     m_ledSimulator->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Blue, CLedWidget::Rounded,
                               tr("Simulator running"), tr("Simulator disconnected"), tr("Simulator connected"), 14);
 
+    m_ledFlightPlan = new CLedWidget(this);
+    m_ledFlightPlan->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, tr("Flight plan loaded"),
+                               tr("No flight plan"), 14);
+
     m_ledNetwork = new CLedWidget(this);
     m_ledNetwork->setValues(CLedWidget::Yellow, CLedWidget::Black, CLedWidget::Rounded, tr("Network connected"),
                             tr("Network disconnected"), 14);
 
     QLabel *lblSim = new QLabel(tr("Simulator"), this);
-    QLabel *lblNet = new QLabel(tr("FSD-Server"), this);
+    QLabel *lblFp = new QLabel(tr("Flight Plan"), this);
+    QLabel *lblNet = new QLabel(tr("FSD Server"), this);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(6, 2, 6, 2);
     layout->addWidget(lblSim);
     layout->addWidget(m_ledSimulator);
+    layout->addSpacing(16);
+    layout->addWidget(lblFp);
+    layout->addWidget(m_ledFlightPlan);
     layout->addSpacing(16);
     layout->addWidget(lblNet);
     layout->addWidget(m_ledNetwork);
@@ -70,7 +78,7 @@ void CMiniStatusBarWidget::onSimulatorStatusChanged(int status)
 
     if (simStatus.testFlag(swift::core::ISimulator::Connected))
     {
-        // kurzer Typ-Name, z.B. P3D, MSFS2020, MSFS2024, XPlane
+        // short type name, e.g. P3D, MSFS2020, MSFS2024, XPlane
         const QString shortName =
             sGui->getIContextSimulator()->getSimulatorPluginInfo().getSimulatorInfo().convertToQString();
         const QString tooltip = shortName % u": " % swift::core::ISimulator::statusToString(simStatus);
@@ -100,11 +108,17 @@ void CMiniStatusBarWidget::onNetworkStatusChanged(const CConnectionStatus &from,
     case CConnectionStatus::Connected:
         m_ledNetwork->setOn(true);
         m_ledNetwork->setOnToolTip(
-            tr("Verbunden mit: %1").arg(sGui->getIContextNetwork()->getConnectedServer().getName()));
+            tr("Connected to: %1").arg(sGui->getIContextNetwork()->getConnectedServer().getName()));
         break;
     case CConnectionStatus::Connecting: m_ledNetwork->setTriStateColor(CLedWidget::Yellow); break;
     default: m_ledNetwork->setOn(false); break;
     }
+}
+
+void CMiniStatusBarWidget::setFlightPlanLoaded(bool available)
+{
+    m_ledFlightPlan->setOn(available);
+    if (available) { m_ledFlightPlan->setOnToolTip(tr("Flight plan loaded")); }
 }
 
 void CMiniStatusBarWidget::updateValues()

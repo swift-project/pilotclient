@@ -11,9 +11,12 @@
 
 class QRadioButton;
 class QComboBox;
+class QCheckBox;
+class QSlider;
+class QLabel;
 
-//! Sammel-Dialog fuer verschiedene, noch kommende "Miscellaneous"-Einstellungen der Mini-GUI.
-//! Aktuell enthalten: Sortierung der ATC-Liste (nach Entfernung / nach Kategorie) und Sprache der Mini-GUI.
+//! Collection dialog for various (future) "Miscellaneous" settings of the Mini-GUI.
+//! Currently included: sorting of the ATC list (by distance / by category) and Mini-GUI language.
 class CMiniMiscSettingsDialog : public QDialog
 {
     Q_OBJECT
@@ -26,18 +29,29 @@ public:
     ~CMiniMiscSettingsDialog() override;
 
 private:
-    //! Radiobutton-Auswahl hat sich geaendert, Einstellung speichern
+    //! Radio button selection has changed, save the setting
     void onAtcSortModeChanged();
 
-    //! Sprachauswahl hat sich geaendert, Einstellung speichern und Hinweis auf Neustart anzeigen
+    //! Language selection has changed, save the setting and show a restart hint
     void onLanguageChanged(int index);
+
+    //! "Require flight plan for connect" checkbox has changed, save the setting
+    void onRequireFlightPlanChanged();
+
+    //! "Minimize opacity" slider has changed, save the setting and update the label
+    void onMinimizeOpacityChanged(int value);
 
     QRadioButton *m_rbSortByDistance = nullptr;
     QRadioButton *m_rbSortByCategory = nullptr;
     QComboBox *m_languageSelector = nullptr;
+    QCheckBox *m_cbRequireFlightPlan = nullptr;
+    QSlider *m_slMinimizeOpacity = nullptr;
+    QLabel *m_lblMinimizeOpacityValue = nullptr;
 
     swift::misc::CSetting<swift::gui::settings::TMiniAtcSortMode> m_atcSortSetting { this };
     swift::misc::CSetting<swift::gui::settings::TMiniLanguage> m_languageSetting { this };
+    swift::misc::CSetting<swift::gui::settings::TMiniRequireFlightPlanForConnect> m_requireFlightPlanSetting { this };
+    swift::misc::CSetting<swift::gui::settings::TMiniMinimizeOpacity> m_minimizeOpacitySetting { this };
 };
 
 #endif // SWIFTGUIMINI_MINIMISCSETTINGSDIALOG_H

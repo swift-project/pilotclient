@@ -9,6 +9,7 @@
 #include <QFrame>
 #include <QScopedPointer>
 
+#include "gui/swiftguiexport.h"
 #include "misc/aviation/aircrafticaocode.h"
 #include "misc/aviation/airlineicaocode.h"
 #include "misc/aviation/callsign.h"
@@ -23,7 +24,7 @@ namespace Ui
 namespace swift::gui::components
 {
     //! Own aircraft
-    class COwnAircraftComponent : public QFrame
+    class SWIFT_GUI_EXPORT COwnAircraftComponent : public QFrame
     {
         Q_OBJECT
 

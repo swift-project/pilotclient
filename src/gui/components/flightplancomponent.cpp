@@ -273,6 +273,11 @@ namespace swift::gui::components
 
     void CFlightPlanComponent::fillWithFlightPlanData(const CFlightPlan &flightPlan)
     {
+        if (flightPlan.hasCallsign()) { ui->le_Callsign->setText(flightPlan.getCallsign().asString()); }
+
+        const QString aircraftDesignator = flightPlan.getAircraftInfo().getAircraftIcao().getDesignator();
+        if (!aircraftDesignator.isEmpty()) { ui->le_AircraftType->setText(aircraftDesignator); }
+
         ui->le_AlternateAirport->setText(flightPlan.getAlternateAirportIcao().asString());
         ui->le_DestinationAirport->setText(flightPlan.getDestinationAirportIcao().asString());
         ui->le_OriginAirport->setText(flightPlan.getOriginAirportIcao().asString());
@@ -309,12 +314,21 @@ namespace swift::gui::components
 
         m_ssrEquipment = flightPlan.getAircraftInfo().getSsrEquipment();
         updateSsrEquipmentUi();
+
+        emit this->flightPlanDataChanged(true);
     }
 
     const QStringList &CFlightPlanComponent::getLogCategories()
     {
         static const QStringList cats { CLogCategories::flightPlan(), CLogCategories::guiComponent() };
         return cats;
+    }
+
+    CFlightPlan CFlightPlanComponent::getCurrentFlightPlanData()
+    {
+        CFlightPlan flightPlan;
+        this->validateAndInitializeFlightPlan(flightPlan); // messages intentionally discarded, no overlay shown
+        return flightPlan;
     }
 
     CStatusMessageList CFlightPlanComponent::validateAndInitializeFlightPlan(CFlightPlan &flightPlan)
@@ -531,6 +545,7 @@ namespace swift::gui::components
             }
             else { this->showOverlayMessage(m, OverlayTimeout); }
             m_sentFlightPlan = flightPlan; // last valid FP
+            emit this->flightPlanDataChanged(true);
         }
         else { this->showOverlayMessages(messages); }
     }

@@ -14,8 +14,8 @@ namespace swift::gui
     class CLedWidget;
 }
 
-//! Schlanke Statusanzeige (LEDs) fuer Simulator- und FSD-Netzwerkverbindung,
-//! gedacht zur Platzierung oberhalb des zentralen Tab-Bereichs (z.B. unterhalb der Menueleiste).
+//! Lightweight status display (LEDs) for simulator and FSD network connection,
+//! intended to be placed above the central tab area (e.g. below the menu bar).
 class CMiniStatusBarWidget : public QFrame
 {
     Q_OBJECT
@@ -26,6 +26,10 @@ public:
 
     //! Destructor
     ~CMiniStatusBarWidget() override;
+
+public slots:
+    //! Flight plan availability changed (SimBrief, file load or manual input)
+    void setFlightPlanLoaded(bool available);
 
 private:
     //! Simulator status changed
@@ -39,6 +43,7 @@ private:
     void updateValues();
 
     swift::gui::CLedWidget *m_ledSimulator = nullptr;
+    swift::gui::CLedWidget *m_ledFlightPlan = nullptr;
     swift::gui::CLedWidget *m_ledNetwork = nullptr;
 };
 

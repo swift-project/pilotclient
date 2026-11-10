@@ -11,7 +11,9 @@
 #include "gui/settings/minisettings.h"
 #include "gui/swiftguiexport.h"
 #include "misc/aviation/atcstationlist.h"
+#include "misc/identifiable.h"
 #include "misc/network/connectionstatus.h"
+#include "misc/variant.h"
 
 namespace swift::gui::views
 {
@@ -28,7 +30,7 @@ namespace swift::gui::components
      * analog zu CMiniAtcStationWidget / CMiniRadarWidget.
      * \remark benoetigt sGui mit gestartetem IContextNetwork
      */
-    class SWIFT_GUI_EXPORT CMiniClientsWidget : public QFrame
+    class SWIFT_GUI_EXPORT CMiniClientsWidget : public QFrame, public swift::misc::CIdentifiable
     {
         Q_OBJECT
 
@@ -53,6 +55,9 @@ namespace swift::gui::components
         //! Connection status has changed
         void onConnectionStatusChanged(const swift::misc::network::CConnectionStatus &from,
                                        const swift::misc::network::CConnectionStatus &to);
+
+        //! ATC-Station in der Liste angeklickt -> Frequenz in die COM1-Standby-Frequenz uebernehmen
+        void onAtcStationClicked(const swift::misc::CVariant &object);
 
         //! Sortiert die ATC-Stationen gemaess aktueller Einstellung (Entfernung oder Kategorie)
         swift::misc::aviation::CAtcStationList sortAtcStations(swift::misc::aviation::CAtcStationList stations) const;

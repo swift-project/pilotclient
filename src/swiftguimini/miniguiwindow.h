@@ -7,7 +7,9 @@
 
 #include <QMainWindow>
 
+#include "gui/settings/minisettings.h"
 #include "misc/network/connectionstatus.h"
+#include "misc/settingscache.h"
 
 class QTabWidget;
 class QCloseEvent;
@@ -24,8 +26,9 @@ class CMiniSimulatorSettingsDialog;
 class CMiniStatusBarWidget;
 class CMiniLoginWidget;
 class CMiniMiscSettingsDialog;
+class CMiniLoginSettingsDialog;
 
-//! Vereinfachtes Hauptfenster der Mini-GUI mit Tabs (Login, Clients, Radar, Cockpit) und Menue
+//! Simplified main window of the Mini-GUI with tabs (Connect, Clients, Radar, Cockpit) and menu
 class CMiniGuiWindow : public QMainWindow
 {
     Q_OBJECT
@@ -39,41 +42,46 @@ public:
 
 protected:
     //! \copydoc QMainWindow::closeEvent
-    //! Verhindert das Beenden, solange eine aktive FSD-Verbindung besteht, und laesst
-    //! stattdessen den Disconnect-Button mehrfach rot blinken, um den Benutzer darauf hinzuweisen.
+    //! Prevents closing while an active FSD connection exists, and instead makes the
+    //! disconnect button blink red several times to draw the user's attention.
     void closeEvent(QCloseEvent *event) override;
 
 private slots:
-    //! Wechselt zum Login-Tab
+    //! Opens the login configuration dialog (servers/connection parameters)
     void showLoginSettings();
 
-    //! Oeffnet den Flugplan-Dialog
+    //! Opens the flight plan dialog
     void showFlightPlan();
 
-    //! Oeffnet den Simulator-Konfigurationsdialog
+    //! Opens the simulator configuration dialog
     void showSimulatorSettings();
 
-    //! Oeffnet den Miscellaneous-Einstellungsdialog
+    //! Opens the miscellaneous settings dialog
     void showMiscSettings();
 
-    //! Netzwerkstatus hat sich geaendert (fuer automatischen Tabwechsel nach Connect)
+    //! Network status has changed (for automatic tab switch after connect)
     void onNetworkStatusChanged(const swift::misc::network::CConnectionStatus &from,
                                 const swift::misc::network::CConnectionStatus &to);
 
-    //! Laedt/aktualisiert das Mini-GUI-Stylesheet (initial und bei Aenderung der .qss-Dateien)
+    //! Loads/updates the Mini-GUI stylesheet (initially and when the .qss files change)
     void initStyleSheet();
 
+    //! Current tab changed, used to collapse/restore the window for the empty "minimize" tab
+    void onTabChanged(int index);
+
 private:
-    //! Initialisiert die Tabs
+    //! Initializes the tabs
     void initTabs();
 
-    //! Initialisiert die Menueleiste
+    //! Initializes the menu bar
     void initMenus();
 
     QTabWidget *m_tabs = nullptr;
     int m_loginTabIndex = -1;
     int m_clientsTabIndex = -1;
     int m_cockpitTabIndex = -1;
+    int m_minimizeTabIndex = -1; //!< empty tab used to collapse the window
+    int m_expandedHeight = -1; //!< window height before collapsing
 
     CMiniLoginWidget *m_loginComponent = nullptr;
     swift::gui::components::CMiniClientsWidget *m_clientsWidget = nullptr;
@@ -84,6 +92,9 @@ private:
     CMiniSimulatorSettingsDialog *m_simSettingsDialog = nullptr;
     CMiniStatusBarWidget *m_statusBarWidget = nullptr;
     CMiniMiscSettingsDialog *m_miscSettingsDialog = nullptr;
+    CMiniLoginSettingsDialog *m_loginSettingsDialog = nullptr;
+
+    swift::misc::CSetting<swift::gui::settings::TMiniMinimizeOpacity> m_minimizeOpacitySetting { this };
 };
 
 #endif // SWIFTGUIMINI_MINIGUIWINDOW_H

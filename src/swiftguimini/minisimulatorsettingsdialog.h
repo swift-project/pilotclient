@@ -12,8 +12,8 @@ namespace swift::gui::components
     class CSettingsSimulatorComponent;
 }
 
-//! Einfacher Dialog, der CSettingsSimulatorComponent (wie in swiftguistandard) kapselt,
-//! damit Simulator-Plugins auch in der Mini-GUI aktiviert/konfiguriert werden koennen.
+//! Simple dialog that wraps CSettingsSimulatorComponent (as in swiftguistandard), so simulator
+//! plugins can also be enabled/configured in the Mini-GUI.
 class CMiniSimulatorSettingsDialog : public QDialog
 {
     Q_OBJECT

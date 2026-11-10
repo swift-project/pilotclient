@@ -26,18 +26,17 @@ int main(int argc, char *argv[])
 
     CCrashHandler::instance()->init();
 
-    // Settings muessen VOR dem Auslesen der Sprache von der Platte geladen werden,
-    // da CSettingsCache sonst noch leer ist und TMiniLanguage::defaultValue() ("system") liefert.
+    // Settings must be loaded from disk BEFORE reading the language, otherwise
+    // CSettingsCache is still empty and TMiniLanguage::defaultValue() ("system") is returned.
     CSettingsCache::instance()->loadFromStore();
 
-    // Sprachauswahl: aus den Mini-GUI Einstellungen (Miscellaneous-Dialog), ansonsten Systemsprache.
+    // Language selection: from the Mini-GUI settings (Miscellaneous dialog), otherwise system language.
     const CSetting<TMiniLanguage> languageSetting { &qa };
     const QString languageCode = languageSetting.get();
-    const QLocale locale = (languageCode.isEmpty() || languageCode == QStringLiteral("system"))
-        ? QLocale::system()
-        : QLocale(languageCode);
+    const QLocale locale = (languageCode.isEmpty() || languageCode == QStringLiteral("system")) ? QLocale::system() :
+                                                                                                  QLocale(languageCode);
 
-    // Qt-eigene Uebersetzungen (Standarddialoge wie QMessageBox etc.)
+    // Qt's own translations (standard dialogs such as QMessageBox etc.)
     QTranslator qtTranslator;
     if (qtTranslator.load(locale, QStringLiteral("qt"), QStringLiteral("_"),
                           QLibraryInfo::path(QLibraryInfo::TranslationsPath)))
@@ -45,7 +44,7 @@ int main(int argc, char *argv[])
         QCoreApplication::installTranslator(&qtTranslator);
     }
 
-    // swiftguimini eigene Uebersetzungen (.qm liegen neben der ausfuehrbaren Datei im Unterordner "i18n")
+    // swiftguimini's own translations (.qm files are located next to the executable in the "i18n" subfolder)
     QTranslator appTranslator;
     const QString translationsDir = QCoreApplication::applicationDirPath() + QStringLiteral("/i18n");
     if (appTranslator.load(locale, QStringLiteral("swiftguimini"), QStringLiteral("_"), translationsDir))
