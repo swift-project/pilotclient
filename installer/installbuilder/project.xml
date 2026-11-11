@@ -64,6 +64,10 @@ It must be closed before the installation can proceed</progressText>
                                             <logic>is_running</logic>
                                             <name>swiftdata.exe</name>
                                         </processTest>
+                                      <processTest>
+                                        <logic>is_running</logic>
+                                        <name>swiftguimini.exe</name>
+                                      </processTest>
                                     </ruleList>
                                 </ruleGroup>
                                 <platformTest>
