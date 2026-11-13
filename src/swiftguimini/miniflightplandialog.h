@@ -45,6 +45,13 @@ public:
     //! connections to this signal, and would otherwise be missed.
     bool hasFlightPlanLoaded() const { return m_hasFlightPlan; }
 
+public slots:
+    //! Prefills the flight plan dialog with the given data, see CFlightPlanComponent::fillWithFlightPlanData().
+    //! \remark Used e.g. to forward a flight plan loaded via the quick-access SimBrief button in
+    //! "Own Aircraft" (CMiniLoginWidget::simBriefFlightPlanLoaded()), so the "Flight Plan Management"
+    //! dialog stays the single source of truth.
+    void fillWithFlightPlanData(const swift::misc::aviation::CFlightPlan &flightPlan);
+
 signals:
     //! A flight plan has been loaded, filled in or sent (SimBrief, file, manual input or network)
     void flightPlanDataChanged(bool available);

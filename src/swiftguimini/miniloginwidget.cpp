@@ -3,12 +3,15 @@
 #include "miniloginwidget.h"
 
 #include <QBoxLayout>
+#include <QGridLayout>
 #include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
+#include <QNetworkReply>
 #include <QPointer>
 #include <QPushButton>
+#include <QScopedPointer>
 #include <QTabWidget>
 #include <QTimer>
 #include <QVBoxLayout>
@@ -24,10 +27,12 @@
 #include "gui/components/networkdetailscomponent.h"
 #include "gui/components/ownaircraftcomponent.h"
 #include "gui/components/serverlistselector.h"
+#include "gui/components/simbriefdownloaddialog.h"
 #include "gui/guiapplication.h"
 #include "gui/settings/minisettings.h"
 #include "misc/aviation/flightplan.h"
 #include "misc/network/server.h"
+#include "misc/network/url.h"
 #include "misc/settingscache.h"
 #include "misc/simulation/aircraftmodel.h"
 
@@ -61,6 +66,17 @@ CMiniLoginWidget::CMiniLoginWidget(QWidget *parent) : CLoginComponent(parent)
     // Show "General"/"Advanced" of COwnAircraftComponent stacked directly on top of each
     // other instead of as tabs
     this->stackOwnAircraftSections();
+
+    // Move "lbl_Model"/"le_SimulatorModel" (originally part of "Advanced") directly below
+    // "Type"/"Airline" in the "General" section
+    this->moveModelWidgetBelowTypeAndAirline();
+
+    // Hide simulator model / livery send widgets not relevant for the Mini-GUI
+    this->hideOwnAircraftModelLiveryWidgets();
+
+    // Quick-access SimBrief button (plus Aircraft/Departure/Destination and Route info) below
+    // comp_ModelStringCompleter
+    this->insertSimBriefSection();
 
     // Red warning label below "Own Aircraft", shown when callsign/aircraft type differ from the flight plan
     this->insertAircraftMismatchWarning();
@@ -198,6 +214,118 @@ void CMiniLoginWidget::stackOwnAircraftSections()
 
     tabWidget->setParent(nullptr);
     tabWidget->deleteLater();
+}
+
+void CMiniLoginWidget::moveModelWidgetBelowTypeAndAirline()
+{
+    // "lbl_Model"/"le_SimulatorModel" originally live in the "Advanced" tab's grid layout
+    // (gl_advanced). After stackOwnAircraftSections() merged "General"/"Advanced" into a single
+    // vertical stack, move both widgets into the "General" section's grid layout (gl_general),
+    // directly below "Type" (row 1) / "Airline" (row 1), i.e. as a new row 2.
+    COwnAircraftComponent *ownAircraftComponent =
+        this->findChild<COwnAircraftComponent *>(QStringLiteral("comp_OwnAircraft"));
+    if (!ownAircraftComponent) { return; }
+
+    QLabel *lblModel = ownAircraftComponent->findChild<QLabel *>(QStringLiteral("lbl_Model"));
+    QLineEdit *leSimulatorModel = ownAircraftComponent->findChild<QLineEdit *>(QStringLiteral("le_SimulatorModel"));
+    if (!lblModel || !leSimulatorModel) { return; }
+
+    auto *generalLayout = ownAircraftComponent->findChild<QGridLayout *>(QStringLiteral("gl_general"));
+    auto *advancedLayout = ownAircraftComponent->findChild<QGridLayout *>(QStringLiteral("gl_advanced"));
+    if (!generalLayout) { return; }
+
+    if (advancedLayout)
+    {
+        advancedLayout->removeWidget(lblModel);
+        advancedLayout->removeWidget(leSimulatorModel);
+    }
+
+    constexpr int newRow = 2;
+    generalLayout->addWidget(lblModel, newRow, 0);
+    generalLayout->addWidget(leSimulatorModel, newRow, 2, 1, 6);
+}
+
+void CMiniLoginWidget::insertSimBriefSection()
+{
+    // comp_ModelStringCompleter lives in "Advanced" tab's grid layout (gl_advanced), row 2, column 2
+    // (see hideOwnAircraftModelLiveryWidgets(): it is hidden there, but the grid position is still
+    // used as the anchor for inserting the new SimBrief button/info rows directly below it).
+    COwnAircraftComponent *ownAircraftComponent =
+        this->findChild<COwnAircraftComponent *>(QStringLiteral("comp_OwnAircraft"));
+    if (!ownAircraftComponent) { return; }
+
+    auto *advancedLayout = ownAircraftComponent->findChild<QGridLayout *>(QStringLiteral("gl_advanced"));
+    if (!advancedLayout) { return; }
+
+    auto *simBriefButton = new QPushButton(tr("Load SimBrief flight plan"), ownAircraftComponent);
+    m_lblSimBriefInfo1 = new QLabel(ownAircraftComponent);
+    m_lblSimBriefInfo2 = new QLabel(ownAircraftComponent);
+    m_lblSimBriefInfo2->setWordWrap(true);
+
+    const int row = advancedLayout->rowCount();
+    advancedLayout->addWidget(simBriefButton, row, 0, 1, 4);
+    advancedLayout->addWidget(m_lblSimBriefInfo1, row + 1, 0, 1, 4);
+    advancedLayout->addWidget(m_lblSimBriefInfo2, row + 2, 0, 1, 4);
+
+    connect(simBriefButton, &QPushButton::pressed, this, &CMiniLoginWidget::onLoadFromSimBrief);
+}
+
+void CMiniLoginWidget::onLoadFromSimBrief()
+{
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (!m_simBriefDialog) { m_simBriefDialog = new CSimBriefDownloadDialog(this); }
+    const int rv = m_simBriefDialog->exec();
+    if (rv != QDialog::Accepted) { return; }
+
+    const CUrl url = m_simBriefDialog->getSimBriefData().getUrlAndUsername();
+    sGui->getFromNetwork(url.toNetworkRequest(), { this, &CMiniLoginWidget::onSimBriefResponse });
+}
+
+void CMiniLoginWidget::onSimBriefResponse(QNetworkReply *nwReplyPtr)
+{
+    QScopedPointer<QNetworkReply, QScopedPointerDeleteLater> nwReply(nwReplyPtr);
+    if (!sGui || sGui->isShuttingDown()) { return; }
+    if (nwReply->error() != QNetworkReply::NoError) { return; }
+
+    const QString simBriefFP(nwReply->readAll());
+    if (simBriefFP.isEmpty()) { return; }
+
+    const CFlightPlan flightPlan = CFlightPlan::fromSimBriefFormat(simBriefFP);
+    this->updateSimBriefInfoLabels(flightPlan);
+    emit this->simBriefFlightPlanLoaded(flightPlan);
+}
+
+void CMiniLoginWidget::updateSimBriefInfoLabels(const CFlightPlan &flightPlan)
+{
+    if (!m_lblSimBriefInfo1 || !m_lblSimBriefInfo2) { return; }
+
+    const QString aircraft = flightPlan.getAircraftInfo().getAircraftIcao().getDesignator();
+    const QString origin = flightPlan.getOriginAirportIcao().asString();
+    const QString destination = flightPlan.getDestinationAirportIcao().asString();
+    m_lblSimBriefInfo1->setText(
+        tr("Aircraft: %1  Departure: %2  Destination: %3").arg(aircraft, origin, destination));
+    m_lblSimBriefInfo2->setText(tr("Route: %1").arg(flightPlan.getRoute()));
+}
+
+void CMiniLoginWidget::hideOwnAircraftModelLiveryWidgets()
+{
+    COwnAircraftComponent *ownAircraftComponent =
+        this->findChild<COwnAircraftComponent *>(QStringLiteral("comp_OwnAircraft"));
+    if (!ownAircraftComponent) { return; }
+
+    const QStringList namesToHide {
+        QStringLiteral("lbl_LiverySend"),
+        QStringLiteral("cb_Livery"),
+        QStringLiteral("le_SendLivery"),
+        QStringLiteral("lbl_ModelSent"),
+        QStringLiteral("cb_Model"),
+        QStringLiteral("comp_ModelStringCompleter"),
+        QStringLiteral("pb_Clear"),
+    };
+    for (const QString &name : namesToHide)
+    {
+        if (QWidget *widget = ownAircraftComponent->findChild<QWidget *>(name)) { widget->setVisible(false); }
+    }
 }
 
 void CMiniLoginWidget::insertServerSelector()

@@ -9,6 +9,7 @@
 #include <QDialog>
 #include <QScopedPointer>
 
+#include "gui/swiftguiexport.h"
 #include "misc/aviation/simbriefdata.h"
 
 namespace Ui
@@ -18,7 +19,7 @@ namespace Ui
 namespace swift::gui::components
 {
     //! Download from SimBrief
-    class CSimBriefDownloadDialog : public QDialog
+    class SWIFT_GUI_EXPORT CSimBriefDownloadDialog : public QDialog
     {
         Q_OBJECT
 

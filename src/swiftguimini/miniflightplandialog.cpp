@@ -47,6 +47,11 @@ CFlightPlan CMiniFlightPlanDialog::getCurrentFlightPlanData() const
     return m_flightPlanComponent ? m_flightPlanComponent->getCurrentFlightPlanData() : CFlightPlan();
 }
 
+void CMiniFlightPlanDialog::fillWithFlightPlanData(const CFlightPlan &flightPlan)
+{
+    if (m_flightPlanComponent) { m_flightPlanComponent->fillWithFlightPlanData(flightPlan); }
+}
+
 void CMiniFlightPlanDialog::closeEvent(QCloseEvent *event)
 {
     if (m_flightPlanComponent)

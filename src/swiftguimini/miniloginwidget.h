@@ -15,11 +15,13 @@ class QWidget;
 class QLayout;
 class QUrl;
 class QLabel;
+class QNetworkReply;
 
 namespace swift::gui::components
 {
     class CServerListSelector;
     class CNetworkDetailsComponent;
+    class CSimBriefDownloadDialog;
 } // namespace swift::gui::components
 
 //! Derived, isolated variant of CLoginComponent (Mini-GUI only) that keeps the login button
@@ -75,6 +77,13 @@ public slots:
     //! and show a warning below the "Own Aircraft" group in case of a mismatch.
     void setFlightPlanContent(const swift::misc::aviation::CFlightPlan &flightPlan);
 
+signals:
+    //! A flight plan has been loaded from SimBrief via the "Own Aircraft" quick-access button.
+    //! \remark Intentionally mirrors CFlightPlanComponent::flightPlanDataChanged() /
+    //! CMiniFlightPlanDialog::flightPlanContentChanged(), so CMiniGuiWindow can forward the loaded
+    //! flight plan to CMiniFlightPlanDialog (single source of truth for the "Flight Plan Management" dialog).
+    void simBriefFlightPlanLoaded(const swift::misc::aviation::CFlightPlan &flightPlan);
+
 private:
     //! Forces the enabled state of the login/logoff button, independent of the
     //! simulator connection status.
@@ -90,6 +99,29 @@ private:
     //! Converts the internal tab view of COwnAircraftComponent ("General"/"Advanced")
     //! into a view with the sections stacked directly on top of each other (no more tabs).
     void stackOwnAircraftSections();
+
+    //! Hides the simulator model / livery related widgets ("le_SimulatorModel", "lbl_Model",
+    //! "lbl_LiverySend", "cb_Livery") within "Own Aircraft", which are not relevant for the
+    //! Mini-GUI (no simulator model string / livery send handling there).
+    void hideOwnAircraftModelLiveryWidgets();
+
+    //! Moves "lbl_Model" and "le_SimulatorModel" (originally part of the "Advanced" section) into
+    //! the "General" section's grid layout, directly below "Type"/"Airline".
+    void moveModelWidgetBelowTypeAndAirline();
+
+    //! Inserts a quick-access SimBrief button (plus info rows for Aircraft/Departure/Destination and
+    //! Route) directly below "comp_ModelStringCompleter" within "Own Aircraft".
+    void insertSimBriefSection();
+
+    //! The SimBrief button (inserted via insertSimBriefSection()) was pressed: opens the SimBrief
+    //! download dialog (same as CFlightPlanComponent::loadFromSimBrief()) and downloads the plan.
+    void onLoadFromSimBrief();
+
+    //! Response from the SimBrief download triggered by onLoadFromSimBrief().
+    void onSimBriefResponse(QNetworkReply *nwReplyPtr);
+
+    //! Updates m_lblSimBriefInfo1/2 with the given flight plan's Aircraft/Departure/Destination/Route.
+    void updateSimBriefInfoLabels(const swift::misc::aviation::CFlightPlan &flightPlan);
 
     //! Inserts the quick-access server selection box directly above the "Own Aircraft" group.
     void insertServerSelector();
@@ -124,6 +156,9 @@ private:
     swift::misc::aviation::CCallsign m_fpCallsign; //!< callsign as currently entered in the flight plan
     QString m_fpAircraftIcao; //!< aircraft ICAO designator as currently entered in the flight plan
     QLabel *m_mismatchWarningLabel = nullptr; //!< red warning shown below "Own Aircraft" on mismatch
+    QLabel *m_lblSimBriefInfo1 = nullptr; //!< "Aircraft"/"Departure"/"Destination" line below the SimBrief button
+    QLabel *m_lblSimBriefInfo2 = nullptr; //!< "Route" line below the SimBrief button
+    swift::gui::components::CSimBriefDownloadDialog *m_simBriefDialog = nullptr; //!< SimBrief download dialog
     swift::gui::components::CServerListSelector *m_serverSelector = nullptr; //!< quick-access server box
     swift::gui::components::CNetworkDetailsComponent *m_networkDetailsComponent =
         nullptr; //!< captured before a possible relocation (moveNetworkAndPilotGroupsTo())

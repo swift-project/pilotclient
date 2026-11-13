@@ -122,6 +122,10 @@ void CMiniGuiWindow::initTabs()
         // Compare callsign/aircraft type between flight plan and "Own Aircraft" (mismatch warning)
         connect(m_flightPlanDialog, &CMiniFlightPlanDialog::flightPlanContentChanged, m_loginComponent,
                 &CMiniLoginWidget::setFlightPlanContent);
+        // A flight plan was loaded via the quick-access SimBrief button in "Own Aircraft" -> forward
+        // it to the "Flight Plan Management" dialog, so it remains the single source of truth.
+        connect(m_loginComponent, &CMiniLoginWidget::simBriefFlightPlanLoaded, m_flightPlanDialog,
+                &CMiniFlightPlanDialog::fillWithFlightPlanData);
     }
 
     // The dialog's constructor may already have restored and emitted a locally persisted flight plan
