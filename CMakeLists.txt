@@ -42,11 +42,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out/lib)
 
 # Build related options
-option(SWIFT_BUILD_SAMPLES "Build samples" ON)
-option(SWIFT_BUILD_UNIT_TESTS "Build unit tests" ON)
+option(SWIFT_BUILD_SAMPLES "Build samples" OFF)
+option(SWIFT_BUILD_UNIT_TESTS "Build unit tests" OFF)
 option(SWIFT_BUILD_DOCUMENTATION "Build documentation" ON)
 
-cmake_dependent_option(SWIFT_BUILD_P3D_PLUGIN "Build P3D plugin" ON WIN32 OFF)
+cmake_dependent_option(SWIFT_BUILD_P3D_PLUGIN "Build P3D plugin" OFF WIN32 OFF)
 option(SWIFT_BUILD_XPLANE_PLUGIN "Build X-Plane plugin" ON)
 option(SWIFT_BUILD_XSWIFTBUS "Build xswiftbus" ON)
 option(SWIFT_BUILD_FLIGHTGEAR_PLUGIN "Build Flightgear plugin" ON)

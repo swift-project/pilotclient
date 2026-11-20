@@ -10,7 +10,7 @@
 
 #include "plugins/simulator/fsxcommon/fsxcommonexport.h"
 
-#ifdef Q_OS_WIN64
+#ifdef SWIFT_BUILD_P3D_PLUGIN
 
 //! P3D versions
 enum P3DSimConnectVersion
@@ -36,17 +36,19 @@ inline bool loadAndResolveP3DSimConnectByString(const QString &version)
 {
     return loadAndResolveP3DSimConnect(stringToP3DVersion(version));
 }
+#else
 
 FSXCOMMON_EXPORT bool loadAndResolveMSFSimConnect();
 
 FSXCOMMON_EXPORT bool loadAndResolveMSFS2024SimConnect();
 
+#ifdef Q_OS_WIN64
 #else
-
 //! Load and resolve FSX SimConnect.
 //! \param manifestProbing  Set to true if you want to try loading from the assembly cache with manifests.
 //!                         Otherwise the library in the bin folder will be loaded.
 FSXCOMMON_EXPORT bool loadAndResolveFsxSimConnect(bool manifestProbing);
+#    endif
 
 #endif
 

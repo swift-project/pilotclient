@@ -22,9 +22,9 @@ namespace swift::simplugin::fsxp3d
 {
     void CSimPluginFsxP3d::resolveSymbols()
     {
-#ifdef Q_OS_WIN64
+#if defined(Q_OS_WIN64) && defined(SWIFT_BUILD_P3D_PLUGIN)
         QVERIFY2(loadAndResolveP3DSimConnect(P3DSimConnectv42), "Could not load and resolve SimConnect library!");
-#else
+#    elsif defined(Q_OS_WIN32)
         QVERIFY2(loadAndResolveFsxSimConnect(false), "Could not load and resolve SimConnect library!");
 #endif
         HANDLE hSimConnect;

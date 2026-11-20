@@ -78,7 +78,7 @@ using PfnSimConnect_CreateClientData = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_C
 using PfnSimConnect_AddToClientDataDefinition = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_CLIENT_DATA_DEFINITION_ID,
                                                                      DWORD, DWORD, float, DWORD);
 
-#ifdef Q_OS_WIN64
+#ifdef SWIFT_BUILD_P3D_PLUGIN
 using PfnSimConnect_RequestGroundInfo = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_DATA_REQUEST_ID, double, double, double,
                                                              double, double, double, DWORD, DWORD,
                                                              SIMCONNECT_GROUND_INFO_LATLON_FORMAT,
@@ -131,7 +131,7 @@ struct SimConnectSymbols
     PfnSimConnect_MapClientDataNameToID SimConnect_MapClientDataNameToID = nullptr;
     PfnSimConnect_CreateClientData SimConnect_CreateClientData = nullptr;
     PfnSimConnect_AddToClientDataDefinition SimConnect_AddToClientDataDefinition = nullptr;
-#ifdef Q_OS_WIN64
+#ifdef SWIFT_BUILD_P3D_PLUGIN
     PfnSimConnect_RequestGroundInfo SimConnect_RequestGroundInfo = nullptr;
     PfnSimConnect_ChangeView SimConnect_ChangeView = nullptr;
     PfnSimConnect_AIReleaseControlEx SimConnect_AIReleaseControlEx = nullptr;
@@ -223,7 +223,9 @@ bool resolveCommonSimConnectSymbols(QLibrary &simConnectDll)
     return resolveSuccess;
 }
 
-#ifdef Q_OS_WIN64
+
+
+#ifdef SWIFT_BUILD_P3D_PLUGIN
 bool resolveP3DSimConnectSymbols(QLibrary &simConnectDll)
 {
     bool resolveSuccess = true;
@@ -349,6 +351,7 @@ bool loadAndResolveP3DSimConnect(P3DSimConnectVersion version)
         return false;
     }
 }
+#endif
 
 bool loadAndResolveMSFSimConnect()
 {
@@ -418,6 +421,7 @@ bool loadAndResolveMSFS2024SimConnect()
     }
 }
 
+#ifdef Q_OS_WIN64
 #else
 bool loadAndResolveFsxSimConnect(bool manifestProbing)
 {
@@ -664,7 +668,7 @@ SIMCONNECTAPI SimConnect_AddToClientDataDefinition(HANDLE hSimConnect, SIMCONNEC
                                                          DatumID);
 }
 
-#ifdef Q_OS_WIN64
+#ifdef SWIFT_BUILD_P3D_PLUGIN
 SIMCONNECTAPI SimConnect_RequestGroundInfo(HANDLE hSimConnect, SIMCONNECT_DATA_REQUEST_ID RequestID, double minLat,
                                            double minLon, double minAlt, double maxLat, double maxLon, double maxAlt,
                                            DWORD dwGridWidth, DWORD dwGridHeight,

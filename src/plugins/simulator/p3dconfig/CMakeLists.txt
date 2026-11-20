@@ -19,7 +19,7 @@ target_link_libraries(simulatorp3dconfig
         misc
         Qt::Core
         PRIVATE
-        fsxcommon
+        fsxcommon_p3d
 )
 
 install(TARGETS simulatorp3dconfig

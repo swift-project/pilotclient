@@ -18,7 +18,7 @@ target_include_directories(simulatorp3d PUBLIC ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(simulatorp3d
         PUBLIC
         fscommon
-        fsxcommon
+        fsxcommon_p3d
         core
         misc
         Qt::Core

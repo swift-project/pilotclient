@@ -43,19 +43,20 @@ namespace swift::simplugin::p3d
 
     bool CSimulatorP3D::connectTo()
     {
-#ifdef Q_OS_WIN64
+#if defined(Q_OS_WIN64) && defined(SWIFT_BUILD_P3D_PLUGIN)
         if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get()))
         {
             return false;
         }
         return CSimulatorFsxCommon::connectTo();
-#else
+#elseif defined(Q_OS_WIN32) 
         if (!loadAndResolveFsxSimConnect(true))
         {
             return false;
         }
         return CSimulatorFsxCommon::connectTo();
 #endif
+        return false;
     }
 
 #ifdef Q_OS_WIN64
@@ -327,13 +328,13 @@ namespace swift::simplugin::p3d
 
     void CSimulatorP3DListener::startImpl()
     {
-#ifdef Q_OS_WIN64
+#if defined(Q_OS_WIN64) && defined(SWIFT_BUILD_P3D_PLUGIN)
         if (!loadAndResolveP3DSimConnectByString(m_p3dVersion.get()))
         {
             return;
         }
         CSimulatorFsxCommonListener::startImpl();
-#else
+#elsif defined(Q_OS_WIN32)
         if (!loadAndResolveFsxSimConnect(true))
         {
             return;

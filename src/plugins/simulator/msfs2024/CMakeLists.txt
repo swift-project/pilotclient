@@ -18,7 +18,7 @@ target_include_directories(simulatormsfs2024 PUBLIC ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(simulatormsfs2024
         PUBLIC
         fscommon
-        fsxcommon
+        fsxcommon_msfs2024
         core
         misc
         Qt::Core
@@ -27,4 +27,4 @@ target_link_libraries(simulatormsfs2024
 install(TARGETS simulatormsfs2024
         LIBRARY DESTINATION bin/plugins/simulator
         RUNTIME DESTINATION bin/plugins/simulator
-        )
+)
