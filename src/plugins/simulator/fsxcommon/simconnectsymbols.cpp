@@ -100,6 +100,14 @@ using PfnSimConnect_ObserverAttachToEntityOn = HRESULT(__stdcall *)(HANDLE, cons
 using PfnSimConnect_CreateObserver = HRESULT(__stdcall *)(HANDLE, const char *, SIMCONNECT_DATA_OBSERVER);
 using PfnSimConnect_SetObserverLookAt = HRESULT(__stdcall *)(HANDLE, const char *, SIMCONNECT_DATA_LATLONALT);
 #endif
+#ifdef SWIFT_BUILD_MSFS2024_PLUGIN
+using PfnSimConnect_SimConnect_EnumerateSimObjectsAndLiveries = HRESULT(__stdcall *)(HANDLE, SIMCONNECT_DATA_REQUEST_ID,
+                                                                                     SIMCONNECT_SIMOBJECT_TYPE);
+using PfnSimConnect_AICreateSimulatedObject_EX1 = HRESULT(__stdcall *)(HANDLE, const char *, const char *,
+                                                                       SIMCONNECT_DATA_INITPOSITION,
+                                                                       SIMCONNECT_DATA_REQUEST_ID);
+
+#endif
 
 //! The SimConnect Symbols
 //! \private
@@ -143,6 +151,11 @@ struct SimConnectSymbols
     PfnSimConnect_SetObserverLookAt SimConnect_SetObserverLookAt = nullptr;
     PfnSimConnect_OpenView SimConnect_OpenView = nullptr;
     PfnSimConnect_CloseView SimConnect_CloseView = nullptr;
+#endif
+#ifdef SWIFT_BUILD_MSFS2024_PLUGIN
+    PfnSimConnect_SimConnect_EnumerateSimObjectsAndLiveries SimConnect_EnumerateSimObjectsAndLiveries = nullptr;
+    PfnSimConnect_AICreateNonATCAircraft_EX1 SimConnect_AICreateNonATCAircraft_EX1 = nullptr;
+    PfnSimConnect_AICreateSimulatedObject_EX1 SimConnect_AICreateSimulatedObject_EX1 = nullptr;
 #endif
 };
 
@@ -220,10 +233,13 @@ bool resolveCommonSimConnectSymbols(QLibrary &simConnectDll)
     resolveSuccess =
         resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_AddToClientDataDefinition,
                                                  "SimConnect_AddToClientDataDefinition");
+#ifdef SWIFT_BUILD_MSFS2024_PLUGIN
+     resolveSuccess =
+        resolveSuccess & resolveSimConnectSymbol(simConnectDll, gSymbols.SimConnect_EnumerateSimObjectsAndLiveries,
+                                                 "SimConnect_EnumerateSimObjectsAndLiveries");
+#endif
     return resolveSuccess;
 }
-
-
 
 #ifdef SWIFT_BUILD_P3D_PLUGIN
 bool resolveP3DSimConnectSymbols(QLibrary &simConnectDll)
@@ -511,6 +527,13 @@ SIMCONNECTAPI SimConnect_AddToDataDefinition(HANDLE hSimConnect, SIMCONNECT_DATA
     return gSymbols.SimConnect_AddToDataDefinition(hSimConnect, DefineID, DatumName, UnitsName, DatumType, fEpsilon,
                                                    DatumID);
 }
+#ifdef SWIFT_BUILD_MSFS2024_PLUGIN
+SIMCONNECTAPI SimConnect_EnumerateSimObjectsAndLiveries(HANDLE hSimConnect, SIMCONNECT_DATA_REQUEST_ID RequestID,
+                                                        SIMCONNECT_SIMOBJECT_TYPE Type)
+{
+    return gSymbols.SimConnect_EnumerateSimObjectsAndLiveries(hSimConnect, RequestID, Type);
+}
+#endif
 
 SIMCONNECTAPI SimConnect_Text(HANDLE hSimConnect, SIMCONNECT_TEXT_TYPE type, float fTimeSeconds,
                               SIMCONNECT_CLIENT_EVENT_ID EventID, DWORD cbUnitSize, void *pDataSet)

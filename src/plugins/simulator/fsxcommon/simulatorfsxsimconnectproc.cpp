@@ -260,7 +260,7 @@ namespace swift::simplugin::fsxcommon
             {
             case CSimConnectDefinitions::RequestOwnAircraft:
             {
-                static_assert(sizeof(DataDefinitionOwnAircraft) == 49 * sizeof(double),
+                static_assert(sizeof(DataDefinitionOwnAircraft) == 52 * sizeof(double),
                               "DataDefinitionOwnAircraft has an incorrect size.");
                 const DataDefinitionOwnAircraft *ownAircaft =
                     reinterpret_cast<const DataDefinitionOwnAircraft *>(&pObjData->dwData);
@@ -310,7 +310,7 @@ namespace swift::simplugin::fsxcommon
                     } // position
                     else if (subRequest == CSimConnectDefinitions::SimObjectModel)
                     {
-                        static_assert(sizeof(DataDefinitionRemoteAircraftModel) == sizeof(double) + 168 + 256,
+                        static_assert(sizeof(DataDefinitionRemoteAircraftModel) == sizeof(double) + 168 + 256 + 256,
                                       "DataDefinitionRemoteAircraftModel has an incorrect size.");
                         const DataDefinitionRemoteAircraftModel *remoteAircraftModel =
                             reinterpret_cast<const DataDefinitionRemoteAircraftModel *>(&pObjData->dwData);
@@ -322,7 +322,7 @@ namespace swift::simplugin::fsxcommon
                     } // model
                     else if (subRequest == CSimConnectDefinitions::SimObjectLights)
                     {
-                        static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 8 * sizeof(double),
+                        static_assert(sizeof(DataDefinitionRemoteAircraftLights) == 9 * sizeof(double),
                                       "DataDefinitionRemoteAircraftLights has an incorrect size.");
                         const DataDefinitionRemoteAircraftLights *remoteAircraftLights =
                             reinterpret_cast<const DataDefinitionRemoteAircraftLights *>(&pObjData->dwData);

@@ -46,7 +46,10 @@ namespace swift::simplugin::fsxcommon
         double lightBeacon; //!< Is beacon light on?
         double lightNav; //!< Is nav light on?
         double lightLogo; //!< Is logo light on?
-        // 18
+        double lightRecognition;
+        double lightCabin; //!< Is cabin light on?
+        double lightWing; //!< Is wing light on?
+        // 21
         double transponderCode; //!< Transponder Code
         double com1ActiveMHz; //!< COM1 active frequency
         double com2ActiveMHz; //!< COM2 active frequency
@@ -59,17 +62,17 @@ namespace swift::simplugin::fsxcommon
         double comTest2; //!< COM2 test
         double comStatus1; //!< COM1 status
         double comStatus2; //!< COM2 status
-        // 30
+        // 33
         double flapsHandlePosition; //!< Flaps handle position in percent
         double spoilersHandlePosition; //!< Spoilers out? (flag)
         double gearHandlePosition; //!< Gear handle position (flag)
-        // 33
+        // 36
         double numberOfEngines; //!< Number of engines
         double engine1Combustion; //!< Engine 1 combustion flag
         double engine2Combustion; //!< Engine 2 combustion flag
         double engine3Combustion; //!< Engine 3 combustion flag
         double engine4Combustion; //!< Engine 4 combustion flag
-        // 38
+        // 41
         double engine1RpmPct; //!< Engine 1 RPM [%]
         double engine2RpmPct; //!< Engine 2 RPM [%]
         double engine3RpmPct; //!< Engine 3 RPM [%]
@@ -80,18 +83,27 @@ namespace swift::simplugin::fsxcommon
         double rotationVelocityBodyX; //!< Rotation Velocity Body X
         double rotationVelocityBodyY; //!< Rotation Velocity Body Y
         double rotationVelocityBodyZ; //!< Rotation Velocity Body Z
-        // 48
+        // 51
         double altitudeCalibratedFt; //!< Altitude without temperature effect (ft, FS2020)
-        // 49
+        // 52
     };
 
     //! Data struct of aircraft position
     struct DataDefinitionOwnAircraftModel
     {
         char title[256]; //!< Aircraft model string
+        char livery[256]; //!< Aircraft livery string msfs2024
     };
 
     //! Data struct of aircraft model data
+
+    // struct DataDefinitionOwnAircraftLivery
+    //{
+    //     char livery[256]; //!< Aircraft model string
+    // };
+
+    ////! Data struct of aircraft model livery
+
     struct DataDefinitionRemoteAircraftModel
     {
         double cgToGroundFt; //!< Static CG to ground (ft)
@@ -101,6 +113,7 @@ namespace swift::simplugin::fsxcommon
         char atcAirlineNumber[64]; //!< airline number
         char atcFlightNumber[8]; //!< flight number (168)
         char title[256]; //!< Aircraft model string
+        char livery[256]; //!< Aircraft livery string msfs2024
     };
 
     //! Data struct of aircraft data (setable)
@@ -196,6 +209,7 @@ namespace swift::simplugin::fsxcommon
         double lightLogo; //!< Is logo light on?
         double lightRecognition; //!< Is recognition light on
         double lightCabin; //!< Is cabin light on
+        double lightWing; //!< Is cabin light on
 
         //! Convert to lights
         swift::misc::aviation::CAircraftLights toLights() const;
@@ -300,10 +314,13 @@ namespace swift::simplugin::fsxcommon
         {
             RequestOwnAircraft,
             RequestOwnAircraftTitle,
+            RequestOwnAircraftLivery,
+            RequestSimEnvironment,
             RequestSbData, //!< SB client area / XPDR mode
             RequestMSFSTransponder, //!< MSFS XPDR mode/ident
             RequestFacility,
-            RequestEndMarker //!< free request ids can start here
+            RequestEndMarker, //!< free request ids can start here
+
         };
 
         //! SimObject requests used for AI aircraft and probes
@@ -319,6 +336,21 @@ namespace swift::simplugin::fsxcommon
             SimObjectEndMarker //!< end marker, do NOT remove, also means invalid
         };
 
+        enum REQUEST_ID
+        {
+            REQUEST_NONE = 0,
+            REQUEST_POSITION_USER = 50,
+            REQUEST_CREATE = 100,
+            REQUEST_ALL = 1000,
+            REQUEST_USER,
+            REQUEST_AIRPLANE,
+            REQUEST_HELICOPTER,
+            REQUEST_GROUND,
+            REQUEST_ANIMAL,
+            REQUEST_HOT_AIR,
+            REQUEST_BOAT,
+        };
+
         //! Request to string
         static const QString &requestToString(Request request);
 
@@ -331,6 +363,9 @@ namespace swift::simplugin::fsxcommon
         //! Initialize all data definitions
         static HRESULT initDataDefinitionsWhenConnected(const HANDLE hSimConnect,
                                                         const swift::misc::simulation::CSimulatorInfo &simInfo);
+
+        //! Initialize data retrieval for model list
+        static HRESULT initOwnAircraftList(const HANDLE hSimConnect);
 
     private:
         //! Initialize data definition for our own aircraft
